@@ -1,0 +1,15 @@
+body,
+html {
+    width: 100%;
+    /* height: 100%; */
+    box-sizing: border-box;
+    /* margin: 1rem; */
+    /* padding: 0; */
+    background-color: black;
+    font-family: monospace;
+}
+
+main {
+    background-color: cadetblue;
+    height: 100vh;
+}
