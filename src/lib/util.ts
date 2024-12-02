@@ -32,7 +32,7 @@ function typeofasfcuntion(value: unknown) {
     return typeof value;
 }
 
-export type VType = ReturnType<typeof typeofasfcuntion> | 'regexp' | 'date' | 'class' | 'error' | 'array' | 'null'
+export type VType = ReturnType<typeof typeofasfcuntion> | 'regexp' | 'date' | 'class' | 'error' | 'array' | 'null' | 'set' | 'map' | 'url' | 'urlsearchparams'
 
 export function stringify(value: unknown, indent = 2) {
     return JSON.stringify(value, (key, value) => {

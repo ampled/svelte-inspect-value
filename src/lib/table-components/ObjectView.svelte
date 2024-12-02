@@ -1,6 +1,5 @@
 <script lang="ts">
   import type { TypeViewProps } from '$lib/types.js'
-  import { slide } from 'svelte/transition'
   import JsonViewer from './JsonViewer.svelte'
   import TitleBar from './TitleBar.svelte'
 
@@ -16,23 +15,11 @@
   let collapsed = $state(false)
 </script>
 
-{#if key != null}
-  <TitleBar {key} {type} length={entries.length} bind:collapsed />
-{/if}
-{#if !collapsed}
-  <div
-    class="indent"
-    out:slide|global={{ duration: 300, delay: 1000 }}
-    in:slide|global={{ duration: 300 }}
-  >
-    {#each entries as [key, value], i (key)}
-      <div
-        class="entry"
-        out:slide|global={{ axis: 'x', delay: 20 * i }}
-        in:slide|global={{ axis: 'x', delay: 30 * i }}
-      >
-        <JsonViewer {value} {key} />
-      </div>
-    {/each}
-  </div>
-{/if}
+<TitleBar {key} {type} length={entries.length} bind:collapsed />
+<div class="indent" class:collapsed>
+  {#each entries as [key, value], i (key)}
+    <div class="entry">
+      <JsonViewer {value} {key} />
+    </div>
+  {/each}
+</div>

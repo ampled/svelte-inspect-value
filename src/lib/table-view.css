@@ -61,42 +61,36 @@
 }
 
 .ampled-json-inspect {
+    font-size: 12px;
     box-sizing: border-box;
     color: var(--base05, #fafafa);
-    max-width: 500px;
+    /* max-width: 500px; */
     font-family: monospace;
     margin: 10px;
     /* padding-right: 1em; */
     /* padding: 10px; */
-    line-height: 1.5;
-    overflow: auto;
+    overflow: hidden;
+    line-height: 1.5em;
     white-space: nowrap;
+    /* resize: both; */
+    background-color: var(--base00, #000);
+    border: 1px solid var(--base03, gray);
+    border-radius: 8px;
+    text-overflow: ellipsis;
+    max-width: min-content;
 
-    &.draggable {
-        position: absolute;
+    small {
+        font-size: 10px;
     }
+
+    /* &.draggable {
+        position: absolute;
+    } */
 
     * {
         box-sizing: border-box
     }
 
-    .tabs {
-        display: flex;
-        flex-direction: row;
-    }
-
-    .tab {
-        /* aspect-ratio: 1/1; */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        max-width: max-content;
-        padding: 0.5em;
-        background-color: var(--base00, black);
-        border: 1px solid var(--base03, gray);
-        border-bottom-width: 0;
-
-    }
 
     .handle {
         aspect-ratio: 1/1;
@@ -120,21 +114,17 @@
         border-top-width: 0;
         border-left-width: 0;
         border-style: solid;
+        display: block;
+        margin-left: -0.75em;
         /* padding-block: 2px; */
         /* padding-inline: 4px; */
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: flex-start;
-        gap: 0.5em;
+        /* gap: 0.5em; */
 
-        &.nopad {
-            padding: 0;
-        }
 
-        &.no-bottom-border {
-            border-bottom-width: 0;
-        }
 
         /* &:hover {
             background-color: var(--base01, gray);
@@ -143,12 +133,11 @@
 
     .body {
         position: relative;
-        background-color: var(--base00, #000);
         overflow: auto;
-        border: 1px solid var(--base03, gray);
         width: 100%;
+        height: 100%;
         padding: 1em;
-        /* padding: 1em; */
+        padding-left: 2em;
     }
 
     .raw-view {
@@ -156,6 +145,12 @@
         flex-basis: 100%;
         padding: 2px;
         font-size: 10px;
+    }
+
+    button {
+        all: unset;
+        cursor: pointer;
+        border: 1px solid var(--base05, white);
     }
 
     button.collapse {
@@ -181,6 +176,7 @@
 
     .entry {
         /* margin-right: 1em; */
+        /* border: 1px solid var(--base03); */
 
         &:hover {
             background-color: var(--base01, gray);
@@ -195,14 +191,18 @@
 
     .indent {
         /* margin-left: 0.5em; */
-        padding-left: 0.75em;
+        padding-left: 1em;
+        /* margin-left: .25em; */
         /* margin-left: 0.25em; */
         display: flex;
         flex-direction: column;
         border-left: 1px solid var(--base03, gray);
         /* padding-right: 1em; */
 
-
+        &.collapsed {
+            overflow: hidden;
+            height: 0;
+        }
     }
 
     .key {
@@ -242,9 +242,9 @@
     /* border-radius: 2px; */
 }
 
-.ampled-json-inspect .value {
+/* .ampled-json-inspect .value {
     padding-right: 1em;
-}
+} */
 
 .ampled-json-inspect .type {
 
@@ -262,11 +262,11 @@
     }
 
     &.array {
-        color: var(--base04, lightblue);
+        color: var(--base0D, lightblue);
     }
 
     &.object {
-        color: var(--base04, lightblue);
+        color: var(--base0D, lightblue);
     }
 
     &.bigint {
@@ -282,7 +282,7 @@
     }
 
     &.date {
-        color: var(--base04, cyan);
+        color: var(--base0D, cyan);
     }
 
     &.function {
@@ -294,8 +294,15 @@
     }
 
     &.map {
-        color: var(--base04, cyan);
+        color: var(--base0D, cyan);
+    }
 
+    &.url {
+        color: var(--base0D, cyan);
+    }
+
+    &.set {
+        color: var(--base0D, cyan);
     }
 
     &.class {
@@ -308,6 +315,11 @@
 
     &.string {
         color: var(--base0B, yellow);
+    }
+
+    &.multi {
+        padding-left: 1em;
+        border-left: 1px solid currentColor;
     }
 
     &.number {

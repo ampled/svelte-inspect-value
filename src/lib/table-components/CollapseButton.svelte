@@ -7,5 +7,5 @@
 </script>
 
 <button class="collapse" onclick={() => (collapsed = !collapsed)}>
-  <span style:rotate={collapsed ? '0deg' : '90deg'}>&rsaquo;</span>
+  <span style:rotate={collapsed ? '0deg' : '90deg'}>&#9656;</span>
 </button>

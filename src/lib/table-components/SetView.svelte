@@ -3,9 +3,9 @@
   import JsonViewer from './JsonViewer.svelte'
   import TitleBar from './TitleBar.svelte'
 
-  type Props = TypeViewProps<Map<any, any>>
+  type Props = TypeViewProps<Set<any>>
 
-  let { value = new Map(), key = undefined, type }: Props = $props()
+  let { value = new Set(), key = undefined, type }: Props = $props()
 
   let entries = $derived(Array.from(value.entries()))
   let collapsed = $state(false)
@@ -13,9 +13,9 @@
 
 <TitleBar {key} {type} length={entries.length} bind:collapsed />
 <div class="indent" class:collapsed>
-  {#each entries as value, i (i)}
+  {#each entries as [key, value], i (i)}
     <div class="entry">
-      <JsonViewer {value} key={i} />
+      <JsonViewer {value} {key} />
     </div>
   {/each}
 </div>

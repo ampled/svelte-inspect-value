@@ -14,23 +14,13 @@
   let collapsed = $state(false)
 </script>
 
-{#if key}
-  <TitleBar {key} bind:collapsed length={arrayVal.length} {type} />
-{/if}
-{#if !collapsed}
-  <div
-    class="indent"
-    out:slide|global={{ duration: 300, delay: 1000 }}
-    in:slide|global={{ duration: 300 }}
-  >
-    {#each arrayVal as value, i (i)}
-      <div
-        class="entry"
-        out:slide|global={{ axis: 'x', delay: 20 * i }}
-        in:slide|global={{ axis: 'x', delay: 30 * i }}
-      >
-        <JsonViewer key={i} {value} />
-      </div>
-    {/each}
-  </div>
-{/if}
+<!-- {#if key != } -->
+<TitleBar {key} bind:collapsed length={arrayVal.length} {type} />
+<!-- {/if} -->
+<div class="indent" class:collapsed>
+  {#each arrayVal as value, i (i)}
+    <div class="entry">
+      <JsonViewer key={i} {value} />
+    </div>
+  {/each}
+</div>

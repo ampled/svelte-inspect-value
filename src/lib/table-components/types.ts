@@ -10,9 +10,12 @@ import NullView from "./NullView.svelte";
 import NumberView from "./NumberView.svelte";
 import ObjectView from "./ObjectView.svelte";
 import RegexView from "./RegexView.svelte";
+import SetView from "./SetView.svelte";
 import StringView from "./StringView.svelte";
 import SymbolView from "./SymbolView.svelte";
 import UndefinedView from "./UndefinedView.svelte";
+import UrlSearchParamsView from "./URLSearchParamsView.svelte";
+import UrlView from "./URLView.svelte";
 
 export default {
     object: ObjectView,
@@ -29,5 +32,8 @@ export default {
     date: DateView,
     bigint: BigIntView,
     error: ErrorView,
-    map: MapView
+    map: MapView,
+    set: SetView,
+    url: UrlView,
+    urlsearchparams: UrlSearchParamsView
 }

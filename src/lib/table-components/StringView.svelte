@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { stringify } from '$lib/util.js'
+
   import type { OptionsContext } from '$lib/options.svelte.js'
   import type { TypeViewProps } from '$lib/types.js'
   import { getContext } from 'svelte'
@@ -11,17 +13,23 @@
 
   const options: OptionsContext = getContext('json-inspect')
 
-  let { stringCollapse } = $derived(options.value)
+  let { stringCollapse, stringRender } = $derived(options.value)
+
+  let isMultiLine = $derived(value.includes('\n'))
 
   let display = $derived(
-    stringCollapse < value.length ? value.slice(0, stringCollapse).trimEnd() : value
+    stringCollapse && stringCollapse < value.length
+      ? value.slice(0, stringCollapse).trimEnd() + '…'
+      : value
   )
-
-  let collapsed = $derived(stringCollapse < value.length)
 </script>
 
 <Key {key} />
 <Type {type} />
-<span class={`value ${type}`} title={value}>
-  &quot;{display}{#if collapsed}&hellip;{/if}&quot;
-</span>
+{#if isMultiLine && stringRender === 'pre'}
+  <pre class="value {type} multi" title={stringify(value)}>{value}</pre>
+{:else}
+  <span class={`value ${type}`} title={stringify(value)}>
+    {stringify(display)}
+  </span>
+{/if}

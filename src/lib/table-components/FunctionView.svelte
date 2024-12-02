@@ -14,8 +14,6 @@
       return str
     }
   })
-
-  // $inspect(funcBody)
 </script>
 
 <Key {key} />
