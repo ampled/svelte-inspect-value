@@ -1,4 +1,6 @@
 <script lang="ts">
+  import Line from './Line.svelte'
+
   import { stringify } from '$lib/util.js'
 
   import Key from '$lib/table-components/Key.svelte'
@@ -15,12 +17,9 @@
   let display = $derived(stringified !== '{}' ? stringified : (value as any).toString())
 </script>
 
-{#if value != null}
-  {#if typeof value === 'object'}
-    <ObjectView {value} {key} {type} />
-  {:else}
-    <Key {key} />
-    <Type {type} />
-    <span class="value {type}">{display} (noop)</span>
-  {/if}
-{/if}
+<Line>
+  <Key {key} />
+  <Type {type} />
+  <Type type="noop" title="no handler for this type" />
+  <span class="value {type}">{(value as any).toString()} </span>
+</Line>

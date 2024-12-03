@@ -1,4 +1,6 @@
 <script lang="ts">
+  import Line from './Line.svelte'
+
   import { stringify } from '$lib/util.js'
 
   import type { OptionsContext } from '$lib/options.svelte.js'
@@ -6,10 +8,11 @@
   import { getContext } from 'svelte'
   import Key from './Key.svelte'
   import Type from './Type.svelte'
+  import OneLineView from './OneLineView.svelte'
 
   type Props = TypeViewProps<string>
 
-  let { value = '', key, type }: Props = $props()
+  let { value = '', key, type, path }: Props = $props()
 
   const options: OptionsContext = getContext('json-inspect')
 
@@ -24,12 +27,20 @@
   )
 </script>
 
-<Key {key} />
-<Type {type} />
 {#if isMultiLine && stringRender === 'pre'}
+  <Line>
+    <Key {key} {path} />
+    <Type {type} />
+  </Line>
   <pre class="value {type} multi" title={stringify(value)}>{value}</pre>
 {:else}
-  <span class={`value ${type}`} title={stringify(value)}>
-    {stringify(display)}
-  </span>
+  <!-- <Line>
+    <Key {key} />
+    <Type {type} />
+    <span class={`value ${type}`} title={stringify(value)}>
+      {stringify(display)}
+    </span>
+  </Line> -->
+
+  <OneLineView {key} {type} {path} value={stringify(display)} />
 {/if}

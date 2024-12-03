@@ -9,6 +9,7 @@ import MapView from "./MapView.svelte";
 import NullView from "./NullView.svelte";
 import NumberView from "./NumberView.svelte";
 import ObjectView from "./ObjectView.svelte";
+import OneLineView from "./OneLineView.svelte";
 import RegexView from "./RegexView.svelte";
 import SetView from "./SetView.svelte";
 import StringView from "./StringView.svelte";
@@ -22,15 +23,15 @@ export default {
     array: ArrayView,
     string: StringView,
     number: NumberView,
-    boolean: BooleanView,
+    boolean: OneLineView,
     function: FunctionView,
     class: ClassView,
     symbol: SymbolView,
-    undefined: UndefinedView,
-    null: NullView,
+    undefined: OneLineView,
+    null: OneLineView,
     regexp: RegexView,
     date: DateView,
-    bigint: BigIntView,
+    bigint: OneLineView,
     error: ErrorView,
     map: MapView,
     set: SetView,

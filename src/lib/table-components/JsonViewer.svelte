@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { TypeViewProps } from '$lib/types.js'
+  import type { KeyName, TypeViewProps } from '$lib/types.js'
   import { getType, type VType } from '../util.js'
   import ErrorView from './ErrorView.svelte'
   import Noop from './Noop.svelte'
@@ -7,24 +7,24 @@
 
   type Props = TypeViewProps<any>
 
-  let { value = undefined, key = undefined }: Props = $props()
+  let { value = undefined, key = undefined, path: prevPath = [] }: Props = $props()
 
   let type: VType = $derived(getType(value))
 
   let TypeComponent = $derived(components[type] ?? Noop)
 
+  let path = $derived(key && prevPath ? [...prevPath, key] : undefined)
+
   function onclick(event: MouseEvent & { currentTarget: EventTarget & HTMLDivElement }) {
     event.stopPropagation()
     console.log(`${String(key)}:`, value)
   }
+
+  // $inspect(path, value)
 </script>
 
 <svelte:boundary>
-  <!-- svelte-ignore a11y_click_events_have_key_events -->
-  <!-- svelte-ignore a11y_no_static_element_interactions -->
-  <div style="display: contents">
-    <TypeComponent {value} {key} {type} />
-  </div>
+  <TypeComponent {value} {key} {type} {path} />
 
   {#snippet failed(error, reset)}
     {#if error instanceof Error}

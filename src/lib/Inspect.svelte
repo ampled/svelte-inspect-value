@@ -1,13 +1,10 @@
 <script lang="ts">
+  import './inspect.css'
   import { setContext } from 'svelte'
-  import { createOptions } from './options.svelte.js'
-
-  import './table-view.css'
-
-  // import { draggable as dragAction } from '@neodrag/svelte'
-  import JsonViewer from './table-components/JsonViewer.svelte'
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Action } from 'svelte/action'
+  import { createOptions } from './options.svelte.js'
+  import JsonViewer from './table-components/JsonViewer.svelte'
   import type { DragOptions } from '@neodrag/svelte'
 
   type Props = {
@@ -41,26 +38,30 @@
 
   setContext('json-inspect', options)
 
-  let dragAction: Action<HTMLElement, DragOptions | undefined> | undefined = $state(undefined)
+  let dragAction: typeof import('@neodrag/svelte').draggable | undefined = $state(undefined)
+  let actReturn: ReturnType<typeof import('@neodrag/svelte').draggable>
 
   let getAction: Action<HTMLElement, () => DragOptions | undefined> = (el, params) => {
     $effect(() => {
       if (dragAction) {
-        let actReturn = dragAction(el, params())
-        console.log(actReturn)
+        if (!actReturn) {
+          actReturn = dragAction(el, params())
+        } else {
+          actReturn.update?.(params())
+        }
+        // console.log(actReturn)
 
         return () => {
           actReturn?.destroy?.()
+          actReturn = undefined
         }
       }
     })
   }
 
   async function loadDraggable() {
-    if (!dragAction) {
-      const module = await import('@neodrag/svelte')
-      dragAction = module.draggable
-    }
+    const module = await import('@neodrag/svelte')
+    dragAction = module.draggable
   }
 
   $effect(() => {
@@ -72,7 +73,6 @@
 
 <div
   class="ampled-json-inspect {classValue}"
-  class:draggable
   use:getAction={() => ({ handle: '.handle', disabled: !draggable })}
   {...rest}
 >

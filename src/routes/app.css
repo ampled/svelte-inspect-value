@@ -5,7 +5,7 @@ html {
     box-sizing: border-box;
     /* margin: 1em; */
     /* padding: 0; */
-    background-color: black;
+    background-color: cadetblue;
     font-family: monospace;
 }
 
@@ -82,4 +82,22 @@ h6 {
 #root,
 #__next {
     isolation: isolate;
+}
+
+.flex {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    /* background-color: antiquewhite; */
+    width: 100%;
+}
+
+.row {
+    flex-direction: row;
+}
+
+.col {
+    flex-direction: column;
+    width: 100%;
+    margin-inline: 2em;
 }

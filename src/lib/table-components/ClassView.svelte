@@ -12,11 +12,15 @@
 
   let entries = $derived(Object.entries(value))
 
-  let collapsed = $state(false)
+  let collapsed = $state(true)
 </script>
 
 {#if entries.length}
-  <TitleBar {key} {type} length={entries.length} value={value.name} bind:collapsed />
+  <TitleBar {key} {type} length={entries.length} bind:collapsed>
+    {#snippet val()}
+      <span class="value {type}">{value.name}</span>
+    {/snippet}
+  </TitleBar>
   <div class="indent" class:collapsed>
     {#each entries as [key, value], i (key)}
       <div class="entry">

@@ -1,11 +1,12 @@
 <script lang="ts">
   import type { TypeViewProps } from '$lib/types.js'
+  import { stringify } from '$lib/util.js'
   import JsonViewer from './JsonViewer.svelte'
   import TitleBar from './TitleBar.svelte'
 
   type Props = TypeViewProps<URLSearchParams>
 
-  let { value = new URLSearchParams(), key = undefined, type }: Props = $props()
+  let { value = new URLSearchParams(), key = undefined, type, path }: Props = $props()
 
   let entries = $derived.by(() => {
     let entries: Record<string, any> = {}
@@ -27,11 +28,15 @@
   let collapsed = $state(true)
 </script>
 
-<TitleBar {key} {type} length={entries.length} value={value.toString()} bind:collapsed />
+<TitleBar {key} {type} length={entries.length} bind:collapsed>
+  {#snippet val()}
+    <span class="value string">{stringify(value.toString())}</span>
+  {/snippet}
+</TitleBar>
 <div class="indent" class:collapsed>
-  {#each entries as [key, value], i (i)}
+  {#each entries as [key, value] (key)}
     <div class="entry">
-      <JsonViewer {value} {key} />
+      <JsonViewer {value} {key} {path} />
     </div>
   {/each}
 </div>

@@ -10,8 +10,8 @@
 
   type Props = TypeViewProps<any[]>
 
-  let { value: arrayVal = [], key = undefined, type }: Props = $props()
-  let collapsed = $state(false)
+  let { value: arrayVal = [], key = undefined, type, path }: Props = $props()
+  let collapsed = $state(true)
 </script>
 
 <!-- {#if key != } -->
@@ -20,7 +20,7 @@
 <div class="indent" class:collapsed>
   {#each arrayVal as value, i (i)}
     <div class="entry">
-      <JsonViewer key={i} {value} />
+      <JsonViewer key={i} {value} {path} />
     </div>
   {/each}
 </div>

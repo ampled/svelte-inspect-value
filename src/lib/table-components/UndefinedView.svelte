@@ -1,13 +1,10 @@
 <script lang="ts">
   import type { TypeViewProps } from '$lib/types.js'
-  // import { stringify } from '$lib/util.js'
-  import Key from './Key.svelte'
-  import Type from './Type.svelte'
+  import OneLineView from './OneLineView.svelte'
 
   type Props = TypeViewProps<undefined>
 
   let { key, type }: Props = $props()
 </script>
 
-<Key {key} />
-<Type {type} />
+<OneLineView {key} {type} />

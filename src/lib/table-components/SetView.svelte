@@ -5,17 +5,17 @@
 
   type Props = TypeViewProps<Set<any>>
 
-  let { value = new Set(), key = undefined, type }: Props = $props()
+  let { value = new Set(), key = undefined, type, path }: Props = $props()
 
   let entries = $derived(Array.from(value.entries()))
-  let collapsed = $state(false)
+  let collapsed = $state(true)
 </script>
 
 <TitleBar {key} {type} length={entries.length} bind:collapsed />
 <div class="indent" class:collapsed>
   {#each entries as [key, value], i (i)}
     <div class="entry">
-      <JsonViewer {value} {key} />
+      <JsonViewer {value} {key} {path} />
     </div>
   {/each}
 </div>

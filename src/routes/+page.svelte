@@ -1,9 +1,8 @@
 <script lang="ts">
-  import './app.css'
-  import TableJsonView from '$lib/TableJsonView.svelte'
-  import { stringify } from '$lib/util.js'
-  import { SvelteMap } from 'svelte/reactivity'
+  // import './app.css'
+  import Inspect from '$lib/Inspect.svelte'
   import { browser } from '$app/environment'
+  import { onMount } from 'svelte'
 
   let showLength = $state(true)
   let showTypes = $state(true)
@@ -18,7 +17,7 @@
     stringCollapse,
     stringRender,
     class: theme,
-    draggable
+    draggable,
   })
 
   let div = $state()
@@ -29,35 +28,211 @@
 
   let symbolKey = Symbol('key')
 
-  let image = new Image()
-  image.src = 'hello.jpg'
+  let image: HTMLImageElement | undefined = $state()
+
+  let error: Error | undefined = $state()
+
+  onMount(() => {
+    if (browser) {
+      image = new Image()
+      image.src = 'favicon.png'
+    }
+
+    try {
+      let lol: any
+      lol.doesNotHaveProperty
+    } catch (e) {
+      error = e as Error
+    }
+  })
 
   class IAmAClass {
     iHaveAProperty = 'hello'
     static staticProperty = 'HI'
   }
 
-  let allTypesValue = $derived(
-    browser
-      ? {
-          emptyArr: [],
-          emptyObj: {},
-          div,
-          image,
-          longString: 'lorem ipsum dolor sit amet. boy is this string long!!',
-          multiLineString: '-line one\n-line two\n-line three',
-          numberValue: 1484789234,
-          bigInteger: 1n,
-          nanValue: NaN,
-          infinity: Infinity,
-          undefinedValue: undefined,
-          nullValue: null,
+  let allTypesValue = $derived({
+    emptyArr: [],
+    emptyObj: {},
+    div,
+    image,
+    longString: 'lorem ipsum dolor sit amet. boy is this string long!!',
+    multiLineString: 'line one\n  line two\n    line three',
+    numberValue: 1484789234,
+    bigInteger: 1n,
+    nanValue: NaN,
+    infinity: Infinity,
+    undefinedValue: undefined,
+    nullValue: null,
+    map: new Map<any, any>([
+      ['yeah', 1],
+      [3, 2],
+      [{ name: 'object key' }, 3],
+      [symbolKey, 4],
+    ]),
+    set: new Set([1, 2, 3]),
+    emptyUrl: new URL('https://localhost'),
+    url: new URL('https://subdomain.example.org/about'),
+    fullyFeaturedUrl: new URL(
+      'https://anon:hunter2@example.org:8080/pathname/index.html?q=query&p=123#result'
+    ),
+
+    search: new URLSearchParams([
+      ['a', '1'],
+      ['a', '2'],
+      ['b', '3'],
+      ['b', '4'],
+      ['c', '5'],
+    ]),
+    // anotherSearch: new URLSearchParams('?q&b=foo'),
+    date: date,
+    booleanVal: true,
+    arrayValue: [1, 2, 3, 14, 'u2'],
+    symbolProp: Symbol('hi i am symbol'),
+    [symbolKey]: 'my key is a symbol',
+    reg: /^[re(g)ex]$/,
+    arrowFunction: returnValue,
+    normalFunction() {
+      return 'normal'
+    },
+    classWithStaticProperties: IAmAClass,
+    instanceOfClass: new IAmAClass(),
+    simpleClass: class SimpleClass {},
+    error: new TypeError('can not access property of undefined'),
+  })
+
+  let jsonString = $state(JSON.stringify({ anObject: { name: 'Carl' } }))
+
+  // $inspect(allTypesValue)
+</script>
+
+<main>
+  <!-- <div class="flex col">
+    <h2>JSON</h2>
+    <p>works pretty well for basic object and array-values aka "json"</p>
+
+    <div class="flex">
+      <TableJsonView
+        value={{
+          id: undefined,
+          firstName: 'Bob',
+          lastName: 'Alice',
+          email: 'bob@alice.lol',
+          birthDate: new Date(),
+          age: -42,
+          emailVerified: true,
+          interests: ['radio', 'tv', 'internet', 'kayaks'],
+        }}
+        name="simple"
+        {showLength}
+        {showTypes}
+        {stringCollapse}
+        {draggable}
+        class={theme}
+      />
+    </div>
+  </div>
+
+  <div class="flex col">
+    <h2>map & set</h2>
+    <p>handles map and set instances.</p>
+    <p>
+      for maps, if keys are not of type number|string|symbol, the entry is shown as a key/value
+      tuple:
+    </p>
+
+    <div class="flex">
+      <TableJsonView
+        value={{
           map: new Map<any, any>([
             ['yeah', 1],
             [3, 2],
-            [{ name: 'object key' }, 3]
+            [{ name: 'object key' }, 3],
+            [symbolKey, 4],
           ]),
-          url: new URL(
+          set: new Set([1, 2, 3, 'four']),
+        }}
+        name="mapAndSet"
+        {showLength}
+        {showTypes}
+        {stringCollapse}
+        {draggable}
+        class={theme}
+      />
+    </div>
+  </div>
+
+  <div class="flex col">
+    <h2>class</h2>
+    <p>display static properties of classes (but not on instances.)</p>
+
+    <div class="flex">
+      <TableJsonView
+        value={{
+          class: IAmAClass,
+          classInstance: new IAmAClass(),
+        }}
+        {showLength}
+        {showTypes}
+        {stringCollapse}
+        {draggable}
+        class={theme}
+      />
+    </div>
+  </div>
+
+  <div class="flex col">
+    <h2>functions</h2>
+    <p>display bodies of arrow functions (experimental)</p>
+
+    <div class="flex">
+      <TableJsonView
+        name="functions"
+        value={{
+          arrowFunction: (num: number) => num * 2,
+          someFunction: function () {
+            return 'something'
+          },
+        }}
+        {showLength}
+        {showTypes}
+        {stringCollapse}
+        {draggable}
+        class={theme}
+      />
+    </div>
+  </div>
+
+  <div class="flex col">
+    <h2>symbol keys</h2>
+    <p>object properties where keys are symbols are displayed</p>
+
+    <div class="flex">
+      <TableJsonView
+        value={{
+          stringKey: 'string value',
+          anotherKey: 2,
+          [symbolKey]: 'my key is a symbol',
+        }}
+        name="objectWithSymbolKey"
+        {showLength}
+        {showTypes}
+        {stringCollapse}
+        {draggable}
+        class={theme}
+      />
+    </div>
+  </div>
+
+  <div class="flex col">
+    <h2>urls</h2>
+    <p>special handling of URLs and URLSearchParams</p>
+
+    <div class="flex">
+      <TableJsonView
+        value={{
+          url: new URL('https://subdomain.example.org/about'),
+          fullyFeaturedUrl: new URL(
             'https://anon:hunter2@example.org:8080/pathname/index.html?q=query&p=123#result'
           ),
           search: new URLSearchParams([
@@ -65,30 +240,58 @@
             ['a', '2'],
             ['b', '3'],
             ['b', '4'],
-            ['c', '5']
+            ['c', '5'],
           ]),
-          // anotherSearch: new URLSearchParams('?q&b=foo'),
-          set: new Set([1, 2, 3]),
-          date: date,
-          booleanVal: true,
-          arrayValue: [1, 2, 3, 14, 'u2'],
-          symbolProp: Symbol('hi i am symbol'),
-          [symbolKey]: 'my key is a symbol',
-          reg: /^[re(g)ex]$/,
-          arrowFunction: returnValue,
-          normalFunction() {
-            return 'normal'
-          },
-          classWithStaticProperties: IAmAClass,
-          instanceOfClass: new IAmAClass(),
-          simpleClass: class SimpleClass {},
-          error: new TypeError('can not access property of undefined')
-        }
-      : {}
-  )
-</script>
+        }}
+        name="urlFeatures"
+        {showLength}
+        {showTypes}
+        {stringCollapse}
+        {draggable}
+        class={theme}
+      />
+    </div>
+  </div>
 
-<main>
+  <div class="flex col">
+    <h2>multi-line strings</h2>
+    <p>configurable display of multi-line strings</p>
+
+    <div class="flex" style="gap: 2em">
+      <TableJsonView
+        value={'normal \n boring \n string'}
+        {...options}
+        stringRender="stringify"
+        class={theme}
+      />
+
+      <TableJsonView
+        value={'cool \n multi-line \n  render 😎'}
+        {...options}
+        stringRender="pre"
+        class={theme}
+      />
+    </div>
+  </div>
+
+  <div class="flex col">
+    <h2>other</h2>
+    <p>other types handled includes Error, Date, regexp</p>
+    <p>you can also go wild with nesting</p>
+
+    <div class="flex">
+      <TableJsonView
+        value={{
+          dateValue: new Date(),
+          reg: /^[re(g)ex]$/,
+          error,
+        }}
+        {...options}
+        class={theme}
+      />
+    </div>
+  </div>-->
+
   <div class="options" bind:this={div}>
     <label>
       <input type="checkbox" bind:checked={draggable} />
@@ -127,68 +330,52 @@
         <option>none (uggo)</option>
       </select>
     </label>
+
+    <Inspect value={options} name={'options'} {...options} style="margin: auto" />
   </div>
-  <TableJsonView value={allTypesValue} name={'demo'} {...options} />
-
-  <TableJsonView value={options} name={'options'} {...options} />
-
-  <TableJsonView
-    value={returnValue}
-    {showLength}
-    {showTypes}
-    {stringCollapse}
-    {draggable}
-    class={theme}
-  />
-
-  <TableJsonView
-    value={[{ name: 'one' }, { name: 'two' }, { name: 'three' }]}
-    {showLength}
-    {showTypes}
-    {stringCollapse}
-    {draggable}
-    class={theme}
-  />
-  <TableJsonView
+  <Inspect
     value={{
-      firstName: 'Bob',
-      lastName: 'Alice',
-      email: 'bob@alice.lol',
-      birthDate: new Date(),
-      age: -42,
-      interests: ['radio', 'tv', 'internet', 'kayaks']
+      normal: 'normal',
+      number: 2,
+      object: {
+        name: 'obj',
+      },
+      aString: 'hey',
+      array: [1, 2, 3],
+      aList: [1, 2, 3],
     }}
-    name={'simple'}
-    {showLength}
-    {showTypes}
-    {stringCollapse}
-    {draggable}
-    class={theme}
+    name={'demo'}
+    {...options}
   />
+  <Inspect value={allTypesValue} name={'demo'} {...options} />
 </main>
-
-<!-- <TableJsonView value={weirdos.arr} />
-<TableJsonView value={'i am string'} />
-<TableJsonView value={1234} /> -->
 
 <style>
   .options {
     margin: 4px;
-    display: flex;
+    /* position: fixed; */
+    /* height: max-content; */
+    /* top: 0; */
+    /* right: 0; */
     gap: 1em;
-    flex-flow: row wrap;
-    align-items: center;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    flex-direction: row;
+    align-items: flex-start;
     justify-items: flex-start;
+    border: 1px solid black;
+    background-color: cadetblue;
   }
 
   label {
     height: 3.5rem;
     display: flex;
+    border: 1px solid;
     flex-direction: row;
     align-items: center;
     justify-items: flex-start;
     gap: 0.5rem;
-    border: 1px solid black;
     padding: 1em;
   }
 </style>
