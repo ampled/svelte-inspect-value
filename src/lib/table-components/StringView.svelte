@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { fade } from 'svelte/transition'
+
   import Line from './Line.svelte'
 
   import { stringify } from '$lib/util.js'
@@ -34,14 +36,16 @@
   <TitleBar {key} {path} {type} bind:collapsed length={value.length}>
     {#snippet val()}
       {#if collapsed}
-        <span class="value string" title={stringify(value)}>{stringify(display)}</span>
+        <span transition:fade class="value string" title={stringify(value)}
+          >{stringify(display)}</span
+        >
       {/if}
     {/snippet}
   </TitleBar>
 
-  {#if !collapsed}
-    <pre class="value string multi" title={stringify(value)}>{value}</pre>
-  {/if}
+  <!-- {#if !collapsed} -->
+  <pre class:collapsed class="value string multi" title={stringify(value)}>{value}</pre>
+  <!-- {/if} -->
 {:else}
-  <OneLineView {key} {type} value={stringify(display)} />
+  <OneLineView {key} {type} {path} value={stringify(display)} />
 {/if}

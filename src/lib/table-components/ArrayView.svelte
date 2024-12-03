@@ -15,7 +15,7 @@
 </script>
 
 <!-- {#if key != } -->
-<TitleBar {key} bind:collapsed length={arrayVal.length} {type} />
+<TitleBar {path} {key} bind:collapsed length={arrayVal.length} {type} />
 <!-- {/if} -->
 <div class="indent" class:collapsed>
   {#each arrayVal as value, i (i)}

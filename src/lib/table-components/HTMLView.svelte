@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { TypeViewProps } from '$lib/types.js'
+  import HtmlValue from './HTMLValue.svelte'
   import JsonViewer from './JsonViewer.svelte'
   import OneLineView from './OneLineView.svelte'
   import TitleBar from './TitleBar.svelte'
@@ -30,4 +31,8 @@
     {/each}
   </div> -->
 
-<OneLineView {key} {type} value={outer} />
+<OneLineView {key} {type}>
+  {#snippet val()}
+    <HtmlValue {value} />
+  {/snippet}
+</OneLineView>

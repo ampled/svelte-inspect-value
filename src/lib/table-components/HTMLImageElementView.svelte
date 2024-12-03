@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { TypeViewProps } from '$lib/types.js'
-  import OneLineView from './OneLineView.svelte'
+  import HtmlValue from './HTMLValue.svelte'
   import TitleBar from './TitleBar.svelte'
 
   type Props = TypeViewProps<HTMLImageElement>
@@ -24,7 +24,8 @@
   <TitleBar {key} {path} {type} bind:collapsed length={1}>
     {#snippet val()}
       {#if collapsed}
-        <span class="value {type}" title={outer}>{outer}</span>
+        <!-- <span class="value {type}" title={outer}>{outer}</span> -->
+        <HtmlValue {value} />
       {/if}
     {/snippet}
   </TitleBar>
@@ -35,14 +36,3 @@
     </div>
   {/if}
 {/if}
-
-<!-- <TitleBar {key} {type} {path} length={properties.length} bind:collapsed />
-    <div class="indent" class:collapsed>
-      {#each entries as [key, value] (key)}
-        <div class="entry">
-          <JsonViewer {value} {key} {path} />
-        </div>
-      {/each}
-    </div> -->
-
-<!-- <OneLineView {key} {type} value={outer} /> -->

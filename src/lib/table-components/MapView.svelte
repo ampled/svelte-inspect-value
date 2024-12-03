@@ -12,7 +12,7 @@
   let collapsed = $state(true)
 </script>
 
-<TitleBar {key} {type} length={entries.length} bind:collapsed />
+<TitleBar {key} {type} {path} length={entries.length} bind:collapsed />
 <div class="indent" class:collapsed>
   {#each entries as [mapKey, mapValue] (mapKey)}
     <div class="entry">

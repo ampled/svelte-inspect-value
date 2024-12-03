@@ -1,6 +1,5 @@
 <script lang="ts">
   import type { TypeViewProps } from '$lib/types.js'
-  import { stringify } from '$lib/util.js'
   import JsonViewer from './JsonViewer.svelte'
   import StringValue from './StringValue.svelte'
   import TitleBar from './TitleBar.svelte'
@@ -29,7 +28,7 @@
   let collapsed = $state(true)
 </script>
 
-<TitleBar {key} {type} length={entries.length} bind:collapsed>
+<TitleBar {key} {type} {path} length={entries.length} bind:collapsed>
   {#snippet val()}
     <StringValue value={value.toString()} />
   {/snippet}

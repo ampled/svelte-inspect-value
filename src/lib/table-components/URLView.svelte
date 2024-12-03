@@ -47,7 +47,7 @@
 </script>
 
 {#if entries.length}
-  <TitleBar {key} {type} length={entries.length} bind:collapsed>
+  <TitleBar {key} {type} {path} length={entries.length} bind:collapsed>
     {#snippet val()}
       <StringValue value={value.toString()} />
     {/snippet}
@@ -60,7 +60,7 @@
     {/each}
   </div>
 {:else}
-  <Key {key} />
+  <Key {key} {path} />
   <Type {type} />
   <span class="value {type}">
     {value.toString()}
