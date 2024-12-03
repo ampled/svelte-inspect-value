@@ -25,9 +25,10 @@
     <CollapseButton
       bind:collapsed
       disabled={length === 0}
+      aria-label="expand {key?.toString()}"
       style="opacity: {length > 0 ? 1 : 0.4}"
     />
-    <Key {key} />
+    <Key {key} {path} />
   </div>
 
   <Type {type} />
@@ -35,7 +36,9 @@
   {#if value}
     {@render value()}
   {/if}
-  <Entries {length} />
+  {#if ['map', 'set', 'url', 'urlsearchparams', 'object', 'array', 'class'].includes(type as any)}
+    <Entries {length} />
+  {/if}
 </div>
 
 <style>
@@ -62,7 +65,7 @@
     width: calc(100% + 1em);
 
     &:hover {
-      background-color: var(--base01);
+      background-color: var(--bg-lighter);
     }
   }
 </style>

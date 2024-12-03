@@ -9,6 +9,7 @@
   import Key from './Key.svelte'
   import Type from './Type.svelte'
   import OneLineView from './OneLineView.svelte'
+  import TitleBar from './TitleBar.svelte'
 
   type Props = TypeViewProps<string>
 
@@ -25,22 +26,22 @@
       ? value.slice(0, stringCollapse).trimEnd() + '…'
       : value
   )
+
+  let collapsed = $state(true)
 </script>
 
-{#if isMultiLine && stringRender === 'pre'}
-  <Line>
-    <Key {key} {path} />
-    <Type {type} />
-  </Line>
-  <pre class="value {type} multi" title={stringify(value)}>{value}</pre>
-{:else}
-  <!-- <Line>
-    <Key {key} />
-    <Type {type} />
-    <span class={`value ${type}`} title={stringify(value)}>
-      {stringify(display)}
-    </span>
-  </Line> -->
+{#if isMultiLine}
+  <TitleBar {key} {path} {type} bind:collapsed length={value.length}>
+    {#snippet val()}
+      {#if collapsed}
+        <span class="value string" title={stringify(value)}>{stringify(display)}</span>
+      {/if}
+    {/snippet}
+  </TitleBar>
 
-  <OneLineView {key} {type} {path} value={stringify(display)} />
+  {#if !collapsed}
+    <pre class="value string multi" title={stringify(value)}>{value}</pre>
+  {/if}
+{:else}
+  <OneLineView {key} {type} value={stringify(display)} />
 {/if}

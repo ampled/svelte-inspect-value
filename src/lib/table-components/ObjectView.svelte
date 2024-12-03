@@ -25,7 +25,7 @@
   let collapsed = $state(true)
 </script>
 
-<TitleBar {key} {type} length={properties.length} bind:collapsed />
+<TitleBar {key} {type} {path} length={properties.length} bind:collapsed />
 <div class="indent" class:collapsed>
   {#each entries as [key, value] (key)}
     <div class="entry">

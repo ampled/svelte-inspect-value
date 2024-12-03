@@ -14,10 +14,29 @@
   const options: OptionsContext = getContext('json-inspect')
 
   let { showTypes } = $derived(options.value)
+
+  let display = $derived.by(() => {
+    switch (type) {
+      case 'boolean':
+        return 'bool'
+      case 'url':
+        return 'URL'
+      case 'urlsearchparams':
+        return 'URLsearch'
+      case 'map':
+        return 'Map'
+      case 'set':
+        return 'Set'
+      case 'date':
+        return 'Date'
+      default:
+        return type
+    }
+  })
 </script>
 
 {#if showTypes || type === 'undefined' || type === 'null' || type === 'class' || type === 'function'}
-  <small class={`type ${type}`} {...rest}>
-    {type}
+  <small class={`type ${type}`} {...rest} title={type}>
+    {display}
   </small>
 {/if}

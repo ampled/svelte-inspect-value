@@ -16,7 +16,7 @@
     /* border: 1px solid salmon; */
 
     &:hover {
-      background-color: var(--base01);
+      background-color: var(--bg-lighter);
     }
   }
 </style>

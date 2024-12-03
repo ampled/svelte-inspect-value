@@ -3,6 +3,7 @@
   import { stringify } from '$lib/util.js'
   import JsonViewer from './JsonViewer.svelte'
   import Key from './Key.svelte'
+  import StringValue from './StringValue.svelte'
   import TitleBar from './TitleBar.svelte'
   import Type from './Type.svelte'
 
@@ -39,7 +40,7 @@
       protocol,
       search,
       username,
-    }).filter((prop) => !!prop[1])
+    }).filter((prop) => !!prop[1].toString())
   )
 
   let collapsed = $state(true)
@@ -48,7 +49,7 @@
 {#if entries.length}
   <TitleBar {key} {type} length={entries.length} bind:collapsed>
     {#snippet val()}
-      <span class="value string">{stringify(value.toString())}</span>
+      <StringValue value={value.toString()} />
     {/snippet}
   </TitleBar>
   <div class="indent" class:collapsed>

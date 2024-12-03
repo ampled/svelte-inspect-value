@@ -5,6 +5,8 @@ import ClassView from "./ClassView.svelte";
 import DateView from "./DateView.svelte";
 import ErrorView from "./ErrorView.svelte";
 import FunctionView from "./FunctionView.svelte";
+import HtmlImageElementView from "./HTMLImageElementView.svelte";
+import HtmlView from "./HTMLView.svelte";
 import MapView from "./MapView.svelte";
 import NullView from "./NullView.svelte";
 import NumberView from "./NumberView.svelte";
@@ -36,5 +38,7 @@ export default {
     map: MapView,
     set: SetView,
     url: UrlView,
-    urlsearchparams: UrlSearchParamsView
-}
+    urlsearchparams: UrlSearchParamsView,
+    htmlimageelement: HtmlImageElementView,
+    html: HtmlView
+} as const;

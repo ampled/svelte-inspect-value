@@ -12,5 +12,5 @@
 <Line>
   <Key {key} {path} />
   <Type {type} />
-  <span class={`value ${type}`}>{value}</span>
+  <span title={value} class={`value ${type}`}>{value}</span>
 </Line>

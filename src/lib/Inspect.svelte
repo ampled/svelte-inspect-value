@@ -78,9 +78,8 @@
 >
   <div class="body">
     {#if draggable}
-      <div class="handle"></div>
+      <div class="handle">&vellip;</div>
     {/if}
-
     <JsonViewer {value} key={name} />
   </div>
 </div>

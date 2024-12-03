@@ -56,6 +56,7 @@
     emptyObj: {},
     div,
     image,
+    emptyString: '',
     longString: 'lorem ipsum dolor sit amet. boy is this string long!!',
     multiLineString: 'line one\n  line two\n    line three',
     numberValue: 1484789234,
@@ -327,6 +328,8 @@
         <option>dracula</option>
         <option>monokai</option>
         <option>solarized-dark</option>
+        <option>default-dark</option>
+        <option>default-light</option>
         <option>none (uggo)</option>
       </select>
     </label>

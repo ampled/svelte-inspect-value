@@ -11,7 +11,21 @@
 
   let type: VType = $derived(getType(value))
 
-  let TypeComponent = $derived(components[type] ?? Noop)
+  function getTypeComponent(type: VType) {
+    let component = components[type]
+
+    if (!component && type.startsWith('html')) {
+      component = components['html']
+    }
+
+    if (!component) {
+      return Noop
+    }
+
+    return component
+  }
+
+  let TypeComponent = $derived(getTypeComponent(type))
 
   let path = $derived(key && prevPath ? [...prevPath, key] : undefined)
 

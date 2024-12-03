@@ -2,6 +2,7 @@
   import type { TypeViewProps } from '$lib/types.js'
   import { stringify } from '$lib/util.js'
   import JsonViewer from './JsonViewer.svelte'
+  import StringValue from './StringValue.svelte'
   import TitleBar from './TitleBar.svelte'
 
   type Props = TypeViewProps<URLSearchParams>
@@ -30,7 +31,7 @@
 
 <TitleBar {key} {type} length={entries.length} bind:collapsed>
   {#snippet val()}
-    <span class="value string">{stringify(value.toString())}</span>
+    <StringValue value={value.toString()} />
   {/snippet}
 </TitleBar>
 <div class="indent" class:collapsed>
