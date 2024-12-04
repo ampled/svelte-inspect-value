@@ -1,9 +1,5 @@
 <script lang="ts">
-  import Key from './Key.svelte'
-
   import type { TypeViewProps } from '$lib/types.js'
-  import { stringify } from '$lib/util.js'
-  import Type from './Type.svelte'
   import OneLineView from './OneLineView.svelte'
 
   type Props = TypeViewProps<number>

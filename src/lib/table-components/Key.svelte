@@ -16,11 +16,18 @@
 </script>
 
 {#if key != null}
-  <span><span title={stringPath} class="key {keyType}">{display}</span>:</span>
+  <span class="border-left"
+    ><span title={stringPath} class="key {keyType}">{display}</span><span class="delim">:</span
+    ></span
+  >
 {/if}
 
 <style>
   .border-left {
-    border-left: 1px solid white;
+    border-left: 0px solid white;
+  }
+
+  .delim {
+    color: var(--delimiter);
   }
 </style>

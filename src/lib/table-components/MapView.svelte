@@ -2,18 +2,38 @@
   import type { TypeViewProps } from '$lib/types.js'
   import { getType } from '$lib/util.js'
   import JsonViewer from './JsonViewer.svelte'
+  import Line from './Line.svelte'
+  import OneLineView from './OneLineView.svelte'
   import TitleBar from './TitleBar.svelte'
 
   type Props = TypeViewProps<Map<any, any>>
 
-  let { value = new Map(), key = undefined, type, path }: Props = $props()
+  let { value = new Map(), key = undefined, type, path = [] }: Props = $props()
 
   let entries = $derived(Array.from(value.entries()))
-  let collapsed = $state(true)
 </script>
+
+{#snippet mapEntry(entry: [any, any], index: number)}
+  {@const [key, value] = entry}
+  {@const newPath = [...path, index]}
+
+  <TitleBar key={index} {path}>
+    {#snippet val()}
+      <span class="value">MapEntry</span>
+    {/snippet}
+    <div class="entry">
+      <JsonViewer key="key" value={key} path={newPath} />
+    </div>
+    <div class="entry">
+      <JsonViewer key="value" {value} path={newPath} />
+    </div>
+  </TitleBar>
+{/snippet}
 
 <TitleBar {key} {type} {path} length={entries.length}>
   {#each entries as [mapKey, mapValue], i (mapKey)}
+    <!-- {@render mapEntry([mapKey, mapValue], i)} -->
+
     <div class="entry">
       {#if ['string', 'number', 'symbol'].includes(typeof mapKey)}
         <JsonViewer key={mapKey} value={mapValue} {path} />

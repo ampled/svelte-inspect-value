@@ -4,12 +4,22 @@
 
   type Props = {
     collapsed?: boolean
-  } & HTMLButtonAttributes
+    onchange?: (collapsed: boolean) => void
+  } & Omit<HTMLButtonAttributes, 'onchange'>
 
-  let { collapsed = $bindable(), ...rest }: Props = $props()
+  let { collapsed = $bindable(), onchange, ...rest }: Props = $props()
+
+  function onclick() {
+    const newValue = !collapsed
+    if (onchange) {
+      onchange(newValue)
+    } else {
+      collapsed = newValue
+    }
+  }
 </script>
 
-<button class="collapse" onclick={() => (collapsed = !collapsed)} {...rest}>
+<button type="button" class="collapse" {onclick} {...rest}>
   <!-- {#if collapsed}
     +
   {:else}

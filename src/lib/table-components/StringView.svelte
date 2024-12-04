@@ -20,7 +20,7 @@
 
   let display = $derived(
     stringCollapse && stringCollapse < value.length
-      ? value.slice(0, stringCollapse).trimEnd() + '…'
+      ? value.slice(0, stringCollapse).trimEnd().trimStart() + '…'
       : value
   )
 </script>

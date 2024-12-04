@@ -46,18 +46,35 @@
     }
   })
 
-  class IAmAClass {
-    iHaveAProperty = 'hello'
+  class Greeter {
     static staticProperty = 'HI'
+    iHaveAProperty = 'hello'
+    private name: string
+
+    constructor(name: string) {
+      this.name = name
+    }
+
+    public greet = () => console.log(`${Greeter.staticProperty} ${this.name}`)
+
+    #nope = () => 'no'
+
+    public method() {
+      return 'hei'
+    }
+
+    toString() {
+      return 'nonononono'
+    }
   }
 
   let allTypesValue = $derived({
     options,
-    emptyArr: [],
-    emptyObj: {},
+    // emptyArr: [],
+    // emptyObj: {},
     div,
     image,
-    emptyString: '',
+    // emptyString: '',
     longString: 'lorem ipsum dolor sit amet. boy is this string long!!',
     multiLineString: 'line one\n  line two\n    line three',
     numberValue: 1484789234,
@@ -71,14 +88,14 @@
       [3, 2],
       [{ name: 'object key' }, 3],
       [symbolKey, 4],
+      ['longArray', Array(100).fill('yo')],
     ]),
     set: new Set([1, 2, 3]),
-    emptyUrl: new URL('https://localhost'),
+    // emptyUrl: new URL('https://localhost'),
     url: new URL('https://subdomain.example.org/about'),
     fullyFeaturedUrl: new URL(
       'https://anon:hunter2@example.org:8080/pathname/index.html?q=query&p=123#result'
     ),
-
     search: new URLSearchParams([
       ['a', '1'],
       ['a', '2'],
@@ -97,8 +114,8 @@
     normalFunction() {
       return 'normal'
     },
-    classWithStaticProperties: IAmAClass,
-    instanceOfClass: new IAmAClass(),
+    classWithStaticProperties: Greeter,
+    instanceOfClass: new Greeter('World'),
     simpleClass: class SimpleClass {},
     error: new TypeError('can not access property of undefined'),
   })
@@ -109,18 +126,22 @@
 </script>
 
 <main>
-  <!-- <div class="flex col">
+  <div class="flex col">
     <h2>JSON</h2>
     <p>works pretty well for basic object and array-values aka "json"</p>
 
     <div class="flex">
-      <TableJsonView
+      <Inspect
         value={{
           id: undefined,
           firstName: 'Bob',
           lastName: 'Alice',
           email: 'bob@alice.lol',
+          introduction: `The name is Alice.
+          
+              Bob Alice.`,
           birthDate: new Date(),
+          website: new URL('https://alicebob.website/?ref=abcdefg#about'),
           age: -42,
           emailVerified: true,
           interests: ['radio', 'tv', 'internet', 'kayaks'],
@@ -134,6 +155,7 @@
       />
     </div>
   </div>
+  <!--
 
   <div class="flex col">
     <h2>map & set</h2>
@@ -294,7 +316,13 @@
     </div>
   </div>-->
 
-  <div class="options" bind:this={div} class:showLength>
+  <div
+    class="options"
+    bind:this={div}
+    class:showLength
+    style:opacity={showLength ? 1 : 0.95}
+    data-lol="hei"
+  >
     <label>
       <input type="checkbox" bind:checked={draggable} />
       draggable

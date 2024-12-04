@@ -21,7 +21,6 @@
     pathname,
     port,
     protocol,
-    search,
     username,
   } = $derived(value)
 
@@ -37,7 +36,6 @@
       pathname,
       port,
       protocol,
-      search,
       username,
     }).filter((prop) => !!prop[1].toString())
   )
@@ -48,8 +46,8 @@
     {#snippet val()}
       <StringValue value={value.toString()} />
     {/snippet}
-    {#each entries as [key, value] (key)}
-      <div class="entry">
+    {#each entries as [key, value], i (key)}
+      <div class="entry" style="--index: {i}">
         <JsonViewer {value} {key} {path} />
       </div>
     {/each}

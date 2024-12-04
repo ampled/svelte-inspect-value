@@ -10,7 +10,7 @@
 
 <TitleBar {path} {key} length={arrayVal.length} {type}>
   {#each arrayVal as value, i (i)}
-    <div class="entry">
+    <div class="entry" style="--index: {i}">
       <JsonViewer key={i} {value} {path} />
     </div>
   {/each}

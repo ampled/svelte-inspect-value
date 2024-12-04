@@ -5,6 +5,8 @@
   type Props = TypeViewProps<bigint>
 
   let { value = 1n, key, type }: Props = $props()
+
+  let display = $derived(value.toString() + 'n')
 </script>
 
-<OneLineView {value} {key} {type} />
+<OneLineView value={display} {key} {type} />

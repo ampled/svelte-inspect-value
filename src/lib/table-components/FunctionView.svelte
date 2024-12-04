@@ -1,11 +1,12 @@
 <script lang="ts">
   import type { TypeViewProps } from '$lib/types.js'
   import Key from './Key.svelte'
+  import OneLineView from './OneLineView.svelte'
   import Type from './Type.svelte'
 
   type Props = TypeViewProps<Function>
 
-  let { value = () => {}, key, type }: Props = $props()
+  let { value = () => {}, key, type, path }: Props = $props()
 
   let funcBody = $derived.by(() => {
     const str = value.toString()
@@ -16,7 +17,13 @@
   })
 </script>
 
-<Key {key} />
-<Type {type} />
-<span class="value {type}">{value.name}</span>
-{#if funcBody}{funcBody}{:else}{'{ ... }'}{/if}
+<OneLineView {key} {type} {path}>
+  {#snippet val()}
+    <span class="value {type}">
+      {value.name}
+      <span class="funcbody">
+        {#if funcBody}{funcBody}{:else}{'{ ... }'}{/if}
+      </span>
+    </span>
+  {/snippet}
+</OneLineView>

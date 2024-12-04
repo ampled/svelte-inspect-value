@@ -8,7 +8,6 @@
   let { value = new Set(), key = undefined, type, path }: Props = $props()
 
   let entries = $derived(Array.from(value.entries()))
-  let collapsed = $state(true)
 </script>
 
 <TitleBar {key} {type} {path} length={entries.length}>

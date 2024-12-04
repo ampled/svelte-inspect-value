@@ -13,8 +13,8 @@
   type Props = {
     key?: KeyName
     path?: KeyName[]
-    length: number
-    type?: ValueType
+    length?: number
+    type?: ValueType | string
     val?: Snippet
     children?: Snippet
   }
@@ -25,9 +25,10 @@
 
   let collapsed = $state(inspectState.getCollapse(path))
 
-  $effect(() => {
-    inspectState.setCollapse(path, collapsed)
-  })
+  function onCollapseChanged(newValue: boolean) {
+    collapsed = newValue
+    inspectState.setCollapse(path, newValue)
+  }
 
   // let state: StateContext = getContext('inspect-state')
 
@@ -67,10 +68,11 @@
 <div class="title-bar">
   <div class="button-key">
     <CollapseButton
-      bind:collapsed
+      {collapsed}
+      onchange={onCollapseChanged}
       disabled={length === 0}
       aria-label="expand {key?.toString()}"
-      style="opacity: {length > 0 ? 1 : 0.4}"
+      style="opacity: {length && length > 0 ? 1 : 0.4}"
     />
     <Key {key} {path} />
   </div>
@@ -80,8 +82,9 @@
   {#if value}
     {@render value()}
   {/if}
-  {#if ['map', 'set', 'url', 'urlsearchparams', 'object', 'array', 'class'].includes(type as any)}
-    <Entries {length} />
+  {#if length}
+    <!-- {#if ['map', 'set', 'url', 'urlsearchparams', 'object', 'array', 'class'].includes(type as any)} -->
+    <Entries {length} {type} />
   {/if}
 </div>
 
@@ -92,13 +95,11 @@
 {/if}
 
 <style>
-  .button-key {
-    display: inline-flex;
-    align-items: center;
-  }
-
   .title-bar {
+    background-color: var(--bg);
     width: 100%;
+    position: sticky;
+    top: 0;
     border-color: var(--base03, gray);
     border-bottom-width: 0px;
     border-right-width: 0;
@@ -111,11 +112,22 @@
     align-items: center;
     justify-content: flex-start;
     gap: 0.5em;
-    margin-left: -1em;
-    width: calc(100% + 1em);
+    padding-left: calc(var(--indent) * 0.5);
+    /* margin-left: -0.5em; */
+    /* padding-left: calc(0.25em); */
+    /* width: calc(100% + 0.5em); */
+    transition: all 0.2s ease-in-out;
 
     &:hover {
       background-color: var(--bg-lighter);
+    }
+
+    .button-key {
+      display: inline-flex;
+      align-items: center;
+      gap: calc(var(--indent) * 0.5);
+      padding-left: 1px;
+      /* gap: 0.25em; */
     }
   }
 </style>

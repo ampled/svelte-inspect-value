@@ -6,7 +6,7 @@
   import type { HTMLAttributes } from 'svelte/elements'
 
   type Props = {
-    type?: ValueType | 'noop'
+    type?: ValueType | 'noop' | string
   } & HTMLAttributes<HTMLSpanElement>
 
   let { type, ...rest }: Props = $props()
@@ -22,7 +22,7 @@
       case 'url':
         return 'URL'
       case 'urlsearchparams':
-        return 'URLsearch'
+        return 'URLSearch'
       case 'map':
         return 'Map'
       case 'set':
@@ -35,7 +35,7 @@
   })
 </script>
 
-{#if showTypes || type === 'undefined' || type === 'null' || type === 'class' || type === 'function'}
+{#if (type && showTypes) || type === 'undefined' || type === 'null' || type === 'class' || type === 'function'}
   <small class={`type ${type}`} {...rest} title={type}>
     {display}
   </small>

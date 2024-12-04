@@ -48,6 +48,8 @@ export function createState(init: InspectState, title = 'svelte-value-inspect') 
       if (state) state[key] = { collapsed }
     },
     getCollapse: (keyOrPath: string | KeyName[]) => {
+      console.log('tracking:', $effect.tracking())
+
       const key = ensureStringPath(keyOrPath)
       const wasCollapsed = state?.[key]?.collapsed
       if (typeof wasCollapsed === 'boolean') {
