@@ -4,7 +4,6 @@
   import type { OptionsContext } from '$lib/options.svelte.js'
   import type { TypeViewProps } from '$lib/types.js'
   import { getContext } from 'svelte'
-  import TitleBar from './TitleBar.svelte'
 
   type Props = TypeViewProps<string>
 

@@ -1,6 +1,5 @@
 <script lang="ts">
   import type { TypeViewProps } from '$lib/types.js'
-  import { stringify } from '$lib/util.js'
   import JsonViewer from './JsonViewer.svelte'
   import Key from './Key.svelte'
   import StringValue from './StringValue.svelte'
@@ -42,23 +41,19 @@
       username,
     }).filter((prop) => !!prop[1].toString())
   )
-
-  let collapsed = $state(true)
 </script>
 
 {#if entries.length}
-  <TitleBar {key} {type} {path} length={entries.length} bind:collapsed>
+  <TitleBar {key} {type} {path} length={entries.length}>
     {#snippet val()}
       <StringValue value={value.toString()} />
     {/snippet}
-  </TitleBar>
-  <div class="indent" class:collapsed>
     {#each entries as [key, value] (key)}
       <div class="entry">
         <JsonViewer {value} {key} {path} />
       </div>
     {/each}
-  </div>
+  </TitleBar>
 {:else}
   <Key {key} {path} />
   <Type {type} />

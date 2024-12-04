@@ -1,17 +1,12 @@
 <script lang="ts">
-  import { fade } from 'svelte/transition'
-
-  import Line from './Line.svelte'
-
   import { stringify } from '$lib/util.js'
 
   import type { OptionsContext } from '$lib/options.svelte.js'
   import type { TypeViewProps } from '$lib/types.js'
   import { getContext } from 'svelte'
-  import Key from './Key.svelte'
-  import Type from './Type.svelte'
   import OneLineView from './OneLineView.svelte'
   import TitleBar from './TitleBar.svelte'
+  import StringValue from './StringValue.svelte'
 
   type Props = TypeViewProps<string>
 
@@ -19,7 +14,7 @@
 
   const options: OptionsContext = getContext('json-inspect')
 
-  let { stringCollapse, stringRender } = $derived(options.value)
+  let { stringCollapse } = $derived(options.value)
 
   let isMultiLine = $derived(value.includes('\n'))
 
@@ -28,24 +23,15 @@
       ? value.slice(0, stringCollapse).trimEnd() + '…'
       : value
   )
-
-  let collapsed = $state(true)
 </script>
 
 {#if isMultiLine}
-  <TitleBar {key} {path} {type} bind:collapsed length={value.length}>
+  <TitleBar {key} {path} {type} length={value.length}>
     {#snippet val()}
-      {#if collapsed}
-        <span transition:fade class="value string" title={stringify(value)}
-          >{stringify(display)}</span
-        >
-      {/if}
+      <StringValue {value} />
     {/snippet}
+    <pre class="value string multi" title={stringify(value)}>{value}</pre>
   </TitleBar>
-
-  <!-- {#if !collapsed} -->
-  <pre class:collapsed class="value string multi" title={stringify(value)}>{value}</pre>
-  <!-- {/if} -->
 {:else}
-  <OneLineView {key} {type} {path} value={stringify(display)} />
+  <OneLineView {key} {type} {path} value={stringify(display)} title={stringify(value)} />
 {/if}

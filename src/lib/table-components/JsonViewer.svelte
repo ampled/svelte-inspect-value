@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { KeyName, TypeViewProps } from '$lib/types.js'
-  import { getType, type VType } from '../util.js'
+  import { getType, type ValueType } from '../util.js'
   import ErrorView from './ErrorView.svelte'
   import Noop from './Noop.svelte'
   import components from './types.js'
@@ -9,9 +9,9 @@
 
   let { value = undefined, key = undefined, path: prevPath = [] }: Props = $props()
 
-  let type: VType = $derived(getType(value))
+  let type: ValueType = $derived(getType(value))
 
-  function getTypeComponent(type: VType) {
+  function getTypeComponent(type: ValueType) {
     let component = components[type]
 
     if (!component && type.startsWith('html')) {

@@ -2,11 +2,11 @@
   import { getContext } from 'svelte'
 
   import type { OptionsContext } from '$lib/options.svelte.js'
-  import type { VType } from '$lib/util.js'
+  import type { ValueType } from '$lib/util.js'
   import type { HTMLAttributes } from 'svelte/elements'
 
   type Props = {
-    type?: VType | 'noop'
+    type?: ValueType | 'noop'
   } & HTMLAttributes<HTMLSpanElement>
 
   let { type, ...rest }: Props = $props()

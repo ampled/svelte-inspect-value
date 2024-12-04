@@ -52,6 +52,7 @@
   }
 
   let allTypesValue = $derived({
+    options,
     emptyArr: [],
     emptyObj: {},
     div,
@@ -293,7 +294,7 @@
     </div>
   </div>-->
 
-  <div class="options" bind:this={div}>
+  <div class="options" bind:this={div} class:showLength>
     <label>
       <input type="checkbox" bind:checked={draggable} />
       draggable
@@ -334,9 +335,9 @@
       </select>
     </label>
 
-    <Inspect value={options} name={'options'} {...options} style="margin: auto" />
+    <!-- <Inspect value={options} name={'options'} {...options} style="margin: auto" /> -->
   </div>
-  <Inspect
+  <!-- <Inspect
     value={{
       normal: 'normal',
       number: 2,
@@ -349,11 +350,25 @@
     }}
     name={'demo'}
     {...options}
+  /> -->
+  <Inspect
+    name="test"
+    value={{
+      a: {
+        b: { hey: 'wassup' },
+      },
+    }}
   />
-  <Inspect value={allTypesValue} name={'demo'} {...options} />
+  <Inspect value={allTypesValue} name={'allTypes'} {...options} />
 </main>
 
 <style>
+  main {
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
+  }
+
   .options {
     margin: 4px;
     /* position: fixed; */

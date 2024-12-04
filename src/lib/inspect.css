@@ -1,103 +1,103 @@
 :root {
-    .dracula {
-        /* dracula */
-        --base00: #282a36;
-        --base01: #3a3c4e;
-        --base02: #44475A;
-        --base03: #626483;
-        --base04: #8BE9FD;
-        --base05: #F8F8F2;
-        --base06: #f1f2f8;
-        --base07: #f7f7fb;
-        --base08: #ea51b2;
-        --base09: #BD93F9;
-        --base0A: #62d6e8;
-        --base0B: #F1FA8C;
-        --base0C: #a1efe4;
-        --base0D: #00f769;
-        --base0E: #BD93F9;
-        --base0F: #009e45;
-    }
+  .dracula {
+    /* dracula */
+    --base00: #282a36;
+    --base01: #3a3c4e;
+    --base02: #44475a;
+    --base03: #626483;
+    --base04: #8be9fd;
+    --base05: #f8f8f2;
+    --base06: #f1f2f8;
+    --base07: #f7f7fb;
+    --base08: #ea51b2;
+    --base09: #bd93f9;
+    --base0A: #62d6e8;
+    --base0B: #f1fa8c;
+    --base0C: #a1efe4;
+    --base0D: #00f769;
+    --base0E: #bd93f9;
+    --base0F: #009e45;
+  }
 
-    .monokai {
-        /* monokai */
-        --base00: #272822;
-        --base01: #383830;
-        --base02: #49483e;
-        --base03: #75715e;
-        --base04: #a59f85;
-        --base05: #f8f8f2;
-        --base06: #f5f4f1;
-        --base07: #f9f8f5;
-        --base08: #f92672;
-        --base09: #fd971f;
-        --base0A: #f4bf75;
-        --base0B: #a6e22e;
-        --base0C: #a1efe4;
-        --base0D: #66d9ef;
-        --base0E: #ae81ff;
-        --base0F: #cc6633;
-    }
+  .monokai {
+    /* monokai */
+    --base00: #272822;
+    --base01: #383830;
+    --base02: #49483e;
+    --base03: #75715e;
+    --base04: #a59f85;
+    --base05: #f8f8f2;
+    --base06: #f5f4f1;
+    --base07: #f9f8f5;
+    --base08: #f92672;
+    --base09: #fd971f;
+    --base0A: #f4bf75;
+    --base0B: #a6e22e;
+    --base0C: #a1efe4;
+    --base0D: #66d9ef;
+    --base0E: #ae81ff;
+    --base0F: #cc6633;
+  }
 
-    .solarized-dark {
-        /** solarized dark */
-        --base00: #002b36;
-        --base01: #073642;
-        --base02: #586e75;
-        --base03: #657b83;
-        --base04: #839496;
-        --base05: #93a1a1;
-        --base06: #eee8d5;
-        --base07: #fdf6e3;
-        --base08: #dc322f;
-        --base09: #cb4b16;
-        --base0A: #b58900;
-        --base0B: #859900;
-        --base0C: #2aa198;
-        --base0D: #268bd2;
-        --base0E: #6c71c4;
-        --base0F: #d33682;
-    }
+  .solarized-dark {
+    /** solarized dark */
+    --base00: #002b36;
+    --base01: #073642;
+    --base02: #586e75;
+    --base03: #657b83;
+    --base04: #839496;
+    --base05: #93a1a1;
+    --base06: #eee8d5;
+    --base07: #fdf6e3;
+    --base08: #dc322f;
+    --base09: #cb4b16;
+    --base0A: #b58900;
+    --base0B: #859900;
+    --base0C: #2aa198;
+    --base0D: #268bd2;
+    --base0E: #6c71c4;
+    --base0F: #d33682;
+  }
 
-    .default-dark {
-        --base00: #181818;
-        --base01: #282828;
-        --base02: #383838;
-        --base03: #585858;
-        --base04: #b8b8b8;
-        --base05: #d8d8d8;
-        --base06: #e8e8e8;
-        --base07: #f8f8f8;
-        --base08: #ab4642;
-        --base09: #dc9656;
-        --base0A: #f7ca88;
-        --base0B: #a1b56c;
-        --base0C: #86c1b9;
-        --base0D: #7cafc2;
-        --base0E: #ba8baf;
-        --base0F: #a16946;
-    }
+  .default-dark {
+    --base00: #181818;
+    --base01: #282828;
+    --base02: #383838;
+    --base03: #585858;
+    --base04: #b8b8b8;
+    --base05: #d8d8d8;
+    --base06: #e8e8e8;
+    --base07: #f8f8f8;
+    --base08: #ab4642;
+    --base09: #dc9656;
+    --base0A: #f7ca88;
+    --base0B: #a1b56c;
+    --base0C: #86c1b9;
+    --base0D: #7cafc2;
+    --base0E: #ba8baf;
+    --base0F: #a16946;
+  }
 
-    .default-light {
-        --base00: #f8f8f8;
-        --base01: #e8e8e8;
-        --base02: #d8d8d8;
-        --base03: #b8b8b8;
-        --base04: #585858;
-        --base05: #383838;
-        --base06: #282828;
-        --base07: #181818;
-        --base08: #ab4642;
-        --base09: #dc9656;
-        --base0A: #f7ca88;
-        --base0B: #a1b56c;
-        --base0C: #86c1b9;
-        --base0D: #7cafc2;
-        --base0E: #ba8baf;
-        --base0F: #a16946;
-    }
+  .default-light {
+    --base00: #f8f8f8;
+    --base01: #e8e8e8;
+    --base02: #d8d8d8;
+    --base03: #b8b8b8;
+    --base04: #585858;
+    --base05: #383838;
+    --base06: #282828;
+    --base07: #181818;
+    --base08: #ab4642;
+    --base09: #dc9656;
+    --base0A: #f7ca88;
+    --base0B: #a1b56c;
+    --base0C: #86c1b9;
+    --base0D: #7cafc2;
+    --base0E: #ba8baf;
+    --base0F: #a16946;
+  }
 
-    /*
+  /*
         base00  #181818  Default Background
         base01  #282828  Lighter Background (Used for status bars, line number and folding marks)
         base02  #383838  Selection Background
@@ -116,184 +116,180 @@
         base0F  #a16946  Deprecated, Opening/Closing Embedded Language Tags, e.g. <?php ?>
     */
 
-    .ampled-json-inspect {
-        --bg: var(--base00);
-        --bg-lighter: var(--base01);
-        --selection: var(--base02);
-        --comments: var(--base03);
-        --border: var(--base03);
-        --dark-fg: var(--base04);
-        --fg: var(--base05);
-        --fg-light: var(--base06);
-        --bg-light: var(--base07);
-        --error: var(--base08);
-        --keyword: var(--base08);
-        --number: var(--base09);
-        --number-type: var(--base08);
-        --boolean: var(--base09);
-        --class: var(--base0A);
-        --string: var(--base0B);
-        --string-type: var(--base09);
-        --regex: var(--base0C);
-        --symbol: var(--base0C);
-        --function: var(--base0D);
-        --object-type: var(--base0C);
-        --object: var(--base0D);
-        --idk: var(--base0E);
-        --deprecated: var(--base0F);
-
-    }
+  .ampled-json-inspect {
+    --bg: var(--base00);
+    --bg-lighter: var(--base01);
+    --selection: var(--base02);
+    --comments: var(--base03);
+    --border: var(--base03);
+    --dark-fg: var(--base04);
+    --fg: var(--base05);
+    --fg-light: var(--base06);
+    --bg-light: var(--base07);
+    --error: var(--base08);
+    --keyword: var(--base08);
+    --number: var(--base09);
+    --number-type: var(--base08);
+    --boolean: var(--base09);
+    --class: var(--base0A);
+    --string: var(--base0B);
+    --string-type: var(--base09);
+    --regex: var(--base0C);
+    --symbol: var(--base0C);
+    --function: var(--base0D);
+    --object-type: var(--base0C);
+    --object: var(--base0D);
+    --idk: var(--base0E);
+    --deprecated: var(--base0F);
+  }
 }
 
 .ampled-json-inspect {
-    font-size: 14px;
+  font-size: 14px;
+  box-sizing: border-box;
+  color: var(--fg, #fafafa);
+  /* max-width: 500px; */
+  font-family: monospace;
+  /* padding-right: 1em; */
+  /* padding: 10px; */
+  /* overflow: hidden; */
+  line-height: 1.5em;
+  white-space: nowrap;
+  /* width: 100%; */
+  /* resize: both; */
+  background-color: var(--bg, #000);
+  border: 1px solid var(--border, gray);
+  border-radius: 8px;
+  text-overflow: ellipsis;
+  max-width: min-content;
+
+  &.dracula {
+    background: linear-gradient(332deg, rgba(64, 66, 89, 1) 0%, rgba(40, 42, 54, 1) 10%);
+  }
+
+  /* small {
+        font-size: 10px;
+    } */
+
+  /* &.draggable {
+        position: absolute;
+    } */
+
+  *,
+  *::before,
+  *::after {
     box-sizing: border-box;
-    color: var(--fg, #fafafa);
-    /* max-width: 500px; */
-    font-family: monospace;
-    /* padding-right: 1em; */
-    /* padding: 10px; */
-    /* overflow: hidden; */
-    line-height: 1.5em;
-    white-space: nowrap;
-    /* width: 100%; */
-    /* resize: both; */
-    background-color: var(--bg, #000);
-    border: 1px solid var(--border, gray);
-    border-radius: 8px;
-    text-overflow: ellipsis;
-    max-width: min-content;
+  }
 
-    &.dracula {
-        background: linear-gradient(332deg, rgba(64, 66, 89, 1) 0%, rgba(40, 42, 54, 1) 10%);
+  .handle {
+    aspect-ratio: 1/1;
+    border: 1px solid var(--base03, gray);
+    border-top-width: 0;
+    border-right-width: 0;
+    background-color: var(--base01, gray);
+    padding: 0.5em;
+    height: 2em;
+    width: 2em;
+    text-align: center;
+    font-size: 0.8em;
+    line-height: 1;
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: move;
+  }
+
+  .body {
+    position: relative;
+    overflow: auto;
+    width: 100%;
+    height: 100%;
+    padding: 1em;
+    padding-left: 2em;
+  }
+
+  .raw-view {
+    transition: all 100ms linear;
+    flex-basis: 100%;
+    padding: 2px;
+    font-size: 10px;
+  }
+
+  button {
+    all: unset;
+    box-sizing: border-box;
+    cursor: pointer;
+  }
+
+  .entry {
+    min-height: 1.5em;
+  }
+
+  .length {
+    color: var(--comments, gray);
+    font-style: italic;
+  }
+
+  .indent {
+    padding-left: 1em;
+    margin: 0;
+    border-left: 1px solid var(--border, gray);
+    transition: 0.2s ease-in-out;
+    overflow: clip;
+    height: calc-size(auto, size);
+
+    &.string {
+      --border: var(--string);
     }
 
-    /* small {
-        font-size: 10px;
-    } */
+    &.collapsed {
+      height: 0;
+    }
+  }
 
-    /* &.draggable {
-        position: absolute;
-    } */
+  .box {
+    width: 200px;
+    overflow: clip;
+    background: salmon;
+    height: calc-size(auto, size);
+    transition: 0.2s ease-in-out;
 
-    *,
-    *::before,
-    *::after {
-        box-sizing: border-box;
+    [type='checkbox']:checked + & {
+      height: 0;
+    }
+  }
+
+  .key {
+    &.number {
+      color: var(--number, pink);
     }
 
-
-    .handle {
-        aspect-ratio: 1/1;
-        border: 1px solid var(--base03, gray);
-        border-top-width: 0;
-        border-right-width: 0;
-        background-color: var(--base01, gray);
-        padding: .5em;
-        height: 2em;
-        width: 2em;
-        text-align: center;
-        font-size: 0.8em;
-        line-height: 1;
-        position: absolute;
-        top: 0;
-        right: 0;
-        cursor: move;
+    &.string {
+      color: var(--fg, #fafafa);
     }
 
-
-
-    .body {
-        position: relative;
-        overflow: auto;
-        width: 100%;
-        height: 100%;
-        padding: 1em;
-        padding-left: 2em;
+    &.symbol {
+      color: var(--symbol, cyan);
     }
-
-    .raw-view {
-        transition: all 100ms linear;
-        flex-basis: 100%;
-        padding: 2px;
-        font-size: 10px;
-    }
-
-    button {
-        all: unset;
-        box-sizing: border-box;
-        cursor: pointer;
-    }
-
-    .entry {
-        min-height: 1.5em;
-    }
-
-    .length {
-        color: var(--comments, gray);
-        font-style: italic;
-    }
-
-    .indent {
-        padding-left: 1em;
-        /* display: flex;
-        flex-direction: column; */
-        border-left: 1px solid var(--border, gray);
-        transition: 0.2s ease-in-out;
-        overflow: clip;
-        height: calc-size(auto, size);
-
-        &.collapsed {
-            height: 0;
-        }
-    }
-
-    .box {
-        width: 200px;
-        overflow: clip;
-        background: salmon;
-        height: calc-size(auto, size);
-        transition: 0.2s ease-in-out;
-
-        [type="checkbox"]:checked+& {
-            height: 0;
-        }
-    }
-
-    .key {
-        &.number {
-            color: var(--number, pink);
-        }
-
-        &.string {
-            color: var(--fg, #fafafa);
-
-        }
-
-        &.symbol {
-            color: var(--symbol, cyan);
-
-        }
-    }
+  }
 }
 
 .ampled-json-inspect::selection,
 .ampled-json-inspect ::selection {
-    background-color: var(--selection, lightgray);
-    color: var(--error);
+  background-color: var(--selection, lightgray);
+  color: var(--error);
 }
 
 .ampled-json-inspect .type {
-    line-height: 1em;
-    padding: 1px;
-    padding-inline: .25em;
-    border-radius: 2px;
+  line-height: 1em;
+  padding: 1px;
+  padding-inline: 0.25em;
+  border-radius: 2px;
 
-    &.null,
-    &.undefined {
-        background-color: var(--bg-lighter, gray);
-
-    }
+  &.null,
+  &.undefined {
+    background-color: var(--bg-lighter, gray);
+  }
 }
 
 /* .ampled-json-inspect .value {
@@ -301,140 +297,128 @@
 } */
 
 .ampled-json-inspect .type {
+  &.string {
+    color: var(--string-type, orange);
+  }
 
-    &.string {
-        color: var(--string-type, orange);
-    }
+  &.number {
+    color: var(--number-type, rgb(223, 0, 223));
+  }
 
-    &.number {
-        color: var(--number-type, rgb(223, 0, 223));
-    }
+  &.boolean {
+    color: var(--number-type, pink);
+  }
 
+  &.array {
+    color: var(--object-type, lightblue);
+  }
 
-    &.boolean {
-        color: var(--number-type, pink);
-    }
+  &.object {
+    color: var(--object-type, lightblue);
+  }
 
-    &.array {
-        color: var(--object-type, lightblue);
-    }
+  &.bigint {
+    color: var(--number-type, darkred);
+  }
 
-    &.object {
-        color: var(--object-type, lightblue);
-    }
+  &.error {
+    color: var(--error, red);
+  }
 
-    &.bigint {
-        color: var(--number-type, darkred);
-    }
+  &.regexp {
+    color: var(--regex, orange);
+  }
 
-    &.error {
-        color: var(--error, red);
-    }
+  &.date {
+    color: var(--class, cyan);
+  }
 
-    &.regexp {
-        color: var(--regex, orange);
-    }
+  &.function {
+    color: var(--keyword, hotpink);
+  }
 
-    &.date {
-        color: var(--class, cyan);
-    }
+  &.symbol {
+    color: var(--symbol, cyan);
+  }
 
-    &.function {
-        color: var(--keyword, hotpink);
-    }
+  &.map {
+    color: var(--class, cyan);
+  }
 
-    &.symbol {
-        color: var(--symbol, cyan);
-    }
+  &.url {
+    color: var(--class, cyan);
+  }
 
-    &.map {
-        color: var(--class, cyan);
-    }
+  &.set {
+    color: var(--class, cyan);
+  }
 
-    &.url {
-        color: var(--class, cyan);
-    }
-
-    &.set {
-        color: var(--class, cyan);
-    }
-
-    &.class {
-        color: var(--keyword, hotpink);
-    }
+  &.class {
+    color: var(--keyword, hotpink);
+  }
 }
 
-
 .ampled-json-inspect .value {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 
-    &.string {
-        color: var(--string, lightgreen);
-    }
+  &.string {
+    color: var(--string, lightgreen);
+  }
 
-    &.multi {
-        margin: 0;
-        padding-left: 1em;
-        border-left: 1px solid currentColor;
-        white-space: pre;
-        overflow: clip;
-        transition: 0.2s ease-in-out;
-        height: calc-size(auto, size);
+  &.multi {
+    margin: 0;
+    white-space: pre;
+    overflow: clip;
+    transition: 0.2s ease-in-out;
+  }
 
-        &.collapsed {
-            height: 0;
-        }
-    }
+  &.number {
+    color: var(--number, rgb(223, 0, 223));
+  }
 
-    &.number {
-        color: var(--number, rgb(223, 0, 223));
-    }
+  &.boolean {
+    color: var(--boolean, pink);
+  }
 
+  &.array {
+    color: var(--object, lightblue);
+  }
 
-    &.boolean {
-        color: var(--boolean, pink);
-    }
+  &.object {
+    color: var(--object, lightblue);
+  }
 
-    &.array {
-        color: var(--object, lightblue);
-    }
+  &.bigint {
+    color: var(--number, darkred);
+  }
 
-    &.object {
-        color: var(--object, lightblue);
-    }
+  &.error {
+    color: var(--error, red);
+  }
 
-    &.bigint {
-        color: var(--number, darkred);
-    }
+  &.regexp {
+    color: var(--regex, orange);
+  }
 
-    &.error {
-        color: var(--error, red);
-    }
+  &.date {
+    color: var(--object, orange);
+  }
 
-    &.regexp {
-        color: var(--regex, orange);
-    }
+  &.function {
+    color: var(--function, lightgreen);
+  }
 
-    &.date {
-        color: var(--object, orange);
-    }
+  &.symbol {
+    color: var(--symbol, cyan);
+  }
 
-    &.function {
-        color: var(--function, lightgreen);
-    }
+  &.map {
+    color: var(--object, cyan);
+  }
 
-    &.symbol {
-        color: var(--symbol, cyan);
-    }
-
-    &.map {
-        color: var(--object, cyan);
-
-    }
-
-    &.class {
-        color: var(--class, cyan);
-    }
+  &.class {
+    color: var(--class, cyan);
+  }
 }

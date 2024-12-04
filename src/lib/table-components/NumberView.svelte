@@ -8,7 +8,7 @@
 
   type Props = TypeViewProps<number>
 
-  let { value = 0, key, type }: Props = $props()
+  let { value = 0, key, type, path }: Props = $props()
 
   let display = $derived.by(() => {
     if (Number.isNaN(value)) {
@@ -20,4 +20,4 @@
   })
 </script>
 
-<OneLineView value={display} {key} {type} />
+<OneLineView value={display} {key} {type} {path} />

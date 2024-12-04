@@ -1,4 +1,6 @@
 <script lang="ts">
+  import './app.css'
+
   import TableJsonView from '$lib/Inspect.svelte'
 
   const { children } = $props()
@@ -17,7 +19,3 @@
     {@render children()}
   </svelte:boundary>
 </main>
-
-<style>
-  @import './app.css';
-</style>

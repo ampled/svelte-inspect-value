@@ -12,16 +12,15 @@
   let collapsed = $state(true)
 </script>
 
-<TitleBar {key} {type} {path} length={entries.length} bind:collapsed />
-<div class="indent" class:collapsed>
-  {#each entries as [mapKey, mapValue] (mapKey)}
+<TitleBar {key} {type} {path} length={entries.length}>
+  {#each entries as [mapKey, mapValue], i (mapKey)}
     <div class="entry">
       {#if ['string', 'number', 'symbol'].includes(typeof mapKey)}
         <JsonViewer key={mapKey} value={mapValue} {path} />
       {:else}
         {@const keyType = getType(mapKey)}
-        <JsonViewer key={`[${keyType} key]`} value={[mapKey, mapValue]} {path} />
+        <JsonViewer key={`${i}: [${keyType} key]`} value={[mapKey, mapValue]} {path} />
       {/if}
     </div>
   {/each}
-</div>
+</TitleBar>

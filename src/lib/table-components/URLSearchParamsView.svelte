@@ -24,19 +24,15 @@
 
     return Object.entries(entries)
   })
-
-  let collapsed = $state(true)
 </script>
 
-<TitleBar {key} {type} {path} length={entries.length} bind:collapsed>
+<TitleBar {key} {type} {path} length={entries.length}>
   {#snippet val()}
     <StringValue value={value.toString()} />
   {/snippet}
-</TitleBar>
-<div class="indent" class:collapsed>
   {#each entries as [key, value] (key)}
     <div class="entry">
       <JsonViewer {value} {key} {path} />
     </div>
   {/each}
-</div>
+</TitleBar>

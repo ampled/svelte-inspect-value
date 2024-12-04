@@ -6,7 +6,7 @@
     collapsed?: boolean
   } & HTMLButtonAttributes
 
-  let { collapsed = $bindable(false), ...rest }: Props = $props()
+  let { collapsed = $bindable(), ...rest }: Props = $props()
 </script>
 
 <button class="collapse" onclick={() => (collapsed = !collapsed)} {...rest}>

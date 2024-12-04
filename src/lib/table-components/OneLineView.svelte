@@ -4,10 +4,11 @@
   import type { TypeViewProps } from '$lib/types.js'
   import Type from './Type.svelte'
   import type { Snippet } from 'svelte'
+  import type { HTMLAttributes } from 'svelte/elements'
 
-  type Props = TypeViewProps<any> & { val?: Snippet }
+  type Props = TypeViewProps<any> & { val?: Snippet } & HTMLAttributes<HTMLSpanElement>
 
-  let { value, key, type, path, val }: Props = $props()
+  let { value, key, type, path, val, ...rest }: Props = $props()
 </script>
 
 <Line>
@@ -16,6 +17,6 @@
   {#if val}
     {@render val()}
   {:else}
-    <span title={value} class={`value ${type}`}>{value}</span>
+    <span title={value} class={`value ${type}`} {...rest}>{value}</span>
   {/if}
 </Line>

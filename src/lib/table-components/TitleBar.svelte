@@ -1,23 +1,67 @@
 <script lang="ts">
-  import type { Snippet } from 'svelte'
+  import { STATE_CONTEXT_KEY, type StateContext } from '$lib/state.svelte.js'
+
+  import { getContext, type Snippet } from 'svelte'
   import CollapseButton from './CollapseButton.svelte'
   import Entries from './Entries.svelte'
 
   import Type from './Type.svelte'
   import Key from './Key.svelte'
-  import type { VType } from '$lib/util.js'
+  import type { ValueType } from '$lib/util.js'
   import type { KeyName } from '$lib/types.js'
 
   type Props = {
-    collapsed: boolean
     key?: KeyName
     path?: KeyName[]
     length: number
-    type?: VType
+    type?: ValueType
     val?: Snippet
+    children?: Snippet
   }
 
-  let { key, collapsed = $bindable(false), type, length, val: value, path }: Props = $props()
+  let { key, type, length, val: value, path = [], children }: Props = $props()
+
+  let inspectState: StateContext = getContext(STATE_CONTEXT_KEY)
+
+  let collapsed = $state(inspectState.getCollapse(path))
+
+  $effect(() => {
+    inspectState.setCollapse(path, collapsed)
+  })
+
+  // let state: StateContext = getContext('inspect-state')
+
+  // let currentPath = $derived([...path].map((k) => k?.toString()).join('.'))
+
+  // $effect(() => {
+  //   untrack(() => {
+  //     const wasCollapsed = state.getCollapse(currentPath)
+  //     console.log({
+  //       currentPath,
+  //       wasCollapsed,
+  //     })
+  //     if (wasCollapsed !== undefined) {
+  //       collapsed = wasCollapsed
+  //     }
+  //   })
+  // })
+
+  // $effect(() => {
+  //   console.log('get collapse state from context')
+  //   const wasCollapsed = state.getCollapse(currentPath)
+  //   // if (typeof wasCollapsed)
+  //   console.log({ path, wasCollapsed })
+  //   if (typeof wasCollapsed === 'boolean') {
+  //     collapsed = wasCollapsed
+  //   }
+  // })
+
+  // $effect(() => {
+  //   console.log('set collapse state from context')
+  //   if (collapsed !== undefined) {
+  //     state.setCollapse(currentPath, collapsed)
+  //   }
+  // })
 </script>
 
 <div class="title-bar">
@@ -40,6 +84,12 @@
     <Entries {length} />
   {/if}
 </div>
+
+{#if children}
+  <div class="indent {type}" class:collapsed>
+    {@render children()}
+  </div>
+{/if}
 
 <style>
   .button-key {

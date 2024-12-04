@@ -11,11 +11,10 @@
   let collapsed = $state(true)
 </script>
 
-<TitleBar {key} {type} {path} length={entries.length} bind:collapsed />
-<div class="indent" class:collapsed>
+<TitleBar {key} {type} {path} length={entries.length}>
   {#each entries as [key, value], i (i)}
     <div class="entry">
       <JsonViewer {value} {key} {path} />
     </div>
   {/each}
-</div>
+</TitleBar>
