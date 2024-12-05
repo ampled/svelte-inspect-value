@@ -17,7 +17,7 @@
   {@const [key, value] = entry}
   {@const newPath = [...path, index]}
 
-  <TitleBar key={index} {path}>
+  <TitleBar {...{ value, type, path }} key={index}>
     {#snippet val()}
       <span class="value">MapEntry</span>
     {/snippet}
@@ -30,11 +30,11 @@
   </TitleBar>
 {/snippet}
 
-<TitleBar {key} {type} {path} length={entries.length}>
+<TitleBar {...{ value, key, type, path }} length={entries.length}>
   {#each entries as [mapKey, mapValue], i (mapKey)}
     <!-- {@render mapEntry([mapKey, mapValue], i)} -->
 
-    <div class="entry">
+    <div class="entry" style="--index: {i}">
       {#if ['string', 'number', 'symbol'].includes(typeof mapKey)}
         <JsonViewer key={mapKey} value={mapValue} {path} />
       {:else}

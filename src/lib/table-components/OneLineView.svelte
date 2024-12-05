@@ -5,7 +5,6 @@
   import Type from './Type.svelte'
   import type { Snippet } from 'svelte'
   import type { HTMLAttributes } from 'svelte/elements'
-  import { fly, slide } from 'svelte/transition'
 
   type Props = TypeViewProps<any> & { val?: Snippet } & HTMLAttributes<HTMLSpanElement>
 

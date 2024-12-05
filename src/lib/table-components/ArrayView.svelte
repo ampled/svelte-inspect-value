@@ -8,7 +8,7 @@
   let { value: arrayVal = [], key = undefined, type, path }: Props = $props()
 </script>
 
-<TitleBar {path} {key} length={arrayVal.length} {type}>
+<TitleBar {...{ value: arrayVal, key, type, path }} length={arrayVal.length}>
   {#each arrayVal as value, i (i)}
     <div class="entry" style="--index: {i}">
       <JsonViewer key={i} {value} {path} />

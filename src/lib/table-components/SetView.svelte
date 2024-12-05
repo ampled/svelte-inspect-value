@@ -10,9 +10,9 @@
   let entries = $derived(Array.from(value.entries()))
 </script>
 
-<TitleBar {key} {type} {path} length={entries.length}>
+<TitleBar {...{ value, key, type, path }} length={entries.length}>
   {#each entries as [key, value], i (i)}
-    <div class="entry">
+    <div class="entry" style="--index: {i}">
       <JsonViewer {value} {key} {path} />
     </div>
   {/each}

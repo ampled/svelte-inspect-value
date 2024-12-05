@@ -51,6 +51,8 @@
       } catch (e) {
         console.warn('[Svelte Value Inspect] Could not restore saved state')
       }
+    } else {
+      initialState = {}
     }
   })
 

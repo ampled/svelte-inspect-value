@@ -19,7 +19,7 @@
   let objectType = $derived(classInstance ? classInstance : type)
 </script>
 
-<TitleBar {key} type={objectType} {path} length={entries.length}>
+<TitleBar {...{ value, key, path }} type={objectType} length={entries.length}>
   {#each entries as [key, value], i (key)}
     <div class="entry" style="--index: {i}">
       <JsonViewer {value} {key} {path} />

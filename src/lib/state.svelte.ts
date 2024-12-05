@@ -26,11 +26,8 @@ function ensureStringPath(path: string | KeyName[]) {
 export function createState(init: InspectState, title = 'svelte-value-inspect') {
   let state: InspectState = $state(init)
 
-  // $inspect(state)
-
   $effect(() => {
     if (state != null && Object.entries(state).length) {
-      // console.log('set storage');
       const v = JSON.stringify(state)
       localStorage.setItem(title, v)
     }
@@ -48,7 +45,6 @@ export function createState(init: InspectState, title = 'svelte-value-inspect') 
       if (state) state[key] = { collapsed }
     },
     getCollapse: (keyOrPath: string | KeyName[]) => {
-      console.log('tracking:', $effect.tracking())
 
       const key = ensureStringPath(keyOrPath)
       const wasCollapsed = state?.[key]?.collapsed

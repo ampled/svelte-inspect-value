@@ -40,6 +40,7 @@
     display: inline-flex;
     justify-content: center;
     align-items: center;
+    color: var(--comments);
     aspect-ratio: 1 / 1;
     width: 1em;
     height: 1em;

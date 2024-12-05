@@ -172,7 +172,7 @@
 }
 
 .ampled-json-inspect {
-  font-size: 14px;
+  font-size: 12px;
   box-sizing: border-box;
   color: var(--fg, #fafafa);
   /* max-width: 500px; */
@@ -249,6 +249,7 @@
   }
 
   .indent {
+    margin-block: calc(var(--indent) * 0.5);
     /* border-bottom-left-radius: 8px; */
     /* padding-left: calc(var(--indent) * .75); */
     margin-left: calc(var(--indent) * 1.5);
@@ -262,11 +263,17 @@
     opacity: 1;
 
     .entry {
-      transition: all 0.4s var(--ease-out-circ); /* arriving */
-      transition-delay: calc(30ms * calc(var(--index) + 1)); 
+      transition: all 0.5s var(--ease-out-back); /* arriving */
+      transition-delay: calc(50ms * calc(var(--index) + 1)); 
       margin-left: 0;
       min-height: 1.5em;
       opacity: 1;
+
+      .dash, button.collapse {
+        transition: all 0.4s linear;
+        transition-delay: calc(0.7s + calc(40ms * calc(var(--index) + 1))); 
+        opacity: 1;
+      }
     }
 
     &.string {
@@ -283,9 +290,11 @@
 
 
     &.collapsed {
+      margin: 0;
+      padding: 0;
       /* transform: scale(1, 0); */
       height: 0;
-      transition-delay: 200ms;
+      transition-delay: 0;
       /* width: 0; */
       /* margin-left: -1.25em; */
       /* opacity: 0.5; */
@@ -296,6 +305,12 @@
         /* transition-delay: 5s; */
         opacity: 0;
         transform: translateX(-20%);
+
+        .dash, button.collapse {
+          transition: all 0.4s ease-in;
+          opacity: 0;
+          /* transform: translateX(-100%); */
+        }
       }
     }
   }
@@ -322,15 +337,12 @@
 }
 
 .ampled-json-inspect .type {
-  line-height: 1em;
-  padding: 1px;
-  padding-inline: 0.25em;
-  border-radius: 2px;
 
   &.null,
   &.undefined {
     background-color: var(--bg-lighter, gray);
-    color: var(--fg)
+    color: var(--fg);
+    /* padding: 1px; */
   }
 }
 
@@ -339,7 +351,22 @@
 } */
 
 .ampled-json-inspect .type {
+  /* background-color: var(--bg-lighter, gray); */
   color: var(--class);
+  margin-top: 1px;
+  /* filter: hue-rotate(20deg); */
+  font-size: .857em;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  /* align-self: flex-end; */
+  line-height: 1.5em;
+  padding: 2px 0.25em;
+  height: 1em;
+  border-radius: 2px;
+  /* border-bottom: 1px solid currentColor; */
+  vertical-align: bottom;
+
 
   &.string {
     color: var(--string-type, orange);

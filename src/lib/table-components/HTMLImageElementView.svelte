@@ -9,7 +9,7 @@
 </script>
 
 {#if value}
-  <TitleBar {key} {path} {type} length={1}>
+  <TitleBar {...{ value, key, type, path }} length={1}>
     {#snippet val()}
       <HtmlValue {value} />
     {/snippet}

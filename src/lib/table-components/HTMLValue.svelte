@@ -13,14 +13,6 @@
 
   let { value = undefined }: Props = $props()
 
-  // let outer = $derived.by(() => {
-  //   if (value) {
-  //     let tag = innerHTML ? outerHTML.slice(0, outerHTML.indexOf(innerHTML)) : outerHTML
-  //     return tag
-  //   }
-  //   return ''
-  // })
-
   const getOpenTag = (ele: HTMLElement) => {
     if (ele) {
       let tag = ele.innerHTML
@@ -36,10 +28,7 @@
   let highlighted: string = $state('')
 
   const mutationObserver = new MutationObserver(([mutation]) => {
-    console.log('mutation!', mutation)
     const outer = getOpenTag(mutation.target as HTMLElement)
-    console.log(outer)
-    // console.log(outer)
     highlighted = highlight(outer)
   })
 
@@ -47,7 +36,6 @@
     if (value) {
       const outer = getOpenTag(value)
       highlighted = highlight(outer)
-      console.log('observe!')
       mutationObserver.observe(value, { attributes: true })
     }
 
@@ -55,21 +43,6 @@
       mutationObserver.disconnect()
     }
   })
-
-  // $effect(() => {
-  //   if (value) {
-  //     mutationObserver.observe(value, { attributes: true })
-  //   }
-  // })
-
-  // $effect(() => {
-  //   value
-  //   if (outer) {
-  //     highlighted = hljs.highlight(outer, { language: 'xml' }).value
-  //   }
-  // })
-
-  $inspect(highlighted)
 </script>
 
 <span class="value html">{@html highlighted}</span>

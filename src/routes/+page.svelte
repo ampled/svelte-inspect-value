@@ -88,7 +88,12 @@
       [3, 2],
       [{ name: 'object key' }, 3],
       [symbolKey, 4],
-      ['longArray', Array(100).fill('yo')],
+      [
+        'longArray',
+        Array(100)
+          .fill(0)
+          .map((v, i) => i * 100),
+      ],
     ]),
     set: new Set([1, 2, 3]),
     // emptyUrl: new URL('https://localhost'),
@@ -105,6 +110,7 @@
     ]),
     // anotherSearch: new URLSearchParams('?q&b=foo'),
     date: date,
+    dateConstructror: Date,
     booleanVal: true,
     arrayValue: [1, 2, 3, 14, 'u2'],
     symbolProp: Symbol('hi i am symbol'),

@@ -29,6 +29,10 @@
         return 'Set'
       case 'date':
         return 'Date'
+      case 'object':
+        return '{obj}'
+      case 'array':
+        return '[arr]'
       default:
         return type
     }

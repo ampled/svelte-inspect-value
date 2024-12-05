@@ -26,7 +26,7 @@
   })
 </script>
 
-<TitleBar {key} {type} {path} length={entries.length}>
+<TitleBar {...{ value, key, type, path }} length={entries.length}>
   {#snippet val()}
     <StringValue value={value.toString()} />
   {/snippet}

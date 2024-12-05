@@ -26,7 +26,7 @@
 </script>
 
 {#if isMultiLine}
-  <TitleBar {key} {path} {type} length={value.length}>
+  <TitleBar {...{ value, key, type, path }} length={value.length}>
     {#snippet val()}
       <StringValue {value} />
     {/snippet}
