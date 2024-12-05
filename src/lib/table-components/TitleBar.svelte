@@ -10,7 +10,9 @@
   import type { ValueType } from '$lib/util.js'
   import type { KeyName } from '$lib/types.js'
   import Console from '$lib/icons/Console.svelte'
-  import { logToConsole } from '$lib/hello.js'
+  import { copyToClipBoard, logToConsole } from '$lib/hello.js'
+  import Copy from '$lib/icons/Copy.svelte'
+  import Tools from './Tools.svelte'
 
   type Props = {
     key?: KeyName
@@ -75,8 +77,8 @@
       onchange={onCollapseChanged}
       disabled={length === 0}
       aria-label="expand {key?.toString()}"
+      title="expand {key?.toString()}"
     />
-    <!-- style="opacity: {length && length > 0 ? 1 : 0.4}" -->
 
     <Key {key} {path} />
   </div>
@@ -87,11 +89,10 @@
     {@render val()}
   {/if}
   {#if length}
-    <!-- {#if ['map', 'set', 'url', 'urlsearchparams', 'object', 'array', 'class'].includes(type as any)} -->
     <Entries {length} {type} />
   {/if}
   <div class="tools">
-    <button onclick={() => logToConsole(value)}><Console /></button>
+    <Tools {value} />
   </div>
 </div>
 
@@ -135,27 +136,6 @@
       gap: calc(var(--indent) * 0.5);
       padding-left: 1px;
       /* gap: 0.25em; */
-    }
-
-    .tools {
-      transition: 0.3s ease-in-out;
-      padding-inline: 0.5em;
-      opacity: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-left: auto;
-
-      button {
-        height: 1.25em;
-        width: 1.25em;
-      }
-    }
-
-    &:hover {
-      .tools {
-        opacity: 1;
-      }
     }
   }
 </style>
