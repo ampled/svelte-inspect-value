@@ -6,6 +6,6 @@ export function logToConsole(...items: unknown[]) {
 }
 
 export function copyToClipBoard(item: unknown) {
-    const asdf = stringify(item);
+    const asdf = stringify(item, 0);
     return navigator.clipboard.writeText(asdf);
 }

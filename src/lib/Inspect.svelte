@@ -4,11 +4,12 @@
   import type { HTMLAttributes } from 'svelte/elements'
   import type { Action } from 'svelte/action'
   import { createOptions } from './options.svelte.js'
-  import JsonViewer from './table-components/JsonViewer.svelte'
+  import JsonViewer from './components/JsonViewer.svelte'
   import type { DragOptions } from '@neodrag/svelte'
   import { type InspectState } from './state.svelte.js'
   import StateProvider from './StateContextProvider.svelte'
   import { fade } from 'svelte/transition'
+  import { Collapse } from './collapse.svelte.js'
 
   type Props = {
     value?: any
@@ -17,6 +18,7 @@
     showLength?: boolean
     showTypes?: boolean
     stringCollapse?: number
+    noanimate?: boolean
     stringRender?: 'stringify' | 'pre'
     draggable?: boolean
   } & HTMLAttributes<HTMLDivElement>
@@ -24,27 +26,37 @@
   let {
     value = undefined,
     name = undefined,
-    showLength = false,
+    showLength = true,
     showTypes = true,
     stringCollapse = undefined,
+    noanimate = true,
     class: classValue = '',
     draggable = false,
     stringRender = 'pre',
     ...rest
   }: Props = $props()
 
-  let options = createOptions({ showLength, showTypes, stringCollapse, stringRender })
+  let options = createOptions({ showLength, showTypes, stringCollapse })
 
   $effect(() => {
-    options.value = { showLength, showTypes, stringCollapse, stringRender }
+    options.value = { showLength, showTypes, stringCollapse }
   })
 
   setContext('json-inspect', options)
 
   let initialState: InspectState | undefined = $state()
 
+  let collapseState = new Collapse(
+    typeof value === 'object'
+      ? [{ id: String(name), state: { collapsed: false }, children: [] }]
+      : [],
+    'yeah'
+  )
+
+  setContext('collapse', collapseState)
+
   onMount(() => {
-    const v = localStorage.getItem('svelte-value-inspect')
+    const v = localStorage.getItem('[svelte-value-inspect]' + name)
     if (v) {
       try {
         initialState = JSON.parse(v)
@@ -90,9 +102,10 @@
 </script>
 
 {#if initialState}
-  <StateProvider {initialState} options={options.value}>
+  <StateProvider {name} {initialState} options={options.value}>
     <div
       in:fade
+      class:noanimate
       class="ampled-json-inspect {classValue}"
       use:getAction={() => ({ handle: '.handle', disabled: !draggable })}
       {...rest}

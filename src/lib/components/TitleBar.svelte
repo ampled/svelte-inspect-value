@@ -1,26 +1,23 @@
 <script lang="ts">
   import { STATE_CONTEXT_KEY, type StateContext } from '$lib/state.svelte.js'
 
-  import { getContext, type Snippet } from 'svelte'
+  import { getContext, onMount, type Snippet } from 'svelte'
   import CollapseButton from './CollapseButton.svelte'
   import Entries from './Entries.svelte'
 
   import Type from './Type.svelte'
   import Key from './Key.svelte'
-  import type { ValueType } from '$lib/util.js'
-  import type { KeyName } from '$lib/types.js'
+  import { stringifyPath, type ValueType } from '$lib/util.js'
+  import type { KeyName, TypeViewProps } from '$lib/types.js'
   import Console from '$lib/icons/Console.svelte'
   import { copyToClipBoard, logToConsole } from '$lib/hello.js'
   import Copy from '$lib/icons/Copy.svelte'
   import Tools from './Tools.svelte'
+  import type { Collapse } from '$lib/collapse.svelte.js'
 
-  type Props = {
-    key?: KeyName
-    path?: KeyName[]
+  type Props = TypeViewProps<any> & {
     length?: number
-    type?: ValueType | string
     val?: Snippet
-    value: any
     children?: Snippet
   }
 
@@ -28,10 +25,36 @@
 
   let inspectState: StateContext = getContext(STATE_CONTEXT_KEY)
 
-  let collapsed = $state(inspectState.getCollapse(path))
+  let c: Collapse = getContext('collapse')
+
+  let level = $derived(path.length)
+
+  let collapseState = $derived(inspectState.value[stringifyPath(path)])
+  let collapsed = $derived(collapseState ? collapseState.collapsed : level === 1 ? false : true)
+
+  // $inspect(collapseState)
+
+  onMount(() => {
+    if (inspectState.value[stringifyPath(path)] == null) {
+      if (path.length === 0) {
+        inspectState.setCollapse(['root'], false)
+      } else {
+        inspectState.setCollapse(path, level === 1 ? false : true)
+      }
+    }
+    if (key) {
+      c.addSelf(path)
+    }
+  })
+
+  // $effect(() => {
+  //   console.log('isCollapsed update:', isCollapsed)
+  // })
+
+  // $inspect(collapsed)
 
   function onCollapseChanged(newValue: boolean) {
-    collapsed = newValue
+    // collapsed = newValue
     inspectState.setCollapse(path, newValue)
   }
 
@@ -74,13 +97,14 @@
   <div class="button-key">
     <CollapseButton
       {collapsed}
+      {value}
       onchange={onCollapseChanged}
       disabled={length === 0}
       aria-label="expand {key?.toString()}"
       title="expand {key?.toString()}"
     />
 
-    <Key {key} {path} />
+    <Key {key} {path} ondblclick={() => onCollapseChanged(!collapsed)} />
   </div>
 
   <Type {type} />
@@ -88,11 +112,12 @@
   {#if val}
     {@render val()}
   {/if}
-  {#if length}
-    <Entries {length} {type} />
-  {/if}
+
+  <Entries {length} {type} />
+
   <div class="tools">
-    <Tools {value} />
+    <!-- <small>{level}</small> -->
+    <Tools {value} {path} />
   </div>
 </div>
 

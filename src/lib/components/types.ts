@@ -7,9 +7,11 @@ import FunctionView from './FunctionView.svelte'
 import HtmlImageElementView from './HTMLImageElementView.svelte'
 import HtmlView from './HTMLView.svelte'
 import MapView from './MapView.svelte'
+import Noop from './Noop.svelte'
 import NumberView from './NumberView.svelte'
 import ObjectView from './ObjectView.svelte'
 import OneLineView from './OneLineView.svelte'
+import PromiseView from './PromiseView.svelte'
 import RegexView from './RegexView.svelte'
 import SetView from './SetView.svelte'
 import StringView from './StringView.svelte'
@@ -38,4 +40,6 @@ export default {
   urlsearchparams: UrlSearchParamsView,
   htmlimageelement: HtmlImageElementView,
   html: HtmlView,
+  promise: PromiseView,
+  iterator: Noop,
 } as const

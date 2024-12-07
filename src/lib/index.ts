@@ -1,2 +1,2 @@
 // Reexport your entry components here
-export { default as InspectValue } from './Inspect.svelte'
+export { default as Inspect } from './Inspect.svelte'

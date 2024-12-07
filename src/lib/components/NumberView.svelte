@@ -16,4 +16,4 @@
   })
 </script>
 
-<OneLineView value={display} {key} {type} {path} />
+<OneLineView display={value.toString()} {value} {key} {type} {path} />

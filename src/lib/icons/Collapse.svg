@@ -1,0 +1,10 @@
+<svg viewBox="0 0 24 24">
+  <rect x="0" y="0" width="24" height="24" stroke="white" stroke-width="0.1" fill="none" />
+
+  <rect x="2" y="4" width="16" height="16" stroke="white" fill="none" />
+
+  <line x1="4" y1="2" x2="20" y2="2" stroke="white" stroke-linecap="square" />
+  <line x1="20" y1="2" x2="20" y2="18" stroke="white" stroke-linecap="square" />
+  <!-- <line x1="11" y1="2" x2="14" y2="2" stroke="black" stroke-linecap="butt"/> -->
+  <!-- <line x1="6" y1="4" x2="6" y2="8" stroke="white" stroke-linecap="butt"/> -->
+</svg>

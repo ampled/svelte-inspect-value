@@ -1,6 +1,9 @@
 <script lang="ts">
   import type { TypeViewProps } from '$lib/types.js'
+  import type { ValueType } from '$lib/util.js'
+  import Entry from './Entry.svelte'
   import JsonViewer from './JsonViewer.svelte'
+  import ObjectLikeView from './ObjectLikeView.svelte'
   import TitleBar from './TitleBar.svelte'
 
   type Props = TypeViewProps<object>
@@ -16,13 +19,21 @@
     value.constructor.toString().startsWith('class') ? value.constructor.name : false
   )
 
-  let objectType = $derived(classInstance ? classInstance : type)
+  let objectType = $derived(classInstance ? (classInstance as ValueType) : type)
 </script>
 
-<TitleBar {...{ value, key, path }} type={objectType} length={entries.length}>
+<!-- <TitleBar {...{ value, key, path }} type={objectType} length={entries.length}>
   {#each entries as [key, value], i (key)}
-    <div class="entry" style="--index: {i}">
+    <Entry {i}>
       <JsonViewer {value} {key} {path} />
-    </div>
+    </Entry>
   {/each}
-</TitleBar>
+</TitleBar> -->
+
+<ObjectLikeView type={objectType} length={entries.length} {key} {path} {value}>
+  {#each entries as [key, value], i (key)}
+    <Entry {i}>
+      <JsonViewer {value} {key} {path} />
+    </Entry>
+  {/each}
+</ObjectLikeView>

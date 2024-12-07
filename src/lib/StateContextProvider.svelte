@@ -5,13 +5,14 @@
 
   type Props = {
     initialState: InspectState
+    name?: string
     options: JSONInspectOptions
     children: Snippet
   }
 
-  const { initialState, children }: Props = $props()
+  const { initialState, children, name }: Props = $props()
 
-  const inspectState = createState(initialState)
+  const inspectState = createState(initialState, '[svelte-value-inspect]' + (name ?? ''))
 
   setContext(STATE_CONTEXT_KEY, inspectState)
 </script>

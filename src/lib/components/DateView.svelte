@@ -1,8 +1,8 @@
 <script lang="ts">
   import type { TypeViewProps } from '$lib/types.js'
   import { stringify } from '$lib/util.js'
+  import Entry from './Entry.svelte'
   import JsonViewer from './JsonViewer.svelte'
-  import StringValue from './StringValue.svelte'
   import StringView from './StringView.svelte'
   import TitleBar from './TitleBar.svelte'
 
@@ -32,10 +32,8 @@
     <span class="value date">{stringify(value)}</span>
   {/snippet}
   {#each entries as [key, value], i (key)}
-    <div class="entry" style="--index: {i}">
+    <Entry {i}>
       <JsonViewer {value} {key} {path} />
-    </div>
+    </Entry>
   {/each}
 </TitleBar>
-
-<StringView value={stringify(value).replaceAll('"', '')} {key} {type} />

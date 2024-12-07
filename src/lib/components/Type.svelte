@@ -33,13 +33,17 @@
         return '{obj}'
       case 'array':
         return '[arr]'
+      case 'promise':
+        return 'Promise'
+      case 'iterator':
+        return 'Iterator'
       default:
         return type
     }
   })
 </script>
 
-{#if (type && showTypes) || type === 'undefined' || type === 'null' || type === 'class' || type === 'function'}
+{#if (type && showTypes) || type === 'undefined' || type === 'null' || type === 'class' || type === 'function' || type === 'promise'}
   <small class={`type ${type}`} {...rest} title={type}>
     {display}
   </small>

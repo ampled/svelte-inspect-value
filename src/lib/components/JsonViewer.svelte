@@ -7,7 +7,7 @@
 
   type Props = TypeViewProps<any>
 
-  let { value = undefined, key = undefined, path: prevPath = [] }: Props = $props()
+  let { value = undefined, key = 'root', path: prevPath = [] }: Props = $props()
 
   let type: ValueType = $derived(getType(value))
 
@@ -27,14 +27,14 @@
 
   let TypeComponent = $derived(getTypeComponent(type))
 
-  let path = $derived(key && prevPath ? [...prevPath, key] : undefined)
+  let path = $derived(key != null && prevPath ? [...prevPath, key] : undefined)
 
   function onclick(event: MouseEvent & { currentTarget: EventTarget & HTMLDivElement }) {
     event.stopPropagation()
     console.log(`${String(key)}:`, value)
   }
 
-  // $inspect(path, value)
+  // $inspect({ value, type })
 </script>
 
 <svelte:boundary>

@@ -2,6 +2,9 @@
 import type { KeyName } from './types.js'
 
 export function getType(value: unknown) {
+  if (value instanceof Iterator) {
+    return 'iterator'
+  }
   const t = typeOf(value)
   if (typeof value === 'function') {
     if (value.toString().startsWith('class') || value.toLocaleString().startsWith('class')) {
@@ -30,6 +33,8 @@ export type ValueType =
   | 'map'
   | 'url'
   | 'urlsearchparams'
+  | 'promise'
+  | 'iterator'
 
 export function stringify(value: unknown, indent = 2) {
   return JSON.stringify(
@@ -62,4 +67,14 @@ function typeOf(obj: unknown): ValueType {
 
 // export const noopAction: Action<HTMLElement, any> = (el) => { };
 
-export const stringifyPath = (path: KeyName[]) => path.map((k) => k.toString()).join('.')
+export const stringifyPath = (path: KeyName[]) => {
+  return path
+    .map((k, i) => {
+      if (typeof k === 'number') {
+        return `[${k}]`
+      }
+      const pre = i === 0 ? '' : '.'
+      return pre + k.toString()
+    })
+    .join('$$$')
+}

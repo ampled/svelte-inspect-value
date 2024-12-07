@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { TypeViewProps } from '$lib/types.js'
+  import Entry from './Entry.svelte'
   import JsonViewer from './JsonViewer.svelte'
   import TitleBar from './TitleBar.svelte'
 
@@ -12,8 +13,8 @@
 
 <TitleBar {...{ value, key, type, path }} length={entries.length}>
   {#each entries as [key, value], i (i)}
-    <div class="entry" style="--index: {i}">
+    <Entry {i}>
       <JsonViewer {value} {key} {path} />
-    </div>
+    </Entry>
   {/each}
 </TitleBar>

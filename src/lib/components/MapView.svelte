@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { TypeViewProps } from '$lib/types.js'
   import { getType } from '$lib/util.js'
+  import Entry from './Entry.svelte'
   import JsonViewer from './JsonViewer.svelte'
   import Line from './Line.svelte'
   import OneLineView from './OneLineView.svelte'
@@ -34,13 +35,13 @@
   {#each entries as [mapKey, mapValue], i (mapKey)}
     <!-- {@render mapEntry([mapKey, mapValue], i)} -->
 
-    <div class="entry" style="--index: {i}">
+    <Entry {i}>
       {#if ['string', 'number', 'symbol'].includes(typeof mapKey)}
         <JsonViewer key={mapKey} value={mapValue} {path} />
       {:else}
         {@const keyType = getType(mapKey)}
         <JsonViewer key={`${i}: [${keyType} key]`} value={[mapKey, mapValue]} {path} />
       {/if}
-    </div>
+    </Entry>
   {/each}
 </TitleBar>

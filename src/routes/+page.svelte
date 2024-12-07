@@ -70,8 +70,8 @@
 
   let allTypesValue = $derived({
     options,
-    // emptyArr: [],
-    // emptyObj: {},
+    emptyArr: [],
+    emptyObj: {},
     div,
     image,
     // emptyString: '',

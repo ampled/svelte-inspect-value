@@ -33,5 +33,9 @@
     <pre class="value string multi" title={stringify(value)}>{value}</pre>
   </TitleBar>
 {:else}
-  <OneLineView {key} {type} {path} value={stringify(display)} title={stringify(value)} />
+  <OneLineView {key} {type} {path} value={stringify(display)} title={stringify(value)}>
+    {#snippet val()}
+      <StringValue {value} length />
+    {/snippet}
+  </OneLineView>
 {/if}

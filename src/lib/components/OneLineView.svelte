@@ -5,25 +5,38 @@
   import Type from './Type.svelte'
   import type { Snippet } from 'svelte'
   import type { HTMLAttributes } from 'svelte/elements'
+  import { fly } from 'svelte/transition'
+  import Tools from './Tools.svelte'
 
-  type Props = TypeViewProps<any> & { val?: Snippet } & HTMLAttributes<HTMLSpanElement>
+  type Props = TypeViewProps<any> & {
+    val?: Snippet
+    display?: string
+  } & HTMLAttributes<HTMLSpanElement>
 
-  let { value, key, type, path, val, ...rest }: Props = $props()
+  let { value, display, key, type, path, val, ...rest }: Props = $props()
+
+  // $inspect(value)
 </script>
 
 <Line>
   <div class="dash-key">
-    <div class="dash">&hyphen;</div>
+    {#key value}
+      <div class="dash flash-update">&hyphen;</div>
+    {/key}
     <Key {key} {path} />
   </div>
   <Type {type} />
   {#if val}
     {@render val()}
   {:else}
-    <span title={value} class={`value ${type}`} {...rest}>
-      {value}
+    <span title={display} class={`value ${type}`} {...rest}>
+      {display}
     </span>
   {/if}
+  <div class="tools">
+    <!-- <small>{level}</small> -->
+    <Tools {value} {path} />
+  </div>
 </Line>
 
 <style>
@@ -34,9 +47,11 @@
     padding-left: 1px;
 
     .dash {
+      border-radius: 9999px;
       display: inline-flex;
       justify-content: center;
       text-align: center;
+      vertical-align: middle;
       align-items: center;
       aspect-ratio: 1 / 1;
       width: 1em;
@@ -44,6 +59,7 @@
       line-height: 1em;
       color: var(--comments);
       user-select: none;
+      /* transition: all 500ms; */
     }
   }
 </style>

@@ -10,4 +10,4 @@
   let { value = Symbol('oop'), key, type }: Props = $props()
 </script>
 
-<OneLineView {key} {type} value={value.toString()} />
+<OneLineView {key} {type} {value} display={value.toString()} />

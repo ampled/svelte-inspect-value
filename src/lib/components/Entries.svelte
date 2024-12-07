@@ -4,7 +4,7 @@
   import { getContext } from 'svelte'
 
   type Props = {
-    length: number
+    length?: number
     type?: ValueType | string
   }
 
@@ -32,9 +32,11 @@
         return 'entries'
     }
   })
+
+  //
 </script>
 
-{#if showLength || length === 0}
+{#if showLength && typeof length === 'number'}
   {#if length > 0}
     <small class="length">{length} {unit}</small>
   {:else}
