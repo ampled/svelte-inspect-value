@@ -4,7 +4,7 @@
     --base00: #282a36;
     --base01: #3a3c4e;
     --base02: #44475a;
-    --base03: #6273a4;
+    --base03: #6272a4;
     --base04: #8be9fd;
     --base05: #f8f8f2;
     --base06: #f1f2f8;
@@ -78,10 +78,30 @@
     --base0F: #a16946;
   }
 
+  .drak {
+    /* drak */
+    --base00: #282a36;
+    --base01: #3a3c4e;
+    --base02: #44475a;
+    --base03: #6272a4;
+    --base04: #8be9fd;
+    --base05: #f8f8f2;
+    --base06: #f1f2f8;
+    --base07: #f7f7fb;
+    --base08: #ea51b2; /* red */
+    --base09: #ffb86c; /* orange */
+    --base0A: #f1fa8c; /* yellow */
+    --base0B: #50fa7b; /* green */
+    --base0C: #a1efe4; /* cyan */
+    --base0D: #62d6e8; /* blue */
+    --base0E: #bd93f9; /* purp */
+    --base0F: #009e45;
+  }
+
   .default-light {
-    --base00: #f8f8f8;
-    --base01: #e8e8e8;
-    --base02: #d8d8d8;
+    --base00: #e8e8e8;
+    --base01: #d8d8d8;
+    --base02: #f8f8f8;
     --base03: #b8b8b8;
     --base04: #585858;
     --base05: #383838;
@@ -117,37 +137,45 @@
     */
 
   .ampled-json-inspect {
-    --bg: var(--base00);
-    --bg-lighter: var(--base01);
-    --selection: var(--base02);
-    --comments: var(--base03);
-    --border: var(--base03);
-    --dark-fg: var(--base04);
-    --fg: var(--base05);
-    --fg-light: var(--base06);
+    --cyan: var(--base0C, #00c1be);
+    --yellow: var(--base0A, #e1ff7f);
+    --green: var(--base0B, #5faa70);
+    --red: var(--base08, #b03a3a);
+    --purple: var(--base0E, #8f42ae);
+    --blue: var(--base0D, #6a6ace);
+    --orange: var(--base09, #c6903a);
+
+    --bg: var(--base00, #0e0026);
+    --bg-lighter: var(--base01, #250060);
     --bg-light: var(--base07);
-    --error: var(--base08);
-    --delimiter: var(--base08);
-    --keyword: var(--base08);
-    --number: var(--base09);
-    --number-type: var(--base08);
-    --boolean: var(--base09);
-    --class: var(--base0A);
-    --string: var(--base0B);
-    --string-type: var(--base09);
-    --regex: var(--base0C);
-    --symbol: var(--base0C);
-    --function: var(--base0D);
-    --object-type: var(--base0C);
-    --object: var(--base0D);
+    --selection: var(--base02);
+    --comments: var(--base03, #59456e);
+    --border-color: var(--base03, var(--comments));
+    --dark-fg: var(--base04);
+    --fg: var(--base05, #b9a9be);
+    --fg-light: var(--base06);
+
+    --error: var(--red);
+    --delimiter: var(--red);
+    --keyword: var(--red);
+    --number: var(--purple);
+    --number-type: var(--red);
+    --boolean: var(--purple);
+    --class: var(--blue);
+    --string: var(--yellow);
+    --string-type: var(--orange);
+    --regex: var(--cyan);
+    --symbol: var(--cyan);
+    --function: var(--green);
+    --object-type: var(--cyan);
+    --object: var(--blue);
     --interactive: var(--base0E);
     --deprecated: var(--base0F);
 
-    --yellow: var(--base0A);
-    --green: var(--base0B);
-    --red: var(--base08);
+    /* --indent-multiplier: 1; */
+    --indent: calc(0.5em * var(--indent-multiplier, 1));
 
-    --indent: 0.5em;
+    --stagger-delay: 20ms;
   }
 
   --ease-in-quad: cubic-bezier(0.55, 0.085, 0.68, 0.53);
@@ -178,39 +206,29 @@
 .ampled-json-inspect {
   font-size: 12px;
   box-sizing: border-box;
-  color: var(--fg, #fafafa);
-  /* max-width: 500px; */
+  color: var(--fg);
   font-family: monospace;
-  /* padding-right: 1em; */
-  /* padding: 10px; */
-  /* overflow: hidden; */
   line-height: 1.5em;
   white-space: nowrap;
-  /* width: 100%; */
-  /* resize: both; */
-  background-color: var(--bg, #000);
-  border: 1px solid var(--border, gray);
+  background-color: var(--bg);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   text-overflow: ellipsis;
   max-width: min-content;
+  position: relative;
+  width: calc(auto, size);
+  transition: 1s linear;
 
   &.noanimate {
     * {
       transition: none !important;
+      animation: none !important;
     }
   }
 
-  /* &.dracula {
-    background: linear-gradient(332deg, rgba(64, 66, 89, 1) 0%, rgba(40, 42, 54, 1) 10%);
-  } */
-
-  /* small {
-        font-size: 10px;
-    } */
-
-  /* &.draggable {
-        position: absolute;
-    } */
+  small {
+    font-size: 0.8333em;
+  }
 
   *,
   *::before,
@@ -222,10 +240,10 @@
   .handle {
     aspect-ratio: 1/1;
     z-index: 20;
-    border: 1px solid var(--base03, gray);
+    border: 1px solid var(--border-color);
     border-top-width: 0;
     border-right-width: 0;
-    background-color: var(--base01, gray);
+    background-color: var(--bg-lighter);
     padding: 0.5em;
     height: 2em;
     width: 2em;
@@ -254,7 +272,7 @@
   }
 
   .length {
-    color: var(--comments, gray);
+    color: var(--comments);
     font-style: italic;
   }
 
@@ -279,7 +297,7 @@
         color: var(--interactive);
 
         &.copied {
-          color: greenyellow;
+          color: var(--green);
         }
       }
     }
@@ -291,111 +309,139 @@
     }
   }
 
+  details {
+    .indent {
+      transition: 0.4s var(--ease-out-back);
+      margin-block: 0;
+      padding: 0;
+      transition-delay: 0;
+      height: calc-size(0);
+
+      .entry {
+        transition: none;
+        transition: all 0.3s var(--ease-out-back); /* leaving */
+        opacity: 0;
+        transform: translateX(2em);
+
+        .dash,
+        button.collapse {
+          transition-duration: 0;
+          opacity: 0;
+          transition-delay: 0;
+        }
+      }
+    }
+
+    &[open] {
+      .indent {
+        margin-block: calc(var(--indent) * 0.5);
+        margin-left: calc(var(--indent) * 1.5);
+        border-left: 1px solid var(--border-color);
+        transition: 0.4s var(--ease-out-back);
+        overflow-x: visible;
+        overflow-y: auto;
+        height: calc-size(auto, size);
+        opacity: 1;
+
+        .entry {
+          transition: all 0.5s var(--ease-out-circ); /* arriving */
+          transition-delay: calc(0s + calc(var(--stagger-delay) * calc(var(--index) + 1)));
+          margin-left: 0;
+          opacity: 1;
+          transform: translateX(0);
+          height: calc-size(auto, size);
+
+          .dash,
+          button.collapse {
+            transition: all 0.4s var(--ease-out-back);
+            transition-delay: calc(0.7s + calc(40ms * calc(var(--index))));
+            opacity: 1;
+          }
+        }
+      }
+    }
+  }
   .indent {
     margin-block: calc(var(--indent) * 0.5);
-    /* border-bottom-left-radius: 8px; */
-    /* padding-left: calc(var(--indent) * .75); */
     margin-left: calc(var(--indent) * 1.5);
-    border-left: 1px solid var(--border, gray);
-    /* border-top: 1px solid var(--border); */
-    transition: all 0.2s ease-in-out;
+    border-left: 1px solid var(--border-color);
+    transition: 0.4s var(--ease-out-back);
     overflow-x: visible;
     overflow-y: auto;
     height: calc-size(auto, size);
-    /* max-height: calc(1.5em * 30); */
     opacity: 1;
 
     .entry {
-      transition: all 0.5s var(--ease-out-circ) allow-discrete; /* arriving */
-      transition-delay: calc(0s + calc(50ms * calc(var(--index) + 1)));
+      transition: all 0.5s var(--ease-out-circ); /* arriving */
+      transition-delay: calc(0s + calc(var(--stagger-delay) * calc(var(--index) + 1)));
       margin-left: 0;
-      /* min-height: 1.5em; */
       opacity: 1;
       transform: translateX(0);
       height: calc-size(auto, size);
 
-      /* @starting-style {
-        height: 0;
-        min-height: 0;
-        transition-delay: all 0;
-        transform: translateX(-2em);
-      } */
-
       .dash,
       button.collapse {
-        transition: all 0.4s linear;
+        transition: all 0.4s var(--ease-out-back);
         transition-delay: calc(0.7s + calc(40ms * calc(var(--index))));
         opacity: 1;
       }
     }
 
     &.collapsed {
-      margin: 0;
+      margin-block: 0;
       padding: 0;
-      transition-delay: 0.2s;
-      /* transform: scale(1, 0); */
-      height: 0;
       transition-delay: 0;
-      /* width: 0; */
-      /* margin-left: -1.25em; */
-      /* opacity: 0.5; */
+      height: 0;
 
       .entry {
         transition: none;
         transition: all 0.3s var(--ease-out-back); /* leaving */
-        /* transition-delay: 5s; */
         opacity: 0;
         transform: translateX(2em);
 
         .dash,
         button.collapse {
-          /* transition: all 0.4s ease-in; */
           transition-duration: 0;
           opacity: 0;
           transition-delay: 0;
-          /* transform: translateX(-100%); */
         }
       }
     }
 
     &.string {
-      --border: var(--string);
+      --border-color: var(--string);
     }
 
-    /* &.array {
-      --border: var(--object-type);
+    &.error {
+      --border-color: var(--error);
     }
-
-    &.url {
-      --border: var(--class)
-    } */
   }
 
   .key {
     &.number {
-      color: var(--number, pink);
+      color: var(--number);
     }
 
     &.string {
-      color: var(--fg, #fafafa);
+      color: var(--fg);
     }
 
     &.symbol {
-      color: var(--symbol, cyan);
+      color: var(--symbol);
     }
   }
 }
 
 .ampled-json-inspect::selection,
 .ampled-json-inspect ::selection {
-  background-color: var(--selection, lightgray);
+  background-color: var(--selection);
   color: var(--error);
 }
 
 .ampled-json-inspect .type {
   &.null,
   &.undefined {
-    background-color: var(--bg-lighter, gray);
+    background-color: var(--bg-lighter);
     color: var(--fg);
     padding: 4px 0.5em;
     height: 1.25em;
@@ -416,73 +462,74 @@
   justify-content: center;
   align-items: center;
   line-height: 1.5em;
-  padding: 2px 0.25em;
+  padding-block: 2px;
   height: 1em;
   border-radius: 2px;
   vertical-align: bottom;
 
   &.string {
-    color: var(--string-type, orange);
+    color: var(--string-type);
   }
 
   &.number {
-    color: var(--number-type, rgb(223, 0, 223));
+    color: var(--number-type);
   }
 
   &.boolean {
-    color: var(--number-type, pink);
+    color: var(--number-type);
   }
 
   &.array {
-    color: var(--object-type, lightblue);
+    color: var(--object-type);
   }
 
   &.object {
-    color: var(--object-type, lightblue);
+    color: var(--object-type);
   }
 
   &.bigint {
-    color: var(--number-type, darkred);
+    color: var(--number-type);
   }
 
-  &.error {
-    color: var(--error, red);
+  &.error,
+  &.InspectError {
+    color: var(--error);
   }
 
   &.regexp {
-    color: var(--regex, orange);
+    color: var(--function);
   }
 
   &.date {
-    color: var(--class, cyan);
+    color: var(--cyan);
   }
 
   &.function {
-    color: var(--keyword, hotpink);
+    color: var(--keyword);
   }
 
   &.symbol {
-    color: var(--symbol, cyan);
+    color: var(--string-type);
   }
 
   &.map {
-    color: var(--class, cyan);
+    color: var(--class);
   }
 
   &.url {
-    color: var(--class, cyan);
+    color: var(--class);
   }
 
   &.urlsearchparams {
-    color: var(--class, cyan);
+    color: var(--class);
   }
 
   &.set {
-    color: var(--class, cyan);
+    color: var(--class);
   }
 
   &.class {
-    color: var(--keyword, hotpink);
+    color: var(--keyword);
   }
 }
 
@@ -492,70 +539,87 @@
   white-space: nowrap;
 
   &.string {
-    color: var(--string, lightgreen);
+    color: var(--string);
   }
 
   &.multi {
     /* margin: 0; */
     /* padding: 0; */
     padding: var(--indent);
+    padding-left: calc(var(--indent) * 2);
     white-space: pre;
     overflow: clip;
     transition: 0.2s ease-in-out;
   }
 
   &.number {
-    color: var(--number, rgb(223, 0, 223));
+    color: var(--number);
   }
 
   &.boolean {
-    color: var(--boolean, pink);
+    color: var(--boolean);
   }
 
   &.array {
-    color: var(--object, lightblue);
+    color: var(--object);
   }
 
   &.object {
-    color: var(--object, lightblue);
+    color: var(--object);
   }
 
   &.bigint {
-    color: var(--number, darkred);
+    color: var(--number);
   }
 
   &.error {
-    color: var(--error, red);
+    color: var(--error);
   }
 
   &.regexp {
-    color: var(--regex, orange);
+    color: var(--regex);
   }
 
   &.date {
-    color: var(--object, orange);
+    color: var(--object);
   }
 
   &.function {
-    color: var(--function, lightgreen);
+    color: var(--function);
   }
 
   &.symbol {
-    color: var(--symbol, cyan);
+    color: var(--symbol);
   }
 
   &.map {
-    color: var(--object, cyan);
+    color: var(--object);
   }
 
   &.class {
-    color: var(--class, cyan);
+    color: var(--class);
   }
 
   &.html {
-    background-color: #282a36;
+    /* background-color: var(--bg); */
     padding-inline: 0.5em;
     border-radius: 4px;
+
+    .tag {
+      color: var(--fg);
+    }
+
+    .name {
+      color: var(--red);
+    }
+
+    .attr {
+      color: var(--green);
+    }
+
+    .string {
+      color: var(--yellow);
+    }
   }
 
   &.promise {

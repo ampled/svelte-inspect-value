@@ -4,9 +4,8 @@
   import Entry from './Entry.svelte'
   import JsonViewer from './JsonViewer.svelte'
   import ObjectLikeView from './ObjectLikeView.svelte'
-  import TitleBar from './TitleBar.svelte'
 
-  type Props = TypeViewProps<object>
+  type Props = TypeViewProps<object | SetIterator<any>>
 
   let { value = {}, key = undefined, type = 'object', path = [] }: Props = $props()
 

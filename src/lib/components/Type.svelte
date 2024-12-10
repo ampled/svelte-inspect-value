@@ -16,7 +16,15 @@
   let { showTypes } = $derived(options.value)
 
   let display = $derived.by(() => {
+    if (type?.includes('iterator')) {
+      return 'iterator'
+    }
+
     switch (type) {
+      case 'number':
+        return 'num'
+      case 'function':
+        return 'fn'
       case 'boolean':
         return 'bool'
       case 'url':
@@ -37,13 +45,15 @@
         return 'Promise'
       case 'iterator':
         return 'Iterator'
+      case 'null':
+        return 'NULL'
       default:
         return type
     }
   })
 </script>
 
-{#if (type && showTypes) || type === 'undefined' || type === 'null' || type === 'class' || type === 'function' || type === 'promise'}
+{#if (type && showTypes) || type === 'undefined' || type === 'null' || type === 'class' || type === 'function' || type === 'promise' || type === 'MapEntry'}
   <small class={`type ${type}`} {...rest} title={type}>
     {display}
   </small>

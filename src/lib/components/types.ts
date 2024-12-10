@@ -1,3 +1,4 @@
+import ArrayIteratorView from './ArrayIteratorView.svelte'
 import ArrayView from './ArrayView.svelte'
 import BigIntView from './BigIntView.svelte'
 import ClassView from './ClassView.svelte'
@@ -6,8 +7,10 @@ import ErrorView from './ErrorView.svelte'
 import FunctionView from './FunctionView.svelte'
 import HtmlImageElementView from './HTMLImageElementView.svelte'
 import HtmlView from './HTMLView.svelte'
+import IteratorView from './IteratorView.svelte'
+import MapIteratorView from './MapIteratorView.svelte'
 import MapView from './MapView.svelte'
-import Noop from './Noop.svelte'
+// import Noop from './Noop.svelte'
 import NumberView from './NumberView.svelte'
 import ObjectView from './ObjectView.svelte'
 import OneLineView from './OneLineView.svelte'
@@ -19,7 +22,7 @@ import SymbolView from './SymbolView.svelte'
 import UrlSearchParamsView from './URLSearchParamsView.svelte'
 import UrlView from './URLView.svelte'
 
-export default {
+const components = {
   object: ObjectView,
   array: ArrayView,
   string: StringView,
@@ -41,5 +44,12 @@ export default {
   htmlimageelement: HtmlImageElementView,
   html: HtmlView,
   promise: PromiseView,
-  iterator: Noop,
+  setiterator: ArrayIteratorView,
+  arrayiterator: ArrayIteratorView,
+  mapiterator: MapIteratorView,
+  iterator: IteratorView,
 } as const
+
+export default components
+
+export type ViewComponents = typeof components

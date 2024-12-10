@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { TypeViewProps } from '$lib/types.js'
+  import { fly, slide } from 'svelte/transition'
   import Entry from './Entry.svelte'
   import JsonViewer from './JsonViewer.svelte'
   import ObjectLikeView from './ObjectLikeView.svelte'
@@ -45,11 +46,13 @@
 
 <ObjectLikeView {...{ value, key, type, path }} length={entries.length}>
   {#snippet val()}
-    <span class="value promise {status}">
-      <span style="color: var(--comments)">{'<'}</span>{`${status}`}<span
-        style="color: var(--comments)">{'>'}</span
-      >
-    </span>
+    {#key status}
+      <span class="value promise {status}" in:slide={{ axis: 'y' }}>
+        <span style="color: var(--comments)">{'<'}</span>{`${status}`}<span
+          style="color: var(--comments)">{'>'}</span
+        >
+      </span>
+    {/key}
   {/snippet}
   {#each entries as [key, value], i (key)}
     <Entry {i}>

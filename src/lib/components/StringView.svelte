@@ -8,9 +8,7 @@
   import TitleBar from './TitleBar.svelte'
   import StringValue from './StringValue.svelte'
 
-  type Props = TypeViewProps<string>
-
-  let { value = '', key, type, path }: Props = $props()
+  let { value = '', key, type, path }: TypeViewProps<string> = $props()
 
   const options: OptionsContext = getContext('json-inspect')
 
@@ -23,6 +21,8 @@
       ? value.slice(0, stringCollapse).trimEnd().trimStart() + '…'
       : value
   )
+
+  // $inspect(value)
 </script>
 
 {#if isMultiLine}

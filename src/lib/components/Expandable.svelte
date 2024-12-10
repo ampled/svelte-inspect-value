@@ -11,16 +11,14 @@
   import type { TypeViewProps } from '$lib/types.js'
   import Tools from './Tools.svelte'
   import type { Collapse } from '$lib/collapse.svelte.js'
-  import type { HTMLAttributes } from 'svelte/elements'
-  import { slide } from 'svelte/transition'
-  import { backInOut, backOut } from 'svelte/easing'
+  import type { HTMLAttributes, HTMLDetailsAttributes } from 'svelte/elements'
 
   type Props = TypeViewProps<any> & {
     length?: number
     val?: Snippet
     children?: Snippet
     showLength?: boolean
-  } & HTMLAttributes<HTMLDivElement>
+  } & HTMLDetailsAttributes
 
   let {
     key,
@@ -109,44 +107,54 @@
   // })
 </script>
 
-<div class="title-bar" {...rest}>
-  <div class="button-key">
-    <CollapseButton
-      {collapsed}
-      {value}
-      onchange={onCollapseChanged}
-      disabled={length === 0}
-      aria-label="expand {key?.toString()}"
-      title="expand {key?.toString()}"
-    />
+<details open={!collapsed} {...rest} style="display: contents">
+  <summary class="line">
+    <div class="button-key">
+      <CollapseButton
+        {collapsed}
+        {value}
+        onchange={onCollapseChanged}
+        disabled={length === 0}
+        aria-label="expand {key?.toString()}"
+        title="expand {key?.toString()}"
+      />
 
-    <Key {key} {path} ondblclick={() => onCollapseChanged(!collapsed)} />
-  </div>
+      <Key {key} {path} ondblclick={() => onCollapseChanged(!collapsed)} />
+    </div>
 
-  <Type {type} />
+    <Type {type} />
 
-  {#if val}
-    {@render val()}
+    {#if val}
+      {@render val()}
+    {/if}
+
+    {#if showLength}
+      <Entries {length} {type} />
+    {/if}
+
+    <div class="tools">
+      <!-- <small>{level}</small> -->
+      <Tools {value} {path} />
+    </div>
+  </summary>
+
+  <!-- <details> -->
+  {#if children && length != null && length > 0}
+    <div class="indent {type}" class:collapsed>
+      {@render children()}
+    </div>
   {/if}
+  <!-- </details> -->
+</details>
 
-  {#if showLength}
-    <Entries {length} {type} />
-  {/if}
-
-  <div class="tools">
-    <!-- <small>{level}</small> -->
-    <Tools {value} {path} />
-  </div>
-</div>
-
-{#if children && length != null && length > 0}
+<!-- {#if children && length != null && length > 0}
   <div class="indent {type}" class:collapsed>
     {@render children()}
   </div>
-{/if}
+{/if} -->
 
 <style>
-  .title-bar {
+  .line {
     background-color: var(--bg);
     width: 100%;
     position: sticky;

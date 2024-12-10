@@ -76,14 +76,6 @@ h6 {
   text-wrap: balance;
 }
 
-/*
-    9. Create a root stacking context
-  */
-#root,
-#__next {
-  isolation: isolate;
-}
-
 .flex {
   display: flex;
   align-items: flex-start;

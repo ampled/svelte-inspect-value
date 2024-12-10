@@ -1,13 +1,13 @@
 <script module lang="ts">
   import hljs from 'highlight.js/lib/core'
   import xml from 'highlight.js/lib/languages/xml'
-  import 'highlight.js/styles/base16/dracula.min.css'
+  hljs.configure({ classPrefix: '' })
   hljs.registerLanguage('xml', xml)
 </script>
 
 <script lang="ts">
   import type { TypeViewProps } from '$lib/types.js'
-  import { onDestroy, onMount } from 'svelte'
+  import { onMount } from 'svelte'
 
   type Props = TypeViewProps<HTMLElement>
 
@@ -21,6 +21,11 @@
       return tag
     }
     return ''
+  }
+
+  function toHighlighted(ele: HTMLElement) {
+    const openTag = getOpenTag(ele)
+    return hljs.highlight(openTag, { language: 'xml' }).value
   }
 
   const highlight = (markup: string) => hljs.highlight(markup, { language: 'xml' }).value

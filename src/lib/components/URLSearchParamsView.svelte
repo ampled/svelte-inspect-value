@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { TypeViewProps } from '$lib/types.js'
+  import Entry from './Entry.svelte'
   import JsonViewer from './JsonViewer.svelte'
   import StringValue from './StringValue.svelte'
   import TitleBar from './TitleBar.svelte'
@@ -30,9 +31,9 @@
   {#snippet val()}
     <StringValue value={value.toString()} />
   {/snippet}
-  {#each entries as [key, value] (key)}
-    <div class="entry">
+  {#each entries as [key, value], i (key)}
+    <Entry {i}>
       <JsonViewer {value} {key} {path} />
-    </div>
+    </Entry>
   {/each}
 </TitleBar>

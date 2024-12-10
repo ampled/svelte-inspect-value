@@ -29,7 +29,7 @@
 
 <TitleBar {...{ value, key, type, path }} length={entries.length}>
   {#snippet val()}
-    <span class="value date">{stringify(value)}</span>
+    <span class="value date">{value.toJSON()}</span>
   {/snippet}
   {#each entries as [key, value], i (key)}
     <Entry {i}>

@@ -47,7 +47,13 @@ export class Collapse {
   save() {
     if (this.#value != null && Object.entries(this.#value).length) {
       const v = JSON.stringify(this.#value)
-      localStorage.setItem(this.name, v)
+      try {
+        localStorage.setItem(this.name, v)
+      } catch (e) {
+        if (e instanceof Error) {
+          console.error('saving state to localstorage failed because:', e)
+        }
+      }
     }
   }
 

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type { KeyName } from './types.js'
 import { stringifyPath } from './util.js'
+import LZ from 'lz-string'
 
 export type CollapseState = {
   collapsed: boolean
@@ -12,7 +13,7 @@ export type InspectState = {
   }
 }
 
-export const STATE_CONTEXT_KEY = 'inspect-state'
+export const STATE_CONTEXT_KEY = Symbol('inspect-state')
 
 function ensureStringPath(path: string | KeyName[]) {
   let key: string
@@ -24,8 +25,8 @@ function ensureStringPath(path: string | KeyName[]) {
   return key
 }
 
-export function createState(init: InspectState, title = 'svelte-value-inspect') {
-  let state: InspectState = $state(init)
+export function createState(init: InspectState | undefined, title = 'svelte-value-inspect') {
+  let state: InspectState | undefined = $state(init)
 
   // $effect(() => {
   //   if (state != null && Object.entries(state).length) {
@@ -35,16 +36,23 @@ export function createState(init: InspectState, title = 'svelte-value-inspect') 
   // })
 
   const save = () => {
+    console.log(`${title} SAVE`)
     if (state != null && Object.entries(state).length) {
       const v = JSON.stringify(state)
-      localStorage.setItem(title, v)
+      try {
+        localStorage.setItem(title, LZ.compress(v))
+      } catch (e) {
+        if (e instanceof Error) {
+          console.error('saving state to localstorage failed because:', e)
+        }
+      }
     }
   }
 
   // $inspect(state);
 
   return {
-    get value(): InspectState {
+    get value(): InspectState | undefined {
       return state
     },
     set value(val: InspectState) {
@@ -64,32 +72,39 @@ export function createState(init: InspectState, title = 'svelte-value-inspect') 
       return true
     },
     hasExpandedChildren: (path: KeyName[]) => {
-      const key = stringifyPath(path)
-      const children = Object.entries(state).filter(([k]) => k.startsWith(key) && k !== key)
-      return children.some(([k, v]) => !v.collapsed)
+      if (state) {
+        const key = stringifyPath(path)
+        const children = Object.entries(state).filter(([k]) => k.startsWith(key) && k !== key)
+        return children.some(([k, v]) => !v.collapsed)
+      }
+      return false
     },
     collapseChildren: (level: number, path: KeyName[]) => {
       // console.log('collapse under level:', level)
-      Object.entries(state).forEach((entry) => {
-        const [key] = entry
-        if (key.split('$$$').length > level) {
-          entry[1].collapsed = true
-        }
-      })
+      if (state) {
+        Object.entries(state).forEach((entry) => {
+          const [key] = entry
+          if (key.split('$$$').length > level) {
+            entry[1].collapsed = true
+          }
+        })
 
-      save()
+        save()
+      }
     },
     expandChildren: (level: number, path: string | KeyName[]) => {
       // console.log(level, path);
-      const key = ensureStringPath(path)
-      Object.entries(state).forEach((entry) => {
-        const [k] = entry
-        if (k.startsWith(key)) {
-          entry[1].collapsed = false
-        }
-      })
+      if (state) {
+        const key = ensureStringPath(path)
+        Object.entries(state).forEach((entry) => {
+          const [k] = entry
+          if (k.startsWith(key)) {
+            entry[1].collapsed = false
+          }
+        })
 
-      save()
+        save()
+      }
     },
   }
 }

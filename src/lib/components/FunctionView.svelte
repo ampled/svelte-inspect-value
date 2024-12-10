@@ -17,7 +17,7 @@
   })
 </script>
 
-<OneLineView {key} {type} {path}>
+<OneLineView {key} {type} {path} {value}>
   {#snippet val()}
     <span class="value {type}">
       {value.name}

@@ -1,11 +1,8 @@
 // import type { Action } from "svelte/action";
+
 import type { KeyName } from './types.js'
 
 export function getType(value: unknown) {
-  if (value instanceof Iterator) {
-    return 'iterator'
-  }
-  const t = typeOf(value)
   if (typeof value === 'function') {
     if (value.toString().startsWith('class') || value.toLocaleString().startsWith('class')) {
       return 'class'
@@ -13,6 +10,19 @@ export function getType(value: unknown) {
       return 'function'
     }
   }
+  // console.log({ value: value, objType: objType(value, false) })
+  // console.log
+  // if (!browser) return 'undefined'
+  // if (!globalThis.Iterator) {
+  //   return 'undefined'
+  // }
+  // if (typeof value === 'object' && Object.prototype.toString.) {
+  //   console.log(value?.constructor.name)
+  //   return 'iterator'
+  // }
+  const t = typeOf(value)
+  // console.log({ value, type: t })
+
   return t
 }
 
@@ -58,11 +68,12 @@ export function stringify(value: unknown, indent = 2) {
 }
 
 // source: http://stackoverflow.com/questions/7390426/better-way-to-get-type-of-a-javascript-variable/7390612#7390612
-function typeOf(obj: unknown): ValueType {
-  return ({}.toString
-    .call(obj)
-    .match(/\s([a-zA-Z]+)/)?.[1]
-    .toLowerCase() ?? 'undefined') as unknown as ValueType
+export function typeOf(obj: unknown): ValueType {
+  const t = {}.toString.call(obj).slice(8, -1)
+
+  // console.log(t)
+
+  return (t.replace(' ', '').toLowerCase() ?? 'undefined') as unknown as ValueType
 }
 
 // export const noopAction: Action<HTMLElement, any> = (el) => { };

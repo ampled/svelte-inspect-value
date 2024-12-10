@@ -1,21 +1,33 @@
 <script lang="ts">
-  import type { KeyName, TypeViewProps } from '$lib/types.js'
+  import { useOptions } from '$lib/options.svelte.js'
+  import { InspectError, type KeyName, type TypeViewProps } from '$lib/types.js'
   import { getType, type ValueType } from '../util.js'
   import ErrorView from './ErrorView.svelte'
+  import InspectErrorView from './InspectErrorView.svelte'
   import Noop from './Noop.svelte'
+  import StringView from './StringView.svelte'
   import components from './types.js'
 
-  type Props = TypeViewProps<any>
+  type Props = TypeViewProps<any> & { usedefaults?: boolean }
 
-  let { value = undefined, key = 'root', path: prevPath = [] }: Props = $props()
+  let {
+    value = undefined,
+    key = 'root',
+    path: prevPath = [],
+    usedefaults = false,
+  }: Props = $props()
+
+  let { customComponents } = $derived(useOptions())
 
   let type: ValueType = $derived(getType(value))
 
-  function getTypeComponent(type: ValueType) {
-    let component = components[type]
+  function getTypeComponent(type: ValueType, custom: any, useDefaults: boolean) {
+    let comps = { ...components, ...(usedefaults ? {} : custom) }
+
+    let component = comps[type]
 
     if (!component && type.startsWith('html')) {
-      component = components['html']
+      component = comps['html']
     }
 
     if (!component) {
@@ -25,9 +37,13 @@
     return component
   }
 
-  let TypeComponent = $derived(getTypeComponent(type))
+  let TypeComponent = $derived(getTypeComponent(type, customComponents, usedefaults))
+
+  // $inspect(TypeComponent)
 
   let path = $derived(key != null && prevPath ? [...prevPath, key] : undefined)
+
+  // $inspect(path)
 
   function onclick(event: MouseEvent & { currentTarget: EventTarget & HTMLDivElement }) {
     event.stopPropagation()
@@ -41,9 +57,14 @@
   <TypeComponent {value} {key} {type} {path} />
 
   {#snippet failed(error, reset)}
-    {#if error instanceof Error}
-      <ErrorView value={error} type="error" {key} />
-    {/if}
-    <button onclick={reset}>retry</button>
+    {@const inspectError = new InspectError(
+      `InspectError: Component for value of type ${type} failed`,
+      value,
+      {
+        cause: error,
+      }
+    )}
+
+    <InspectErrorView value={inspectError} {key} {path} {reset} />
   {/snippet}
 </svelte:boundary>

@@ -4,7 +4,7 @@
   import type { JSONInspectOptions } from './options.svelte.js'
 
   type Props = {
-    initialState: InspectState
+    initialState?: InspectState
     name?: string
     options: JSONInspectOptions
     children: Snippet
@@ -17,4 +17,6 @@
   setContext(STATE_CONTEXT_KEY, inspectState)
 </script>
 
+<!-- {#if initialState} -->
 {@render children()}
+<!-- {/if} -->

@@ -24,16 +24,23 @@
   let rotation = $derived.by(() => {
     if (disabled) return 180
     if (collapsed) return 0
-    return 90
+    return 450
   })
 
-  let type = $derived(getType(value))
+  // let type = $derived(getType(value))
 
   let changeDetect = $derived.by(() => {
-    if (type === 'object' || type === 'array' || type === 'string' || type === 'number') {
+    const type = getType(value)
+    if (
+      type === 'object' ||
+      type === 'array' ||
+      type === 'date' ||
+      type === 'string' ||
+      type === 'number'
+    ) {
       return stringify(value)
     }
-    return ''
+    return value
   })
 </script>
 
@@ -49,7 +56,7 @@
       {#if disabled}
         &hyphen;
       {:else}
-        <Caret style="rotate:{rotation}deg; transition: rotate 100ms ease-in-out" />
+        <Caret style="rotate:{rotation}deg; transition: rotate 500ms var(--ease-out-back);" />
       {/if}
     </div>
   {/key}

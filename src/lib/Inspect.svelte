@@ -9,18 +9,23 @@
   import { type InspectState } from './state.svelte.js'
   import StateProvider from './StateContextProvider.svelte'
   import { fade } from 'svelte/transition'
-  import { Collapse } from './collapse.svelte.js'
+  import Options from './components/Options.svelte'
+  import LZ from 'lz-string'
+  import type { CustomComponents } from './types.js'
+  import { browser } from '$app/environment'
 
-  type Props = {
+  type InspectProps = {
     value?: any
     name?: string
     rawIndent?: number
     showLength?: boolean
     showTypes?: boolean
     stringCollapse?: number
+    savecollapse?: 'localStorage' | 'sessionStorage'
     noanimate?: boolean
-    stringRender?: 'stringify' | 'pre'
+    theme?: string
     draggable?: boolean
+    customComponents?: CustomComponents
   } & HTMLAttributes<HTMLDivElement>
 
   let {
@@ -28,38 +33,47 @@
     name = undefined,
     showLength = true,
     showTypes = true,
+    savecollapse = 'localStorage',
     stringCollapse = undefined,
-    noanimate = true,
+    noanimate = false,
     class: classValue = '',
+    theme = 'drak',
     draggable = false,
-    stringRender = 'pre',
+    customComponents = {},
     ...rest
-  }: Props = $props()
+  }: InspectProps = $props()
 
-  let options = createOptions({ showLength, showTypes, stringCollapse })
+  let options = createOptions(() => ({
+    showLength,
+    showTypes,
+    stringCollapse,
+    draggable,
+    noanimate,
+    customComponents,
+    theme,
+  }))
 
   $effect(() => {
-    options.value = { showLength, showTypes, stringCollapse }
+    options.value = {
+      showLength,
+      showTypes,
+      stringCollapse,
+      draggable,
+      noanimate,
+      customComponents,
+      theme,
+    }
   })
 
   setContext('json-inspect', options)
 
-  let initialState: InspectState | undefined = $state()
-
-  let collapseState = new Collapse(
-    typeof value === 'object'
-      ? [{ id: String(name), state: { collapsed: false }, children: [] }]
-      : [],
-    'yeah'
-  )
-
-  setContext('collapse', collapseState)
+  let initialState: InspectState | undefined = $state({})
 
   onMount(() => {
     const v = localStorage.getItem('[svelte-value-inspect]' + name)
     if (v) {
       try {
-        initialState = JSON.parse(v)
+        initialState = JSON.parse(LZ.decompress(v))
       } catch (e) {
         console.warn('[Svelte Value Inspect] Could not restore saved state')
       }
@@ -95,27 +109,39 @@
   }
 
   $effect(() => {
-    if (draggable && !dragAction) {
+    if (options.value.draggable && !dragAction) {
       loadDraggable()
     }
   })
 </script>
 
-{#if initialState}
-  <StateProvider {name} {initialState} options={options.value}>
-    <div
-      in:fade
-      class:noanimate
-      class="ampled-json-inspect {classValue}"
-      use:getAction={() => ({ handle: '.handle', disabled: !draggable })}
-      {...rest}
-    >
-      <div class="body">
-        {#if draggable}
-          <div class="handle">&vellip;</div>
-        {/if}
-        <JsonViewer {value} key={name} />
+<!-- {#if browser} -->
+<svelte:boundary>
+  {#snippet failed(error, reset)}
+    {#if error instanceof Error}
+      {error.name}<br />
+      {error.message}<br />
+    {/if}
+    <button onclick={reset}>retry</button>
+  {/snippet}
+  {#if initialState}
+    <StateProvider {name} {initialState} options={options.value}>
+      <div
+        in:fade
+        class:noanimate={options.value.noanimate}
+        class="ampled-json-inspect {classValue} {options.value.theme}"
+        use:getAction={() => ({ handle: '.handle', disabled: !options.value.draggable })}
+        {...rest}
+      >
+        <Options />
+        <div class="body">
+          {#if options.value.draggable}
+            <div class="handle">&vellip;</div>
+          {/if}
+          <JsonViewer {value} key={name} />
+        </div>
       </div>
-    </div>
-  </StateProvider>
-{/if}
+    </StateProvider>
+  {/if}
+</svelte:boundary>
+<!-- {/if} -->

@@ -13,9 +13,19 @@
   let keyType = $derived(typeof key)
 
   let display = $derived(typeof key === 'symbol' ? key.toString() : key)
+
+  let showKey = $derived.by(() => {
+    if (key != null) {
+      if (typeof key === 'string') {
+        return key.length > 0
+      }
+      return true
+    }
+    return true
+  })
 </script>
 
-{#if key !== null && key !== undefined}
+{#if showKey}
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <button class="border-left" {ondblclick} onclick={() => console.log(path, stringifyPath(path))}>
     <span class="key {keyType}">

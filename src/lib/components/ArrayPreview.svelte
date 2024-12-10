@@ -6,22 +6,23 @@
   import Entry from './Entry.svelte'
   import { getType, stringify } from '$lib/util.js'
   import Type from './Type.svelte'
-  import ArrayPreview from './ArrayPreview.svelte'
 
   type Props = TypeViewProps<any[]>
 
   let { value: arrayVal = [], key = undefined, type, path }: Props = $props()
 
-  // let preview = $derived(arrayVal?.slice(0, 3) ?? [])
+  let preview = $derived(arrayVal?.slice?.(0, 3) ?? [])
 </script>
 
-<TitleBar {...{ value: arrayVal, key, type, path }} length={arrayVal.length}>
-  {#snippet val()}
-    <ArrayPreview value={arrayVal} />
-  {/snippet}
-  {#each arrayVal as value, i (i)}
-    <Entry {i}>
-      <JsonViewer key={i} {value} {path} />
-    </Entry>
+<div class="preview">
+  {'['}
+  {#each preview as val, i}
+    {@const type = getType(val)}
+    <span class="value {type}"> {stringify(val)}</span>{#if i !== 2},{/if}
   {/each}
-</TitleBar>
+
+  {#if preview.length < arrayVal.length}
+    &hellip;
+  {/if}
+  ]
+</div>

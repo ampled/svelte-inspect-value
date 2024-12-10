@@ -4,46 +4,53 @@
   import Console from '$lib/icons/Console.svelte'
   import Copy from '$lib/icons/Copy.svelte'
   import ExpandChildren from '$lib/icons/ExpandChildren.svelte'
+  import Settings from '$lib/icons/Settings.svelte'
+  import type { OptionsContext } from '$lib/options.svelte.js'
   import { STATE_CONTEXT_KEY, type StateContext } from '$lib/state.svelte.js'
   import type { TypeViewProps } from '$lib/types.js'
   import { stringifyPath } from '$lib/util.js'
   import { getContext } from 'svelte'
-  import { fade, fly } from 'svelte/transition'
 
-  type Props = TypeViewProps<any> & {
-    childrenCollapsed?: () => void
-  }
+  type Props = TypeViewProps<any>
 
-  let { value, path = [], childrenCollapsed }: Props = $props()
+  let { value, path = [] }: Props = $props()
 
   let copied = $state(false)
 
-  let inspectState: StateContext = getContext(STATE_CONTEXT_KEY)
+  let options: OptionsContext = getContext('json-inspect')
+  let inspectState: StateContext | undefined = getContext(STATE_CONTEXT_KEY)
 
   let level = $derived(path.length)
 
-  let collapseState = $derived(inspectState.value[stringifyPath(path)])
+  let collapseState = $derived(inspectState?.value?.[stringifyPath(path)])
   let collapsed = $derived(collapseState ? collapseState.collapsed : level === 1 ? false : true)
 
   const hasChildren = $derived.by(() => {
-    const key = stringifyPath(path)
-    return Object.entries(inspectState.value).filter(
-      ([k]) => k.startsWith(key) && k.length > key.length
-    )
+    if (inspectState?.value) {
+      const key = stringifyPath(path)
+      return Object.entries(inspectState.value).filter(
+        ([k]) => k.startsWith(key) && k.length > key.length
+      )
+    }
   })
 
   const children = $derived(
-    Object.entries(inspectState.value).filter(
-      ([k]) => k.startsWith(stringifyPath(path)) && k !== stringifyPath(path)
-    )
+    inspectState?.value
+      ? Object.entries(inspectState.value).filter(
+          ([k]) => k.startsWith(stringifyPath(path)) && k !== stringifyPath(path)
+        )
+      : []
   )
 
   let hasExpandedChildren = $derived.by(() => {
-    const key = stringifyPath(path)
-    const children = Object.entries(inspectState.value).filter(
-      ([k]) => k.startsWith(key) && k !== key
-    )
-    return children.some(([k, v]) => !v.collapsed)
+    if (inspectState?.value) {
+      const key = stringifyPath(path)
+      const children = Object.entries(inspectState.value).filter(
+        ([k]) => k.startsWith(key) && k.split('$$$').length === level + 1
+      )
+      return children.some(([k, v]) => !v.collapsed)
+    }
+    return false
   })
 
   let hint = $state('')
@@ -70,11 +77,6 @@
     }
   }
 
-  function collapseChildren() {
-    inspectState.collapseChildren(level, path)
-    childrenCollapsed?.()
-  }
-
   // function log (value: any) {
   //   if val
   // }
@@ -89,7 +91,7 @@
       title={hint}
       aria-label={hint}
       onmouseenter={() => setHint('collapse children')}
-      onclick={() => collapseChildren()}
+      onclick={() => inspectState?.collapseChildren(level, path)}
     >
       <CollapseChildren />
     </button>
@@ -98,7 +100,7 @@
       title={hint}
       aria-label={hint}
       onmouseenter={() => setHint('expand children')}
-      onclick={() => inspectState.expandChildren(level, path)}
+      onclick={() => inspectState?.expandChildren(level, path)}
     >
       <ExpandChildren />
     </button>
@@ -130,7 +132,17 @@
 >
   <Copy />
 </button>
-<div
+{#if level === 1}
+  <button
+    title="options"
+    aria-label="options"
+    onmouseenter={() => setHint('options')}
+    onclick={() => (options.value.open = true)}
+  >
+    <Settings />
+  </button>
+{/if}
+<!-- <div
   style="width: 8em; height: 1em; line-height: 1em; position: relative; border-right: 1px solid currentColor"
 >
   {#if !!hint}
@@ -144,4 +156,4 @@
       </small>
     {/key}
   {/if}
-</div>
+</div> -->

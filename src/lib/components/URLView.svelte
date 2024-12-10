@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { TypeViewProps } from '$lib/types.js'
+  import Entry from './Entry.svelte'
   import JsonViewer from './JsonViewer.svelte'
   import Key from './Key.svelte'
   import StringValue from './StringValue.svelte'
@@ -26,17 +27,17 @@
 
   let entries = $derived(
     Object.entries({
-      hash,
-      host,
-      hostname,
-      href,
-      origin,
-      searchParams,
-      password,
-      pathname,
-      port,
       protocol,
       username,
+      password,
+      host,
+      port,
+      pathname,
+      hash,
+      hostname,
+      origin,
+      href,
+      searchParams,
     }).filter((prop) => !!prop[1].toString())
   )
 </script>
@@ -44,12 +45,14 @@
 {#if entries.length}
   <TitleBar {...{ value, key, type, path }} length={entries.length}>
     {#snippet val()}
-      <StringValue value={value.toString()} />
+      <StringValue>
+        {value.toJSON()}
+      </StringValue>
     {/snippet}
     {#each entries as [key, value], i (key)}
-      <div class="entry" style="--index: {i}">
+      <Entry {i}>
         <JsonViewer {value} {key} {path} />
-      </div>
+      </Entry>
     {/each}
   </TitleBar>
 {:else}

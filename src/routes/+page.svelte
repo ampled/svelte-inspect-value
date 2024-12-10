@@ -8,7 +8,7 @@
   let showTypes = $state(true)
   let stringCollapse = $state(0)
   let stringRender: 'stringify' | 'pre' = $state('pre')
-  let theme = $state('dracula')
+  let theme = $state('drak')
   let draggable = $state(false)
 
   let options = $derived({
@@ -16,7 +16,7 @@
     showTypes,
     stringCollapse,
     stringRender,
-    class: theme,
+    theme,
     draggable,
   })
 
@@ -122,17 +122,23 @@
     },
     classWithStaticProperties: Greeter,
     instanceOfClass: new Greeter('World'),
+    svelteComponent: Inspect,
     simpleClass: class SimpleClass {},
     error: new TypeError('can not access property of undefined'),
+    arr: [{ name: 'alice' }, { name: 'bob gunderson' }],
   })
 
   let jsonString = $state(JSON.stringify({ anObject: { name: 'Carl' } }))
+
+  let showOptions = $state(true)
 
   // $inspect(allTypesValue)
 </script>
 
 <main>
   <div class="flex col">
+    <input type="checkbox" bind:checked={showOptions} />
+
     <h2>JSON</h2>
     <p>works pretty well for basic object and array-values aka "json"</p>
 
@@ -153,15 +159,10 @@
           interests: ['radio', 'tv', 'internet', 'kayaks'],
         }}
         name="simple"
-        {showLength}
-        {showTypes}
-        {stringCollapse}
-        {draggable}
-        class={theme}
+        {...options}
       />
     </div>
   </div>
-  <!--
 
   <div class="flex col">
     <h2>map & set</h2>
@@ -172,7 +173,7 @@
     </p>
 
     <div class="flex">
-      <TableJsonView
+      <Inspect
         value={{
           map: new Map<any, any>([
             ['yeah', 1],
@@ -183,11 +184,7 @@
           set: new Set([1, 2, 3, 'four']),
         }}
         name="mapAndSet"
-        {showLength}
-        {showTypes}
-        {stringCollapse}
-        {draggable}
-        class={theme}
+        {...options}
       />
     </div>
   </div>
@@ -197,16 +194,12 @@
     <p>display static properties of classes (but not on instances.)</p>
 
     <div class="flex">
-      <TableJsonView
+      <Inspect
         value={{
-          class: IAmAClass,
-          classInstance: new IAmAClass(),
+          class: Greeter,
+          classInstance: new Greeter('world'),
         }}
-        {showLength}
-        {showTypes}
-        {stringCollapse}
-        {draggable}
-        class={theme}
+        {...options}
       />
     </div>
   </div>
@@ -216,7 +209,7 @@
     <p>display bodies of arrow functions (experimental)</p>
 
     <div class="flex">
-      <TableJsonView
+      <Inspect
         name="functions"
         value={{
           arrowFunction: (num: number) => num * 2,
@@ -224,11 +217,7 @@
             return 'something'
           },
         }}
-        {showLength}
-        {showTypes}
-        {stringCollapse}
-        {draggable}
-        class={theme}
+        {...options}
       />
     </div>
   </div>
@@ -238,18 +227,14 @@
     <p>object properties where keys are symbols are displayed</p>
 
     <div class="flex">
-      <TableJsonView
+      <Inspect
         value={{
           stringKey: 'string value',
           anotherKey: 2,
           [symbolKey]: 'my key is a symbol',
         }}
         name="objectWithSymbolKey"
-        {showLength}
-        {showTypes}
-        {stringCollapse}
-        {draggable}
-        class={theme}
+        {...options}
       />
     </div>
   </div>
@@ -259,7 +244,7 @@
     <p>special handling of URLs and URLSearchParams</p>
 
     <div class="flex">
-      <TableJsonView
+      <Inspect
         value={{
           url: new URL('https://subdomain.example.org/about'),
           fullyFeaturedUrl: new URL(
@@ -274,33 +259,31 @@
           ]),
         }}
         name="urlFeatures"
-        {showLength}
-        {showTypes}
-        {stringCollapse}
-        {draggable}
-        class={theme}
+        {...options}
       />
     </div>
   </div>
 
   <div class="flex col">
     <h2>multi-line strings</h2>
-    <p>configurable display of multi-line strings</p>
+    <p>expandable view for multi-line strings</p>
+
+    <div class="flex">
+      <Inspect
+        value={['normal boring string', 'cool \n multi-line \n  render 😎']}
+        {...options}
+        name="strings"
+        class={theme}
+      />
+    </div>
+  </div>
+
+  <div class="flex col">
+    <h2>html elements</h2>
+    <!-- <p>expandable view for multi-line strings</p> -->
 
     <div class="flex" style="gap: 2em">
-      <TableJsonView
-        value={'normal \n boring \n string'}
-        {...options}
-        stringRender="stringify"
-        class={theme}
-      />
-
-      <TableJsonView
-        value={'cool \n multi-line \n  render 😎'}
-        {...options}
-        stringRender="pre"
-        class={theme}
-      />
+      <Inspect value={div} {...options} name="divElement" class={theme} />
     </div>
   </div>
 
@@ -310,7 +293,7 @@
     <p>you can also go wild with nesting</p>
 
     <div class="flex">
-      <TableJsonView
+      <Inspect
         value={{
           dateValue: new Date(),
           reg: /^[re(g)ex]$/,
@@ -320,79 +303,51 @@
         class={theme}
       />
     </div>
-  </div>-->
-
-  <div
-    class="options"
-    bind:this={div}
-    class:showLength
-    style:opacity={showLength ? 1 : 0.95}
-    data-lol="hei"
-  >
-    <label>
-      <input type="checkbox" bind:checked={draggable} />
-      draggable
-    </label>
-
-    <label>
-      <input type="checkbox" bind:checked={showLength} />
-      show length of entries
-    </label>
-
-    <label>
-      <input type="checkbox" bind:checked={showTypes} />
-      show types
-    </label>
-
-    <label>
-      collapse strings
-      <input type="number" bind:value={stringCollapse} />
-    </label>
-
-    <label>
-      string mode
-      <select bind:value={stringRender}>
-        <option>stringify</option>
-        <option>pre</option>
-      </select>
-    </label>
-
-    <label>
-      theme
-      <select bind:value={theme}>
-        <option>dracula</option>
-        <option>monokai</option>
-        <option>solarized-dark</option>
-        <option>default-dark</option>
-        <option>default-light</option>
-        <option>none (uggo)</option>
-      </select>
-    </label>
-
-    <!-- <Inspect value={options} name={'options'} {...options} style="margin: auto" /> -->
   </div>
-  <!-- <Inspect
-    value={{
-      normal: 'normal',
-      number: 2,
-      object: {
-        name: 'obj',
-      },
-      aString: 'hey',
-      array: [1, 2, 3],
-      aList: [1, 2, 3],
-    }}
-    name={'demo'}
-    {...options}
-  /> -->
-  <Inspect
-    name="test"
-    value={{
-      a: {
-        b: { hey: 'wassup' },
-      },
-    }}
-  />
+  {#if showOptions}
+    <div
+      class="options"
+      bind:this={div}
+      class:showLength
+      style:opacity={showLength ? 1 : 0.95}
+      data-testid="options"
+    >
+      <label>
+        <input type="checkbox" bind:checked={draggable} />
+        draggable
+      </label>
+
+      <label>
+        <input type="checkbox" bind:checked={showLength} />
+        show length of entries
+      </label>
+
+      <label>
+        <input type="checkbox" bind:checked={showTypes} />
+        show types
+      </label>
+
+      <label>
+        collapse strings
+        <input type="number" bind:value={stringCollapse} />
+      </label>
+
+      <label>
+        theme
+        <select bind:value={theme}>
+          <option>dracula</option>
+          <option>monokai</option>
+          <option>solarized-dark</option>
+          <option>default-dark</option>
+          <option>default-light</option>
+          <option></option>
+        </select>
+      </label>
+
+      <!-- <Inspect value={options} name={'options'} {...options} style="margin: auto" /> -->
+    </div>
+  {/if}
+
   <Inspect value={allTypesValue} name={'allTypes'} {...options} />
 </main>
 
