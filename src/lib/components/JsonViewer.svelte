@@ -2,10 +2,8 @@
   import { useOptions } from '$lib/options.svelte.js'
   import { InspectError, type KeyName, type TypeViewProps } from '$lib/types.js'
   import { getType, type ValueType } from '../util.js'
-  import ErrorView from './ErrorView.svelte'
   import InspectErrorView from './InspectErrorView.svelte'
   import Noop from './Noop.svelte'
-  import StringView from './StringView.svelte'
   import components from './types.js'
 
   type Props = TypeViewProps<any> & { usedefaults?: boolean }

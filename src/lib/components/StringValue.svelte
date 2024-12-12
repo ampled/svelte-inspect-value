@@ -12,7 +12,7 @@
 
   const options: OptionsContext = getContext('json-inspect')
 
-  let { stringCollapse } = $derived(options.value)
+  let { stringCollapse, quotes } = $derived(options.value)
 
   let display = $derived(
     stringCollapse && stringCollapse < value.length
@@ -25,7 +25,7 @@
   {#if children}
     {@render children()}
   {:else}
-    {stringify(display)}
+    {stringify(display, 0, quotes)}
   {/if}
 </span>
 {#if length}

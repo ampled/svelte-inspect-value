@@ -26,8 +26,12 @@
 </script>
 
 {#if showKey}
-  <!-- svelte-ignore a11y_no_static_element_interactions -->
-  <button class="border-left" {ondblclick} onclick={() => console.log(path, stringifyPath(path))}>
+  <button
+    tabindex="-1"
+    class="border-left"
+    {ondblclick}
+    onclick={() => console.log(path, stringifyPath(path))}
+  >
     <span class="key {keyType}">
       {display}<span class="delim">:</span>
     </span>

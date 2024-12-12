@@ -9,7 +9,7 @@
   import type { TypeViewProps } from '$lib/types.js'
   import { onMount } from 'svelte'
 
-  type Props = TypeViewProps<HTMLElement>
+  type Props = TypeViewProps<HTMLElement | null>
 
   let { value = undefined }: Props = $props()
 

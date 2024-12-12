@@ -6,16 +6,24 @@
   import JsonViewer from './JsonViewer.svelte'
   import TitleBar from './TitleBar.svelte'
   import Entry from './Entry.svelte'
+  import { getType } from '$lib/util.js'
 
   type Props = TypeViewProps<HTMLElement> & { children?: Snippet }
 
   let { value, key = undefined, type, path, children }: Props = $props()
 
-  const oop = htmlState(value!)
+  let element = $state(htmlState(value!))
+
+  $effect(() => {
+    if (value && value !== element.ele) {
+      element.destroy()
+      element = htmlState(value!)
+    }
+  })
 
   let attrs = $derived.by(() => {
-    if (oop.ele) {
-      return Object.entries(oop.ele.attributes)
+    if (element.ele) {
+      return Object.entries(element.ele.attributes)
         .map(([, attr]) => [attr.name, attr.value])
         .filter(([name]) => !['class', 'style', 'data'].includes(name) && !name.startsWith('data-'))
     }
@@ -23,38 +31,48 @@
   })
 
   let styles = $derived.by(() => {
-    if (oop.ele) {
-      const elementStyle = oop.ele.style
-      const out: Record<string, any> = {}
+    if (element.ele) {
+      const elementStyle = element.ele.style
+      const out: [string, string][] = []
       for (const prop in elementStyle) {
         // We check if the property belongs to the CSSStyleDeclaration instance
         // We also ensure that the property is a numeric index (indicating an inline style)
         if (Object.hasOwn(elementStyle, prop) && !Number.isNaN(Number.parseInt(prop))) {
-          out[elementStyle[prop]] = elementStyle.getPropertyValue(elementStyle[prop])
+          const value = elementStyle.getPropertyValue(elementStyle[prop])
+          if (value)
+            out.push([elementStyle[prop], elementStyle.getPropertyValue(elementStyle[prop])])
         }
       }
       return out
     }
-    return {}
+    return []
   })
 
   let entries = $derived(
-    oop.ele
-      ? [
-          ...attrs,
-          ...Object.entries({
-            class: oop.ele.className.split(' ').filter(Boolean),
-            styles,
-            data: Object.fromEntries(Object.entries(oop.ele.dataset)),
-          }),
-        ]
+    element.ele
+      ? Object.entries({
+          attrs: Object.fromEntries(attrs),
+          class: element.ele.className.split(' ').filter(Boolean),
+          styles: Object.fromEntries(styles),
+          data: Object.fromEntries(Object.entries(element.ele.dataset)),
+        }).filter((entry) =>
+          entry.length && getType(entry[1]) === 'array'
+            ? entry[1].length
+            : getType(entry[1]) === 'object'
+              ? Object.entries(entry[1]).length
+              : false
+        )
       : []
   )
+
+  $inspect(entries)
 </script>
 
 <TitleBar {...{ value, key, type, path }} length={entries.length}>
   {#snippet val()}
-    <HtmlValue {value} />
+    {#key element.ele}
+      <HtmlValue value={element.ele} />
+    {/key}
   {/snippet}
   {#if children}
     {@render children()}

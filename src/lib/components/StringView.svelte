@@ -21,8 +21,6 @@
       ? value.slice(0, stringCollapse).trimEnd().trimStart() + '…'
       : value
   )
-
-  // $inspect(value)
 </script>
 
 {#if isMultiLine}
@@ -30,7 +28,7 @@
     {#snippet val()}
       <StringValue {value} />
     {/snippet}
-    <pre class="value string multi" title={stringify(value)}>{value}</pre>
+    <pre class="value string multi" title={value}>{value}</pre>
   </TitleBar>
 {:else}
   <OneLineView {key} {type} {path} value={stringify(display)} title={stringify(value)}>

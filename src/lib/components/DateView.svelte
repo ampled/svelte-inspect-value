@@ -1,9 +1,7 @@
 <script lang="ts">
   import type { TypeViewProps } from '$lib/types.js'
-  import { stringify } from '$lib/util.js'
   import Entry from './Entry.svelte'
   import JsonViewer from './JsonViewer.svelte'
-  import StringView from './StringView.svelte'
   import TitleBar from './TitleBar.svelte'
 
   type Props = TypeViewProps<Date>
@@ -29,7 +27,7 @@
 
 <TitleBar {...{ value, key, type, path }} length={entries.length}>
   {#snippet val()}
-    <span class="value date">{value.toJSON()}</span>
+    <span class="value date">{value.toUTCString()}</span>
   {/snippet}
   {#each entries as [key, value], i (key)}
     <Entry {i}>

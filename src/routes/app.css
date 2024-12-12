@@ -1,16 +1,78 @@
+:root {
+  --base00: #282a36;
+  --base01: #3a3c4e;
+  --base02: #44475a;
+  --base03: #6272a4;
+  --base04: #8be9fd;
+  --base05: #f8f8f2;
+  --base06: #f1f2f8;
+  --base07: #f7f7fb;
+  --base08: #ea51b2; /* red */
+  --base09: #ffb86c; /* orange */
+  --base0A: #f1fa8c; /* yellow */
+  --base0B: #50fa7b; /* green */
+  --base0C: #a1efe4; /* cyan */
+  --base0D: #62d6e8; /* blue */
+  --base0E: #bd93f9; /* purp */
+  --base0F: #009e45;
+
+  --cyan: var(--base0C, #00c1be);
+  --yellow: var(--base0A, #e1ff7f);
+  --green: var(--base0B, #5faa70);
+  --red: var(--base08, #b03a3a);
+  --purple: var(--base0E, #8f42ae);
+  --blue: var(--base0D, #6a6ace);
+  --orange: var(--base09, #c6903a);
+
+  --bg: #21232d;
+  --bg-code: var(--base00);
+  --bg-lighter: var(--base01, #250060);
+  --bg-light: var(--base07);
+  --selection: var(--base02);
+  --comments: var(--base03, #59456e);
+  --border-color: var(--base03, var(--comments));
+  --dark-fg: var(--base04);
+  --fg: var(--base05, #b9a9be);
+  --fg-light: var(--base06);
+
+  --error: var(--red);
+  --delimiter: var(--red);
+  --keyword: var(--red);
+  --number: var(--purple);
+  --number-type: var(--red);
+  --boolean: var(--purple);
+  --class: var(--blue);
+  --string: var(--yellow);
+  --string-type: var(--purple);
+  --regex: var(--cyan);
+  --symbol: var(--cyan);
+  --function: var(--green);
+  --object-type: var(--cyan);
+  --object: var(--blue);
+  --interactive: var(--base0E);
+  --deprecated: var(--base0F);
+
+  /* --indent-multiplier: 1; */
+  --indent: calc(0.5em * var(--indent-multiplier, 1));
+
+  --stagger-delay: 20ms;
+}
+
 body,
 html {
-  width: 100%;
+  /* width: 100%; */
   /* height: 100%; */
   box-sizing: border-box;
   /* margin: 1em; */
   /* padding: 0; */
-  background-color: cadetblue;
+  background-color: var(--bg);
+  color: var(--fg);
   font-family: monospace;
+  max-width: 100vw;
 }
 
 main {
-  background-color: cadetblue;
+  /* background-color: cadetblue; */
   /* height: 100vh; */
 }
 
@@ -80,8 +142,9 @@ h6 {
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
+  gap: 1em;
   /* background-color: antiquewhite; */
-  width: 100%;
+  /* width: 100%; */
 }
 
 .row {
@@ -90,6 +153,17 @@ h6 {
 
 .col {
   flex-direction: column;
-  width: 100%;
+  /* width: 100%; */
   margin-inline: 2em;
+}
+
+label {
+  /* height: 3.5rem; */
+  display: flex;
+  /* border: 1px solid; */
+  flex-direction: column;
+  align-items: center;
+  justify-items: flex-start;
+  /* gap: 0.5rem; */
+  /* padding: 1em; */
 }

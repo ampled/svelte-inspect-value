@@ -1,0 +1,19 @@
+<script>
+  import { Inspect } from '@eirikk/inspect'
+
+  let promises = {
+    neverResolve: new Promise(() => {}),
+    resolveInAFew: new Promise((resolve) => {
+      setTimeout(() => {
+        resolve('yeah')
+      }, 2000)
+    }),
+    rejectsInAFew: new Promise((_, reject) => {
+      setTimeout(() => {
+        reject('nope')
+      }, 3500)
+    }),
+  }
+</script>
+
+<Inspect value={promises} name="promises" />

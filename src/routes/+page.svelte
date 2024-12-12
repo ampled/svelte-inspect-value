@@ -3,6 +3,8 @@
   import Inspect from '$lib/Inspect.svelte'
   import { browser } from '$app/environment'
   import { onMount } from 'svelte'
+  import Promises from '../doclib/examples/Promises.svelte'
+  import HtmlElements from '../doclib/examples/HTMLElements.svelte'
 
   let showLength = $state(true)
   let showTypes = $state(true)
@@ -137,8 +139,6 @@
 
 <main>
   <div class="flex col">
-    <input type="checkbox" bind:checked={showOptions} />
-
     <h2>JSON</h2>
     <p>works pretty well for basic object and array-values aka "json"</p>
 
@@ -188,6 +188,10 @@
       />
     </div>
   </div>
+
+  <Promises />
+
+  <HtmlElements />
 
   <div class="flex col">
     <h2>class</h2>
@@ -279,15 +283,6 @@
   </div>
 
   <div class="flex col">
-    <h2>html elements</h2>
-    <!-- <p>expandable view for multi-line strings</p> -->
-
-    <div class="flex" style="gap: 2em">
-      <Inspect value={div} {...options} name="divElement" class={theme} />
-    </div>
-  </div>
-
-  <div class="flex col">
     <h2>other</h2>
     <p>other types handled includes Error, Date, regexp</p>
     <p>you can also go wild with nesting</p>
@@ -304,7 +299,7 @@
       />
     </div>
   </div>
-  {#if showOptions}
+  <!-- {#if showOptions}
     <div
       class="options"
       bind:this={div}
@@ -343,12 +338,10 @@
           <option></option>
         </select>
       </label>
-
-      <!-- <Inspect value={options} name={'options'} {...options} style="margin: auto" /> -->
     </div>
-  {/if}
+  {/if} -->
 
-  <Inspect value={allTypesValue} name={'allTypes'} {...options} />
+  <!-- <Inspect value={allTypesValue} name={'allTypes'} {...options} /> -->
 </main>
 
 <style>
@@ -372,7 +365,7 @@
     align-items: flex-start;
     justify-items: flex-start;
     border: 1px solid black;
-    background-color: cadetblue;
+    /* background-color: cadetblue; */
   }
 
   label {

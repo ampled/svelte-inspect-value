@@ -46,7 +46,11 @@ export type ValueType =
   | 'promise'
   | 'iterator'
 
-export function stringify(value: unknown, indent = 2) {
+export function stringify(value: unknown, indent = 2, quotes: 'single' | 'double' = 'single') {
+  if (typeof value === 'string' && quotes === 'single') {
+    const str = `'${JSON.stringify(value).slice(1, -1)}'`
+    return str
+  }
   return JSON.stringify(
     value,
     (key, value) => {

@@ -36,11 +36,12 @@ export function createState(init: InspectState | undefined, title = 'svelte-valu
   // })
 
   const save = () => {
-    console.log(`${title} SAVE`)
+    // console.log(`${title} SAVE`)
     if (state != null && Object.entries(state).length) {
       const v = JSON.stringify(state)
       try {
-        localStorage.setItem(title, LZ.compress(v))
+        // localStorage.setItem(title, LZ.compress(v))
+        localStorage.setItem(title, v)
       } catch (e) {
         if (e instanceof Error) {
           console.error('saving state to localstorage failed because:', e)
@@ -53,6 +54,7 @@ export function createState(init: InspectState | undefined, title = 'svelte-valu
 
   return {
     get value(): InspectState | undefined {
+      // console.trace('get collapse state value')
       return state
     },
     set value(val: InspectState) {
@@ -60,8 +62,14 @@ export function createState(init: InspectState | undefined, title = 'svelte-valu
     },
     setCollapse: (keyOrPath: string | KeyName[], collapsed: boolean) => {
       const key = ensureStringPath(keyOrPath)
-      if (state) state[key] = { collapsed }
-      save()
+      let changed = false
+      if (state) {
+        state[key] = { collapsed }
+        changed = true
+      }
+      if (changed) {
+        save()
+      }
     },
     getCollapse: (keyOrPath: string | KeyName[]) => {
       const key = ensureStringPath(keyOrPath)
@@ -82,28 +90,36 @@ export function createState(init: InspectState | undefined, title = 'svelte-valu
     collapseChildren: (level: number, path: KeyName[]) => {
       // console.log('collapse under level:', level)
       if (state) {
+        let changed = false
         Object.entries(state).forEach((entry) => {
           const [key] = entry
           if (key.split('$$$').length > level) {
+            changed = true
             entry[1].collapsed = true
           }
         })
-
-        save()
+        if (changed) {
+          save()
+        }
       }
     },
     expandChildren: (level: number, path: string | KeyName[]) => {
       // console.log(level, path);
       if (state) {
+        let changed = false
+
         const key = ensureStringPath(path)
         Object.entries(state).forEach((entry) => {
           const [k] = entry
           if (k.startsWith(key)) {
+            changed = true
             entry[1].collapsed = false
           }
         })
 
-        save()
+        if (changed) {
+          save()
+        }
       }
     },
   }

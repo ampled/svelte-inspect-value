@@ -13,16 +13,18 @@
   import LZ from 'lz-string'
   import type { CustomComponents } from './types.js'
   import { browser } from '$app/environment'
+  import { prefersReducedMotion } from 'svelte/motion'
 
   type InspectProps = {
     value?: any
     name?: string
-    rawIndent?: number
     showLength?: boolean
     showTypes?: boolean
     stringCollapse?: number
     savecollapse?: 'localStorage' | 'sessionStorage'
     noanimate?: boolean
+    quotes?: 'single' | 'double'
+    expandAll?: boolean
     theme?: string
     draggable?: boolean
     customComponents?: CustomComponents
@@ -34,16 +36,18 @@
     showLength = true,
     showTypes = true,
     savecollapse = 'localStorage',
-    stringCollapse = undefined,
+    quotes = 'single',
+    expandAll = false,
+    stringCollapse = 0,
     noanimate = false,
     class: classValue = '',
-    theme = 'drak',
+    theme = 'cotton-candy',
     draggable = false,
     customComponents = {},
     ...rest
   }: InspectProps = $props()
 
-  let options = createOptions(() => ({
+  let options = createOptions({
     showLength,
     showTypes,
     stringCollapse,
@@ -51,10 +55,11 @@
     noanimate,
     customComponents,
     theme,
-  }))
+    expandAll,
+  })
 
   $effect(() => {
-    options.value = {
+    options.setOptions({
       showLength,
       showTypes,
       stringCollapse,
@@ -62,7 +67,8 @@
       noanimate,
       customComponents,
       theme,
-    }
+      expandAll,
+    })
   })
 
   setContext('json-inspect', options)
@@ -73,7 +79,8 @@
     const v = localStorage.getItem('[svelte-value-inspect]' + name)
     if (v) {
       try {
-        initialState = JSON.parse(LZ.decompress(v))
+        // initialState = JSON.parse(LZ.decompress(v))
+        initialState = JSON.parse(v)
       } catch (e) {
         console.warn('[Svelte Value Inspect] Could not restore saved state')
       }
@@ -113,9 +120,12 @@
       loadDraggable()
     }
   })
+
+  let fixedBottom = $state(false)
 </script>
 
 <!-- {#if browser} -->
+<!-- {#if initialState} -->
 <svelte:boundary>
   {#snippet failed(error, reset)}
     {#if error instanceof Error}
@@ -130,11 +140,16 @@
         in:fade
         class:noanimate={options.value.noanimate}
         class="ampled-json-inspect {classValue} {options.value.theme}"
+        class:fixedBottom
         use:getAction={() => ({ handle: '.handle', disabled: !options.value.draggable })}
         {...rest}
       >
         <Options />
         <div class="body">
+          <!-- <button
+            style="position: absolute; top:0; left: 0;"
+            onclick={() => (fixedBottom = !fixedBottom)}>&rArr;</button
+          > -->
           {#if options.value.draggable}
             <div class="handle">&vellip;</div>
           {/if}

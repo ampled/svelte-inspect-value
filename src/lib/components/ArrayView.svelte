@@ -1,18 +1,13 @@
 <script lang="ts">
   import type { TypeViewProps } from '$lib/types.js'
-  import { slide } from 'svelte/transition'
   import JsonViewer from './JsonViewer.svelte'
   import TitleBar from './TitleBar.svelte'
   import Entry from './Entry.svelte'
-  import { getType, stringify } from '$lib/util.js'
-  import Type from './Type.svelte'
   import ArrayPreview from './ArrayPreview.svelte'
 
   type Props = TypeViewProps<any[]>
 
   let { value: arrayVal = [], key = undefined, type, path }: Props = $props()
-
-  // let preview = $derived(arrayVal?.slice(0, 3) ?? [])
 </script>
 
 <TitleBar {...{ value: arrayVal, key, type, path }} length={arrayVal.length}>

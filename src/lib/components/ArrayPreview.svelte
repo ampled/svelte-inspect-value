@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { TypeViewProps } from '$lib/types.js'
+  import ArrayPreview from './ArrayPreview.svelte'
   import { slide } from 'svelte/transition'
   import JsonViewer from './JsonViewer.svelte'
   import TitleBar from './TitleBar.svelte'
@@ -7,9 +8,7 @@
   import { getType, stringify } from '$lib/util.js'
   import Type from './Type.svelte'
 
-  type Props = TypeViewProps<any[]>
-
-  let { value: arrayVal = [], key = undefined, type, path }: Props = $props()
+  let { value: arrayVal = [], key = undefined, type, path }: TypeViewProps<any[]> = $props()
 
   let preview = $derived(arrayVal?.slice?.(0, 3) ?? [])
 </script>
@@ -18,7 +17,15 @@
   {'['}
   {#each preview as val, i}
     {@const type = getType(val)}
-    <span class="value {type}"> {stringify(val)}</span>{#if i !== 2},{/if}
+
+    <span class="value {type}">
+      {#if type === 'array'}
+        <ArrayPreview value={val} />
+      {:else}
+        {val === undefined ? 'undefined' : stringify(val)}
+      {/if}</span
+    >
+    {#if i !== 2},{/if}
   {/each}
 
   {#if preview.length < arrayVal.length}
@@ -26,3 +33,11 @@
   {/if}
   ]
 </div>
+
+<style>
+  .preview {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+</style>

@@ -7,11 +7,12 @@
   import Settings from '$lib/icons/Settings.svelte'
   import type { OptionsContext } from '$lib/options.svelte.js'
   import { STATE_CONTEXT_KEY, type StateContext } from '$lib/state.svelte.js'
-  import type { TypeViewProps } from '$lib/types.js'
+  import type { KeyName, TypeViewProps } from '$lib/types.js'
   import { stringifyPath } from '$lib/util.js'
   import { getContext } from 'svelte'
+  import { blur, draw } from 'svelte/transition'
 
-  type Props = TypeViewProps<any>
+  type Props = TypeViewProps<any> & { collapsed?: boolean }
 
   let { value, path = [] }: Props = $props()
 
@@ -21,9 +22,6 @@
   let inspectState: StateContext | undefined = getContext(STATE_CONTEXT_KEY)
 
   let level = $derived(path.length)
-
-  let collapseState = $derived(inspectState?.value?.[stringifyPath(path)])
-  let collapsed = $derived(collapseState ? collapseState.collapsed : level === 1 ? false : true)
 
   const hasChildren = $derived.by(() => {
     if (inspectState?.value) {
@@ -82,30 +80,35 @@
   // }
 
   // const actions = [{}]
+
+  let collapseAction = {
+    hint: 'collapse children',
+    action: (level: number, path: KeyName[]) => inspectState?.collapseChildren(level, path),
+    icon: CollapseChildren,
+  }
+
+  let expandAction = {
+    hint: 'expand children',
+    action: (level: number, path: KeyName[]) => inspectState?.expandChildren(level, path),
+    icon: ExpandChildren,
+  }
+
+  let treeAction = $derived(hasExpandedChildren ? collapseAction : expandAction)
 </script>
 
 <!-- <small>hasExpandedChildren: {hasExpandedChildren}</small> -->
 {#if children.length}
-  {#if hasExpandedChildren}
-    <button
-      title={hint}
-      aria-label={hint}
-      onmouseenter={() => setHint('collapse children')}
-      onclick={() => inspectState?.collapseChildren(level, path)}
-    >
-      <CollapseChildren />
-    </button>
-  {:else}
-    <button
-      title={hint}
-      aria-label={hint}
-      onmouseenter={() => setHint('expand children')}
-      onclick={() => inspectState?.expandChildren(level, path)}
-    >
-      <ExpandChildren />
-    </button>
-  {/if}
+  <button
+    title={treeAction.hint}
+    aria-label={treeAction.hint}
+    onmouseenter={() => setHint(treeAction.hint)}
+    onfocus={() => setHint(treeAction.hint)}
+    onclick={() => treeAction.action(level, path)}
+  >
+    <treeAction.icon />
+  </button>
 {/if}
+
 <!--
 <button
   title={hint}
@@ -142,6 +145,7 @@
     <Settings />
   </button>
 {/if}
+
 <!-- <div
   style="width: 8em; height: 1em; line-height: 1em; position: relative; border-right: 1px solid currentColor"
 >

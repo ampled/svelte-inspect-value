@@ -1,12 +1,11 @@
 <script lang="ts">
   import type { TypeViewProps } from '$lib/types.js'
-  import { fly, slide } from 'svelte/transition'
+  import { fade } from 'svelte/transition'
   import Entry from './Entry.svelte'
   import JsonViewer from './JsonViewer.svelte'
   import ObjectLikeView from './ObjectLikeView.svelte'
-  import TitleBar from './TitleBar.svelte'
 
-  type Props = TypeViewProps<Promise<any>>
+  type Props = TypeViewProps<Promise<unknown>>
 
   let { value = Promise.resolve(), key, type, path }: Props = $props()
 
@@ -17,37 +16,49 @@
     Object.entries({
       state: status,
       result: result,
-    }).filter(([, value]) => value !== undefined)
+    })
   )
 
-  $effect(() => {
-    try {
-      value
-        .then(
-          (res) => {
-            result = res
-            status = 'fulfilled'
-          },
-          (err) => {
-            result = err
-            status = 'rejected'
-          }
-        )
-        .catch((err) => {
-          result = err
-          status = 'rejected'
-        })
-    } catch (err) {
+  function handleSuccess(res: unknown, promise: Promise<any>) {
+    if (promise === value) {
+      result = res
+      status = 'fulfilled'
+    }
+  }
+
+  function handleReject(err: unknown, promise: Promise<any>) {
+    if (promise === value) {
       result = err
       status = 'rejected'
     }
+  }
+
+  function resolvePromise(promise: Promise<any>) {
+    // if (promise !== value) {
+    status = 'pending'
+    result = undefined
+    // }
+    try {
+      promise
+        .then(
+          (res) => handleSuccess(res, promise),
+          (e) => handleReject(e, promise)
+        )
+        .catch((e) => handleReject(e, promise))
+    } catch (err) {
+      handleReject(err, promise)
+    }
+  }
+
+  $effect(() => {
+    resolvePromise(value)
   })
 </script>
 
 <ObjectLikeView {...{ value, key, type, path }} length={entries.length}>
   {#snippet val()}
     {#key status}
-      <span class="value promise {status}" in:slide={{ axis: 'y' }}>
+      <span class="value promise {status}" in:fade>
         <span style="color: var(--comments)">{'<'}</span>{`${status}`}<span
           style="color: var(--comments)">{'>'}</span
         >
@@ -60,3 +71,9 @@
     </Entry>
   {/each}
 </ObjectLikeView>
+
+<style>
+  span.value {
+    width: 7em;
+  }
+</style>

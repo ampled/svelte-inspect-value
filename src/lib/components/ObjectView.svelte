@@ -21,14 +21,6 @@
   let objectType = $derived(classInstance ? (classInstance as ValueType) : type)
 </script>
 
-<!-- <TitleBar {...{ value, key, path }} type={objectType} length={entries.length}>
-  {#each entries as [key, value], i (key)}
-    <Entry {i}>
-      <JsonViewer {value} {key} {path} />
-    </Entry>
-  {/each}
-</TitleBar> -->
-
 <ObjectLikeView type={objectType} length={entries.length} {key} {path} {value}>
   {#each entries as [key, value], i (key)}
     <Entry {i}>

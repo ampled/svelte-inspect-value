@@ -14,14 +14,27 @@
   // $inspect(options)
 
   // $inspect(options)
-  const themes = ['drak', 'monokai', 'default-dark', 'default-light', 'solarized-dark', 'none']
+  const themes = [
+    'drak',
+    'monokai',
+    'default-dark',
+    'default-light',
+    'solarized-dark',
+    'none',
+    'cotton-candy',
+  ]
 </script>
 
 {#if options.value.open}
   <div class="options" transition:fade>
     <div class="header" style="display: flex; justify-items: space-between;">
       <span>Options</span>
-      <button style="margin-left: 100%" onclick={() => (options.value.open = false)}>x</button>
+      <button
+        style="margin-left: auto"
+        onclick={() => (options.value.open = false)}
+        aria-label="close options"
+        title="close options">&times;</button
+      >
     </div>
 
     <div class="controls">
@@ -36,18 +49,18 @@
       </label>
 
       <label>
-        collapse strings
-        <input type="number" bind:value={options.value.stringCollapse} />
-      </label>
-
-      <label>
         draggable
         <input type="checkbox" bind:checked={options.value.draggable} />
       </label>
 
       <label>
-        disable animations
+        no animations
         <input type="checkbox" bind:checked={options.value.noanimate} />
+      </label>
+
+      <label>
+        collapse strings
+        <input type="number" bind:value={options.value.stringCollapse} />
       </label>
 
       <label>
@@ -58,19 +71,27 @@
           {/each}
         </select>
       </label>
+
+      <label>
+        string quotes
+        <select bind:value={options.value.quotes}>
+          <option>single</option>
+          <option>double</option>
+        </select>
+      </label>
     </div>
   </div>
 {/if}
 
 <style>
   .options {
+    position: absolute;
+    inset: 0.5em;
     z-index: 10;
     border-radius: 8px;
     background-color: var(--bg);
-    position: absolute;
-    inset: 0.5em;
     overflow: auto;
-    max-width: 300px;
+    max-width: 90%;
     /* margin: auto; */
     border: 1px solid var(--border-color);
     max-height: max-content;
@@ -80,7 +101,18 @@
     padding: 1em;
 
     .header {
-      max-width: 100px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+
+      span {
+        text-decoration: underline;
+      }
+    }
+
+    button {
+      font-weight: bold;
+      font-size: 1.5em;
     }
 
     .controls {
@@ -88,12 +120,63 @@
       flex-flow: row wrap;
       gap: 1em;
 
+      input,
+      select {
+        color: var(--fg);
+        background-color: var(--bg-lighter);
+        border: 1px solid var(--border-color);
+        text-align: right;
+        /* padding-inline: 1em; */
+      }
+
       input[type='number'] {
-        width: 3em;
+        width: 5em;
+      }
+
+      input[type='checkbox'] {
+        appearance: none;
+        -webkit-appearance: none;
+        display: flex;
+        align-content: center;
+        justify-content: center;
+        /* font-size: 2rem; */
+        /* padding: 0.1rem; */
+        border: 1px solid var(--border-color);
+        border-radius: 2px;
+        accent-color: var(--bg-lighter);
+      }
+
+      input[type='checkbox']::before {
+        content: '';
+        width: 1em;
+        height: 1em;
+        clip-path: polygon(28% 38%, 41% 53%, 75% 24%, 86% 38%, 40% 78%, 15% 50%);
+        transform: scale(0);
+        background-color: var(--fg);
+        transition: all 0.1s ease-in-out;
+      }
+
+      input[type='checkbox']:checked::before {
+        transform: scale(1);
+      }
+
+      input[type='checkbox']:hover {
+        color: black;
       }
 
       label {
+        display: flex;
+        gap: 1em;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 0.5em;
+        max-width: max-content;
         flex: 1 0 auto;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        /* align-items: flex-end; */
+        color: var(--string);
+        border-bottom: 1px solid var(--border-color);
       }
     }
   }

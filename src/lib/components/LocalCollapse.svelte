@@ -11,14 +11,16 @@
   import type { TypeViewProps } from '$lib/types.js'
   import Tools from './Tools.svelte'
   import type { Collapse } from '$lib/collapse.svelte.js'
-  import type { HTMLAttributes, HTMLDetailsAttributes } from 'svelte/elements'
+  import type { HTMLAttributes } from 'svelte/elements'
+  import { slide } from 'svelte/transition'
+  import { backInOut, backOut } from 'svelte/easing'
 
   type Props = TypeViewProps<any> & {
     length?: number
     val?: Snippet
     children?: Snippet
     showLength?: boolean
-  } & HTMLDetailsAttributes
+  } & HTMLAttributes<HTMLDivElement>
 
   let {
     key,
@@ -36,19 +38,18 @@
 
   let level = $derived(path.length)
 
-  let collapseState = $derived(inspectState?.value?.[stringifyPath(path)])
-  let collapsed = $derived(collapseState ? collapseState.collapsed : level === 1 ? false : true)
+  let collapsed = $state(true)
 
   // $inspect(collapseState)
 
   onMount(() => {
-    if (inspectState?.value?.[stringifyPath(path)] == null) {
-      if (path.length === 0) {
-        inspectState?.setCollapse(['root'], false)
-      } else {
-        inspectState?.setCollapse(path, level === 1 ? false : true)
-      }
-    }
+    // if (inspectState?.value?.[stringifyPath(path)] == null) {
+    //   if (path.length === 0) {
+    //     inspectState?.setCollapse(['root'], false)
+    //   } else {
+    //     inspectState?.setCollapse(path, level === 1 ? false : true)
+    //   }
+    // }
   })
 
   // $effect(() => {
@@ -58,8 +59,8 @@
   // $inspect(collapsed)
 
   function onCollapseChanged(newValue: boolean) {
-    // collapsed = newValue
-    inspectState?.setCollapse(path, newValue)
+    collapsed = newValue
+    // inspectState?.setCollapse(path, newValue)
     // Object.keys(inspectState.value)
     //   .filter(
     //     (k) =>
@@ -107,54 +108,44 @@
   // })
 </script>
 
-<details open={!collapsed} {...rest} style="display: contents">
-  <summary class="line">
-    <div class="button-key">
-      <CollapseButton
-        {collapsed}
-        {value}
-        onchange={onCollapseChanged}
-        disabled={length === 0}
-        aria-label="expand {key?.toString()}"
-        title="expand {key?.toString()}"
-      />
+<div class="title-bar" {...rest}>
+  <div class="button-key">
+    <CollapseButton
+      {collapsed}
+      {value}
+      onchange={onCollapseChanged}
+      disabled={length === 0}
+      aria-label="expand {key?.toString()}"
+      title="expand {key?.toString()}"
+    />
 
-      <Key {key} {path} ondblclick={() => onCollapseChanged(!collapsed)} />
-    </div>
+    <Key {key} {path} ondblclick={() => onCollapseChanged(!collapsed)} />
+  </div>
 
-    <Type {type} />
+  <Type {type} />
 
-    {#if val}
-      {@render val()}
-    {/if}
-
-    {#if showLength}
-      <Entries {length} {type} />
-    {/if}
-
-    <div class="tools">
-      <!-- <small>{level}</small> -->
-      <Tools {value} {path} />
-    </div>
-  </summary>
-
-  <!-- <details> -->
-  {#if children && length != null && length > 0}
-    <div class="indent {type}" class:collapsed>
-      {@render children()}
-    </div>
+  {#if val}
+    {@render val()}
   {/if}
-  <!-- </details> -->
-</details>
 
-<!-- {#if children && length != null && length > 0}
+  {#if showLength}
+    <Entries {length} {type} />
+  {/if}
+
+  <div class="tools">
+    <!-- <small>{level}</small> -->
+    <!-- <Tools {value} {path} /> -->
+  </div>
+</div>
+
+{#if children && length != null && length > 0}
   <div class="indent {type}" class:collapsed>
     {@render children()}
   </div>
-{/if} -->
+{/if}
 
 <style>
-  .line {
+  .title-bar {
     background-color: var(--bg);
     width: 100%;
     position: sticky;
@@ -177,7 +168,8 @@
     /* width: calc(100% + 0.5em); */
     transition: all 0.2s ease-in-out;
 
-    &:hover {
+    &:hover,
+    &:focus-within {
       background-color: var(--bg-lighter);
     }
 

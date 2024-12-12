@@ -17,7 +17,7 @@
     showTypes,
     stringCollapse,
     stringRender,
-    class: theme,
+    theme,
     draggable,
   })
 
@@ -104,7 +104,7 @@
     }
   }
 
-  let number = $state(90)
+  // let number = $state(90)
   intervalEffect(() => allTypesValue.number++, 1000)
 
   $effect(() => {

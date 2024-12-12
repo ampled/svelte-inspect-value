@@ -1,7 +1,7 @@
 <script lang="ts">
   import { STATE_CONTEXT_KEY, type StateContext } from '$lib/state.svelte.js'
 
-  import { getContext, onMount, type Snippet } from 'svelte'
+  import { getContext, onMount, setContext, type Snippet } from 'svelte'
   import CollapseButton from './CollapseButton.svelte'
   import Entries from './Entries.svelte'
 
@@ -10,10 +10,8 @@
   import { stringifyPath } from '$lib/util.js'
   import type { TypeViewProps } from '$lib/types.js'
   import Tools from './Tools.svelte'
-  import type { Collapse } from '$lib/collapse.svelte.js'
   import type { HTMLAttributes } from 'svelte/elements'
-  import { slide } from 'svelte/transition'
-  import { backInOut, backOut } from 'svelte/easing'
+  import { useOptions } from '$lib/options.svelte.js'
 
   type Props = TypeViewProps<any> & {
     length?: number
@@ -34,16 +32,29 @@
     ...rest
   }: Props = $props()
 
+  let { expandAll } = $derived(useOptions())
   let inspectState: StateContext | undefined = getContext(STATE_CONTEXT_KEY)
+
+  // $inspect(key, inspectState?.value)
 
   let level = $derived(path.length)
 
   let collapseState = $derived(inspectState?.value?.[stringifyPath(path)])
+
+  $inspect(collapseState)
   let collapsed = $derived(collapseState ? collapseState.collapsed : level === 1 ? false : true)
+
+  let parentCollapsed = getContext<(() => boolean) | undefined>('parent-collapsed')
+  setContext('parent-collapsed', () => parentCollapsed?.() || collapsed)
 
   // $inspect(collapseState)
 
   onMount(() => {
+    if (expandAll) {
+      inspectState?.setCollapse(path, false)
+    }
+
+    // add self
     if (inspectState?.value?.[stringifyPath(path)] == null) {
       if (path.length === 0) {
         inspectState?.setCollapse(['root'], false)
@@ -135,7 +146,7 @@
 
   <div class="tools">
     <!-- <small>{level}</small> -->
-    <Tools {value} {path} />
+    <Tools {value} {path} {collapsed} />
   </div>
 </div>
 
@@ -148,6 +159,7 @@
 <style>
   .title-bar {
     background-color: var(--bg);
+    z-index: var(--index);
     width: 100%;
     position: sticky;
     top: 0;
@@ -157,6 +169,7 @@
     border-top-width: 0;
     border-left-width: 0;
     border-style: solid;
+    /* z-index: 10000; */
     white-space: nowrap;
     display: flex;
     flex-direction: row;

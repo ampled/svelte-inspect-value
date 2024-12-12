@@ -3,11 +3,12 @@
   import Key from './Key.svelte'
   import type { TypeViewProps } from '$lib/types.js'
   import Type from './Type.svelte'
-  import type { Snippet } from 'svelte'
+  import { getContext, type Snippet } from 'svelte'
   import type { HTMLAttributes } from 'svelte/elements'
   import { fly } from 'svelte/transition'
   import Tools from './Tools.svelte'
   import { stringify } from '$lib/util.js'
+  import { flashOnUpdate } from '$lib/action.ts/update-flash.svelte.js'
 
   type Props = TypeViewProps<any> & {
     val?: Snippet
@@ -17,6 +18,10 @@
   let { value, display, key, type, path, val, ...rest }: Props = $props()
 
   // $inspect(value)
+
+  let parentCollapsed = getContext<() => boolean | undefined>('parent-collapsed')
+
+  // $inspect($state.snapshot(key), parentCollapsed?.())
 
   let displayOrValue = $derived(display != null ? display : value)
 
@@ -32,9 +37,9 @@
 
 <Line>
   <div class="dash-key">
-    {#key changeDetect}
-      <div class="dash flash-update">&hyphen;</div>
-    {/key}
+    <!-- {#key changeDetect} -->
+    <div class="dash"><span use:flashOnUpdate={() => value}>&hyphen;</span></div>
+    <!-- {/key} -->
     <Key {key} {path} />
   </div>
   <Type {type} />

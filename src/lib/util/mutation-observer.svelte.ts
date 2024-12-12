@@ -4,7 +4,7 @@ export function htmlState<T extends HTMLElement = HTMLElement>(ele: T) {
   let element: T | null = $state(ele)
 
   const observer = new MutationObserver(([mutation]) => {
-    console.log('mutation!')
+    // console.log('mutation!')
     element = null
     element = mutation.target as T
   })
@@ -21,6 +21,9 @@ export function htmlState<T extends HTMLElement = HTMLElement>(ele: T) {
   return {
     get ele() {
       return element
+    },
+    destroy: () => {
+      observer.disconnect()
     },
   }
 }

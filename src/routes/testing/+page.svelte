@@ -48,17 +48,17 @@
 
   let aMap = new Map([[1, 2]])
 
-  let anObject = $derived({
+  let anObject = $state({
     aString: 'some string',
-    errorsWithCauses: new Error('testing', {
-      cause: new Error('i am what happened', { cause: new Error('no i am spartacus') }),
-    }),
+    // errorsWithCauses: new Error('testing', {
+    //   cause: new Error('i am what happened', { cause: new Error('no i am spartacus') }),
+    // }),
     counter: 0,
     // arrayIterator: [1, 2, 3].values(),
     // setIterator: new Set([1, 2, 3]).entries(),
     // mapIterator: new SvelteMap([['key', 'string']]).entries(),
-    typedArr,
-    generator,
+    // typedArr,
+    // generator,
   })
 </script>
 
@@ -67,7 +67,7 @@
 <button onclick={() => (growing = [...growing, growing.length + 1])}>+</button>
 <button onclick={() => (growing = growing.toSpliced(growing.length - 1, 1))}>-</button>
 
-<Inspect class="drak" value={anObject} name="anObject" />
+<Inspect theme="drak" value={anObject} name="anObject" />
 
 <!-- <Inspect class="drak" value={new Error('testing', { cause: 'bababa' })} />
 <Inspect

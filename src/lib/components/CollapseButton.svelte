@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { flashOnUpdate } from '$lib/action.ts/update-flash.svelte.js'
   import Caret from '$lib/icons/Caret.svelte'
   import { getType, stringify } from '$lib/util.js'
   import type { HTMLButtonAttributes } from 'svelte/elements'
@@ -42,24 +43,45 @@
     }
     return value
   })
+
+  function onkeydown(event: KeyboardEvent & { currentTarget: EventTarget & HTMLButtonElement }) {
+    // event.preventDefault()
+    if (onchange) {
+      switch (event.key) {
+        case 'ArrowDown':
+        case 'ArrowRight':
+          event.preventDefault()
+          onchange(false)
+          break
+        case 'ArrowUp':
+        case 'ArrowLeft':
+          event.preventDefault()
+          onchange(true)
+          break
+        default:
+          break
+      }
+    }
+  }
 </script>
 
-<button type="button" class="collapse" {onclick} {disabled} {...rest}>
-  {#key changeDetect}
-    <!-- {#if collapsed}
+<!-- use:flashOnUpdate={() => value} -->
+<button type="button" class="collapse" {onclick} {disabled} {...rest} {onkeydown}>
+  <!-- {#key changeDetect} -->
+  <!-- {#if collapsed}
     +
   {:else}
     -
   {/if} -->
-    <!-- <span style:rotate={collapsed ? '0deg' : '90deg'}>&#9656;</span> -->
-    <div class="flash-update">
-      {#if disabled}
-        &hyphen;
-      {:else}
-        <Caret style="rotate:{rotation}deg; transition: rotate 500ms var(--ease-out-back);" />
-      {/if}
-    </div>
-  {/key}
+  <!-- <span style:rotate={collapsed ? '0deg' : '90deg'}>&#9656;</span> -->
+  <div class="flash-update" use:flashOnUpdate={() => value}>
+    {#if disabled}
+      &hyphen;
+    {:else}
+      <Caret style="rotate:{rotation}deg; transition: rotate 500ms var(--ease-out-back);" />
+    {/if}
+  </div>
+  <!-- {/key} -->
 </button>
 
 <style>
@@ -74,6 +96,11 @@
     aspect-ratio: 1 / 1;
     width: 1em;
     height: 1em;
+
+    &:focus-visible {
+      color: var(--fg);
+      transform: scale(1.2);
+    }
 
     &:disabled {
       cursor: default;

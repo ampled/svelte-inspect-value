@@ -9,7 +9,7 @@
 <style>
   .line {
     transition: all 0.2s ease-in-out;
-    transition-delay: 0.2s;
+    /* transition-delay: 0.2s; */
     padding-left: calc(var(--indent) * 0.5);
     display: flex;
     flex-direction: row;
