@@ -3,7 +3,7 @@
   import type { TypeViewProps } from './types.js'
   import OneLineView from './components/OneLineView.svelte'
 
-  let { ...rest }: TypeViewProps<any> & { val?: Snippet } = $props()
+  let { ...rest }: TypeViewProps<unknown> & { val?: Snippet } = $props()
 </script>
 
 <OneLineView {...rest} />

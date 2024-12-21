@@ -1,7 +1,7 @@
 <script lang="ts">
   import { STATE_CONTEXT_KEY, type StateContext } from '$lib/state.svelte.js'
 
-  import { getContext, onMount, setContext, type Snippet } from 'svelte'
+  import { getContext, onMount, setContext, untrack, type Component, type Snippet } from 'svelte'
   import CollapseButton from './CollapseButton.svelte'
   import Entries from './Entries.svelte'
 
@@ -12,6 +12,8 @@
   import Tools from './Tools.svelte'
   import type { HTMLAttributes } from 'svelte/elements'
   import { useOptions } from '$lib/options.svelte.js'
+  import { slide } from 'svelte/transition'
+  import { backInOut, backOut } from 'svelte/easing'
 
   type Props = TypeViewProps<any> & {
     length?: number
@@ -32,97 +34,40 @@
     ...rest
   }: Props = $props()
 
-  let { expandAll } = $derived(useOptions())
+  let { expandAll, expandLevel, noanimate } = $derived(useOptions())
   let inspectState: StateContext | undefined = getContext(STATE_CONTEXT_KEY)
 
-  // $inspect(key, inspectState?.value)
-
   let level = $derived(path.length)
-
   let collapseState = $derived(inspectState?.value?.[stringifyPath(path)])
-
-  $inspect(collapseState)
-  let collapsed = $derived(collapseState ? collapseState.collapsed : level === 1 ? false : true)
-
-  let parentCollapsed = getContext<(() => boolean) | undefined>('parent-collapsed')
-  setContext('parent-collapsed', () => parentCollapsed?.() || collapsed)
-
-  // $inspect(collapseState)
+  let collapsed = $derived(collapseState ? collapseState.collapsed : true)
 
   onMount(() => {
-    if (expandAll) {
-      inspectState?.setCollapse(path, false)
-    }
-
-    // add self
-    if (inspectState?.value?.[stringifyPath(path)] == null) {
-      if (path.length === 0) {
-        inspectState?.setCollapse(['root'], false)
-      } else {
-        inspectState?.setCollapse(path, level === 1 ? false : true)
+    if (inspectState) {
+      const storedState = inspectState.getCollapse(path)
+      if (!storedState) {
+        if (expandAll) {
+          inspectState.setCollapse(path, false)
+        } else {
+          inspectState.setCollapse(path, level > expandLevel)
+        }
       }
     }
   })
 
-  // $effect(() => {
-  //   console.log('isCollapsed update:', isCollapsed)
-  // })
-
-  // $inspect(collapsed)
+  // let parentCollapsed = getContext<(() => boolean) | undefined>('parent-collapsed')
+  // setContext('parent-collapsed', () => parentCollapsed?.() || collapsed)
 
   function onCollapseChanged(newValue: boolean) {
-    // collapsed = newValue
     inspectState?.setCollapse(path, newValue)
-    // Object.keys(inspectState.value)
-    //   .filter(
-    //     (k) =>
-    //       k.length < stringifyPath(path).length &&
-    //       !k.startsWith(stringifyPath(path)) &&
-    //       k !== stringifyPath(path)
-    //   )
-    //   .forEach((k) => {
-    //     inspectState.value[k].collapsed = true
-    //   })
   }
 
-  // let state: StateContext = getContext('inspect-state')
-
-  // let currentPath = $derived([...path].map((k) => k?.toString()).join('.'))
-
-  // $effect(() => {
-  //   untrack(() => {
-  //     const wasCollapsed = state.getCollapse(currentPath)
-  //     console.log({
-  //       currentPath,
-  //       wasCollapsed,
-  //     })
-  //     if (wasCollapsed !== undefined) {
-  //       collapsed = wasCollapsed
-  //     }
-  //   })
-  // })
-
-  // $effect(() => {
-  //   console.log('get collapse state from context')
-  //   const wasCollapsed = state.getCollapse(currentPath)
-  //   // if (typeof wasCollapsed)
-  //   console.log({ path, wasCollapsed })
-  //   if (typeof wasCollapsed === 'boolean') {
-  //     collapsed = wasCollapsed
-  //   }
-  // })
-
-  // $effect(() => {
-  //   console.log('set collapse state from context')
-  //   if (collapsed !== undefined) {
-  //     state.setCollapse(currentPath, collapsed)
-  //   }
-  // })
+  let buttonComponent = $state<ReturnType<typeof CollapseButton>>()
 </script>
 
 <div class="title-bar" {...rest}>
   <div class="button-key">
     <CollapseButton
+      bind:this={buttonComponent}
       {collapsed}
       {value}
       onchange={onCollapseChanged}
@@ -145,14 +90,22 @@
   {/if}
 
   <div class="tools">
-    <!-- <small>{level}</small> -->
     <Tools {value} {path} {collapsed} />
   </div>
 </div>
 
-{#if children && length != null && length > 0}
-  <div class="indent {type}" class:collapsed>
-    {@render children()}
+{#if children && length != null && length > 0 && !collapsed}
+  <div
+    transition:slide={{ axis: 'x', duration: noanimate ? 0 : 400 }}
+    oninspectvaluechange={() => buttonComponent?.flash()}
+  >
+    <div
+      class="indent {type}"
+      in:slide={{ easing: backOut, duration: noanimate ? 0 : 400 }}
+      out:slide={{ duration: noanimate ? 0 : 400 }}
+    >
+      {@render children()}
+    </div>
   </div>
 {/if}
 

@@ -1,8 +1,8 @@
 <script lang="ts">
   import type { TypeViewProps } from '$lib/types.js'
   import { slide } from 'svelte/transition'
-  import JsonViewer from './JsonViewer.svelte'
-  import TitleBar from './TitleBar.svelte'
+  import JsonViewer from './Node.svelte'
+  import Expandable from './Expandable.svelte'
   import Entry from './Entry.svelte'
   import { stringify } from '$lib/util.js'
 
@@ -15,7 +15,7 @@
   // $inspect(value)
 </script>
 
-<TitleBar {...{ value, key, type, path }} length={entries.length}>
+<Expandable {...{ value, key, type, path }} length={entries.length}>
   {#snippet val()}
     <button
       onclick={() => {
@@ -28,4 +28,4 @@
       <JsonViewer key={i} {value} {path} />
     </Entry>
   {/each}
-</TitleBar>
+</Expandable>

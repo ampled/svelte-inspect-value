@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { flashOnUpdate } from '$lib/action.ts/update-flash.svelte.js'
+  import { flashOnUpdate } from '$lib/action/update-flash.svelte.js'
   import Caret from '$lib/icons/Caret.svelte'
   import { getType, stringify } from '$lib/util.js'
   import type { HTMLButtonAttributes } from 'svelte/elements'
@@ -28,22 +28,6 @@
     return 450
   })
 
-  // let type = $derived(getType(value))
-
-  let changeDetect = $derived.by(() => {
-    const type = getType(value)
-    if (
-      type === 'object' ||
-      type === 'array' ||
-      type === 'date' ||
-      type === 'string' ||
-      type === 'number'
-    ) {
-      return stringify(value)
-    }
-    return value
-  })
-
   function onkeydown(event: KeyboardEvent & { currentTarget: EventTarget & HTMLButtonElement }) {
     // event.preventDefault()
     if (onchange) {
@@ -63,29 +47,26 @@
       }
     }
   }
+
+  let flashFn = $state<() => void>()
+
+  export function flash() {
+    flashFn?.()
+  }
 </script>
 
-<!-- use:flashOnUpdate={() => value} -->
 <button type="button" class="collapse" {onclick} {disabled} {...rest} {onkeydown}>
-  <!-- {#key changeDetect} -->
-  <!-- {#if collapsed}
-    +
-  {:else}
-    -
-  {/if} -->
-  <!-- <span style:rotate={collapsed ? '0deg' : '90deg'}>&#9656;</span> -->
-  <div class="flash-update" use:flashOnUpdate={() => value}>
+  <div use:flashOnUpdate={{ value: () => value, cb: (trigger) => (flashFn = trigger) }}>
     {#if disabled}
       &hyphen;
     {:else}
       <Caret style="rotate:{rotation}deg; transition: rotate 500ms var(--ease-out-back);" />
     {/if}
   </div>
-  <!-- {/key} -->
 </button>
 
 <style>
-  button.collapse {
+  .collapse {
     all: unset;
     overflow: hidden;
     cursor: pointer;
@@ -113,30 +94,5 @@
       width: 100%;
       height: 100%;
     }
-  }
-
-  @keyframes flash {
-    /* 0% {
-  } */
-
-    10% {
-      color: var(--bg-light);
-      /* transform: scale(100, 50); */
-    }
-
-    100% {
-      /* rotate: 360deg; */
-      /* color: var(--comments); */
-    }
-  }
-
-  .flash-update {
-    /* transform-origin: center left; */
-    /* animation: flash 500ms; */
-    animation: flash ease-out 500ms 1;
-    /* animation-name: flash;
-  animation-duration: 500ms;
-  animation-iteration-count: 1;
-  animation-timing-function: linear; */
   }
 </style>

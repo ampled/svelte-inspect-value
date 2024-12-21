@@ -1,18 +1,30 @@
 <script lang="ts">
   import type { TypeViewProps } from '$lib/types.js'
   import { htmlState } from '$lib/util/mutation-observer.svelte.js'
-  import type { Snippet } from 'svelte'
+  import { onMount, type Snippet } from 'svelte'
   import HtmlValue from './HTMLValue.svelte'
-  import JsonViewer from './JsonViewer.svelte'
-  import TitleBar from './TitleBar.svelte'
+  import JsonViewer from './Node.svelte'
+  import Expandable from './Expandable.svelte'
   import Entry from './Entry.svelte'
-  import { getType } from '$lib/util.js'
+  import { isArray, isObject } from '$lib/util.js'
 
   type Props = TypeViewProps<HTMLElement> & { children?: Snippet }
 
   let { value, key = undefined, type, path, children }: Props = $props()
 
   let element = $state(htmlState(value!))
+  let scrollLeft = $state<number | undefined>(value?.scrollLeft)
+  let scrollTop = $state<number | undefined>(value?.scrollTop)
+
+  onMount(() => {
+    if (value) {
+      value.addEventListener('scroll', (event: Event) => {
+        const target = event.target as HTMLElement
+        scrollLeft = target.scrollLeft
+        scrollTop = target.scrollTop
+      })
+    }
+  })
 
   $effect(() => {
     if (value && value !== element.ele) {
@@ -48,27 +60,32 @@
     return []
   })
 
+  // let eventListeners = $derived.by(() => {
+  //   if (element.ele) {
+  //     getEvent
+  //     element.ele.
+  //   }
+  // })
+
   let entries = $derived(
     element.ele
       ? Object.entries({
-          attrs: Object.fromEntries(attrs),
+          ...Object.fromEntries(attrs),
           class: element.ele.className.split(' ').filter(Boolean),
           styles: Object.fromEntries(styles),
           data: Object.fromEntries(Object.entries(element.ele.dataset)),
-        }).filter((entry) =>
-          entry.length && getType(entry[1]) === 'array'
-            ? entry[1].length
-            : getType(entry[1]) === 'object'
-              ? Object.entries(entry[1]).length
-              : false
+          scroll: {
+            left: scrollLeft,
+            top: scrollTop,
+          },
+        }).filter(([, v]) =>
+          isArray(v) ? v.length : isObject(v) ? Object.entries(v).length : v != null
         )
       : []
   )
-
-  $inspect(entries)
 </script>
 
-<TitleBar {...{ value, key, type, path }} length={entries.length}>
+<Expandable {...{ value, key, type, path }} length={entries.length}>
   {#snippet val()}
     {#key element.ele}
       <HtmlValue value={element.ele} />
@@ -82,4 +99,4 @@
       <JsonViewer {value} {key} {path} />
     </Entry>
   {/each}
-</TitleBar>
+</Expandable>

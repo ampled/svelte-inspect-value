@@ -2,11 +2,8 @@
   import type { TypeViewProps } from '$lib/types.js'
   import { getType } from '$lib/util.js'
   import Entry from './Entry.svelte'
-  import JsonViewer from './JsonViewer.svelte'
-  import Line from './Line.svelte'
-  import OneLineView from './OneLineView.svelte'
-  import TitleBar from './TitleBar.svelte'
-  import Type from './Type.svelte'
+  import Node from './Node.svelte'
+  import Expandable from './Expandable.svelte'
 
   type Props = TypeViewProps<Map<any, any>>
 
@@ -15,15 +12,15 @@
   let entries = $derived(Array.from(value.entries()))
 </script>
 
-<TitleBar {...{ value, key, type, path }} length={entries.length}>
+<Expandable {...{ value, key, type, path }} length={entries.length}>
   {#each entries as [mapKey, mapValue], i (mapKey)}
     <Entry {i}>
       {#if ['string', 'number', 'symbol'].includes(typeof mapKey)}
-        <JsonViewer key={mapKey} value={mapValue} {path} />
+        <Node key={mapKey} value={mapValue} {path} />
       {:else}
         {@const keyType = getType(mapKey)}
         {@const valueType = getType(mapValue)}
-        <TitleBar
+        <Expandable
           key=""
           type="MapEntry"
           value={[mapKey, mapValue]}
@@ -38,13 +35,13 @@
             </span>
           {/snippet}
           <Entry i={0}>
-            <JsonViewer key="key" value={mapKey} path={[...path, i, 'key']} />
+            <Node key="key" value={mapKey} path={[...path, i, 'key']} />
           </Entry>
           <Entry i={1}>
-            <JsonViewer key="value" value={mapValue} path={[...path, i, 'value']} />
+            <Node key="value" value={mapValue} path={[...path, i, 'value']} />
           </Entry>
-        </TitleBar>
+        </Expandable>
       {/if}
     </Entry>
   {/each}
-</TitleBar>
+</Expandable>

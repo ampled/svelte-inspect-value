@@ -10,20 +10,16 @@ export function getType(value: unknown) {
       return 'function'
     }
   }
-  // console.log({ value: value, objType: objType(value, false) })
-  // console.log
-  // if (!browser) return 'undefined'
-  // if (!globalThis.Iterator) {
-  //   return 'undefined'
-  // }
-  // if (typeof value === 'object' && Object.prototype.toString.) {
-  //   console.log(value?.constructor.name)
-  //   return 'iterator'
-  // }
-  const t = typeOf(value)
-  // console.log({ value, type: t })
 
-  return t
+  return typeOf(value)
+}
+
+export function isArray(value: unknown): value is unknown[] {
+  return Array.isArray(value)
+}
+
+export function isObject(value: unknown): value is object {
+  return getType(value) === 'object'
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -83,6 +79,10 @@ export function typeOf(obj: unknown): ValueType {
 // export const noopAction: Action<HTMLElement, any> = (el) => { };
 
 export const stringifyPath = (path: KeyName[]) => {
+  return path.map((k) => k.toString()).join('.')
+}
+
+export const stringifyPath$ = (path: KeyName[]) => {
   return path
     .map((k, i) => {
       if (typeof k === 'number') {
@@ -92,4 +92,10 @@ export const stringifyPath = (path: KeyName[]) => {
       return pre + k.toString()
     })
     .join('$$$')
+}
+
+export function collapseString(value: string, length: undefined | number) {
+  return length && length < value.length
+    ? value.slice(0, length).trimEnd().trimStart() + '…'
+    : value
 }

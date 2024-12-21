@@ -55,9 +55,12 @@
     // }),
     counter: 0,
     // arrayIterator: [1, 2, 3].values(),
-    // setIterator: new Set([1, 2, 3]).entries(),
+    setIterator: new Set([1, 2, 3]).entries(),
     // mapIterator: new SvelteMap([['key', 'string']]).entries(),
-    // typedArr,
+    typedArr,
+    asf: (function* () {
+      yield* [1, 2, 3]
+    })(),
     // generator,
   })
 </script>

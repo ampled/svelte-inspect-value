@@ -8,15 +8,14 @@
     name?: string
     options: JSONInspectOptions
     children: Snippet
+    onChange?: (value: InspectState) => void
   }
 
-  const { initialState, children, name }: Props = $props()
+  const { children, name, onChange }: Props = $props()
 
-  const inspectState = createState(initialState, '[svelte-value-inspect]' + (name ?? ''))
+  const inspectState = createState({}, '[svelte-value-inspect]' + (name ?? ''), onChange)
 
   setContext(STATE_CONTEXT_KEY, inspectState)
 </script>
 
-<!-- {#if initialState} -->
 {@render children()}
-<!-- {/if} -->

@@ -1,12 +1,11 @@
 <script lang="ts">
   import type { TypeViewProps } from '$lib/types.js'
   import Entry from './Entry.svelte'
-  import JsonViewer from './JsonViewer.svelte'
-  import Key from './Key.svelte'
+  import Expandable from './Expandable.svelte'
+  import JsonViewer from './Node.svelte'
   import OneLineView from './OneLineView.svelte'
-  import TitleBar from './TitleBar.svelte'
-  import Type from './Type.svelte'
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   type Props = TypeViewProps<Function>
 
   let { value = class Foo {}, key, type, path }: Props = $props()
@@ -15,7 +14,7 @@
 </script>
 
 {#if entries.length}
-  <TitleBar {...{ value, key, type, path }} length={entries.length}>
+  <Expandable {...{ value, key, type, path }} length={entries.length}>
     {#snippet val()}
       <span class="value {type}">
         {value.name}
@@ -29,9 +28,9 @@
         <JsonViewer {value} {key} {path} />
       </Entry>
     {/each}
-  </TitleBar>
+  </Expandable>
 {:else}
-  <OneLineView {key} {type} {path}>
+  <OneLineView {value} {key} {type} {path}>
     {#snippet val()}
       <span class="value {type}">
         {value.name.trim()}

@@ -1,6 +1,6 @@
+import equal from 'fast-deep-equal'
 import { onDestroy, untrack } from 'svelte'
 import type { Action } from 'svelte/action'
-import equal from 'fast-deep-equal'
 
 export const flashOnUpdate: Action<
   HTMLElement,

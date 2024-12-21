@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import type { KeyName } from './types.js'
 import { stringifyPath } from './util.js'
-import LZ from 'lz-string'
 
-export type CollapseState = {
+export type NodeState = {
   collapsed: boolean
 }
 
@@ -25,36 +24,15 @@ function ensureStringPath(path: string | KeyName[]) {
   return key
 }
 
-export function createState(init: InspectState | undefined, title = 'svelte-value-inspect') {
+export function createState(
+  init: InspectState,
+  title = 'svelte-value-inspect',
+  onChange?: (value: InspectState) => void
+) {
   let state: InspectState | undefined = $state(init)
-
-  // $effect(() => {
-  //   if (state != null && Object.entries(state).length) {
-  //     const v = JSON.stringify(state)
-  //     localStorage.setItem(title, v)
-  //   }
-  // })
-
-  const save = () => {
-    // console.log(`${title} SAVE`)
-    if (state != null && Object.entries(state).length) {
-      const v = JSON.stringify(state)
-      try {
-        // localStorage.setItem(title, LZ.compress(v))
-        localStorage.setItem(title, v)
-      } catch (e) {
-        if (e instanceof Error) {
-          console.error('saving state to localstorage failed because:', e)
-        }
-      }
-    }
-  }
-
-  // $inspect(state);
 
   return {
     get value(): InspectState | undefined {
-      // console.trace('get collapse state value')
       return state
     },
     set value(val: InspectState) {
@@ -67,17 +45,13 @@ export function createState(init: InspectState | undefined, title = 'svelte-valu
         state[key] = { collapsed }
         changed = true
       }
-      if (changed) {
-        save()
+      if (changed && state) {
+        onChange?.(state)
       }
     },
     getCollapse: (keyOrPath: string | KeyName[]) => {
       const key = ensureStringPath(keyOrPath)
-      const wasCollapsed = state?.[key]?.collapsed
-      if (typeof wasCollapsed === 'boolean') {
-        return wasCollapsed
-      }
-      return true
+      return state?.[key]
     },
     hasExpandedChildren: (path: KeyName[]) => {
       if (state) {
@@ -88,37 +62,37 @@ export function createState(init: InspectState | undefined, title = 'svelte-valu
       return false
     },
     collapseChildren: (level: number, path: KeyName[]) => {
-      // console.log('collapse under level:', level)
       if (state) {
         let changed = false
         Object.entries(state).forEach((entry) => {
           const [key] = entry
-          if (key.split('$$$').length > level) {
-            changed = true
+          if (key.split('.').length > level) {
             entry[1].collapsed = true
+            changed = true
           }
         })
         if (changed) {
-          save()
+          onChange?.(state)
         }
       }
     },
-    expandChildren: (level: number, path: string | KeyName[]) => {
-      // console.log(level, path);
+    expandChildren: (currentLevel: number, currentPath: string | KeyName[]) => {
       if (state) {
         let changed = false
 
-        const key = ensureStringPath(path)
+        const key = ensureStringPath(currentPath)
         Object.entries(state).forEach((entry) => {
           const [k] = entry
+          const stringPath = k.split('.')
           if (k.startsWith(key)) {
-            changed = true
+            // debugger
             entry[1].collapsed = false
+            changed = true
           }
         })
 
         if (changed) {
-          save()
+          onChange?.(state)
         }
       }
     },

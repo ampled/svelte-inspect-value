@@ -222,6 +222,10 @@
   --ease-in-out-back: cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
+.ampled-json-inspect code {
+  all: unset;
+}
+
 .ampled-json-inspect {
   font-size: 12px;
   box-sizing: border-box;
@@ -233,10 +237,12 @@
   border: 1px solid var(--border-color);
   border-radius: 8px;
   text-overflow: ellipsis;
-  max-width: min-content;
+  /* max-width: min-content; */
   position: relative;
-  width: calc(auto, size);
-  transition: 1s linear;
+  min-width: 360px;
+  width: 100%;
+  /* width: calc(auto, size); */
+  /* transition: 1s linear; */
 
   &.fixedBottom {
     position: fixed;
@@ -437,7 +443,7 @@
 .ampled-json-inspect::selection,
 .ampled-json-inspect ::selection {
   background-color: var(--selection);
-  color: var(--error);
+  /* color: var(--error); */
 }
 
 .ampled-json-inspect .type {
@@ -583,6 +589,45 @@
 
   &.function {
     color: var(--function);
+
+    &.hl {
+      color: var(--fg);
+      white-space: pre;
+      padding: var(--indent);
+      padding-left: calc(var(--indent) * 2);
+
+      .title.function_ {
+        color: var(--function);
+      }
+
+      .title.class_ {
+        color: var(--class);
+      }
+
+      .tag {
+        color: var(--fg);
+      }
+
+      .keyword {
+        color: var(--red);
+      }
+
+      .name {
+        color: var(--red);
+      }
+
+      .attr {
+        color: var(--green);
+      }
+
+      .number {
+        color: var(--purple);
+      }
+
+      .string {
+        color: var(--yellow);
+      }
+    }
   }
 
   &.symbol {
@@ -633,6 +678,15 @@
 
   .funcbody {
     color: var(--fg);
+  }
+}
+
+.ampled-json-inspect a {
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
   }
 }
 

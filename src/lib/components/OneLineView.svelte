@@ -3,43 +3,30 @@
   import Key from './Key.svelte'
   import type { TypeViewProps } from '$lib/types.js'
   import Type from './Type.svelte'
-  import { getContext, type Snippet } from 'svelte'
+  import type { Snippet } from 'svelte'
   import type { HTMLAttributes } from 'svelte/elements'
-  import { fly } from 'svelte/transition'
   import Tools from './Tools.svelte'
-  import { stringify } from '$lib/util.js'
-  import { flashOnUpdate } from '$lib/action.ts/update-flash.svelte.js'
+  import { flashOnUpdate } from '$lib/action/update-flash.svelte.js'
 
-  type Props = TypeViewProps<any> & {
+  type Props = TypeViewProps<unknown> & {
     val?: Snippet
-    display?: string
   } & HTMLAttributes<HTMLSpanElement>
 
-  let { value, display, key, type, path, val, ...rest }: Props = $props()
+  let { value, display, key, type, path, val, oninspectvaluechange, ...rest }: Props = $props()
 
-  // $inspect(value)
-
-  let parentCollapsed = getContext<() => boolean | undefined>('parent-collapsed')
-
-  // $inspect($state.snapshot(key), parentCollapsed?.())
-
-  let displayOrValue = $derived(display != null ? display : value)
-
-  let changeDetect = $derived.by(() => {
-    if (type === 'object' || type === 'array' || type === 'string' || type === 'number') {
-      return stringify(value)
-    } else if (type === 'symbol') {
-      return value.toString()
-    }
-    return displayOrValue
-  })
+  let displayOrValue = $derived(display != null ? display : (value?.toString?.() ?? ''))
 </script>
 
 <Line>
   <div class="dash-key">
-    <!-- {#key changeDetect} -->
-    <div class="dash"><span use:flashOnUpdate={() => value}>&hyphen;</span></div>
-    <!-- {/key} -->
+    <div class="dash">
+      <span
+        use:flashOnUpdate={{ value: () => value }}
+        oninspectvaluechange={() => {
+          oninspectvaluechange?.()
+        }}>&hyphen;</span
+      >
+    </div>
     <Key {key} {path} />
   </div>
   <Type {type} />
@@ -51,7 +38,6 @@
     </span>
   {/if}
   <div class="tools">
-    <!-- <small>{level}</small> -->
     <Tools {value} {path} />
   </div>
 </Line>
@@ -64,7 +50,6 @@
     padding-left: 1px;
 
     .dash {
-      border-radius: 9999px;
       display: inline-flex;
       justify-content: center;
       text-align: center;
@@ -76,7 +61,6 @@
       line-height: 1em;
       color: var(--comments);
       user-select: none;
-      /* transition: all 500ms; */
     }
   }
 </style>

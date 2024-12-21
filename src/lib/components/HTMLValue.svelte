@@ -1,6 +1,8 @@
 <script module lang="ts">
-  import hljs from 'highlight.js/lib/core'
+  import core from 'highlight.js/lib/core'
   import xml from 'highlight.js/lib/languages/xml'
+
+  const hljs = core.newInstance()
   hljs.configure({ classPrefix: '' })
   hljs.registerLanguage('xml', xml)
 </script>
@@ -8,24 +10,23 @@
 <script lang="ts">
   import type { TypeViewProps } from '$lib/types.js'
   import { onMount } from 'svelte'
+  import { useOptions } from '$lib/options.svelte.js'
+  import { collapseString } from '$lib/util.js'
 
-  type Props = TypeViewProps<HTMLElement | null>
+  type Props = TypeViewProps<HTMLElement>
 
-  let { value = undefined }: Props = $props()
+  let { value }: Props = $props()
 
-  const getOpenTag = (ele: HTMLElement) => {
+  let { stringCollapse } = $derived(useOptions())
+
+  const getOpenTag = (ele: HTMLElement, stringCollapse: number) => {
     if (ele) {
       let tag = ele.innerHTML
         ? ele.outerHTML.slice(0, ele.outerHTML.indexOf(ele.innerHTML))
         : ele.outerHTML
-      return tag
+      return collapseString(tag, stringCollapse)
     }
     return ''
-  }
-
-  function toHighlighted(ele: HTMLElement) {
-    const openTag = getOpenTag(ele)
-    return hljs.highlight(openTag, { language: 'xml' }).value
   }
 
   const highlight = (markup: string) => hljs.highlight(markup, { language: 'xml' }).value
@@ -33,13 +34,13 @@
   let highlighted: string = $state('')
 
   const mutationObserver = new MutationObserver(([mutation]) => {
-    const outer = getOpenTag(mutation.target as HTMLElement)
+    const outer = getOpenTag(mutation.target as HTMLElement, stringCollapse)
     highlighted = highlight(outer)
   })
 
   onMount(() => {
     if (value) {
-      const outer = getOpenTag(value)
+      const outer = getOpenTag(value, stringCollapse)
       highlighted = highlight(outer)
       mutationObserver.observe(value, { attributes: true })
     }
@@ -50,4 +51,5 @@
   })
 </script>
 
-<span class="value html">{@html highlighted}</span>
+<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+<span class="value html" title="">{@html highlighted}</span>

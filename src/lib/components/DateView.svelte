@@ -1,8 +1,8 @@
 <script lang="ts">
   import type { TypeViewProps } from '$lib/types.js'
   import Entry from './Entry.svelte'
-  import JsonViewer from './JsonViewer.svelte'
-  import TitleBar from './TitleBar.svelte'
+  import JsonViewer from './Node.svelte'
+  import Expandable from './Expandable.svelte'
 
   type Props = TypeViewProps<Date>
 
@@ -25,7 +25,7 @@
   )
 </script>
 
-<TitleBar {...{ value, key, type, path }} length={entries.length}>
+<Expandable {...{ value, key, type, path }} length={entries.length}>
   {#snippet val()}
     <span class="value date">{value.toUTCString()}</span>
   {/snippet}
@@ -34,4 +34,4 @@
       <JsonViewer {value} {key} {path} />
     </Entry>
   {/each}
-</TitleBar>
+</Expandable>

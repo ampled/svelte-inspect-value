@@ -1,12 +1,13 @@
 <script lang="ts">
-  import { stringify } from '$lib/util.js'
+  import { collapseString, stringify } from '$lib/util.js'
 
   import type { OptionsContext } from '$lib/options.svelte.js'
   import type { TypeViewProps } from '$lib/types.js'
   import { getContext } from 'svelte'
   import OneLineView from './OneLineView.svelte'
-  import TitleBar from './TitleBar.svelte'
+  import Expandable from './Expandable.svelte'
   import StringValue from './StringValue.svelte'
+  import { isUrl as isurl } from '$lib/util/is-url.js'
 
   let { value = '', key, type, path }: TypeViewProps<string> = $props()
 
@@ -16,20 +17,23 @@
 
   let isMultiLine = $derived(value.includes('\n'))
 
-  let display = $derived(
-    stringCollapse && stringCollapse < value.length
-      ? value.slice(0, stringCollapse).trimEnd().trimStart() + '…'
-      : value
-  )
+  let isUrl = $derived(isurl(value))
+  let isImageUrl = $derived((isUrl && value.endsWith('.png')) || value.endsWith('.svg'))
+
+  let display = $derived(collapseString(value, stringCollapse))
 </script>
 
-{#if isMultiLine}
-  <TitleBar {...{ value, key, type, path }} length={value.length}>
+{#if isMultiLine || isImageUrl}
+  <Expandable {...{ value, key, type, path }} length={value.length}>
     {#snippet val()}
       <StringValue {value} />
     {/snippet}
-    <pre class="value string multi" title={value}>{value}</pre>
-  </TitleBar>
+    {#if isImageUrl}
+      <img alt={key!.toString()} src={value} style="max-height: 100px" />
+    {:else}
+      <pre class="value string multi" title={value}>{value}</pre>
+    {/if}
+  </Expandable>
 {:else}
   <OneLineView {key} {type} {path} value={stringify(display)} title={stringify(value)}>
     {#snippet val()}

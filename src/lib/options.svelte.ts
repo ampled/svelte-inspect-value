@@ -12,6 +12,7 @@ export type JSONInspectOptions = {
   quotes: 'single' | 'double'
   theme: string
   expandAll: boolean
+  expandLevel: number
 }
 
 export function createOptions(options: Partial<JSONInspectOptions>) {
@@ -26,17 +27,9 @@ export function createOptions(options: Partial<JSONInspectOptions>) {
     theme: 'cotton-candy',
     expandAll: false,
     customComponents: {},
+    expandLevel: 1,
     ...options,
   })
-
-  // $effect(() => {
-  //   value = {
-  //     ...value,
-  //     ...options(),
-  //   }
-  // })
-
-  // $inspect(value)
 
   return {
     get value() {
@@ -47,7 +40,6 @@ export function createOptions(options: Partial<JSONInspectOptions>) {
     },
     setOptions(options: Partial<JSONInspectOptions>) {
       if ($effect.tracking()) {
-        console.log('tracking')
         untrack(() => {
           value = {
             ...value,
@@ -55,8 +47,6 @@ export function createOptions(options: Partial<JSONInspectOptions>) {
           }
         })
       } else {
-        console.log('not tracking')
-
         value = {
           ...value,
           ...options,

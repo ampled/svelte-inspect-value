@@ -2,9 +2,9 @@
   import type { TypeViewProps } from '$lib/types.js'
   import ArrayPreview from './ArrayPreview.svelte'
   import Entry from './Entry.svelte'
-  import JsonViewer from './JsonViewer.svelte'
+  import JsonViewer from './Node.svelte'
   import StringValue from './StringValue.svelte'
-  import TitleBar from './TitleBar.svelte'
+  import Expandable from './Expandable.svelte'
 
   type Props = TypeViewProps<URLSearchParams>
 
@@ -28,7 +28,7 @@
   })
 </script>
 
-<TitleBar {...{ value, key, type, path }} length={entries.length}>
+<Expandable {...{ value, key, type, path }} length={entries.length}>
   {#snippet val()}
     <!-- <StringValue value={value.toString()} /> -->
     <ArrayPreview value={entries} />
@@ -38,4 +38,4 @@
       <JsonViewer {value} {key} {path} />
     </Entry>
   {/each}
-</TitleBar>
+</Expandable>

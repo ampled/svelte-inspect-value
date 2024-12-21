@@ -2,8 +2,8 @@
   import { InspectError, type TypeViewProps } from '$lib/types.js'
   import { setContext, untrack } from 'svelte'
   import StringValue from './StringValue.svelte'
-  import TitleBar from './TitleBar.svelte'
-  import JsonViewer from './JsonViewer.svelte'
+  import Expandable from './Expandable.svelte'
+  import JsonViewer from './Node.svelte'
   import Entry from './Entry.svelte'
   import { stringify } from '$lib/util.js'
 
@@ -25,7 +25,7 @@
   // $inspect(value.cause)
 </script>
 
-<TitleBar {value} {key} {type} {path} length={entries.length}>
+<Expandable {value} {key} {type} {path} length={entries.length}>
   {#snippet val()}
     <span>⚠️</span>
     <button onclick={reset}>RESET</button>
@@ -38,7 +38,7 @@
       <JsonViewer {value} {key} {path} usedefaults />
     </Entry>
   {/each}
-</TitleBar>
+</Expandable>
 
 <style>
   button {

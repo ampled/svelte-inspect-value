@@ -10,9 +10,8 @@
   import type { KeyName, TypeViewProps } from '$lib/types.js'
   import { stringifyPath } from '$lib/util.js'
   import { getContext } from 'svelte'
-  import { blur, draw } from 'svelte/transition'
 
-  type Props = TypeViewProps<any> & { collapsed?: boolean }
+  type Props = TypeViewProps<unknown> & { collapsed?: boolean }
 
   let { value, path = [] }: Props = $props()
 
@@ -23,14 +22,14 @@
 
   let level = $derived(path.length)
 
-  const hasChildren = $derived.by(() => {
-    if (inspectState?.value) {
-      const key = stringifyPath(path)
-      return Object.entries(inspectState.value).filter(
-        ([k]) => k.startsWith(key) && k.length > key.length
-      )
-    }
-  })
+  // const hasChildren = $derived.by(() => {
+  //   if (inspectState?.value) {
+  //     const key = stringifyPath(path)
+  //     return Object.entries(inspectState.value).filter(
+  //       ([k]) => k.startsWith(key) && k.length > key.length
+  //     )
+  //   }
+  // })
 
   const children = $derived(
     inspectState?.value
@@ -44,30 +43,21 @@
     if (inspectState?.value) {
       const key = stringifyPath(path)
       const children = Object.entries(inspectState.value).filter(
-        ([k]) => k.startsWith(key) && k.split('$$$').length === level + 1
+        ([k]) => k.startsWith(key) && k.split('.').length === level + 1
       )
-      return children.some(([k, v]) => !v.collapsed)
+      return children.some(([, v]) => !v.collapsed)
     }
     return false
   })
 
-  let hint = $state('')
+  let timeout: number = $state(-1)
 
-  let timeout: number = -1
-
-  function setHint(text: string) {
-    if (timeout) window.clearTimeout(timeout)
-    hint = text
-    timeout = window.setTimeout(() => {
-      hint = ''
-    }, 3000)
-  }
-
-  async function copy(val: any) {
+  async function copy(val: unknown) {
     try {
       await copyToClipBoard(val)
       copied = true
-      window.setTimeout(() => {
+      if (timeout) window.clearTimeout(timeout)
+      timeout = window.setTimeout(() => {
         copied = false
       }, 5000)
     } catch {
@@ -101,27 +91,14 @@
   <button
     title={treeAction.hint}
     aria-label={treeAction.hint}
-    onmouseenter={() => setHint(treeAction.hint)}
-    onfocus={() => setHint(treeAction.hint)}
     onclick={() => treeAction.action(level, path)}
   >
     <treeAction.icon />
   </button>
 {/if}
-
-<!--
-<button
-  title={hint}
-  aria-label={hint}
-  onmouseenter={() => setHint('collapse children')}
-  onclick={() => collapseChildren()}
->
-  <CollapseChildren />
-</button> -->
 <button
   title="log value to console"
   aria-label="log value to console"
-  onmouseenter={() => setHint('log')}
   onclick={() => logToConsole(value)}
 >
   <Console />
@@ -129,35 +106,13 @@
 <button
   title="copy value to clipboard"
   aria-label="copy value to clipboard"
-  onmouseenter={() => setHint('clipboard')}
   onclick={() => copy(value)}
   class:copied
 >
   <Copy />
 </button>
 {#if level === 1}
-  <button
-    title="options"
-    aria-label="options"
-    onmouseenter={() => setHint('options')}
-    onclick={() => (options.value.open = true)}
-  >
+  <button title="options" aria-label="options" onclick={() => (options.value.open = true)}>
     <Settings />
   </button>
 {/if}
-
-<!-- <div
-  style="width: 8em; height: 1em; line-height: 1em; position: relative; border-right: 1px solid currentColor"
->
-  {#if !!hint}
-    {#key hint}
-      <small
-        in:fly={{ y: -10 }}
-        out:fly={{ y: 10 }}
-        style="position: absolute; inset: 0; padding-left: 1em"
-      >
-        {hint}
-      </small>
-    {/key}
-  {/if}
-</div> -->

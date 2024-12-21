@@ -1,0 +1,73 @@
+<script lang="ts">
+  import { useOptions } from '$lib/options.svelte.js'
+  import { InspectError, type CustomComponents, type TypeViewProps } from '$lib/types.js'
+  import { getType, type ValueType } from '../util.js'
+  import HtmlView from './HTMLView.svelte'
+  import InspectErrorView from './InspectErrorView.svelte'
+  import Noop from './Noop.svelte'
+  import components from './types.js'
+
+  type Props = TypeViewProps<unknown> & { usedefaults?: boolean }
+
+  let {
+    value = undefined,
+    key,
+    path: prevPath = [],
+    usedefaults = false,
+    oninspectvaluechange,
+  }: Props = $props()
+
+  let { customComponents } = $derived(useOptions())
+
+  let type: ValueType = $derived(getType(value))
+
+  function getTypeComponent(type: ValueType, custom: CustomComponents, useDefaults: boolean) {
+    let comps = { ...components, ...(useDefaults ? {} : custom) }
+
+    // let propfn:
+
+    let entry = comps[type]
+
+    if (entry) {
+      let component = entry[0]
+      let propfn = entry[1]
+      let props = propfn ? propfn({ value }) : {}
+      return [component, props] as const
+    } else if (type.startsWith('html')) {
+      return [HtmlView, {}] as const
+    }
+
+    return [Noop, {}] as const
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  type TODO = any
+
+  let [TypeComponent, componentProps] = $derived(
+    getTypeComponent(type, customComponents, usedefaults)
+  )
+  let path = $derived(key != null && prevPath ? [...prevPath, key] : ['root'])
+</script>
+
+<svelte:boundary>
+  <TypeComponent
+    value={value as TODO}
+    {key}
+    {type}
+    {path}
+    {oninspectvaluechange}
+    {...componentProps}
+  />
+
+  {#snippet failed(error, reset)}
+    {@const inspectError = new InspectError(
+      `InspectError: Component for value of type ${type} failed`,
+      value,
+      {
+        cause: error,
+      }
+    )}
+
+    <InspectErrorView value={inspectError} {key} {path} {reset} />
+  {/snippet}
+</svelte:boundary>

@@ -4,8 +4,8 @@
   import type { HTMLButtonAttributes } from 'svelte/elements'
 
   type Props = {
-    key: TypeViewProps<any>['key']
-    path?: TypeViewProps<any>['path']
+    key: TypeViewProps<unknown>['key']
+    path?: TypeViewProps<unknown>['path']
   } & HTMLButtonAttributes
 
   let { key, path = [], ondblclick }: Props = $props()
@@ -21,7 +21,7 @@
       }
       return true
     }
-    return true
+    return false
   })
 </script>
 
@@ -49,5 +49,6 @@
 
   button {
     cursor: default;
+    background-color: transparent !important;
   }
 </style>

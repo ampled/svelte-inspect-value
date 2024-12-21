@@ -105,7 +105,7 @@
   }
 
   // let number = $state(90)
-  intervalEffect(() => allTypesValue.number++, 1000)
+  intervalEffect(() => (allTypesValue.number = allTypesValue.number + 1), 1000)
 
   $effect(() => {
     allTypesValue.htmlElements = div as any
@@ -127,7 +127,7 @@
       [{ name: 'object key' }, 'my key is an object'],
       [
         ['array key'],
-        Array(3)
+        Array(100)
           .fill(0)
           .map((v, i) => (i + 1) * 100),
       ],

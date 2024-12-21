@@ -1,16 +1,16 @@
 <script lang="ts">
   import type { TypeViewProps } from '$lib/types.js'
-  import JsonViewer from './JsonViewer.svelte'
-  import TitleBar from './TitleBar.svelte'
+  import JsonViewer from './Node.svelte'
+  import Expandable from './Expandable.svelte'
   import Entry from './Entry.svelte'
   import ArrayPreview from './ArrayPreview.svelte'
 
-  type Props = TypeViewProps<any[]>
+  type Props = TypeViewProps<unknown[]>
 
   let { value: arrayVal = [], key = undefined, type, path }: Props = $props()
 </script>
 
-<TitleBar {...{ value: arrayVal, key, type, path }} length={arrayVal.length}>
+<Expandable {...{ value: arrayVal, key, type, path }} length={arrayVal.length}>
   {#snippet val()}
     <ArrayPreview value={arrayVal} />
   {/snippet}
@@ -19,4 +19,4 @@
       <JsonViewer key={i} {value} {path} />
     </Entry>
   {/each}
-</TitleBar>
+</Expandable>

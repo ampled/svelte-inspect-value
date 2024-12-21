@@ -16,10 +16,6 @@
   let { showTypes } = $derived(options.value)
 
   let display = $derived.by(() => {
-    if (type?.includes('iterator')) {
-      return 'iterator'
-    }
-
     switch (type) {
       case 'number':
         return 'num'
@@ -43,8 +39,8 @@
         return '[arr]'
       case 'promise':
         return 'Promise'
-      case 'iterator':
-        return 'Iterator'
+      case 'setiterator':
+        return 'SetIterator'
       case 'null':
         return 'NULL'
       default:

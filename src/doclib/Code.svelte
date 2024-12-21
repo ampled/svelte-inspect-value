@@ -15,6 +15,7 @@
   let highlighted = $derived(instance.highlight(code, { language: 'xml' }))
 </script>
 
+<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 <pre class="hljs">{@html highlighted.value}<div class="label">example</div>
 </pre>
 

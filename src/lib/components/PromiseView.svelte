@@ -2,8 +2,9 @@
   import type { TypeViewProps } from '$lib/types.js'
   import { fade } from 'svelte/transition'
   import Entry from './Entry.svelte'
-  import JsonViewer from './JsonViewer.svelte'
+  import JsonViewer from './Node.svelte'
   import ObjectLikeView from './ObjectLikeView.svelte'
+  import { untrack } from 'svelte'
 
   type Props = TypeViewProps<Promise<unknown>>
 
@@ -11,6 +12,8 @@
 
   let status = $state<'pending' | 'fulfilled' | 'rejected'>('pending')
   let result = $state<any>(undefined)
+
+  let currentPromise = $state<Promise<unknown>>()
 
   let entries = $derived(
     Object.entries({
@@ -22,7 +25,7 @@
   function handleSuccess(res: unknown, promise: Promise<any>) {
     if (promise === value) {
       result = res
-      status = 'fulfilled'
+      if (status !== 'fulfilled') status = 'fulfilled'
     }
   }
 
@@ -34,10 +37,8 @@
   }
 
   function resolvePromise(promise: Promise<any>) {
-    // if (promise !== value) {
     status = 'pending'
     result = undefined
-    // }
     try {
       promise
         .then(
@@ -51,7 +52,13 @@
   }
 
   $effect(() => {
-    resolvePromise(value)
+    value
+    untrack(() => {
+      if (currentPromise !== value) {
+        currentPromise = value
+        resolvePromise(value)
+      }
+    })
   })
 </script>
 
@@ -59,9 +66,7 @@
   {#snippet val()}
     {#key status}
       <span class="value promise {status}" in:fade>
-        <span style="color: var(--comments)">{'<'}</span>{`${status}`}<span
-          style="color: var(--comments)">{'>'}</span
-        >
+        <span class="bracket">{'<'}</span>{`${status}`}<span class="bracket">{'>'}</span>
       </span>
     {/key}
   {/snippet}
@@ -75,5 +80,9 @@
 <style>
   span.value {
     width: 7em;
+  }
+
+  .bracket {
+    color: var(--comments);
   }
 </style>

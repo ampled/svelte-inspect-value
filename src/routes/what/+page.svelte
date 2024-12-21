@@ -15,14 +15,6 @@
     ]).entries(),
     setEntries: new Set([2, 34]).entries(),
   }
-
-  // $inspect(typeOf(['1,2,3'].entries()))
-  // $inspect(typeOf(new Map([[1, 1]]).entries()))
-  // $inspect(typeOf(new Set([1, 2, 3]).entries()))
-  // $inspect(Object.prototype.toString.call(['1,2,3'].entries()))
-  // $inspect(Object.prototype.toString.call(new Map([[1, 1]]).entries()))
-
-  // $inspect(array)
 </script>
 
 <Inspect value={obj} />

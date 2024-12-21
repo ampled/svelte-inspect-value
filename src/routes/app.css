@@ -157,6 +157,18 @@ h6 {
   margin-inline: 2em;
 }
 
+button {
+  all: unset;
+  border: 1px solid var(--border-color);
+  padding: 0.5em;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--border-color);
+  }
+}
+
 label {
   /* height: 3.5rem; */
   display: flex;
@@ -166,4 +178,9 @@ label {
   justify-items: flex-start;
   /* gap: 0.5rem; */
   /* padding: 1em; */
+}
+
+code {
+  font-family: monospace;
+  background-color: var(--bg-lighter);
 }

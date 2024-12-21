@@ -5,6 +5,8 @@
   import { onMount } from 'svelte'
   import Promises from '../doclib/examples/Promises.svelte'
   import HtmlElements from '../doclib/examples/HTMLElements.svelte'
+  import MapAndSet from '../doclib/examples/MapAndSet.svelte'
+  import SymbolKeys from '../doclib/examples/SymbolKeys.svelte'
 
   let showLength = $state(true)
   let showTypes = $state(true)
@@ -164,30 +166,7 @@
     </div>
   </div>
 
-  <div class="flex col">
-    <h2>map & set</h2>
-    <p>handles map and set instances.</p>
-    <p>
-      for maps, if keys are not of type number|string|symbol, the entry is shown as a key/value
-      tuple:
-    </p>
-
-    <div class="flex">
-      <Inspect
-        value={{
-          map: new Map<any, any>([
-            ['yeah', 1],
-            [3, 2],
-            [{ name: 'object key' }, 3],
-            [symbolKey, 4],
-          ]),
-          set: new Set([1, 2, 3, 'four']),
-        }}
-        name="mapAndSet"
-        {...options}
-      />
-    </div>
-  </div>
+  <MapAndSet />
 
   <Promises />
 
@@ -217,14 +196,30 @@
         name="functions"
         value={{
           arrowFunction: (num: number) => num * 2,
-          someFunction: function () {
-            return 'something'
+          someFunction: function (some: string, thing: string) {
+            if (!some) return thing
+            const obj = {
+              some: thing,
+              thing: some,
+              [Symbol('oh')]: 'doodle',
+            }
+
+            try {
+              Math.random()
+            } catch {
+              const { log } = console
+              log('oh no')
+              log(obj)
+            }
+            return some + ' ' + thing
           },
         }}
         {...options}
       />
     </div>
   </div>
+
+  <SymbolKeys />
 
   <div class="flex col">
     <h2>symbol keys</h2>
