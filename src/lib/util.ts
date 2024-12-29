@@ -49,7 +49,7 @@ export function stringify(value: unknown, indent = 2, quotes: 'single' | 'double
   }
   return JSON.stringify(
     value,
-    (key, value) => {
+    (_key, value) => {
       if (typeof value === 'bigint') {
         try {
           JSON.stringify(value)
@@ -67,6 +67,19 @@ export function stringify(value: unknown, indent = 2, quotes: 'single' | 'double
   )
 }
 
+export function stringifyOrToString(val: unknown): string {
+  const stringified = stringify(val)
+  if (stringified !== '{}') {
+    return stringified
+  }
+  try {
+    return getType(val)
+    // return (val as object).toString()
+  } catch {
+    return getType(val)
+  }
+}
+
 // source: http://stackoverflow.com/questions/7390426/better-way-to-get-type-of-a-javascript-variable/7390612#7390612
 export function typeOf(obj: unknown): ValueType {
   const t = {}.toString.call(obj).slice(8, -1)
@@ -80,18 +93,6 @@ export function typeOf(obj: unknown): ValueType {
 
 export const stringifyPath = (path: KeyName[]) => {
   return path.map((k) => k.toString()).join('.')
-}
-
-export const stringifyPath$ = (path: KeyName[]) => {
-  return path
-    .map((k, i) => {
-      if (typeof k === 'number') {
-        return `[${k}]`
-      }
-      const pre = i === 0 ? '' : '.'
-      return pre + k.toString()
-    })
-    .join('$$$')
 }
 
 export function collapseString(value: string, length: undefined | number) {

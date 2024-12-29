@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { OptionsContext } from '$lib/options.svelte.js'
+  import { OPTIONS_CONTEXT, type OptionsContext } from '$lib/options.svelte.js'
   import type { ValueType } from '$lib/util.js'
   import { getContext } from 'svelte'
 
@@ -10,7 +10,7 @@
 
   let { length, type }: Props = $props()
 
-  const options: OptionsContext = getContext('json-inspect')
+  const options: OptionsContext = getContext(OPTIONS_CONTEXT)
 
   let { showLength } = $derived(options.value)
 
@@ -37,9 +37,11 @@
 </script>
 
 {#if showLength && typeof length === 'number'}
-  {#if length > 0}
-    <small class="length">{length} {unit}</small>
-  {:else}
-    <small class="length">empty!</small>
-  {/if}
+  <span class="length">
+    {#if length > 0}
+      {length} {unit}
+    {:else}
+      empty
+    {/if}
+  </span>
 {/if}

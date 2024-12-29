@@ -1,11 +1,11 @@
 <script lang="ts">
   // import './app.css'
-  import Inspect from '$lib/Inspect.svelte'
   import { browser } from '$app/environment'
+  import Inspect from '$lib/Inspect.svelte'
   import { onMount } from 'svelte'
-  import Promises from '../doclib/examples/Promises.svelte'
   import HtmlElements from '../doclib/examples/HTMLElements.svelte'
   import MapAndSet from '../doclib/examples/MapAndSet.svelte'
+  import Promises from '../doclib/examples/Promises.svelte'
   import SymbolKeys from '../doclib/examples/SymbolKeys.svelte'
 
   let showLength = $state(true)
@@ -222,23 +222,6 @@
   <SymbolKeys />
 
   <div class="flex col">
-    <h2>symbol keys</h2>
-    <p>object properties where keys are symbols are displayed</p>
-
-    <div class="flex">
-      <Inspect
-        value={{
-          stringKey: 'string value',
-          anotherKey: 2,
-          [symbolKey]: 'my key is a symbol',
-        }}
-        name="objectWithSymbolKey"
-        {...options}
-      />
-    </div>
-  </div>
-
-  <div class="flex col">
     <h2>urls</h2>
     <p>special handling of URLs and URLSearchParams</p>
 
@@ -247,7 +230,7 @@
         value={{
           url: new URL('https://subdomain.example.org/about'),
           fullyFeaturedUrl: new URL(
-            'https://anon:hunter2@example.org:8080/pathname/index.html?q=query&p=123#result'
+            'https://anon:hunter2@example.org:8080/pathname/index.html?q=query&p=123&buh#result'
           ),
           search: new URLSearchParams([
             ['a', '1'],
@@ -255,6 +238,7 @@
             ['b', '3'],
             ['b', '4'],
             ['c', '5'],
+            ['query', 'elephants'],
           ]),
         }}
         name="urlFeatures"

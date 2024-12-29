@@ -6,8 +6,8 @@ export default defineConfig({
   build: {
     minify: 'terser',
     terserOptions: {
-      keep_classnames: true
-    }
+      keep_classnames: true,
+    },
   },
   test: {
     include: ['src/**/*.{test,spec}.{js,ts}'],

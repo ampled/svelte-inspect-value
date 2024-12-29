@@ -2,10 +2,10 @@
   import type { TypeViewProps } from '$lib/types.js'
   import { getType } from '$lib/util.js'
   import Entry from './Entry.svelte'
-  import Node from './Node.svelte'
   import Expandable from './Expandable.svelte'
+  import Node from './Node.svelte'
 
-  type Props = TypeViewProps<Map<any, any>>
+  type Props = TypeViewProps<Map<unknown, unknown>>
 
   let { value = new Map(), key = undefined, type, path = [] }: Props = $props()
 

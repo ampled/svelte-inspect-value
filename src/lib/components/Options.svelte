@@ -1,9 +1,9 @@
 <script lang="ts">
-  import type { OptionsContext } from '$lib/options.svelte.js'
+  import { OPTIONS_CONTEXT, type OptionsContext } from '$lib/options.svelte.js'
   import { getContext } from 'svelte'
   import { fade } from 'svelte/transition'
 
-  let options: OptionsContext = getContext('json-inspect')
+  let options: OptionsContext = getContext(OPTIONS_CONTEXT)
 
   // type OptionsProps = {
   //   open: boolean

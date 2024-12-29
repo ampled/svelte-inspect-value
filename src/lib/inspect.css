@@ -109,10 +109,10 @@
     --base07: #181818;
     --base08: #ab4642;
     --base09: #dc9656;
-    --base0A: #f7ca88;
-    --base0B: #a1b56c;
-    --base0C: #86c1b9;
-    --base0D: #7cafc2;
+    --base0A: #9d5e00;
+    --base0B: #75834e;
+    --base0C: #5f8681;
+    --base0D: #3e9cbe;
     --base0E: #ba8baf;
     --base0F: #a16946;
   }
@@ -237,7 +237,7 @@
   border: 1px solid var(--border-color);
   border-radius: 8px;
   text-overflow: ellipsis;
-  /* max-width: min-content; */
+  max-width: max-content;
   position: relative;
   min-width: 360px;
   width: 100%;
@@ -312,6 +312,7 @@
     width: 100%;
     height: 100%;
     padding: 1em;
+    overflow-y: auto;
     /* padding-left: 2em; */
   }
 
@@ -324,6 +325,7 @@
   .length {
     color: var(--comments);
     font-style: italic;
+    font-size: 0.857em;
   }
 
   .title-bar,
@@ -372,7 +374,8 @@
     border-left: 1px solid var(--border-color);
     /* border-radius: 2px; */
     transition: 0.4s var(--ease-out-back);
-    overflow-x: visible;
+    /* overflow-x: clip; */
+    max-width: 100%;
     overflow-y: auto;
     height: calc-size(auto, size);
     opacity: 1;
@@ -417,6 +420,11 @@
 
     &.string {
       --border-color: var(--string);
+      overflow-x: auto;
+    }
+
+    &.function {
+      --border-color: var(--function);
       overflow-x: auto;
     }
 

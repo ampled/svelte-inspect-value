@@ -1,17 +1,34 @@
-import prettier from 'eslint-config-prettier'
 import js from '@eslint/js'
-import svelte from 'eslint-plugin-svelte'
-import svelteParser from 'svelte-eslint-parser'
-import globals from 'globals'
-import ts from 'typescript-eslint'
 import typescriptParser from '@typescript-eslint/parser'
+import prettier from 'eslint-config-prettier'
+import 'eslint-plugin-only-warn'
+import svelte from 'eslint-plugin-svelte'
+import globals from 'globals'
+import svelteParser from 'svelte-eslint-parser'
+import ts from 'typescript-eslint'
 import svelteConfig from './svelte.config.js'
 
 export default ts.config(
   js.configs.recommended,
   ...ts.configs.recommended,
   ...svelte.configs['flat/recommended'],
-  { rules: { 'svelte/no-inner-declarations': 'off' } },
+  {
+    rules: {
+      'svelte/no-inner-declarations': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          args: 'all',
+          argsIgnorePattern: '^_',
+          caughtErrors: 'all',
+          caughtErrorsIgnorePattern: '^_',
+          destructuredArrayIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          ignoreRestSiblings: true,
+        },
+      ],
+    },
+  },
   prettier,
   ...svelte.configs['flat/prettier'],
   {

@@ -1,8 +1,14 @@
 import { getContext, untrack } from 'svelte'
 import type { CustomComponents } from './types.js'
 
+export const OPTIONS_CONTEXT = Symbol('inspect-options')
+
 export type JSONInspectOptions = {
+  /**
+   * Show length of arrays or strings and number of entries in objects
+   */
   showLength: boolean
+
   showTypes: boolean
   stringCollapse: number
   open: boolean
@@ -24,7 +30,7 @@ export function createOptions(options: Partial<JSONInspectOptions>) {
     showTypes: true,
     showLength: true,
     stringCollapse: 0,
-    theme: 'cotton-candy',
+    theme: 'drak',
     expandAll: false,
     customComponents: {},
     expandLevel: 1,
@@ -39,19 +45,12 @@ export function createOptions(options: Partial<JSONInspectOptions>) {
       value = val
     },
     setOptions(options: Partial<JSONInspectOptions>) {
-      if ($effect.tracking()) {
-        untrack(() => {
-          value = {
-            ...value,
-            ...options,
-          }
-        })
-      } else {
+      untrack(() => {
         value = {
           ...value,
           ...options,
         }
-      }
+      })
     },
   }
 }
@@ -59,5 +58,5 @@ export function createOptions(options: Partial<JSONInspectOptions>) {
 export type OptionsContext = ReturnType<typeof createOptions>
 
 export function useOptions(): JSONInspectOptions {
-  return getContext<OptionsContext>('json-inspect').value
+  return getContext<OptionsContext>(OPTIONS_CONTEXT).value
 }

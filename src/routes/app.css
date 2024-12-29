@@ -184,3 +184,7 @@ code {
   font-family: monospace;
   background-color: var(--bg-lighter);
 }
+
+a {
+  color: var(--fg);
+}

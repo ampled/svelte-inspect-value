@@ -1,9 +1,8 @@
 <script lang="ts">
   import CustomLine from '$lib/CustomLine.svelte'
-  import type { TypeViewProps } from '$lib/types.js'
-  import { onMount } from 'svelte'
+  import { onMount, type ComponentProps } from 'svelte'
 
-  type Props = TypeViewProps<string>
+  type Props = ComponentProps<typeof CustomLine>
 
   let { value, ...rest }: Props = $props()
 
@@ -12,16 +11,18 @@
   onMount(() => {
     setTimeout(() => {
       doAnError = true
-    }, 5000)
+    }, 2000)
   })
 </script>
 
 <CustomLine {value} {...rest}>
   {#snippet val()}
     {value}
-    {`<-- lookg at this string tho 😎`}
+    {`<-- look at this string tho 😎`}
     <!-- {throw bababa} -->
     {#if doAnError}
+      err
+      <!-- eslint-disable-next-line @typescript-eslint/no-explicit-any -->
       {(value as any).fdfsdfd.fsdfdsfdsfds.fdsfdsf}
     {/if}
   {/snippet}

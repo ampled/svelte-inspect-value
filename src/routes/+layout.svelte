@@ -2,20 +2,25 @@
   import './app.css'
 
   import TableJsonView from '$lib/Inspect.svelte'
+  import { QueryClientProvider } from '@tanstack/svelte-query'
 
-  const { children } = $props()
+  const { children, data } = $props()
 </script>
 
-<h1>Svelte Value Inspect</h1>
+<a href="/">
+  <h1>Svelte Value Inspect</h1>
+</a>
 
-<main>
-  <svelte:boundary>
-    {#snippet failed(error, reset)}
-      <TableJsonView value={error} />
+<QueryClientProvider client={data.queryClient}>
+  <main>
+    <svelte:boundary>
+      {#snippet failed(error, reset)}
+        <TableJsonView value={error} />
 
-      <button onclick={reset}>reset</button>
-    {/snippet}
+        <button onclick={reset}>reset</button>
+      {/snippet}
 
-    {@render children()}
-  </svelte:boundary>
-</main>
+      {@render children()}
+    </svelte:boundary>
+  </main>
+</QueryClientProvider>

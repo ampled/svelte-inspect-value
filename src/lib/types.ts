@@ -10,7 +10,7 @@ export type TypeViewProps<T = unknown | undefined> = {
   value: T
   display?: string
   type?: ValueType | string
-  oninspectvaluechange?: () => void
+  collapsed?: boolean
 }
 
 export type CustomComponent = Component<TypeViewProps>

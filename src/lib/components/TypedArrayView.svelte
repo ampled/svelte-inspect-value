@@ -1,9 +1,9 @@
 <script lang="ts">
   import type { TypeViewProps } from '$lib/types.js'
-  import JsonViewer from './Node.svelte'
-  import Expandable from './Expandable.svelte'
   import Entry from './Entry.svelte'
-  import ArrayPreview from './ArrayPreview.svelte'
+  import Expandable from './Expandable.svelte'
+  import JsonViewer from './Node.svelte'
+  import Preview from './Preview.svelte'
 
   type TypedArray =
     | Int8Array
@@ -22,24 +22,24 @@
 
   let { value, key = undefined, type, path }: Props = $props()
 
-  const TO_STRING_TAG = 'Symbol(Symbol.toStringTag)'
-  const internalKeys = ['buffer', 'byteLength', 'byteOffset', 'length', TO_STRING_TAG]
+  const internalKeys = ['buffer', 'byteLength', 'byteOffset', 'length']
   let keys = [...Object.getOwnPropertyNames(value), ...internalKeys]
-  let preview = value.slice(0, 5)
 
   function getValue(key: any) {
-    if (key === TO_STRING_TAG) {
-      return value[Symbol.toStringTag]
-    }
     return value[key]
   }
 
   let entries = $derived<[string, unknown][]>(keys.map((k) => [k, getValue(k)]))
+  let preview = $derived(entries.slice(0, 3))
 </script>
 
 <Expandable {...{ value, key, type, path }} length={value?.length}>
   {#snippet val()}
-    <ArrayPreview value={entries} />
+    <Preview prefix="[" postfix="]" list={preview} hasMore={preview.length < 3}>
+      {#snippet item(entry)}
+        {entry[1]}
+      {/snippet}
+    </Preview>
   {/snippet}
   {#each entries as [key, value], i (key)}
     <Entry {i}>

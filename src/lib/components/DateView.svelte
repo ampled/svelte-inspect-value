@@ -1,8 +1,8 @@
 <script lang="ts">
   import type { TypeViewProps } from '$lib/types.js'
   import Entry from './Entry.svelte'
-  import JsonViewer from './Node.svelte'
   import Expandable from './Expandable.svelte'
+  import JsonViewer from './Node.svelte'
 
   type Props = TypeViewProps<Date>
 
@@ -18,6 +18,7 @@
       minutes: value.getMinutes(),
       seconds: value.getSeconds(),
       milliseconds: value.getMilliseconds(),
+      time: value.getTime(),
       asString: value.toString(),
       dateString: value.toDateString(),
       utcString: value.toUTCString(),

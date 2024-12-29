@@ -4,8 +4,7 @@
   "trailingComma": "es5",
   "semi": false,
   "printWidth": 100,
-  "organizeImportsSkipDestructiveCodeActions": true,
-  "plugins": ["prettier-plugin-svelte", "prettier-plugin-organize-imports"],
+  "plugins": ["prettier-plugin-svelte"],
   "overrides": [
     {
       "files": "*.svelte",

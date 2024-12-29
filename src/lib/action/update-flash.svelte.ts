@@ -39,6 +39,8 @@ export const flashOnUpdate: Action<
     const newVal = value()
 
     untrack(() => {
+      console.log('equal:')
+
       if (!equal(prevValue, newVal)) {
         node.dispatchEvent(new CustomEvent('inspectvaluechange', { bubbles: true }))
         flash()

@@ -2,11 +2,11 @@
   import type { TypeViewProps } from '$lib/types.js'
   import ArrayView from './ArrayView.svelte'
 
-  type Props = TypeViewProps<ArrayIterator<any> | SetIterator<any>>
+  type Props = TypeViewProps<ArrayIterator<unknown>>
 
-  let { value = [].values(), key = undefined, type, path }: Props = $props()
+  let { value, key = undefined, type, path }: Props = $props()
 
-  let entries = $derived([...value].map(([, v]) => v))
+  let entries = $derived([...value])
 </script>
 
 <ArrayView value={entries} {type} {key} {path} />

@@ -14,8 +14,7 @@ const config = {
     adapter: adapter(),
   },
   compilerOptions: {
-    runes: true,
-    
+    // runes: true,
   },
 }
 

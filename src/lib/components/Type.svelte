@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getContext } from 'svelte'
 
-  import type { OptionsContext } from '$lib/options.svelte.js'
+  import { OPTIONS_CONTEXT, type OptionsContext } from '$lib/options.svelte.js'
   import type { ValueType } from '$lib/util.js'
   import type { HTMLAttributes } from 'svelte/elements'
 
@@ -9,9 +9,9 @@
     type?: ValueType | 'noop' | string
   } & HTMLAttributes<HTMLSpanElement>
 
-  let { type, ...rest }: Props = $props()
+  let { type = '', ...rest }: Props = $props()
 
-  const options: OptionsContext = getContext('json-inspect')
+  const options: OptionsContext = getContext(OPTIONS_CONTEXT)
 
   let { showTypes } = $derived(options.value)
 
@@ -39,18 +39,20 @@
         return '[arr]'
       case 'promise':
         return 'Promise'
-      case 'setiterator':
-        return 'SetIterator'
       case 'null':
         return 'NULL'
       default:
         return type
     }
   })
+
+  const ALWAYS_VISIBLE_TYPES = ['undefined', 'null', 'class', 'function', 'promise', 'MapEntry']
+
+  let required = $derived(ALWAYS_VISIBLE_TYPES.includes(type))
 </script>
 
-{#if (type && showTypes) || type === 'undefined' || type === 'null' || type === 'class' || type === 'function' || type === 'promise' || type === 'MapEntry'}
-  <small class={`type ${type}`} {...rest} title={type}>
+{#if (type && showTypes) || required}
+  <span class={`type ${type}`} {...rest} title={type}>
     {display}
-  </small>
+  </span>
 {/if}

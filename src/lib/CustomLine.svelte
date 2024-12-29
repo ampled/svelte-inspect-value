@@ -1,9 +1,8 @@
 <script lang="ts">
-  import type { Snippet } from 'svelte'
-  import type { TypeViewProps } from './types.js'
+  import type { ComponentProps } from 'svelte'
   import OneLineView from './components/OneLineView.svelte'
 
-  let { ...rest }: TypeViewProps<unknown> & { val?: Snippet } = $props()
+  let { ...props }: ComponentProps<typeof OneLineView> = $props()
 </script>
 
-<OneLineView {...rest} />
+<OneLineView {...props} />

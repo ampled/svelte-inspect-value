@@ -1,7 +1,7 @@
 <script lang="ts">
   import { STATE_CONTEXT_KEY, type StateContext } from '$lib/state.svelte.js'
 
-  import { getContext, onMount, type Snippet } from 'svelte'
+  import { getContext, onMount, type Component, type Snippet } from 'svelte'
   import CollapseButton from './CollapseButton.svelte'
   import Entries from './Entries.svelte'
 
@@ -20,6 +20,7 @@
     val?: Snippet
     children?: Snippet
     showLength?: boolean
+    ValueComponent?: Component<TypeViewProps>
   } & HTMLAttributes<HTMLDivElement>
 
   let {
@@ -28,6 +29,7 @@
     length,
     value,
     val,
+    ValueComponent,
     path = [],
     showLength = true,
     children,
@@ -85,6 +87,10 @@
     {@render val()}
   {/if}
 
+  {#if ValueComponent}
+    <ValueComponent {value} />
+  {/if}
+
   {#if showLength}
     <Entries {length} {type} />
   {/if}
@@ -96,7 +102,7 @@
 
 {#if children && length != null && length > 0 && !collapsed}
   <div
-    transition:slide={{ axis: 'x', duration: noanimate ? 0 : 400 }}
+    transition:slide|global={{ axis: 'x', duration: noanimate ? 0 : 400 }}
     oninspectvaluechange={() => buttonComponent?.flash()}
   >
     <div
@@ -117,7 +123,7 @@
     position: sticky;
     top: 0;
     border-color: var(--border-color);
-    border-bottom-width: 0;
+    border-bottom-width: 0px;
     border-right-width: 0;
     border-top-width: 0;
     border-left-width: 0;

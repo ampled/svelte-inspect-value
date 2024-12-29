@@ -1,11 +1,11 @@
 <script lang="ts">
   import { stringify } from '$lib/util.js'
 
-  import type { OptionsContext } from '$lib/options.svelte.js'
+  import { OPTIONS_CONTEXT, type OptionsContext } from '$lib/options.svelte.js'
   import type { TypeViewProps } from '$lib/types.js'
+  import { isUrl as isurl } from '$lib/util/is-url.js'
   import { getContext, type Snippet } from 'svelte'
   import Entries from './Entries.svelte'
-  import { isUrl as isurl } from '$lib/util/is-url.js'
 
   type Props = TypeViewProps<string> & { length?: boolean; children?: Snippet }
 
@@ -15,7 +15,7 @@
 
   let ele: 'a' | 'span' = $derived(isUrl ? 'a' : 'span')
 
-  const options: OptionsContext = getContext('json-inspect')
+  const options: OptionsContext = getContext(OPTIONS_CONTEXT)
 
   let { stringCollapse, quotes } = $derived(options.value)
 

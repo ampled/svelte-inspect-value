@@ -6,7 +6,7 @@
   import JsonViewer from './components/Node.svelte'
   import Options from './components/Options.svelte'
   import './inspect.css'
-  import { createOptions, type JSONInspectOptions } from './options.svelte.js'
+  import { createOptions, OPTIONS_CONTEXT, type JSONInspectOptions } from './options.svelte.js'
   import { type InspectState } from './state.svelte.js'
   import StateProvider from './StateContextProvider.svelte'
 
@@ -63,7 +63,7 @@
     })
   })
 
-  setContext('json-inspect', options)
+  setContext(OPTIONS_CONTEXT, options)
 
   let initialState: InspectState | undefined = $state({})
 

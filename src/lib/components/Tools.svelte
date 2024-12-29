@@ -5,19 +5,19 @@
   import Copy from '$lib/icons/Copy.svelte'
   import ExpandChildren from '$lib/icons/ExpandChildren.svelte'
   import Settings from '$lib/icons/Settings.svelte'
-  import type { OptionsContext } from '$lib/options.svelte.js'
+  import { OPTIONS_CONTEXT, type OptionsContext } from '$lib/options.svelte.js'
   import { STATE_CONTEXT_KEY, type StateContext } from '$lib/state.svelte.js'
   import type { KeyName, TypeViewProps } from '$lib/types.js'
   import { stringifyPath } from '$lib/util.js'
   import { getContext } from 'svelte'
 
-  type Props = TypeViewProps<unknown> & { collapsed?: boolean }
+  type Props = Partial<TypeViewProps<unknown>> & { collapsed?: boolean }
 
   let { value, path = [] }: Props = $props()
 
   let copied = $state(false)
 
-  let options: OptionsContext = getContext('json-inspect')
+  let options: OptionsContext = getContext(OPTIONS_CONTEXT)
   let inspectState: StateContext | undefined = getContext(STATE_CONTEXT_KEY)
 
   let level = $derived(path.length)
@@ -116,3 +116,9 @@
     <Settings />
   </button>
 {/if}
+
+<style>
+  button {
+    padding: 2px;
+  }
+</style>

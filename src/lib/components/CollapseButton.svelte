@@ -1,15 +1,13 @@
 <script lang="ts">
   import { flashOnUpdate } from '$lib/action/update-flash.svelte.js'
   import Caret from '$lib/icons/Caret.svelte'
-  import { getType, stringify } from '$lib/util.js'
   import type { HTMLButtonAttributes } from 'svelte/elements'
-  import { slide } from 'svelte/transition'
 
   type Props = {
     collapsed?: boolean
     onchange?: (collapsed: boolean) => void
     value: unknown
-  } & Omit<HTMLButtonAttributes, 'onchange'>
+  } & Omit<HTMLButtonAttributes, 'onchange' | 'value'>
 
   let { collapsed = $bindable(), onchange, disabled, value, ...rest }: Props = $props()
 

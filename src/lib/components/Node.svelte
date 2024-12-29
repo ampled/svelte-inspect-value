@@ -9,13 +9,7 @@
 
   type Props = TypeViewProps<unknown> & { usedefaults?: boolean }
 
-  let {
-    value = undefined,
-    key,
-    path: prevPath = [],
-    usedefaults = false,
-    oninspectvaluechange,
-  }: Props = $props()
+  let { value = undefined, key, path: prevPath = [], usedefaults = false }: Props = $props()
 
   let { customComponents } = $derived(useOptions())
 
@@ -29,8 +23,7 @@
     let entry = comps[type]
 
     if (entry) {
-      let component = entry[0]
-      let propfn = entry[1]
+      let [component, propfn] = entry
       let props = propfn ? propfn({ value }) : {}
       return [component, props] as const
     } else if (type.startsWith('html')) {
@@ -50,14 +43,7 @@
 </script>
 
 <svelte:boundary>
-  <TypeComponent
-    value={value as TODO}
-    {key}
-    {type}
-    {path}
-    {oninspectvaluechange}
-    {...componentProps}
-  />
+  <TypeComponent value={value as TODO} {key} {type} {path} {...componentProps} />
 
   {#snippet failed(error, reset)}
     {@const inspectError = new InspectError(
