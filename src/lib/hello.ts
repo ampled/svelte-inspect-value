@@ -1,15 +1,17 @@
-import { stringify } from './util.js'
+import type { KeyName } from './types.js'
+import { stringifyOrToString } from './util.js'
 
-export function logToConsole(...items: unknown[]) {
+export function logToConsole(path: KeyName[] = [], ...items: unknown[]) {
   console.log(
-    '%cInspect',
+    `%cInspect ${path.join('.')}`,
     'background-color: black; padding: 5px; color: hotpink; border-radius: 8px;',
+    '\n',
     ...items
   )
   // console.dirxml(...items);
 }
 
 export function copyToClipBoard(item: unknown) {
-  const asdf = stringify(item, 0, 'double')
+  const asdf = stringifyOrToString(item)
   return navigator.clipboard.writeText(asdf)
 }

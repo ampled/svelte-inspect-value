@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { useOptions } from '$lib/options.svelte.js'
-  import { InspectError, type CustomComponents, type TypeViewProps } from '$lib/types.js'
+  import { useOptions } from '../options.svelte.js'
+  import { InspectError, type CustomComponents, type TypeViewProps } from '../types.js'
   import { getType, type ValueType } from '../util.js'
   import HtmlView from './HTMLView.svelte'
   import InspectErrorView from './InspectErrorView.svelte'
@@ -11,7 +11,8 @@
 
   let { value = undefined, key, path: prevPath = [], usedefaults = false }: Props = $props()
 
-  let { customComponents } = $derived(useOptions())
+  let options = useOptions()
+  let { customComponents } = $derived(options.value)
 
   let type: ValueType = $derived(getType(value))
 

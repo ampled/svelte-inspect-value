@@ -20,8 +20,6 @@ export const flashOnUpdate: Action<
 
   node.style.transition = ''
 
-  // flash() // SEE TODO extract key and dash/collapse button out of titlebar/onelineview
-
   const flash = () => {
     node.style.opacity = '1'
     node.style.color = 'var(--bg-light)'
@@ -33,14 +31,13 @@ export const flashOnUpdate: Action<
     }, 200)
   }
 
+  // expose flash function
   cb?.(flash)
 
   $effect(() => {
     const newVal = value()
 
     untrack(() => {
-      console.log('equal:')
-
       if (!equal(prevValue, newVal)) {
         node.dispatchEvent(new CustomEvent('inspectvaluechange', { bubbles: true }))
         flash()

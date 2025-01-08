@@ -1,13 +1,10 @@
 <script lang="ts">
-  import type { TypeViewProps } from '$lib/types.js'
-  import { getType, stringifyOrToString, type ValueType } from '$lib/util.js'
+  import type { KeyName, TypeViewProps } from '../types.js'
+  import { type ValueType } from '../util.js'
   import Entry from './Entry.svelte'
   import Expandable from './Expandable.svelte'
-  import Key from './Key.svelte'
   import Node from './Node.svelte'
   import Preview from './Preview.svelte'
-  import StringValue from './StringValue.svelte'
-  import Type from './Type.svelte'
 
   type Props = TypeViewProps<object>
 
@@ -24,31 +21,22 @@
 
   let objectType = $derived(classInstance ? (classInstance as ValueType) : type)
 
-  let preview = $derived(Reflect.ownKeys(value).slice(0, 3))
+  let preview = $derived<[KeyName, unknown][]>(
+    Reflect.ownKeys(value)
+      .slice(0, 3)
+      // @ts-expect-error nope
+      .map((key) => [key, value[key]])
+  )
 </script>
 
 <Expandable type={objectType} length={entries.length} {key} {path} {value}>
   {#snippet val()}
-    <Preview list={preview} prefix={'{'} postfix={'}'} hasMore={entries.length > preview.length}>
-      {#snippet item(i)}
-        {@const val = value[i as keyof typeof value]}
-        {@const valType = getType(val)}
-        <Key key={i as string} />
-        <span class="value {valType}">
-          {#if valType === 'array'}
-            arr({(val as unknown[]).length})
-          {:else if valType === 'object'}
-            {'{'}&hellip;{'}'}
-          {:else if valType === 'undefined' || valType === 'null'}
-            <Type type={valType} />
-          {:else if valType === 'string'}
-            <StringValue value={val as string} />
-          {:else}
-            {stringifyOrToString(value[i as keyof typeof value])}
-          {/if}
-        </span>
-      {/snippet}
-    </Preview>
+    <Preview
+      keyValue={preview}
+      prefix={'{'}
+      postfix={'}'}
+      hasMore={entries.length > preview.length}
+    />
   {/snippet}
   {#each entries as [key, value], i (key)}
     <Entry {i}>

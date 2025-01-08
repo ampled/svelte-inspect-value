@@ -1,10 +1,10 @@
 <script lang="ts">
   import type { TypeViewProps } from '$lib/types.js'
   import Entry from './Entry.svelte'
-  import JsonViewer from './Node.svelte'
-  import Key from './Key.svelte'
-  import StringValue from './StringValue.svelte'
   import Expandable from './Expandable.svelte'
+  import Key from './Key.svelte'
+  import JsonViewer from './Node.svelte'
+  import StringValue from './StringValue.svelte'
   import Type from './Type.svelte'
 
   type Props = TypeViewProps<URL>
@@ -45,9 +45,7 @@
 {#if entries.length}
   <Expandable {...{ value, key, type, path }} length={entries.length}>
     {#snippet val()}
-      <StringValue value={value.toString()}>
-        <a href={value.toString()} target="_blank" rel="noreferrer">{value.toString()}</a>
-      </StringValue>
+      <StringValue value={value.toString()} />
     {/snippet}
     {#each entries as [key, value], i (key)}
       <Entry {i}>

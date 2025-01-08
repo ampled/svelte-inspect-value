@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { useOptions } from '$lib/options.svelte.js'
   import { slide } from 'svelte/transition'
+  import { useOptions } from '../options.svelte.js'
 
   let { i = 0, children } = $props()
 
@@ -11,8 +11,15 @@
   class="entry"
   style="--index: {i}"
   transition:slide={{
-    duration: options.noanimate ? 0 : 200,
+    duration: options.value.noanimate ? 0 : 200,
   }}
 >
   {@render children?.()}
 </div>
+
+<style>
+  .entry {
+    margin-left: 0;
+    opacity: 1;
+  }
+</style>

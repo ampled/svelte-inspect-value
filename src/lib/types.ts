@@ -1,6 +1,20 @@
 import type { Component } from 'svelte'
+import type { HTMLAttributes } from 'svelte/elements'
 import type { ViewComponents } from './components/types.js'
+import type { JSONInspectOptions } from './options.svelte.js'
+import type { InspectState } from './state.svelte.js'
 import type { ValueType } from './util.js'
+
+export type InspectProps = {
+  value?: unknown
+  name?: string
+  /**
+   * Called whenever a node is collapsed or expanded
+   * @param state
+   */
+  onCollapseChange?: (state: InspectState) => void
+} & Partial<JSONInspectOptions> &
+  HTMLAttributes<HTMLDivElement>
 
 export type KeyName = string | number | symbol
 

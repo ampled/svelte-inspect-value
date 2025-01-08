@@ -2,6 +2,7 @@
   // import './app.css'
   import { browser } from '$app/environment'
   import Inspect from '$lib/Inspect.svelte'
+  import { setGlobalInspectOptions } from '$lib/options.svelte.js'
   import { onMount } from 'svelte'
   import HtmlElements from '../doclib/examples/HTMLElements.svelte'
   import MapAndSet from '../doclib/examples/MapAndSet.svelte'
@@ -135,6 +136,8 @@
   let jsonString = $state(JSON.stringify({ anObject: { name: 'Carl' } }))
 
   let showOptions = $state(true)
+
+  setGlobalInspectOptions({ showTypes: false, theme: 'monokai' })
 
   // $inspect(allTypesValue)
 </script>

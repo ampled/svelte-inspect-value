@@ -15,6 +15,7 @@ const config = {
   },
   compilerOptions: {
     // runes: true,
+    customElement: true,
   },
 }
 

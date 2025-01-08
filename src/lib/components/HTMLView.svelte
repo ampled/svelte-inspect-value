@@ -1,12 +1,12 @@
 <script lang="ts">
-  import type { TypeViewProps } from '$lib/types.js'
-  import { htmlState } from '$lib/util/mutation-observer.svelte.js'
-  import { onMount, type Snippet } from 'svelte'
+  import { type Snippet } from 'svelte'
+  import type { TypeViewProps } from '../types.js'
+  import { isArray, isObject } from '../util.js'
+  import { htmlState } from '../util/mutation-observer.svelte.js'
+  import Entry from './Entry.svelte'
+  import Expandable from './Expandable.svelte'
   import HtmlValue from './HTMLValue.svelte'
   import JsonViewer from './Node.svelte'
-  import Expandable from './Expandable.svelte'
-  import Entry from './Entry.svelte'
-  import { isArray, isObject } from '$lib/util.js'
 
   type Props = TypeViewProps<HTMLElement> & { children?: Snippet }
 
@@ -16,13 +16,19 @@
   let scrollLeft = $state<number | undefined>(value?.scrollLeft)
   let scrollTop = $state<number | undefined>(value?.scrollTop)
 
-  onMount(() => {
+  $effect(() => {
+    const onscroll = (event: Event) => {
+      const target = event.target as HTMLElement
+      scrollLeft = target.scrollLeft
+      scrollTop = target.scrollTop
+    }
+
     if (value) {
-      value.addEventListener('scroll', (event: Event) => {
-        const target = event.target as HTMLElement
-        scrollLeft = target.scrollLeft
-        scrollTop = target.scrollTop
-      })
+      value.addEventListener('scroll', onscroll)
+    }
+
+    return () => {
+      value.removeEventListener('scroll', onscroll)
     }
   })
 
@@ -85,7 +91,7 @@
   )
 </script>
 
-<Expandable {...{ value, key, type, path }} length={entries.length}>
+<Expandable {...{ value, key, type, path }} length={entries.length} keepPreviewOnExpand>
   {#snippet val()}
     {#key element.ele}
       <HtmlValue value={element.ele} />

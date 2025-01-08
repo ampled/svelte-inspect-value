@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { flashOnUpdate } from '$lib/action/update-flash.svelte.js'
-  import Caret from '$lib/icons/Caret.svelte'
   import type { HTMLButtonAttributes } from 'svelte/elements'
+  import { flashOnUpdate } from '../action/update-flash.svelte.js'
+  import Caret from '../icons/Caret.svelte'
 
   type Props = {
     collapsed?: boolean
@@ -23,7 +23,7 @@
   let rotation = $derived.by(() => {
     if (disabled) return 180
     if (collapsed) return 0
-    return 450
+    return 90
   })
 
   function onkeydown(event: KeyboardEvent & { currentTarget: EventTarget & HTMLButtonElement }) {
@@ -58,13 +58,16 @@
     {#if disabled}
       &hyphen;
     {:else}
-      <Caret style="rotate:{rotation}deg; transition: rotate 500ms var(--ease-out-back);" />
+      <Caret style="rotate:{rotation}deg; transition: rotate 125ms ease-in-out;" />
     {/if}
   </div>
 </button>
 
 <style>
   .collapse {
+    margin: 0;
+    padding: 0;
+    border: none;
     all: unset;
     overflow: hidden;
     cursor: pointer;

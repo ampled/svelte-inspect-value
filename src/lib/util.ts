@@ -68,7 +68,7 @@ export function stringify(value: unknown, indent = 2, quotes: 'single' | 'double
 }
 
 export function stringifyOrToString(val: unknown): string {
-  const stringified = stringify(val)
+  const stringified = stringify(val, 0)
   if (stringified !== '{}') {
     return stringified
   }
@@ -96,6 +96,9 @@ export const stringifyPath = (path: KeyName[]) => {
 }
 
 export function collapseString(value: string, length: undefined | number) {
+  if (length === 0) {
+    return value
+  }
   return length && length < value.length
     ? value.slice(0, length).trimEnd().trimStart() + '…'
     : value

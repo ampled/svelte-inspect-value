@@ -1,19 +1,10 @@
 <script lang="ts">
-  import { OPTIONS_CONTEXT, type OptionsContext } from '$lib/options.svelte.js'
   import { getContext } from 'svelte'
   import { fade } from 'svelte/transition'
+  import { OPTIONS_CONTEXT, type OptionsContext } from '../options.svelte.js'
 
   let options: OptionsContext = getContext(OPTIONS_CONTEXT)
 
-  // type OptionsProps = {
-  //   open: boolean
-  // }
-
-  // let { open = $bindable(true) }: OptionsProps = $props()
-
-  // $inspect(options)
-
-  // $inspect(options)
   const themes = [
     'drak',
     'monokai',
@@ -46,6 +37,11 @@
       <label>
         show types
         <input type="checkbox" bind:checked={options.value.showTypes} />
+      </label>
+
+      <label>
+        show preview
+        <input type="checkbox" bind:checked={options.value.showPreview} />
       </label>
 
       <label>
@@ -91,7 +87,7 @@
     border-radius: 8px;
     background-color: var(--bg);
     overflow: auto;
-    max-width: 90%;
+    /* max-width: 90%; */
     /* margin: auto; */
     border: 1px solid var(--border-color);
     max-height: max-content;

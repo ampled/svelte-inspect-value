@@ -1,19 +1,18 @@
 <script lang="ts">
   import { getContext } from 'svelte'
 
-  import { OPTIONS_CONTEXT, type OptionsContext } from '$lib/options.svelte.js'
-  import type { ValueType } from '$lib/util.js'
   import type { HTMLAttributes } from 'svelte/elements'
+  import { useOptions } from '../options.svelte.js'
+  import type { ValueType } from '../util.js'
 
   type Props = {
     type?: ValueType | 'noop' | string
+    force?: boolean
   } & HTMLAttributes<HTMLSpanElement>
 
-  let { type = '', ...rest }: Props = $props()
+  let { type = '', force, ...rest }: Props = $props()
 
-  const options: OptionsContext = getContext(OPTIONS_CONTEXT)
-
-  let { showTypes } = $derived(options.value)
+  const options = useOptions()
 
   let display = $derived.by(() => {
     switch (type) {
@@ -46,12 +45,25 @@
     }
   })
 
-  const ALWAYS_VISIBLE_TYPES = ['undefined', 'null', 'class', 'function', 'promise', 'MapEntry']
+  const ALWAYS_VISIBLE_TYPES = [
+    'undefined',
+    'null',
+    'class',
+    'function',
+    'promise',
+    'MapEntry',
+    'map',
+    'set',
+    'date',
+    'url',
+  ]
 
   let required = $derived(ALWAYS_VISIBLE_TYPES.includes(type))
+
+  const preview = getContext<boolean>('preview')
 </script>
 
-{#if (type && showTypes) || required}
+{#if (type && options.value.showTypes && !preview) || required || force}
   <span class={`type ${type}`} {...rest} title={type}>
     {display}
   </span>

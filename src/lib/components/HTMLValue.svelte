@@ -8,16 +8,16 @@
 </script>
 
 <script lang="ts">
-  import type { TypeViewProps } from '$lib/types.js'
   import { onMount } from 'svelte'
-  import { useOptions } from '$lib/options.svelte.js'
-  import { collapseString } from '$lib/util.js'
+  import { useOptions } from '../options.svelte.js'
+  import type { TypeViewProps } from '../types.js'
+  import { collapseString } from '../util.js'
 
   type Props = TypeViewProps<HTMLElement>
 
   let { value }: Props = $props()
 
-  let { stringCollapse } = $derived(useOptions())
+  let options = useOptions()
 
   const getOpenTag = (ele: HTMLElement, stringCollapse: number) => {
     if (ele) {
@@ -34,13 +34,13 @@
   let highlighted: string = $state('')
 
   const mutationObserver = new MutationObserver(([mutation]) => {
-    const outer = getOpenTag(mutation.target as HTMLElement, stringCollapse)
+    const outer = getOpenTag(mutation.target as HTMLElement, options.value.stringCollapse)
     highlighted = highlight(outer)
   })
 
   onMount(() => {
     if (value) {
-      const outer = getOpenTag(value, stringCollapse)
+      const outer = getOpenTag(value, options.value.stringCollapse)
       highlighted = highlight(outer)
       mutationObserver.observe(value, { attributes: true })
     }
@@ -52,4 +52,28 @@
 </script>
 
 <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-<span class="value html" title="">{@html highlighted}</span>
+<code class="value html hl" title="">{@html highlighted}</code>
+
+<style>
+  :global code.value.html.hl {
+    background-color: transparent;
+    padding-inline: 0.5em;
+    border-radius: 4px;
+
+    .tag {
+      color: var(--fg);
+    }
+
+    .name {
+      color: var(--red);
+    }
+
+    .attr {
+      color: var(--green);
+    }
+
+    .string {
+      color: var(--yellow);
+    }
+  }
+</style>

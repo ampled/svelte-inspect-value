@@ -1,9 +1,7 @@
 <script lang="ts">
-  import type { TypeViewProps } from '$lib/types.js'
-  import { getType, stringify } from '$lib/util.js'
+  import type { TypeViewProps } from '../types.js'
   import Entry from './Entry.svelte'
   import Expandable from './Expandable.svelte'
-  import Key from './Key.svelte'
   import JsonViewer from './Node.svelte'
   import Preview from './Preview.svelte'
 
@@ -35,32 +33,12 @@
   {#snippet val()}
     <!-- <StringValue value={value.toString()} /> -->
     <!-- <ArrayPreview value={entries} /> -->
-    <Preview list={preview} prefix={'('} postfix={')'} hasMore={entries.length > preview.length}>
-      {#snippet item(i)}
-        {@const val = i[1]}
-        {@const valType = getType(val)}
-        <Key key={i[0]} />
-        <!-- <Type type={valType} /> -->
-
-        {#if valType === 'undefined'}
-          undefined
-        {:else if valType === 'null'}
-          null
-        {:else if Array.isArray(val)}
-          <!-- {val.map((e) => stringify(e)).join(', ')} -->
-          {#each val as entry, i}
-            <span class="value string">{stringify(entry)}</span>
-            {#if val.length > i + 1}
-              ,
-            {/if}
-          {/each}
-          <!-- {stringify(val.join(','))} -->
-          <!-- {stringifyOrToString(i[1])} -->
-        {:else}
-          <span class="value string">{stringify(val)}</span>
-        {/if}
-      {/snippet}
-    </Preview>
+    <Preview
+      keyValue={preview}
+      prefix={'('}
+      postfix={')'}
+      hasMore={entries.length > preview.length}
+    />
   {/snippet}
   {#each entries as [key, value], i (key)}
     <Entry {i}>

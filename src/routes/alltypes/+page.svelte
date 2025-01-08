@@ -28,6 +28,7 @@
     },
     error: new Error('oh no!'),
     set: new Set([1, 2, 3]),
+    weakSet: new WeakSet(),
     map: new Map([[0, 0]]),
     eight: new Int8Array([1, 2, 3]),
     sixteen: new Int16Array([1, 2, 3, 4, 5]),
@@ -60,10 +61,21 @@
   }
 </script>
 
-<div style="max-width: 70%; padding: 2em">
+<div style="padding: 2em">
   <Inspect value={allTypes} expandLevel={2} />
 </div>
 
-<div style="max-width: 70%; padding: 2em">
+<div style="padding: 2em">
   <Inspect value={'lorem\n ipsum\n\t\rdolor sit amet'} expandLevel={2} />
+</div>
+
+<div style="padding: 2em">
+  <Inspect
+    value={{
+      longMultiLine:
+        'lorem ipsum dolor sit amet \n lorem ipsum dipsum bipdum \n abababababababa ner nerrrrr',
+      long: 'lorem ipsum dolor sit amet. lorem ipsum dipsum bipdum. abababababababa ner ner ner ner',
+    }}
+    expandLevel={2}
+  />
 </div>

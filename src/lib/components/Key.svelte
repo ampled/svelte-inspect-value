@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { TypeViewProps } from '$lib/types.js'
-  import { stringifyPath } from '$lib/util.js'
   import type { HTMLButtonAttributes } from 'svelte/elements'
+  import type { TypeViewProps } from '../types.js'
+  import { stringifyPath } from '../util.js'
 
   type Props = {
     key: TypeViewProps<unknown>['key']
@@ -28,7 +28,7 @@
 {#if showKey}
   <button
     tabindex="-1"
-    class="border-left"
+    class="key-button"
     {ondblclick}
     onclick={() => console.log(path, stringifyPath(path))}
   >
@@ -39,8 +39,11 @@
 {/if}
 
 <style>
-  .border-left {
-    border-left: 0px solid white;
+  .key-button {
+    all: unset;
+    padding: 0;
+    margin: 0;
+    border: none;
   }
 
   .delim {

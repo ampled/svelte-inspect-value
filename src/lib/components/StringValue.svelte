@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { stringify } from '$lib/util.js'
+  import { collapseString, stringify } from '../util.js'
 
-  import { OPTIONS_CONTEXT, type OptionsContext } from '$lib/options.svelte.js'
-  import type { TypeViewProps } from '$lib/types.js'
-  import { isUrl as isurl } from '$lib/util/is-url.js'
   import { getContext, type Snippet } from 'svelte'
+  import { useOptions } from '../options.svelte.js'
+  import type { TypeViewProps } from '../types.js'
+  import { isUrl as isurl } from '../util/is-url.js'
   import Entries from './Entries.svelte'
 
   type Props = TypeViewProps<string> & { length?: boolean; children?: Snippet }
@@ -15,15 +15,11 @@
 
   let ele: 'a' | 'span' = $derived(isUrl ? 'a' : 'span')
 
-  const options: OptionsContext = getContext(OPTIONS_CONTEXT)
+  let options = useOptions()
 
-  let { stringCollapse, quotes } = $derived(options.value)
+  let display = $derived(collapseString(value, options.value.stringCollapse))
 
-  let display = $derived(
-    stringCollapse && stringCollapse < value.length
-      ? value.slice(0, stringCollapse).trimEnd() + '…'
-      : value
-  )
+  const preview = getContext<boolean>('preview')
 </script>
 
 <svelte:element
@@ -37,9 +33,9 @@
   {#if children}
     {@render children()}
   {:else}
-    {stringify(display, 0, quotes)}
+    {stringify(display, 0, options.value.quotes)}
   {/if}
 </svelte:element>
-{#if length}
+{#if length && !preview}
   <Entries type="string" length={value.length} />
 {/if}

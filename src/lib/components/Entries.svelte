@@ -1,7 +1,6 @@
 <script lang="ts">
-  import { OPTIONS_CONTEXT, type OptionsContext } from '$lib/options.svelte.js'
-  import type { ValueType } from '$lib/util.js'
-  import { getContext } from 'svelte'
+  import { useOptions } from '../options.svelte.js'
+  import type { ValueType } from '../util.js'
 
   type Props = {
     length?: number
@@ -10,12 +9,10 @@
 
   let { length, type }: Props = $props()
 
-  const options: OptionsContext = getContext(OPTIONS_CONTEXT)
-
-  let { showLength } = $derived(options.value)
+  const options = useOptions()
 
   let unit = $derived.by(() => {
-    if (!showLength) {
+    if (!options.value.showLength) {
       return ''
     }
     if (!type) return ''
@@ -36,7 +33,7 @@
   //
 </script>
 
-{#if showLength && typeof length === 'number'}
+{#if options.value.showLength && typeof length === 'number'}
   <span class="length">
     {#if length > 0}
       {length} {unit}
@@ -45,3 +42,11 @@
     {/if}
   </span>
 {/if}
+
+<style>
+  .length {
+    color: var(--comments);
+    font-style: italic;
+    font-size: 0.857em;
+  }
+</style>

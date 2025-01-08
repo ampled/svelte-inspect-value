@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { InspectError, type TypeViewProps } from '$lib/types.js'
   import { setContext } from 'svelte'
+  import { InspectError, type TypeViewProps } from '../types.js'
   import Entry from './Entry.svelte'
   import Expandable from './Expandable.svelte'
   import JsonViewer from './Node.svelte'

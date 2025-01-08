@@ -1,47 +1,31 @@
 <script lang="ts">
   import type { TypeViewProps } from '$lib/types.js'
+  import { getContext } from 'svelte'
   import Expandable from './Expandable.svelte'
   import FunctionBody from './FunctionBody.svelte'
   import OneLineView from './OneLineView.svelte'
-  // import OneLineView from './OneLineView.svelte'
 
   type Props = TypeViewProps<() => unknown>
 
-  let { value = () => {}, key, type, path }: Props = $props()
+  let { value, key, type, path }: Props = $props()
 
-  let funcBody = $derived.by(() => {
-    const str = value.toString()
-    return str
-    // console.log(str);
-    // if (str.startsWith('(')) {
-    //   return str
-    // }
-  })
+  let isMultiLine = $derived(value.toString().includes('\n'))
 
-  let isMultiLine = $derived(funcBody.includes('\n'))
+  const preview = getContext<boolean>('preview')
 </script>
 
-{#snippet preview()}
-  <!-- <span class="value {type}"> -->
-  <!-- {value.name} -->
-  <!-- <span class="funcbody"> -->
-  <!-- {#if funcBody}{funcBody}{:else}{'{ ... }'}{/if} -->
-  <FunctionBody value={value.toString()} inline />
-  <!-- </span> -->
-  <!-- </span> -->
+{#snippet val()}
+  {#if preview}
+    <span class="value function">{value.name}</span>
+  {:else}
+    <FunctionBody value={value.toString()} inline />
+  {/if}
 {/snippet}
 
 {#if isMultiLine}
-  <Expandable {key} {type} {path} {value} length={1} showLength={false}>
-    {#snippet val()}
-      <FunctionBody value={value.toString()} inline />
-    {/snippet}
+  <Expandable {key} {type} {path} {value} {val} length={1} showLength={false}>
     <FunctionBody value={value.toString()} />
   </Expandable>
 {:else}
-  <OneLineView {key} {type} {path} {value}>
-    {#snippet val()}
-      <FunctionBody value={value.toString()} inline />
-    {/snippet}
-  </OneLineView>
+  <OneLineView {key} {type} {val} {path} {value} />
 {/if}

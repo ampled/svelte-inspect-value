@@ -25,21 +25,19 @@
   const internalKeys = ['buffer', 'byteLength', 'byteOffset', 'length']
   let keys = [...Object.getOwnPropertyNames(value), ...internalKeys]
 
-  function getValue(key: any) {
+  function getValue(key: keyof typeof value) {
     return value[key]
   }
 
-  let entries = $derived<[string, unknown][]>(keys.map((k) => [k, getValue(k)]))
+  let entries = $derived<[string, unknown][]>(
+    keys.map((k) => [k, getValue(k as keyof typeof value)])
+  )
   let preview = $derived(entries.slice(0, 3))
 </script>
 
 <Expandable {...{ value, key, type, path }} length={value?.length}>
   {#snippet val()}
-    <Preview prefix="[" postfix="]" list={preview} hasMore={preview.length < 3}>
-      {#snippet item(entry)}
-        {entry[1]}
-      {/snippet}
-    </Preview>
+    <Preview prefix="[" postfix="]" list={preview} hasMore={preview.length < 3} />
   {/snippet}
   {#each entries as [key, value], i (key)}
     <Entry {i}>

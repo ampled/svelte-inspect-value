@@ -1,16 +1,15 @@
 <script lang="ts">
-  import { STATE_CONTEXT_KEY, type StateContext } from '$lib/state.svelte.js'
+  import { STATE_CONTEXT_KEY, type StateContext } from '../state.svelte.js'
 
   import { getContext, onMount, type Snippet } from 'svelte'
   import CollapseButton from './CollapseButton.svelte'
   import Entries from './Entries.svelte'
 
-  import { useOptions } from '$lib/options.svelte.js'
-  import type { TypeViewProps } from '$lib/types.js'
-  import { stringifyPath } from '$lib/util.js'
-  import { backOut } from 'svelte/easing'
   import type { HTMLAttributes } from 'svelte/elements'
   import { slide } from 'svelte/transition'
+  import { useOptions } from '../options.svelte.js'
+  import type { TypeViewProps } from '../types.js'
+  import { stringifyPath } from '../util.js'
   import Key from './Key.svelte'
   import Tools from './Tools.svelte'
   import Type from './Type.svelte'
@@ -19,6 +18,7 @@
     length?: number
     val?: Snippet
     children?: Snippet
+    keepPreviewOnExpand?: boolean
     showLength?: boolean
   } & HTMLAttributes<HTMLDivElement>
 
@@ -28,13 +28,14 @@
     length,
     value,
     val,
+    keepPreviewOnExpand = false,
     path = [],
     showLength = true,
     children,
     ...rest
   }: Props = $props()
 
-  let { expandAll, expandLevel, noanimate } = $derived(useOptions())
+  let options = useOptions()
   let inspectState: StateContext | undefined = getContext(STATE_CONTEXT_KEY)
 
   let level = $derived(path.length)
@@ -45,10 +46,10 @@
     if (inspectState) {
       const storedState = inspectState.getCollapse(path)
       if (!storedState) {
-        if (expandAll) {
+        if (options.value.expandAll) {
           inspectState.setCollapse(path, false)
         } else {
-          inspectState.setCollapse(path, level > expandLevel)
+          inspectState.setCollapse(path, level > options.value.expandLevel)
         }
       }
     }
@@ -62,47 +63,54 @@
   }
 
   let buttonComponent = $state<ReturnType<typeof CollapseButton>>()
+
+  const isPreview = getContext<boolean>('preview')
 </script>
 
-<div class="title-bar" {...rest}>
-  <div class="button-key">
-    <CollapseButton
-      bind:this={buttonComponent}
-      {collapsed}
-      {value}
-      onchange={onCollapseChanged}
-      disabled={length === 0}
-      aria-label="expand {key?.toString()}"
-      title="expand {key?.toString()}"
-    />
+<div class="title-bar" {...rest} class:isPreview>
+  {#if !isPreview}
+    <div class="button-key">
+      <CollapseButton
+        bind:this={buttonComponent}
+        {collapsed}
+        {value}
+        onchange={onCollapseChanged}
+        disabled={length === 0}
+        aria-label="expand {key?.toString()}"
+        title="expand {key?.toString()}"
+      />
 
-    <Key {key} {path} ondblclick={() => onCollapseChanged(!collapsed)} />
-  </div>
-
+      <Key {key} {path} ondblclick={() => onCollapseChanged(!collapsed)} />
+    </div>
+  {/if}
   <Type {type} />
 
-  {#if val}
+  {#if val && (collapsed || isPreview || keepPreviewOnExpand)}
     {@render val()}
+    <!-- <div transition:slide={{ axis: 'x' }}>
+      <div transition:slide>
+      </div>
+    </div> -->
   {/if}
 
-  {#if showLength}
+  {#if showLength && !isPreview}
     <Entries {length} {type} />
   {/if}
 
-  <div class="tools">
-    <Tools {value} {path} {collapsed} />
-  </div>
+  {#if !isPreview}
+    <Tools {value} {path} {collapsed} {type} />
+  {/if}
 </div>
 
-{#if children && length != null && length > 0 && !collapsed}
+{#if children && length != null && length > 0 && !collapsed && !isPreview}
   <div
-    transition:slide={{ axis: 'x', duration: noanimate ? 0 : 400 }}
+    transition:slide={{ axis: 'x', duration: options.value.noanimate ? 0 : 400 }}
     oninspectvaluechange={() => buttonComponent?.flash()}
   >
     <div
       class="indent {type}"
-      in:slide|global={{ easing: backOut, duration: noanimate ? 0 : 400 }}
-      out:slide={{ duration: noanimate ? 0 : 400 }}
+      in:slide={{ duration: options.value.noanimate ? 0 : 400 }}
+      out:slide={{ duration: options.value.noanimate ? 0 : 400 }}
     >
       {@render children()}
     </div>
@@ -111,9 +119,9 @@
 
 <style>
   .title-bar {
-    background-color: var(--bg);
+    /* background-color: var(--bg); */
     z-index: var(--index);
-    width: 100%;
+    /* width: 100%; */
     position: sticky;
     top: 0;
     border-color: var(--border-color);
@@ -133,7 +141,7 @@
     /* margin-left: -0.5em; */
     /* padding-left: calc(0.25em); */
     /* width: calc(100% + 0.5em); */
-    transition: all 0.2s ease-in-out;
+    /* transition: all 0.2s ease-in-out; */
 
     &:hover {
       background-color: var(--bg-lighter);
@@ -146,5 +154,9 @@
       padding-left: 1px;
       /* gap: 0.25em; */
     }
+  }
+
+  .title-bar.preview {
+    background-color: transparent;
   }
 </style>

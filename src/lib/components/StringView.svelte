@@ -1,19 +1,15 @@
 <script lang="ts">
-  import { collapseString, stringify } from '$lib/util.js'
-
-  import { OPTIONS_CONTEXT, type OptionsContext } from '$lib/options.svelte.js'
-  import type { TypeViewProps } from '$lib/types.js'
-  import { isUrl as isurl } from '$lib/util/is-url.js'
-  import { getContext } from 'svelte'
+  import { useOptions } from '../options.svelte.js'
+  import type { TypeViewProps } from '../types.js'
+  import { collapseString, stringify } from '../util.js'
+  import { isUrl as isurl } from '../util/is-url.js'
   import Expandable from './Expandable.svelte'
   import OneLineView from './OneLineView.svelte'
   import StringValue from './StringValue.svelte'
 
   let { value = '', key, type, path }: TypeViewProps<string> = $props()
 
-  const options: OptionsContext = getContext(OPTIONS_CONTEXT)
-
-  let { stringCollapse } = $derived(options.value)
+  const options = useOptions()
 
   let isMultiLine = $derived(value.includes('\n'))
 
@@ -21,11 +17,11 @@
   let isImageUrl = $derived((isUrl && value.endsWith('.png')) || value.endsWith('.svg'))
   let iaAudioUrl = $derived(isUrl && value.endsWith('.ogg'))
 
-  let display = $derived(collapseString(value, stringCollapse))
+  let display = $derived(collapseString(value, options.value.stringCollapse))
 </script>
 
 {#if isMultiLine || isImageUrl || iaAudioUrl}
-  <Expandable {...{ value, key, type, path }} length={value.length}>
+  <Expandable {...{ value, key, type, path }} length={value.length} keepPreviewOnExpand>
     {#snippet val()}
       <StringValue {value} />
     {/snippet}

@@ -1,10 +1,8 @@
 <script lang="ts">
-  import type { TypeViewProps } from '$lib/types.js'
-  import { slide } from 'svelte/transition'
-  import JsonViewer from './Node.svelte'
-  import Expandable from './Expandable.svelte'
+  import type { TypeViewProps } from '../types.js'
   import Entry from './Entry.svelte'
-  import { stringify } from '$lib/util.js'
+  import Expandable from './Expandable.svelte'
+  import JsonViewer from './Node.svelte'
 
   type Props = TypeViewProps<Iterator<any, any, any>>
 

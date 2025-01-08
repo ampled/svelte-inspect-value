@@ -1,22 +1,35 @@
 <script lang="ts">
-  import type { TypeViewProps } from '$lib/types.js'
-  import { getType } from '$lib/util.js'
+  import type { KeyName, TypeViewProps } from '../types.js'
+  import { getType } from '../util.js'
   import Entry from './Entry.svelte'
   import Expandable from './Expandable.svelte'
   import Node from './Node.svelte'
+  import Preview from './Preview.svelte'
+  import Type from './Type.svelte'
 
   type Props = TypeViewProps<Map<unknown, unknown>>
 
-  let { value = new Map(), key = undefined, type, path = [] }: Props = $props()
+  let { value, key = undefined, type, path = [] }: Props = $props()
 
-  let entries = $derived(Array.from(value.entries()))
+  let entries = $derived<[KeyName, unknown][]>([...value.entries()] as [KeyName, unknown][])
+
+  let preview = $derived<[KeyName, unknown][]>(entries.slice(0, 3))
 </script>
 
 <Expandable {...{ value, key, type, path }} length={entries.length}>
+  {#snippet val()}
+    <Preview
+      keyValue={preview}
+      prefix={'<'}
+      postfix={'>'}
+      hasMore={entries.length > preview.length}
+    />
+  {/snippet}
+
   {#each entries as [mapKey, mapValue], i (mapKey)}
     <Entry {i}>
       {#if ['string', 'number', 'symbol'].includes(typeof mapKey)}
-        <Node key={mapKey} value={mapValue} {path} />
+        <Node key={mapKey as string} value={mapValue} {path} />
       {:else}
         {@const keyType = getType(mapKey)}
         {@const valueType = getType(mapValue)}
@@ -27,11 +40,13 @@
           path={[...path, i]}
           length={2}
           showLength={false}
+          keepPreviewOnExpand
         >
           {#snippet val()}
             <span style="display: flex; align-items: center; gap: 0;color: var(--comments)">
-              {'<'}<span class="type {keyType}">{keyType}</span>,
-              <span class="type {valueType}"> {valueType}</span>{'>'}
+              <!-- {'<'}<span class="type {keyType}">{keyType}</span>,
+              <span class="type {valueType}"> {valueType}</span>{'>'} -->
+              {'<'}<Type type={keyType} />,<Type type={valueType} />{'>'}
             </span>
           {/snippet}
           <Entry i={0}>

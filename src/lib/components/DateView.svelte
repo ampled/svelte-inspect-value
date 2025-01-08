@@ -10,6 +10,9 @@
 
   let entries = $derived(
     Object.entries({
+      toString: value.toString(),
+      dateString: value.toDateString(),
+      utcString: value.toUTCString(),
       year: value.getFullYear(),
       month: value.getMonth(),
       date: value.getDate(),
@@ -19,14 +22,16 @@
       seconds: value.getSeconds(),
       milliseconds: value.getMilliseconds(),
       time: value.getTime(),
-      asString: value.toString(),
-      dateString: value.toDateString(),
-      utcString: value.toUTCString(),
     })
   )
 </script>
 
-<Expandable {...{ value, key, type, path }} length={entries.length}>
+<Expandable
+  {...{ value, key, type, path }}
+  length={entries.length}
+  keepPreviewOnExpand
+  showLength={false}
+>
   {#snippet val()}
     <span class="value date">{value.toUTCString()}</span>
   {/snippet}

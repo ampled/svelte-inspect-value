@@ -1,17 +1,18 @@
 <script lang="ts">
   import type { TypeViewProps } from '$lib/types.js'
+  import { untrack } from 'svelte'
   import { fade } from 'svelte/transition'
   import Entry from './Entry.svelte'
+  import Expandable from './Expandable.svelte'
   import JsonViewer from './Node.svelte'
-  import ObjectLikeView from './ObjectLikeView.svelte'
-  import { untrack } from 'svelte'
+  import Preview from './Preview.svelte'
 
   type Props = TypeViewProps<Promise<unknown>>
 
   let { value = Promise.resolve(), key, type, path }: Props = $props()
 
   let status = $state<'pending' | 'fulfilled' | 'rejected'>('pending')
-  let result = $state<any>(undefined)
+  let result = $state<unknown>(undefined)
 
   let currentPromise = $state<Promise<unknown>>()
 
@@ -22,21 +23,21 @@
     })
   )
 
-  function handleSuccess(res: unknown, promise: Promise<any>) {
+  function handleSuccess(res: unknown, promise: Promise<unknown>) {
     if (promise === value) {
       result = res
       if (status !== 'fulfilled') status = 'fulfilled'
     }
   }
 
-  function handleReject(err: unknown, promise: Promise<any>) {
+  function handleReject(err: unknown, promise: Promise<unknown>) {
     if (promise === value) {
       result = err
       status = 'rejected'
     }
   }
 
-  function resolvePromise(promise: Promise<any>) {
+  function resolvePromise(promise: Promise<unknown>) {
     status = 'pending'
     result = undefined
     try {
@@ -52,6 +53,7 @@
   }
 
   $effect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     value
     untrack(() => {
       if (currentPromise !== value) {
@@ -62,24 +64,35 @@
   })
 </script>
 
-<ObjectLikeView {...{ value, key, type, path }} length={entries.length}>
+<Expandable
+  {...{ value, key, type, path }}
+  length={entries.length}
+  showLength={false}
+  keepPreviewOnExpand
+>
   {#snippet val()}
     {#key status}
-      <span class="value promise {status}" in:fade>
-        <span class="bracket">{'<'}</span>{`${status}`}<span class="bracket">{'>'}</span>
+      <span class="value promise {status}" in:fade
+        ><span class="bracket">{'<'}</span>{`${status}`}{#if status === 'fulfilled'}
+          :<Preview list={[result]} hasMore={false} />
+        {/if}<span class="bracket">{'>'}</span>
       </span>
     {/key}
+    <!-- {#if result}
+      <Preview list={[result]} hasMore={false} />
+    {/if} -->
   {/snippet}
   {#each entries as [key, value], i (key)}
     <Entry {i}>
       <JsonViewer {value} {key} {path} />
     </Entry>
   {/each}
-</ObjectLikeView>
+</Expandable>
 
 <style>
   span.value {
-    width: 7em;
+    /* width: auto; */
+    font-size: 0.857em;
   }
 
   .bracket {

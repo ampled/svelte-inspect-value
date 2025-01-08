@@ -12,7 +12,7 @@
   let entries = $derived(Object.entries(value))
 </script>
 
-<Expandable {...{ value, key, type, path }} length={entries.length}>
+<Expandable {...{ value, key, type, path }} length={entries.length} keepPreviewOnExpand>
   {#snippet val()}
     <span class="value {type}">
       {value.name}

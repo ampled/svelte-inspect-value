@@ -4,6 +4,7 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build && npm run package",
+    "build-ele": "vite -c ./vite.config.element.ts build",
     "preview": "vite preview",
     "package": "svelte-kit sync && svelte-package && publint",
     "prepublishOnly": "npm run package",
@@ -30,6 +31,9 @@
     ".": {
       "types": "./dist/index.d.ts",
       "svelte": "./dist/index.js"
+    },
+    "./custom-element": {
+      "default": "./dist/ele/index.js"
     }
   },
   "peerDependencies": {
@@ -39,7 +43,7 @@
     "@sveltejs/adapter-auto": "^3.3.1",
     "@sveltejs/kit": "^2.9.1",
     "@sveltejs/package": "^2.3.7",
-    "@sveltejs/vite-plugin-svelte": "^4.0.0",
+    "@sveltejs/vite-plugin-svelte": "^5.0.3",
     "@tanstack/svelte-query": "^5.62.9",
     "eslint": "^9.17.0",
     "eslint-config-prettier": "^9.1.0",
@@ -50,14 +54,15 @@
     "prettier-plugin-organize-imports": "^4.1.0",
     "prettier-plugin-svelte": "^3.3.2",
     "publint": "^0.2.0",
-    "svelte": "^5.15.0",
+    "svelte": "^5.16.5",
     "svelte-check": "^4.1.1",
     "svelte-eslint-parser": "^1.0.0-next.4",
     "terser": "^5.36.0",
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.0.0",
-    "vite": "^5.0.11",
-    "vitest": "^2.0.4"
+    "vite": "^6.0.7",
+    "vitest": "^2.0.4",
+    "svelte-preprocess": "^6.0.3"
   },
   "dependencies": {
     "@neodrag/svelte": "^2.0.6",

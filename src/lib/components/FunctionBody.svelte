@@ -27,5 +27,47 @@
     display: inline;
     padding: 0;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  :global code.value.function.hl {
+    background-color: unset;
+    color: var(--fg);
+    white-space: pre;
+    padding: var(--indent);
+    padding-left: calc(var(--indent) * 2);
+
+    .title.function_ {
+      color: var(--function);
+    }
+
+    .title.class_ {
+      color: var(--class);
+    }
+
+    .tag {
+      color: var(--fg);
+    }
+
+    .keyword {
+      color: var(--red);
+    }
+
+    .name {
+      color: var(--red);
+    }
+
+    .attr {
+      color: var(--green);
+    }
+
+    .number {
+      color: var(--purple);
+    }
+
+    .string {
+      color: var(--yellow);
+    }
   }
 </style>

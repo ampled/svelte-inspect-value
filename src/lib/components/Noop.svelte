@@ -1,6 +1,6 @@
 <script lang="ts">
-  import Type from '$lib/components/Type.svelte'
-  import type { TypeViewProps } from '$lib/types.js'
+  import Type from '../components/Type.svelte'
+  import type { TypeViewProps } from '../types.js'
   import OneLineView from './OneLineView.svelte'
 
   type Props = TypeViewProps<unknown>

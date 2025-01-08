@@ -154,72 +154,48 @@
         base0E  #ba8baf  Keywords, Storage, Selector, Markup Italic, Diff Changed
         base0F  #a16946  Deprecated, Opening/Closing Embedded Language Tags, e.g. <?php ?>
     */
+}
 
-  .ampled-json-inspect {
-    --cyan: var(--base0C, #00c1be);
-    --yellow: var(--base0A, #e1ff7f);
-    --green: var(--base0B, #5faa70);
-    --red: var(--base08, #b03a3a);
-    --purple: var(--base0E, #8f42ae);
-    --blue: var(--base0D, #6a6ace);
-    --orange: var(--base09, #c6903a);
+.ampled-json-inspect {
+  --cyan: var(--base0C, #00c1be);
+  --yellow: var(--base0A, #e1ff7f);
+  --green: var(--base0B, #5faa70);
+  --red: var(--base08, #b03a3a);
+  --purple: var(--base0E, #8f42ae);
+  --blue: var(--base0D, #6a6ace);
+  --orange: var(--base09, #c6903a);
 
-    --bg: var(--base00, #0e0026);
-    --bg-lighter: var(--base01, #250060);
-    --bg-light: var(--base07);
-    --selection: var(--base02);
-    --comments: var(--base03, #59456e);
-    --border-color: var(--base03, var(--comments));
-    --dark-fg: var(--base04);
-    --fg: var(--base05, #b9a9be);
-    --fg-light: var(--base06);
+  --bg: var(--base00, #0e0026);
+  --bg-lighter: var(--base01, #250060);
+  --bg-light: var(--base07);
+  --selection: var(--base02);
+  --comments: var(--base03, #59456e);
+  --border-color: var(--base03, var(--comments));
+  --dark-fg: var(--base04);
+  --fg: var(--base05, #b9a9be);
+  --fg-light: var(--base06);
 
-    --error: var(--red);
-    --delimiter: var(--red);
-    --keyword: var(--red);
-    --number: var(--purple);
-    --number-type: var(--red);
-    --boolean: var(--purple);
-    --class: var(--blue);
-    --string: var(--yellow);
-    --string-type: var(--purple);
-    --regex: var(--cyan);
-    --symbol: var(--cyan);
-    --function: var(--green);
-    --object-type: var(--cyan);
-    --object: var(--blue);
-    --interactive: var(--base0E);
-    --deprecated: var(--base0F);
+  --error: var(--red);
+  --delimiter: var(--red);
+  --keyword: var(--red);
+  --number: var(--purple);
+  --number-type: var(--red);
+  --boolean: var(--purple);
+  --class: var(--blue);
+  --string: var(--yellow);
+  --string-type: var(--purple);
+  --regex: var(--cyan);
+  --symbol: var(--cyan);
+  --function: var(--green);
+  --object-type: var(--cyan);
+  --object: var(--blue);
+  --interactive: var(--base0E);
+  --deprecated: var(--base0F);
 
-    /* --indent-multiplier: 1; */
-    --indent: calc(0.5em * var(--indent-multiplier, 1));
+  /* --indent-multiplier: 1; */
+  --indent: calc(0.5em * var(--indent-multiplier, 1));
 
-    --stagger-delay: 20ms;
-  }
-
-  --ease-in-quad: cubic-bezier(0.55, 0.085, 0.68, 0.53);
-  --ease-in-cubic: cubic-bezier(0.55, 0.055, 0.675, 0.19);
-  --ease-in-quart: cubic-bezier(0.895, 0.03, 0.685, 0.22);
-  --ease-in-quint: cubic-bezier(0.755, 0.05, 0.855, 0.06);
-  --ease-in-expo: cubic-bezier(0.95, 0.05, 0.795, 0.035);
-  --ease-in-circ: cubic-bezier(0.6, 0.04, 0.98, 0.335);
-  --ease-in-back: cubic-bezier(0.6, -0.28, 0.735, 0.045);
-
-  --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  --ease-out-cubic: cubic-bezier(0.215, 0.61, 0.355, 1);
-  --ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
-  --ease-out-quint: cubic-bezier(0.23, 1, 0.32, 1);
-  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
-  --ease-out-circ: cubic-bezier(0.075, 0.82, 0.165, 1);
-  --ease-out-back: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-
-  --ease-in-out-quad: cubic-bezier(0.455, 0.03, 0.515, 0.955);
-  --ease-in-out-cubic: cubic-bezier(0.645, 0.045, 0.355, 1);
-  --ease-in-out-quart: cubic-bezier(0.77, 0, 0.175, 1);
-  --ease-in-out-quint: cubic-bezier(0.86, 0, 0.07, 1);
-  --ease-in-out-expo: cubic-bezier(1, 0, 0, 1);
-  --ease-in-out-circ: cubic-bezier(0.785, 0.135, 0.15, 0.86);
-  --ease-in-out-back: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --stagger-delay: 20ms;
 }
 
 .ampled-json-inspect code {
@@ -276,10 +252,6 @@
     }
   }
 
-  small {
-    font-size: 0.8333em;
-  }
-
   *,
   *::before,
   *::after {
@@ -320,12 +292,6 @@
     all: unset;
     box-sizing: border-box;
     cursor: pointer;
-  }
-
-  .length {
-    color: var(--comments);
-    font-style: italic;
-    font-size: 0.857em;
   }
 
   .title-bar,
@@ -373,49 +339,13 @@
     padding-block: calc(var(--indent) * 0.5);
     border-left: 1px solid var(--border-color);
     /* border-radius: 2px; */
-    transition: 0.4s var(--ease-out-back);
     /* overflow-x: clip; */
     max-width: 100%;
     overflow-y: auto;
-    height: calc-size(auto, size);
-    opacity: 1;
 
     .entry {
-      transition: all 0.5s var(--ease-out-circ); /* arriving */
-      transition-delay: calc(0s + calc(var(--stagger-delay) * calc(var(--index) + 1)));
       margin-left: 0;
       opacity: 1;
-      transform: translateX(0);
-      height: calc-size(auto, size);
-
-      .dash,
-      button.collapse {
-        transition: all 0.4s var(--ease-out-back);
-        transition-delay: calc(0.3s + calc(40ms * calc(var(--index))));
-        opacity: 1;
-      }
-    }
-
-    &.collapsed {
-      margin-block: 0;
-      padding: 0;
-      transition-delay: 0;
-      height: 0;
-      border-block: 0;
-
-      .entry {
-        transition: none;
-        transition: all 0.3s var(--ease-out-back); /* leaving */
-        opacity: 0;
-        transform: translateX(2em);
-
-        .dash,
-        button.collapse {
-          transition-duration: 0;
-          opacity: 0;
-          transition-delay: 0;
-        }
-      }
     }
 
     &.string {
@@ -545,7 +475,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 1000px;
+  /* max-width: 1000px; */
 
   &.string {
     color: var(--string);
@@ -651,7 +581,6 @@
   }
 
   &.html {
-    /* background-color: var(--bg); */
     padding-inline: 0.5em;
     border-radius: 4px;
 
@@ -696,29 +625,4 @@
   &:hover {
     text-decoration: underline;
   }
-}
-
-@keyframes flash {
-  /* 0% {
-  } */
-
-  10% {
-    color: var(--bg-light);
-    /* transform: scale(100, 50); */
-  }
-
-  100% {
-    /* rotate: 360deg; */
-    /* color: var(--comments); */
-  }
-}
-
-.flash-update {
-  transform-origin: center left;
-  /* animation: flash 500ms; */
-  animation: flash ease-out 500ms 1;
-  /* animation-name: flash;
-  animation-duration: 500ms;
-  animation-iteration-count: 1;
-  animation-timing-function: linear; */
 }
