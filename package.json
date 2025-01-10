@@ -5,6 +5,7 @@
     "url": "git+https://github.com/ampled/svelte-inspect-value.git"
   },
   "homepage": "https://svelte-inspect-value.vercel.app/",
+  "license": "MIT",
   "scripts": {
     "dev": "vite dev",
     "build": "vite build && npm run package",
