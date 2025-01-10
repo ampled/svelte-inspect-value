@@ -40,7 +40,5 @@
 <style>
   button.reset {
     all: unset;
-    /* border: 1px solid var(--fg); */
-    /* padding-inline: 0.5em; */
   }
 </style>
