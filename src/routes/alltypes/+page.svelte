@@ -3,6 +3,18 @@
 
   class Greeter {
     static staticProp = 'Hi'
+
+    public asdf = 'hello'
+  }
+
+  class MapEntry {
+    public key: string
+    public value: unknown
+
+    constructor(key: string, value: unknown) {
+      this.key = key
+      this.value = value
+    }
   }
 
   const allTypes = {
@@ -29,7 +41,10 @@
     error: new Error('oh no!'),
     set: new Set([1, 2, 3]),
     weakSet: new WeakSet(),
-    map: new Map([[0, 0]]),
+    map: new Map<unknown, unknown>([
+      [0, 0],
+      [{ id: 123 }, 1],
+    ]),
     eight: new Int8Array([1, 2, 3]),
     sixteen: new Int16Array([1, 2, 3, 4, 5]),
     thirtytwo: new Int32Array([1, 2, 3, 4, 5]),
@@ -55,6 +70,7 @@
     classCtr: Greeter,
     classNoEntries: class Foo {},
     classInstance: new Greeter(),
+    mapEntry: new MapEntry('key', 'value'),
     emptyObject: {},
     emptyArray: [],
     emptyString: '',
@@ -65,7 +81,7 @@
   <Inspect value={allTypes} expandLevel={2} />
 </div>
 
-<div style="padding: 2em">
+<!-- <div style="padding: 2em">
   <Inspect value={'lorem\n ipsum\n\t\rdolor sit amet'} expandLevel={2} />
 </div>
 
@@ -78,4 +94,4 @@
     }}
     expandLevel={2}
   />
-</div>
+</div> -->

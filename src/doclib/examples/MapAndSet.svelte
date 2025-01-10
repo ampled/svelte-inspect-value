@@ -6,8 +6,8 @@
   <h2>map & set</h2>
   <p>handles map and set instances.</p>
   <p>
-    for maps, if keys are not of type <code>number|string|symbol</code>, the entry is shown as a
-    key/value tuple:
+    for maps, if keys are not of type <code>number|string|symbol</code>, the entry is shown as an
+    expandable <code>MapEntry</code>
   </p>
 
   <div class="flex">

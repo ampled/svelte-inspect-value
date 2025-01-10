@@ -13,7 +13,7 @@
 </script>
 
 <Expandable {...{ value, key, type, path }} length={entries.length} keepPreviewOnExpand>
-  {#snippet val()}
+  {#snippet valuePreview()}
     <span class="value {type}">
       {value.name}
       <span class="funcbody">

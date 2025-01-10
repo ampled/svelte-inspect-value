@@ -70,11 +70,12 @@
   showLength={false}
   keepPreviewOnExpand
 >
-  {#snippet val()}
+  {#snippet valuePreview()}
     {#key status}
       <span class="value promise {status}" in:fade
-        ><span class="bracket">{'<'}</span>{`${status}`}{#if status === 'fulfilled'}
-          :<Preview list={[result]} hasMore={false} />
+        ><span class="bracket">{'<'}</span
+        >{`${status}`}{#if status === 'fulfilled' || status === 'rejected'}
+          <Preview prefix={':'} list={[result]} hasMore={false} />
         {/if}<span class="bracket">{'>'}</span>
       </span>
     {/key}

@@ -24,8 +24,8 @@
   // $inspect(value.cause)
 </script>
 
-<Expandable {value} {key} {type} {path} length={entries.length}>
-  {#snippet val()}
+<Expandable {value} {key} {type} {path} length={entries.length} keepPreviewOnExpand>
+  {#snippet valuePreview()}
     <span>⚠️</span>
     <button class="reset" onclick={reset}>[RESET]</button>
     <StringValue {type} value={value.message}>
@@ -41,6 +41,7 @@
 
 <style>
   button.reset {
+    all: unset;
     /* border: 1px solid var(--fg); */
     /* padding-inline: 0.5em; */
   }

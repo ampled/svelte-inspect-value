@@ -1,6 +1,6 @@
 // import type { Action } from "svelte/action";
 
-import type { KeyName } from './types.js'
+import type { KeyType } from './types.js'
 
 export function getType(value: unknown) {
   if (typeof value === 'function') {
@@ -91,7 +91,7 @@ export function typeOf(obj: unknown): ValueType {
 
 // export const noopAction: Action<HTMLElement, any> = (el) => { };
 
-export const stringifyPath = (path: KeyName[]) => {
+export const stringifyPath = (path: KeyType[]) => {
   return path.map((k) => k.toString()).join('.')
 }
 

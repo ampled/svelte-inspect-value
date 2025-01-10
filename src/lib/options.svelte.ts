@@ -73,6 +73,12 @@ export type JSONInspectOptions = {
    */
   noanimate: boolean
   /**
+   * Use no borders and transparent background
+   *
+   * Default `false`
+   */
+  borderless: boolean
+  /**
    * Display string values with double or single quotes
    *
    * Default `'single'`
@@ -98,6 +104,8 @@ export type JSONInspectOptions = {
    * Default `1`
    */
   expandLevel: number
+
+  embedMedia: boolean
 }
 
 export function createOptions(options: Partial<JSONInspectOptions>) {
@@ -113,8 +121,10 @@ export function createOptions(options: Partial<JSONInspectOptions>) {
     stringCollapse: 0,
     theme: 'drak',
     expandAll: false,
+    borderless: false,
     customComponents: {},
     expandLevel: 1,
+    embedMedia: false,
     ...options,
   })
 

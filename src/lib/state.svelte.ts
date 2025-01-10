@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import type { KeyName } from './types.js'
+import type { KeyType } from './types.js'
 import { stringifyPath } from './util.js'
 
 export type NodeState = {
@@ -14,7 +14,7 @@ export type InspectState = {
 
 export const STATE_CONTEXT_KEY = Symbol('inspect-state')
 
-function ensureStringPath(path: string | KeyName[]) {
+function ensureStringPath(path: string | KeyType[]) {
   let key: string
   if (Array.isArray(path)) {
     key = stringifyPath(path)
@@ -38,7 +38,7 @@ export function createState(
     set value(val: InspectState) {
       state = val
     },
-    setCollapse: (keyOrPath: string | KeyName[], collapsed: boolean) => {
+    setCollapse: (keyOrPath: string | KeyType[], collapsed: boolean) => {
       const key = ensureStringPath(keyOrPath)
       let changed = false
       if (state) {
@@ -49,11 +49,11 @@ export function createState(
         onChange?.(state)
       }
     },
-    getCollapse: (keyOrPath: string | KeyName[]) => {
+    getCollapse: (keyOrPath: string | KeyType[]) => {
       const key = ensureStringPath(keyOrPath)
       return state?.[key]
     },
-    hasExpandedChildren: (path: KeyName[]) => {
+    hasExpandedChildren: (path: KeyType[]) => {
       if (state) {
         const key = stringifyPath(path)
         const children = Object.entries(state).filter(([k]) => k.startsWith(key) && k !== key)
@@ -61,7 +61,7 @@ export function createState(
       }
       return false
     },
-    collapseChildren: (level: number, path: KeyName[]) => {
+    collapseChildren: (level: number, path: KeyType[]) => {
       if (state) {
         let changed = false
         Object.entries(state).forEach((entry) => {
@@ -76,7 +76,7 @@ export function createState(
         }
       }
     },
-    expandChildren: (currentLevel: number, currentPath: string | KeyName[]) => {
+    expandChildren: (currentLevel: number, currentPath: string | KeyType[]) => {
       if (state) {
         let changed = false
 

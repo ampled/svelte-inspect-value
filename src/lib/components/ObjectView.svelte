@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { KeyName, TypeViewProps } from '../types.js'
+  import type { KeyType, TypeViewProps } from '../types.js'
   import { type ValueType } from '../util.js'
   import Entry from './Entry.svelte'
   import Expandable from './Expandable.svelte'
@@ -10,27 +10,20 @@
 
   let { value = {}, key = undefined, type = 'object', path = [] }: Props = $props()
 
-  let entries: [string | symbol, unknown][] = $derived(
-    // @ts-expect-error nope
-    Reflect.ownKeys(value).map((key) => [key, value[key]])
-  )
-
   let classInstance = $derived(
     value.constructor.toString().startsWith('class') ? value.constructor.name : false
   )
 
   let objectType = $derived(classInstance ? (classInstance as ValueType) : type)
-
-  let preview = $derived<[KeyName, unknown][]>(
-    Reflect.ownKeys(value)
-      .slice(0, 3)
-      // @ts-expect-error nope
-      .map((key) => [key, value[key]])
+  let entries: [string | symbol, unknown][] = $derived(
+    // @ts-expect-error nope
+    Reflect.ownKeys(value).map((key) => [key, value[key]])
   )
+  let preview = $derived<[KeyType, unknown][]>(entries.slice(0, 3))
 </script>
 
 <Expandable type={objectType} length={entries.length} {key} {path} {value}>
-  {#snippet val()}
+  {#snippet valuePreview()}
     <Preview
       keyValue={preview}
       prefix={'{'}

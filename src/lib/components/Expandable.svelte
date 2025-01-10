@@ -16,7 +16,7 @@
 
   type Props = TypeViewProps<unknown> & {
     length?: number
-    val?: Snippet
+    valuePreview?: Snippet
     children?: Snippet
     keepPreviewOnExpand?: boolean
     showLength?: boolean
@@ -27,7 +27,7 @@
     type,
     length,
     value,
-    val,
+    valuePreview,
     keepPreviewOnExpand = false,
     path = [],
     showLength = true,
@@ -38,7 +38,6 @@
   let options = useOptions()
   let inspectState: StateContext | undefined = getContext(STATE_CONTEXT_KEY)
 
-  let level = $derived(path.length)
   let collapseState = $derived(inspectState?.value?.[stringifyPath(path)])
   let collapsed = $derived(collapseState ? collapseState.collapsed : true)
 
@@ -49,7 +48,7 @@
         if (options.value.expandAll) {
           inspectState.setCollapse(path, false)
         } else {
-          inspectState.setCollapse(path, level > options.value.expandLevel)
+          inspectState.setCollapse(path, path.length > options.value.expandLevel)
         }
       }
     }
@@ -85,8 +84,8 @@
   {/if}
   <Type {type} />
 
-  {#if val && (collapsed || isPreview || keepPreviewOnExpand)}
-    {@render val()}
+  {#if valuePreview && (collapsed || isPreview || keepPreviewOnExpand)}
+    {@render valuePreview()}
     <!-- <div transition:slide={{ axis: 'x' }}>
       <div transition:slide>
       </div>
@@ -137,6 +136,7 @@
     align-items: center;
     justify-content: flex-start;
     gap: 0.5em;
+    min-height: 1.5em;
     padding-left: calc(var(--indent) * 0.5);
     /* margin-left: -0.5em; */
     /* padding-left: calc(0.25em); */
@@ -158,5 +158,12 @@
 
   .title-bar.preview {
     background-color: transparent;
+  }
+
+  .indent {
+    margin-left: calc(var(--indent) * 1.5);
+    padding-block: calc(var(--indent) * 0.5);
+    border-left: 1px solid var(--border-color);
+    overflow: hidden;
   }
 </style>

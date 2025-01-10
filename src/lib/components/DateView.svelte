@@ -32,7 +32,7 @@
   keepPreviewOnExpand
   showLength={false}
 >
-  {#snippet val()}
+  {#snippet valuePreview()}
     <span class="value date">{value.toUTCString()}</span>
   {/snippet}
   {#each entries as [key, value], i (key)}

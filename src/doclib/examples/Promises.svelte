@@ -23,9 +23,7 @@
     }
   }
 
-  onMount(() => {
-    run()
-  })
+  onMount(run)
 </script>
 
 <div class="flex col">
@@ -36,7 +34,13 @@
   <div class="flex row" style="width: 100%">
     <Code {code} />
     {#if promises}
-      <Inspect value={promises} name="promises" theme="drak" style="flex-basis: 100%" expandAll />
+      <Inspect style="max-width: 360px" value={promises} name="promises" theme="drak" expandAll />
     {/if}
   </div>
 </div>
+
+<style>
+  .flex.row {
+    align-items: stretch;
+  }
+</style>

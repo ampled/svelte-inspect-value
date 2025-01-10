@@ -27,6 +27,7 @@
         [Symbol('i am key')]: 'my key is a symbol',
       }}
       name="objectWithSymbolKey"
+      style="max-width: 400px;"
       expandAll
     />
   </div>

@@ -50,12 +50,14 @@ import UrlView from './URLView.svelte'
 // } as const
 
 // type
+type ViewComponent<T> = Component<TypeViewProps<T>>
 
-export type ViewComponents = Record<
-  string,
-  | [Component<TypeViewProps>, (props: TypeViewProps) => Partial<TypeViewProps>]
-  | [Component<TypeViewProps>]
->
+export type CustomComponentEntry<T = unknown> =
+  | [ViewComponent<T>, (props: TypeViewProps<T>) => Partial<TypeViewProps<T>>]
+  | [ViewComponent<T>]
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type ViewComponents = Record<string, CustomComponentEntry<any>>
 
 const components = {
   symbol: [OneLineView, (props: TypeViewProps<symbol>) => ({ display: props.value.toString() })],

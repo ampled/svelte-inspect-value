@@ -87,8 +87,6 @@
     border-radius: 8px;
     background-color: var(--bg);
     overflow: auto;
-    /* max-width: 90%; */
-    /* margin: auto; */
     border: 1px solid var(--border-color);
     max-height: max-content;
     display: flex;
@@ -115,6 +113,7 @@
       display: flex;
       flex-flow: row wrap;
       gap: 1em;
+      overflow-y: auto;
 
       input,
       select {
@@ -135,8 +134,6 @@
         display: flex;
         align-content: center;
         justify-content: center;
-        /* font-size: 2rem; */
-        /* padding: 0.1rem; */
         border: 1px solid var(--border-color);
         border-radius: 2px;
         accent-color: var(--bg-lighter);

@@ -14,7 +14,7 @@
   const preview = getContext<boolean>('preview')
 </script>
 
-{#snippet val()}
+{#snippet valuePreview()}
   {#if preview}
     <span class="value function">{value.name}</span>
   {:else}
@@ -23,9 +23,9 @@
 {/snippet}
 
 {#if isMultiLine}
-  <Expandable {key} {type} {path} {value} {val} length={1} showLength={false}>
+  <Expandable {key} {type} {path} {value} {valuePreview} length={1} showLength={false}>
     <FunctionBody value={value.toString()} />
   </Expandable>
 {:else}
-  <OneLineView {key} {type} {val} {path} {value} />
+  <OneLineView {key} {type} val={valuePreview} {path} {value} />
 {/if}

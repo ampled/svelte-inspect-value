@@ -11,9 +11,9 @@
 
   let { value = '', length = false, type = 'string', children }: Props = $props()
 
-  let isUrl = $derived(isurl(value))
+  let isUrlOrPath = $derived(isurl(value) || value.startsWith('/'))
 
-  let ele: 'a' | 'span' = $derived(isUrl ? 'a' : 'span')
+  let ele: 'a' | 'span' = $derived(isUrlOrPath ? 'a' : 'span')
 
   let options = useOptions()
 
@@ -26,9 +26,9 @@
   this={ele}
   class="value {type}"
   title={stringify(value)}
-  href={isUrl ? value : null}
-  target={isUrl ? '_blank' : null}
-  rel={isUrl ? 'noreferrer' : null}
+  href={isUrlOrPath ? value : null}
+  target={isUrlOrPath ? '_blank' : null}
+  rel={isUrlOrPath ? 'noreferrer' : null}
 >
   {#if children}
     {@render children()}

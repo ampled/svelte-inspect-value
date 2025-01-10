@@ -36,7 +36,7 @@
 </script>
 
 <Expandable {...{ value, key, type, path }} length={value?.length}>
-  {#snippet val()}
+  {#snippet valuePreview()}
     <Preview prefix="[" postfix="]" list={preview} hasMore={preview.length < 3} />
   {/snippet}
   {#each entries as [key, value], i (key)}

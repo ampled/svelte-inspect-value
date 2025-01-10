@@ -14,7 +14,7 @@
 </script>
 
 <Expandable {...{ value, key, type, path }} length={entries.length}>
-  {#snippet val()}
+  {#snippet valuePreview()}
     <button
       onclick={() => {
         entries.push(value.next())

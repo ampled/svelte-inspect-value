@@ -8,7 +8,7 @@
   import Settings from '../icons/Settings.svelte'
   import { useOptions } from '../options.svelte.js'
   import { STATE_CONTEXT_KEY, type StateContext } from '../state.svelte.js'
-  import type { KeyName, TypeViewProps } from '../types.js'
+  import type { KeyType, TypeViewProps } from '../types.js'
   import { stringifyPath } from '../util.js'
 
   type Props = Partial<TypeViewProps<unknown>> & { collapsed?: boolean }
@@ -71,13 +71,13 @@
 
   let collapseAction = {
     hint: 'collapse children',
-    action: (level: number, path: KeyName[]) => inspectState?.collapseChildren(level, path),
+    action: (level: number, path: KeyType[]) => inspectState?.collapseChildren(level, path),
     icon: CollapseChildren,
   }
 
   let expandAction = {
     hint: 'expand children',
-    action: (level: number, path: KeyName[]) => inspectState?.expandChildren(level, path),
+    action: (level: number, path: KeyType[]) => inspectState?.expandChildren(level, path),
     icon: ExpandChildren,
   }
 

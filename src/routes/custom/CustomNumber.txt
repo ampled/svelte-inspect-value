@@ -1,0 +1,28 @@
+<script lang="ts">
+  import { CustomLine, type CustomComponentProps } from 'insert-final-package-name-here'
+
+  let { value, ...rest }: CustomComponentProps<number> = $props()
+</script>
+
+<CustomLine {value} {...rest}>
+  {#snippet val()}
+    <span>{value}</span>
+  {/snippet}
+</CustomLine>
+
+<style>
+  span {
+    font-family: sans-serif;
+    font-weight: 900;
+    font-size: 2em;
+    background: linear-gradient(
+      to right,
+      #ef5350,
+      #f48fb1,
+      #f9a825,
+      #ff5722
+    );
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+</style>

@@ -3,9 +3,9 @@
   import { getContext } from 'svelte'
   // import { untrack } from 'svelte'
   import Entry from './Entry.svelte'
+  import Expandable from './Expandable.svelte'
   import JsonViewer from './Node.svelte'
   import StringValue from './StringValue.svelte'
-  import Expandable from './Expandable.svelte'
   // import { stringify } from '$lib/util.js'
 
   type Props = TypeViewProps<Error>
@@ -27,7 +27,7 @@
 </script>
 
 <Expandable {value} {key} {type} {path} length={entries.length}>
-  {#snippet val()}
+  {#snippet valuePreview()}
     <StringValue {type} value={value.message}>
       {value.name}: {value.message}
     </StringValue>

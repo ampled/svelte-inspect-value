@@ -1,7 +1,7 @@
 <script>
   import hljs from 'highlight.js/lib/core'
-  import xml from 'highlight.js/lib/languages/xml'
   import javascript from 'highlight.js/lib/languages/javascript'
+  import xml from 'highlight.js/lib/languages/xml'
   // import svelte from 'highlight.js/lib/languages/svelte'
   import 'highlight.js/styles/base16/dracula.min.css'
 
@@ -10,13 +10,14 @@
   instance.registerLanguage('xml', xml)
   instance.registerLanguage('javascript', javascript)
 
-  let { code } = $props()
+  let { code, label = 'example', ...rest } = $props()
 
   let highlighted = $derived(instance.highlight(code, { language: 'xml' }))
 </script>
 
 <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-<pre class="hljs">{@html highlighted.value}<div class="label">example</div>
+<pre class="hljs" {...rest}>{@html highlighted.value}{#if label}<div
+      class="label">{label}</div>{/if}
 </pre>
 
 <style>

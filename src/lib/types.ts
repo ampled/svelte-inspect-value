@@ -16,11 +16,11 @@ export type InspectProps = {
 } & Partial<JSONInspectOptions> &
   HTMLAttributes<HTMLDivElement>
 
-export type KeyName = string | number | symbol
+export type KeyType = string | number | symbol
 
 export type TypeViewProps<T = unknown | undefined> = {
-  key?: KeyName
-  path?: KeyName[]
+  key?: KeyType
+  path?: KeyType[]
   value: T
   display?: string
   type?: ValueType | string
@@ -40,3 +40,5 @@ export class InspectError extends Error {
     this.value = value
   }
 }
+
+export type CustomComponentProps<T = unknown> = TypeViewProps<T>

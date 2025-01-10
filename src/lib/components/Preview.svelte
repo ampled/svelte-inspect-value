@@ -1,6 +1,6 @@
 <script lang="ts">
   import { useOptions } from '$lib/options.svelte.js'
-  import type { KeyName } from '$lib/types.js'
+  import type { KeyType } from '$lib/types.js'
   import { getType } from '$lib/util.js'
   import { getContext, setContext } from 'svelte'
   import Key from './Key.svelte'
@@ -12,10 +12,11 @@
     postfix?: string
     hasMore: boolean
     list?: unknown[]
-    keyValue?: [KeyName, unknown][]
+    keyValue?: [KeyType, unknown][]
+    map?: boolean
   }
 
-  let { list, prefix, postfix, hasMore, keyValue }: PreviewProps = $props()
+  let { list, prefix, postfix, hasMore, keyValue, map = false }: PreviewProps = $props()
 
   const nestedPreview = getContext<boolean>('preview')
   let options = useOptions()
@@ -36,26 +37,29 @@
   {/if}
 {/snippet}
 
-{#if options.value.showPreview}
-  {#snippet comma()}
-    <span class="comma">,</span>
-  {/snippet}
+{#snippet comma()}
+  <span class="comma">,</span>
+{/snippet}
 
-  <div class="preview" class:nested-preview={nestedPreview}>
+{#if options.value.showPreview}
+  <div class="preview">
     {#if prefix}
       <span class="pre">{prefix}</span>
     {/if}
-
-    {#if keyValue}
-      {#each keyValue as [key, value], i}
-        <Key {key} />
-        {@render valuePreview(value)}{#if i < keyValue.length - 1}{@render comma()}{/if}
-      {/each}
-    {:else if list}
-      {#each list as value, i}
-        {@render valuePreview(value)}{#if i < list.length - 1}{@render comma()}{/if}
-      {/each}
-    {/if}{#if hasMore}{@render comma()}&hellip;{/if}
+    <div class="inner">
+      {#if keyValue}
+        {#each keyValue as [key, value], i}
+          <div class="key-value">
+            <Key {key} delim={map ? '=>' : ':'} />
+            {@render valuePreview(value)}{#if i < keyValue.length - 1}{@render comma()}{/if}
+          </div>
+        {/each}
+      {:else if list}
+        {#each list as value, i}
+          {@render valuePreview(value)}{#if i < list.length - 1}{@render comma()}{/if}
+        {/each}
+      {/if}{#if hasMore}{@render comma()}&hellip;{/if}
+    </div>
     {#if postfix}
       <span class="post">{postfix}</span>
     {/if}
@@ -72,25 +76,34 @@
     display: inline-flex;
     flex-direction: row;
     align-items: center;
-    text-overflow: ellipsis;
-    /* max-width: 50%; */
+    white-space: nowrap;
     overflow: hidden;
-    opacity: 0.8;
+    text-overflow: ellipsis;
+    min-width: 0;
+    /* gap: 0.25em; */
+    /* outline: 1px solid greenyellow; */
   }
 
-  /* .preview :global(span) {
-    text-overflow: ellipsis;
+  .inner {
+    min-width: 0;
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    white-space: nowrap;
     overflow: hidden;
-  } */
-
-  .preview.nested-preview {
-    opacity: 1;
-    max-width: 100%;
+    text-overflow: ellipsis;
+    gap: 0.25em;
+    /* outline: 1px solid hotpink; */
   }
 
-  /* .isPreviewAlready {
-    background-color: hotpink;
-  } */
+  .key-value {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    /* white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; */
+  }
 
   .pre {
     margin-right: 0.25em;

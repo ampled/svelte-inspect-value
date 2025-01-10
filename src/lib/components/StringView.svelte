@@ -2,7 +2,6 @@
   import { useOptions } from '../options.svelte.js'
   import type { TypeViewProps } from '../types.js'
   import { collapseString, stringify } from '../util.js'
-  import { isUrl as isurl } from '../util/is-url.js'
   import Expandable from './Expandable.svelte'
   import OneLineView from './OneLineView.svelte'
   import StringValue from './StringValue.svelte'
@@ -13,23 +12,32 @@
 
   let isMultiLine = $derived(value.includes('\n'))
 
-  let isUrl = $derived(isurl(value))
-  let isImageUrl = $derived((isUrl && value.endsWith('.png')) || value.endsWith('.svg'))
-  let iaAudioUrl = $derived(isUrl && value.endsWith('.ogg'))
+  const IMAGE_EXTENSIONS = ['.png', '.svg', '.jpg', '.jpeg', '.webp']
+  const AUDIO_EXTENSIONS = ['.mp3', '.ogg', '.wav']
+
+  let isImageUrl = $derived(IMAGE_EXTENSIONS.some((extension) => value.endsWith(extension)))
+  let isAudioUrl = $derived(AUDIO_EXTENSIONS.some((extension) => value.endsWith(extension)))
 
   let display = $derived(collapseString(value, options.value.stringCollapse))
+
+  $effect(() => {
+    if (key === 'sprite') {
+      console.log(isImageUrl, value)
+      console.log('embed media:', options.value.embedMedia)
+    }
+  })
 </script>
 
-{#if isMultiLine || isImageUrl || iaAudioUrl}
+{#if isMultiLine || isImageUrl || isAudioUrl}
   <Expandable {...{ value, key, type, path }} length={value.length} keepPreviewOnExpand>
-    {#snippet val()}
+    {#snippet valuePreview()}
       <StringValue {value} />
     {/snippet}
-    {#if isImageUrl}
+    {#if isImageUrl && options.value.embedMedia}
       <div class="embed">
         <img alt={key!.toString()} src={value} style="max-height: 100px" />
       </div>
-    {:else if iaAudioUrl}
+    {:else if isAudioUrl && options.value.embedMedia}
       <div class="embed">
         <audio controls src={value}></audio>
       </div>

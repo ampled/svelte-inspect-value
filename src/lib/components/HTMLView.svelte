@@ -92,7 +92,7 @@
 </script>
 
 <Expandable {...{ value, key, type, path }} length={entries.length} keepPreviewOnExpand>
-  {#snippet val()}
+  {#snippet valuePreview()}
     {#key element.ele}
       <HtmlValue value={element.ele} />
     {/key}

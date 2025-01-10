@@ -13,7 +13,7 @@
 </script>
 
 <Expandable {...{ value: arrayVal, key, type, path }} length={arrayVal.length}>
-  {#snippet val()}
+  {#snippet valuePreview()}
     <!-- <ArrayPreview value={arrayVal} /> -->
     <Preview list={preview} hasMore={preview.length < arrayVal.length} prefix={'['} postfix={']'} />
   {/snippet}

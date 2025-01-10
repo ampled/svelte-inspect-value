@@ -1,363 +1,234 @@
 <script lang="ts">
-  // import './app.css'
-  import { browser } from '$app/environment'
   import Inspect from '$lib/Inspect.svelte'
-  import { setGlobalInspectOptions } from '$lib/options.svelte.js'
-  import { onMount } from 'svelte'
-  import HtmlElements from '../doclib/examples/HTMLElements.svelte'
-  import MapAndSet from '../doclib/examples/MapAndSet.svelte'
-  import Promises from '../doclib/examples/Promises.svelte'
-  import SymbolKeys from '../doclib/examples/SymbolKeys.svelte'
+  import Code from '../doclib/Code.svelte'
+  import globalConfigCode from '../doclib/examples/globalconfig.txt?raw'
+  import MinimalExample from '../doclib/examples/MinimalExample.svelte'
 
-  let showLength = $state(true)
-  let showTypes = $state(true)
-  let stringCollapse = $state(0)
-  let stringRender: 'stringify' | 'pre' = $state('pre')
-  let theme = $state('drak')
-  let draggable = $state(false)
+  let packageName = 'svelte-value-inspect'
 
-  let options = $derived({
-    showLength,
-    showTypes,
-    stringCollapse,
-    stringRender,
-    theme,
-    draggable,
-  })
-
-  let div = $state()
-
-  let returnValue = <T,>(value: T) => value
-
-  let date = $state(new Date())
-
-  let symbolKey = Symbol('key')
-
-  let image: HTMLImageElement | undefined = $state()
-
-  let error: Error | undefined = $state()
-
-  onMount(() => {
-    if (browser) {
-      image = new Image()
-      image.src = 'favicon.png'
-    }
-
-    try {
-      let lol: any
-      lol.doesNotHaveProperty
-    } catch (e) {
-      error = e as Error
-    }
-  })
-
-  class Greeter {
-    static staticProperty = 'HI'
-    iHaveAProperty = 'hello'
-    private name: string
-
-    constructor(name: string) {
-      this.name = name
-    }
-
-    public greet = () => console.log(`${Greeter.staticProperty} ${this.name}`)
-
-    #nope = () => 'no'
-
-    public method() {
-      return 'hei'
-    }
-
-    toString() {
-      return 'nonononono'
-    }
-  }
-
-  let allTypesValue = $derived({
-    options,
-    emptyArr: [],
-    emptyObj: {},
-    div,
-    image,
-    // emptyString: '',
-    longString: 'lorem ipsum dolor sit amet. boy is this string long!!',
-    multiLineString: 'line one\n  line two\n    line three',
-    numberValue: 1484789234,
-    bigInteger: 1n,
-    nanValue: NaN,
-    infinity: Infinity,
-    undefinedValue: undefined,
-    nullValue: null,
-    map: new Map<any, any>([
-      ['yeah', 1],
-      [3, 2],
-      [{ name: 'object key' }, 3],
-      [symbolKey, 4],
-      [
-        'longArray',
-        Array(100)
-          .fill(0)
-          .map((v, i) => i * 100),
-      ],
-    ]),
-    set: new Set([1, 2, 3]),
-    // emptyUrl: new URL('https://localhost'),
-    url: new URL('https://subdomain.example.org/about'),
-    fullyFeaturedUrl: new URL(
-      'https://anon:hunter2@example.org:8080/pathname/index.html?q=query&p=123#result'
-    ),
-    search: new URLSearchParams([
-      ['a', '1'],
-      ['a', '2'],
-      ['b', '3'],
-      ['b', '4'],
-      ['c', '5'],
-    ]),
-    // anotherSearch: new URLSearchParams('?q&b=foo'),
-    date: date,
-    dateConstructror: Date,
-    booleanVal: true,
-    arrayValue: [1, 2, 3, 14, 'u2'],
-    symbolProp: Symbol('hi i am symbol'),
-    [symbolKey]: 'my key is a symbol',
-    reg: /^[re(g)ex]$/,
-    arrowFunction: returnValue,
-    normalFunction() {
-      return 'normal'
-    },
-    classWithStaticProperties: Greeter,
-    instanceOfClass: new Greeter('World'),
-    svelteComponent: Inspect,
-    simpleClass: class SimpleClass {},
-    error: new TypeError('can not access property of undefined'),
-    arr: [{ name: 'alice' }, { name: 'bob gunderson' }],
-  })
-
-  let jsonString = $state(JSON.stringify({ anObject: { name: 'Carl' } }))
-
-  let showOptions = $state(true)
-
-  setGlobalInspectOptions({ showTypes: false, theme: 'monokai' })
-
-  // $inspect(allTypesValue)
+  import minimalcode from '../doclib/examples/minimalexample.txt?raw'
 </script>
 
-<main>
-  <div class="flex col">
-    <h2>JSON</h2>
-    <p>works pretty well for basic object and array-values aka "json"</p>
+<h2>What it is</h2>
 
-    <div class="flex">
-      <Inspect
-        value={{
-          id: undefined,
-          firstName: 'Bob',
-          lastName: 'Alice',
-          email: 'bob@alice.lol',
-          introduction: `The name is Alice.
-          
-              Bob Alice.`,
-          birthDate: new Date(),
-          website: new URL('https://alicebob.website/?ref=abcdefg#about'),
-          age: -42,
-          emailVerified: true,
-          interests: ['radio', 'tv', 'internet', 'kayaks'],
-        }}
-        name="simple"
-        {...options}
-      />
-    </div>
-  </div>
+<div class="center">
+  <Inspect style="max-width: 400px;" name="helloWorld" value={{ key: 'value' }} />
+</div>
 
-  <MapAndSet />
+<p>
+  Svelte Value Inspect is a "json tree"-like inspector inspired by the likes of <code
+    >react-json-view</code
+  >, and <code>svelte-json-tree</code>. <br />
 
-  <Promises />
+  The main purpose of the component is to be a developer utility. When developing apps it can be
+  useful to have a "live" preview of state like API data, form values, the state of a promise and so
+  on.
+</p>
 
-  <HtmlElements />
+<h2>Features</h2>
 
-  <div class="flex col">
-    <h2>class</h2>
-    <p>display static properties of classes (but not on instances.)</p>
+<p>
+  The <a href="/examples">examples page</a> is the quickest way to get an overview of what this component
+  can do, but here is a list of its key features:
+</p>
 
-    <div class="flex">
-      <Inspect
-        value={{
-          class: Greeter,
-          classInstance: new Greeter('world'),
-        }}
-        {...options}
-      />
-    </div>
-  </div>
+<ul>
+  <li>view arrays & objects in a tree-like view</li>
+  <li>support for most JavaScript built-ins, including <code>Set</code> and <code>Map</code></li>
+  <li>
+    syntax highlighting for functions and html elements (outer selector) using <code>hljs</code>
+  </li>
+  <li>embed media if string ends with image / audio extension (optional)</li>
+  <li>customizable colors</li>
+  <li>use custom components for any type</li>
+  <li>configurable with global options utiltiy as alternative to passing props</li>
+</ul>
 
-  <div class="flex col">
-    <h2>functions</h2>
-    <p>display bodies of arrow functions (experimental)</p>
+<h3>Planned features</h3>
 
-    <div class="flex">
-      <Inspect
-        name="functions"
-        value={{
-          arrowFunction: (num: number) => num * 2,
-          someFunction: function (some: string, thing: string) {
-            if (!some) return thing
-            const obj = {
-              some: thing,
-              thing: some,
-              [Symbol('oh')]: 'doodle',
-            }
+<ul>
+  <li>built-in functionality for pinning the component to a fixed position</li>
+  <li>draggable</li>
+  <li>edit-mode (maybe)</li>
+</ul>
 
-            try {
-              Math.random()
-            } catch {
-              const { log } = console
-              log('oh no')
-              log(obj)
-            }
-            return some + ' ' + thing
-          },
-        }}
-        {...options}
-      />
-    </div>
-  </div>
+<h2>Usage</h2>
 
-  <SymbolKeys />
+<p>
+  Install <code>{packageName}</code> with your favorite package manager.
+</p>
 
-  <div class="flex col">
-    <h2>urls</h2>
-    <p>special handling of URLs and URLSearchParams</p>
+<Code code={minimalcode} />
 
-    <div class="flex">
-      <Inspect
-        value={{
-          url: new URL('https://subdomain.example.org/about'),
-          fullyFeaturedUrl: new URL(
-            'https://anon:hunter2@example.org:8080/pathname/index.html?q=query&p=123&buh#result'
-          ),
-          search: new URLSearchParams([
-            ['a', '1'],
-            ['a', '2'],
-            ['b', '3'],
-            ['b', '4'],
-            ['c', '5'],
-            ['query', 'elephants'],
-          ]),
-        }}
-        name="urlFeatures"
-        {...options}
-      />
-    </div>
-  </div>
+Result:
+<div class="center">
+  <MinimalExample />
+</div>
 
-  <div class="flex col">
-    <h2>multi-line strings</h2>
-    <p>expandable view for multi-line strings</p>
+<h2>Props</h2>
 
-    <div class="flex">
-      <Inspect
-        value={['normal boring string', 'cool \n multi-line \n  render 😎']}
-        {...options}
-        name="strings"
-        class={theme}
-      />
-    </div>
-  </div>
+<!-- <div class="center">
+  <Inspect
+    style="max-width: 1000px"
+    name="props"
+    expandAll
+    value={{
+      value: {
+        description: 'required. value to inspect. can be any javascript value',
+        default: null,
+      },
+      name: {
+        description: `name of outer value. \n displayed as key, e.g. 'props' in this instance`,
+        default: undefined,
+      },
+      stringCollapse: {
+        description: `set a max display length for string values.\n0 means full string will be displayed`,
+        default: 0,
+      },
+    }}
+  />
+</div> -->
 
-  <div class="flex col">
-    <h2>other</h2>
-    <p>other types handled includes Error, Date, regexp</p>
-    <p>you can also go wild with nesting</p>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td> value </td>
+      <td>required. value to inspect. can be any javascript value</td>
+      <td>n/a</td>
+    </tr>
+    <tr>
+      <td> name </td>
+      <td> name of outer value. displayed as key </td>
+      <td><code>undefined</code></td>
+    </tr>
+    <tr>
+      <td> stringCollapse </td>
+      <td> set a max display length for string values. 0 means full string will be displayed </td>
+      <td><code>0</code></td>
+    </tr>
+    <tr>
+      <td> showLength </td>
+      <td>
+        display length of arrays or strings and number of nested entries in objects / maps etc
+      </td>
+      <td><code>true</code></td>
+    </tr>
+    <tr>
+      <td> showTypes </td>
+      <td>
+        display type labels before values e.g. "string" / "number." Mainly affects basic primitive
+        types
+      </td>
+      <td><code>true</code></td>
+    </tr>
+    <tr>
+      <td> showPreview </td>
+      <td> display preview of nested values of object, array, map, set etc. </td>
+      <td><code>true</code></td>
+    </tr>
+    <tr>
+      <td> showTools </td>
+      <td> display row of utility-"tools" when hovering an entry </td>
+      <td><code>true</code></td>
+    </tr>
+    <tr>
+      <td> noanimate </td>
+      <td> disable animations / transitions </td>
+      <td><code>false</code></td>
+    </tr>
+    <tr>
+      <td> embedMedia </td>
+      <td>
+        embed images and audio if a string value is a path or url that ends with an image or audio
+        file extension
+      </td>
+      <td><code>false</code></td>
+    </tr>
+    <tr>
+      <td> theme </td>
+      <td>
+        set color theme class<br />
+        available built-in themes: 'drak','stereo','dark','light','cotton-candy'
+      </td>
+      <td><code>'drak'</code></td>
+    </tr>
+    <tr>
+      <td> expandAll </td>
+      <td> expand all nodes by default. can be a performance hitch with a lot of entries </td>
+      <td><code>false</code></td>
+    </tr>
+    <tr>
+      <td> expandLevel </td>
+      <td> default level of initially expanded nested nodes </td>
+      <td><code>1</code></td>
+    </tr>
+    <tr>
+      <td> borderless </td>
+      <td> remove background color, border and padding </td>
+      <td><code>false</code></td>
+    </tr>
+    <tr>
+      <td> quotes </td>
+      <td> quote type for string values. <code>'single'</code> or <code>'double'</code></td>
+      <td><code>'single'</code></td>
+    </tr>
+    <tr>
+      <td> customComponents </td>
+      <td>
+        custom components for values.<br />
+        object with type as keyname and tuple of component and optional prop modification function.<br
+        /> <a href="/custom">extended documentation here</a>
+      </td>
+      <td><code>{'{}'}</code></td>
+    </tr>
+  </tbody>
+</table>
 
-    <div class="flex">
-      <Inspect
-        value={{
-          dateValue: new Date(),
-          reg: /^[re(g)ex]$/,
-          error,
-        }}
-        {...options}
-        class={theme}
-      />
-    </div>
-  </div>
-  <!-- {#if showOptions}
-    <div
-      class="options"
-      bind:this={div}
-      class:showLength
-      style:opacity={showLength ? 1 : 0.95}
-      data-testid="options"
-    >
-      <label>
-        <input type="checkbox" bind:checked={draggable} />
-        draggable
-      </label>
+<h2>Global config</h2>
 
-      <label>
-        <input type="checkbox" bind:checked={showLength} />
-        show length of entries
-      </label>
+<p>
+  <code>{packageName} </code> exports a utility function to set a "global" config for every instance
+  of the Inspect-component in or under the component where the function is called (it sets context).
+</p>
 
-      <label>
-        <input type="checkbox" bind:checked={showTypes} />
-        show types
-      </label>
+<p>
+  Passing a reactive object to the function will update the components if any property of the object
+  is changed beceause its reactive (yup!)<br />
 
-      <label>
-        collapse strings
-        <input type="number" bind:value={stringCollapse} />
-      </label>
+  You can try this now if you change any options in the configurator at the bottom of your screen!
+  (hover it)
+</p>
 
-      <label>
-        theme
-        <select bind:value={theme}>
-          <option>dracula</option>
-          <option>monokai</option>
-          <option>solarized-dark</option>
-          <option>default-dark</option>
-          <option>default-light</option>
-          <option></option>
-        </select>
-      </label>
-    </div>
-  {/if} -->
+<Code code={globalConfigCode} label="GlobalConfigExample.svelte" />
 
-  <!-- <Inspect value={allTypesValue} name={'allTypes'} {...options} /> -->
-</main>
+<Inspect value={'no long strings in this neighbourhood thanks'} />
 
+<p>Options set with the function will have priority over options passed as props.</p>
+
+<!-- <BasicEditable /> -->
 <style>
-  main {
+  .center {
     display: flex;
-    flex-direction: column;
-    gap: 2em;
+    justify-content: center;
   }
 
-  .options {
-    margin: 4px;
-    /* position: fixed; */
-    /* height: max-content; */
-    /* top: 0; */
-    /* right: 0; */
-    gap: 1em;
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    flex-direction: row;
-    align-items: flex-start;
-    justify-items: flex-start;
-    border: 1px solid black;
-    /* background-color: cadetblue; */
+  table {
+    border-collapse: collapse;
+    border: 2px solid rgb(140 140 140);
+    background-color: var(--bg-lighter);
   }
 
-  label {
-    height: 3.5rem;
-    display: flex;
-    border: 1px solid;
-    flex-direction: row;
-    align-items: center;
-    justify-items: flex-start;
-    gap: 0.5rem;
-    padding: 1em;
+  th,
+  td {
+    border: 1px solid rgb(160 160 160);
+    padding: 8px 10px;
+    text-align: left;
   }
 </style>

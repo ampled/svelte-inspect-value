@@ -44,7 +44,7 @@
 
 {#if entries.length}
   <Expandable {...{ value, key, type, path }} length={entries.length}>
-    {#snippet val()}
+    {#snippet valuePreview()}
       <StringValue value={value.toString()} />
     {/snippet}
     {#each entries as [key, value], i (key)}

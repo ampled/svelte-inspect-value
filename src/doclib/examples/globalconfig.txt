@@ -1,0 +1,12 @@
+<script>
+  import { setGlobalInspectOptions, Inspect } from 'the-package-name'
+
+  setGlobalInspectOptions({ stringCollapse: 20 })
+
+  // or if you want to change settings at any moment:
+  let options = $state({ stringCollapse: 20 })
+
+  setGlobalInspectOptions(options)
+</script>
+
+<Inspect value={'no long strings in this neighbourhood thanks'} />

@@ -30,14 +30,15 @@
 </script>
 
 <Expandable {...{ value, key, type, path }} length={entries.length}>
-  {#snippet val()}
+  {#snippet valuePreview()}
     <!-- <StringValue value={value.toString()} /> -->
     <!-- <ArrayPreview value={entries} /> -->
     <Preview
       keyValue={preview}
-      prefix={'('}
-      postfix={')'}
+      prefix={'{'}
+      postfix={'}'}
       hasMore={entries.length > preview.length}
+      map
     />
   {/snippet}
   {#each entries as [key, value], i (key)}

@@ -1,4 +1,4 @@
-<script lang="ts">
+<script lang="ts" generics="T = unknown">
   import { getContext, type Snippet } from 'svelte'
   import type { HTMLAttributes } from 'svelte/elements'
   import { flashOnUpdate } from '../action/update-flash.svelte.js'
@@ -7,9 +7,9 @@
   import Tools from './Tools.svelte'
   import Type from './Type.svelte'
 
-  type Props = TypeViewProps<unknown> & {
+  type Props = TypeViewProps<T> & {
     val?: Snippet
-  } & HTMLAttributes<HTMLSpanElement>
+  } & HTMLAttributes<HTMLDivElement>
 
   let { value, display, key, type, path, val, oninspectvaluechange, ...rest }: Props = $props()
 
@@ -18,7 +18,7 @@
   const preview = getContext<boolean>('preview')
 </script>
 
-<div class="line" class:preview>
+<div class="line" class:preview {...rest}>
   {#if !preview}
     <div class="dash-key">
       <div class="dash">
@@ -36,7 +36,7 @@
   {#if val}
     {@render val()}
   {:else}
-    <span title={displayOrValue} class={`value ${type}`} {...rest}>
+    <span title={displayOrValue} class={`value ${type}`}>
       {displayOrValue}
     </span>
   {/if}
@@ -53,17 +53,23 @@
     /* transition-delay: 0.2s; */
     padding-left: calc(var(--indent) * 0.5);
     display: flex;
+    gap: 0.5em;
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
+
     /* padding-left: 0.5em; */
-    gap: 0.5em;
     /* border: 1px solid salmon; */
 
     &:hover,
     &:focus-within {
       background-color: var(--bg-lighter);
     }
+  }
+
+  .line.preview {
+    padding-left: 0;
+    gap: 0;
   }
 
   .dash-key {

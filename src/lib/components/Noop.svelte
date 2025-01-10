@@ -11,6 +11,6 @@
 <OneLineView {value} {key} {type} {path}>
   {#snippet val()}
     <Type type="noop" title="no handler for this type" />
-    <span class="value {type}">{(value as any).toString()} </span>
+    <span class="value {type}">{(value as object).toString()} </span>
   {/snippet}
 </OneLineView>

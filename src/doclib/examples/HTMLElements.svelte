@@ -13,7 +13,7 @@
 
 <div class="flex col">
   <h2>HTML Elements</h2>
-  <p>inspect attributes of html elemenets</p>
+  <p>inspect attributes of html elements</p>
 
   <div bind:this={div} class="demo-div {classes}" style="width: {width}px;" data-testid={testid}>
     <div>
@@ -42,6 +42,8 @@
     </ul>
   </div>
   <Inspect value={div} name="htmlElement" theme="drak" style="flex-basis: 100%" expandAll />
+
+  <p>This instance inspects <code>document.activeElement</code>:</p>
   <Inspect
     value={activeElement}
     name="activeElement"
