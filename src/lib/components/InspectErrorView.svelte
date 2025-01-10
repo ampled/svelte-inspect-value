@@ -20,8 +20,6 @@
   )
 
   setContext('error-use-defaults', true)
-
-  // $inspect(value.cause)
 </script>
 
 <Expandable {value} {key} {type} {path} length={entries.length} keepPreviewOnExpand>
