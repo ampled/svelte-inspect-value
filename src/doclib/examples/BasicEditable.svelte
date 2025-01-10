@@ -56,7 +56,7 @@
   <div class="flex">
     <Inspect value={demoObject} name="demo" />
 
-    <textarea onchange={console.log} rows={14} class:demoInputValid bind:value></textarea>
+    <textarea rows={14} class:demoInputValid bind:value></textarea>
   </div>
 </div>
 

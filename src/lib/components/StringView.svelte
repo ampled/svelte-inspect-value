@@ -19,13 +19,6 @@
   let isAudioUrl = $derived(AUDIO_EXTENSIONS.some((extension) => value.endsWith(extension)))
 
   let display = $derived(collapseString(value, options.value.stringCollapse))
-
-  $effect(() => {
-    if (key === 'sprite') {
-      console.log(isImageUrl, value)
-      console.log('embed media:', options.value.embedMedia)
-    }
-  })
 </script>
 
 {#if isMultiLine || isImageUrl || isAudioUrl}

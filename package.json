@@ -1,6 +1,10 @@
 {
   "name": "svelte-inspect-value",
   "version": "0.0.1",
+  "repository": {
+    "url": "git+https://github.com/ampled/svelte-inspect-value.git"
+  },
+  "homepage": "https://svelte-inspect-value.vercel.app/",
   "scripts": {
     "dev": "vite dev",
     "build": "vite build && npm run package",

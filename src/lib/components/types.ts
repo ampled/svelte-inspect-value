@@ -5,10 +5,8 @@ import ClassView from './ClassView.svelte'
 import DateView from './DateView.svelte'
 import ErrorView from './ErrorView.svelte'
 import FunctionView from './FunctionView.svelte'
-import GeneratorView from './GeneratorView.svelte'
 import HtmlImageElementView from './HTMLImageElementView.svelte'
 import HtmlView from './HTMLView.svelte'
-import IteratorView from './IteratorView.svelte'
 import MapView from './MapView.svelte'
 import ObjectView from './ObjectView.svelte'
 import OneLineView from './OneLineView.svelte'
@@ -18,36 +16,6 @@ import StringView from './StringView.svelte'
 import TypedArrayView from './TypedArrayView.svelte'
 import UrlSearchParamsView from './URLSearchParamsView.svelte'
 import UrlView from './URLView.svelte'
-
-// const components = {
-//   number: OneLineView,
-//   boolean: OneLineView,
-//   undefined: OneLineView,
-//   null: OneLineView,
-//   object: ObjectView,
-//   array: ArrayView,
-//   string: StringView,
-//   function: FunctionView,
-//   class: ClassView,
-//   symbol: SymbolView,
-//   regexp: RegexView,
-//   date: DateView,
-//   bigint: BigIntView,
-//   error: ErrorView,
-//   map: MapView,
-//   set: SetView,
-//   url: UrlView,
-//   urlsearchparams: UrlSearchParamsView,
-//   htmlimageelement: HtmlImageElementView,
-//   html: HtmlView,
-//   promise: PromiseView,
-//   setiterator: ArrayIteratorView,
-//   arrayiterator: ArrayIteratorView,
-//   mapiterator: MapIteratorView,
-//   generator: GeneratorView,
-//   iterator: IteratorView,
-//   int16array: TypedArrayView,
-// } as const
 
 // type
 type ViewComponent<T> = Component<TypeViewProps<T>>
@@ -100,8 +68,6 @@ const components = {
   htmlimageelement: [HtmlImageElementView],
   html: [HtmlView],
   promise: [PromiseView],
-  generator: [GeneratorView],
-  iterator: [IteratorView],
   int32array: [TypedArrayView],
   int16array: [TypedArrayView],
   int8array: [TypedArrayView],

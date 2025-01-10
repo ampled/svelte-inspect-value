@@ -102,8 +102,25 @@
 </svelte:boundary>
 
 <style>
+  /*
+        base00  #181818  Default Background
+        base01  #282828  Lighter Background (Used for status bars, line number and folding marks)
+        base02  #383838  Selection Background
+        base03  #585858  Comments, Invisibles, Line Highlighting
+        base04  #b8b8b8  Dark Foreground (Used for status bars)
+        base05  #d8d8d8  Default Foreground, Caret, Delimiters, Operators
+        base06  #e8e8e8  Light Foreground (Not often used)
+        base07  #f8f8f8  Light Background (Not often used)
+        base08  #ab4642  Variables, XML Tags, Markup Link Text, Markup Lists, Diff Deleted
+        base09  #dc9656  Integers, Boolean, Constants, XML Attributes, Markup Link Url
+        base0A  #f7ca88  Classes, Markup Bold, Search Text Background
+        base0B  #a1b56c  Strings, Inherited Class, Markup Code, Diff Inserted
+        base0C  #86c1b9  Support, Regular Expressions, Escape Characters, Markup Quotes
+        base0D  #7cafc2  Functions, Methods, Attribute IDs, Headings
+        base0E  #ba8baf  Keywords, Storage, Selector, Markup Italic, Diff Changed
+        base0F  #a16946  Deprecated, Opening/Closing Embedded Language Tags, e.g. <?php ?>
+    */
   .stereo {
-    /* monokai */
     --base00: #272822;
     --base01: #383830;
     --base02: #49483e;
@@ -142,7 +159,6 @@
   }
 
   .drak {
-    /* drak */
     --base00: #282a36;
     --base01: #3a3c4e;
     --base02: #44475a;
@@ -198,25 +214,6 @@
     --base0E: #ba8baf;
     --base0F: #a16946;
   }
-
-  /*
-        base00  #181818  Default Background
-        base01  #282828  Lighter Background (Used for status bars, line number and folding marks)
-        base02  #383838  Selection Background
-        base03  #585858  Comments, Invisibles, Line Highlighting
-        base04  #b8b8b8  Dark Foreground (Used for status bars)
-        base05  #d8d8d8  Default Foreground, Caret, Delimiters, Operators
-        base06  #e8e8e8  Light Foreground (Not often used)
-        base07  #f8f8f8  Light Background (Not often used)
-        base08  #ab4642  Variables, XML Tags, Markup Link Text, Markup Lists, Diff Deleted
-        base09  #dc9656  Integers, Boolean, Constants, XML Attributes, Markup Link Url
-        base0A  #f7ca88  Classes, Markup Bold, Search Text Background
-        base0B  #a1b56c  Strings, Inherited Class, Markup Code, Diff Inserted
-        base0C  #86c1b9  Support, Regular Expressions, Escape Characters, Markup Quotes
-        base0D  #7cafc2  Functions, Methods, Attribute IDs, Headings
-        base0E  #ba8baf  Keywords, Storage, Selector, Markup Italic, Diff Changed
-        base0F  #a16946  Deprecated, Opening/Closing Embedded Language Tags, e.g. <?php ?>
-    */
 
   .ampled-json-inspect {
     --cyan: var(--base0C, #00c1be);

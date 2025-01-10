@@ -3,10 +3,6 @@
 
   import Code from '../Code.svelte'
   import code from './symbolkeys.txt?raw'
-
-  const obj = { [Symbol('key')]: 'foo' }
-
-  console.log(JSON.stringify(obj)) // outputs '{}'
 </script>
 
 <div class="flex col">
