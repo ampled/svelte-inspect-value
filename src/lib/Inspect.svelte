@@ -1,7 +1,6 @@
 <script lang="ts">
   import { getContext, setContext } from 'svelte'
   import JsonViewer from './components/Node.svelte'
-  import Options from './components/Options.svelte'
   import { createOptions, GLOBAL_OPTIONS_CONTEXT, OPTIONS_CONTEXT } from './options.svelte.js'
   import { createState, STATE_CONTEXT_KEY } from './state.svelte.js'
   import type { InspectProps } from './types.js'
@@ -95,7 +94,7 @@
     {...rest}
   >
     <div class="body">
-      <Options />
+      <!-- <Options /> -->
       <JsonViewer {value} key={name} />
     </div>
   </div>

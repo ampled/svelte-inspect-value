@@ -5,7 +5,6 @@
   import Console from '../icons/Console.svelte'
   import Copy from '../icons/Copy.svelte'
   import ExpandChildren from '../icons/ExpandChildren.svelte'
-  import Settings from '../icons/Settings.svelte'
   import { useOptions } from '../options.svelte.js'
   import { STATE_CONTEXT_KEY, type StateContext } from '../state.svelte.js'
   import type { KeyType, TypeViewProps } from '../types.js'
@@ -25,15 +24,6 @@
   let canCopy = $derived(
     ['array', 'object', 'number', 'string', 'undefined', 'null', 'date', 'boolean'].includes(type)
   )
-
-  // const hasChildren = $derived.by(() => {
-  //   if (inspectState?.value) {
-  //     const key = stringifyPath(path)
-  //     return Object.entries(inspectState.value).filter(
-  //       ([k]) => k.startsWith(key) && k.length > key.length
-  //     )
-  //   }
-  // })
 
   const children = $derived(
     inspectState?.value
@@ -84,9 +74,8 @@
   let treeAction = $derived(hasExpandedChildren ? collapseAction : expandAction)
 </script>
 
-<div class="tools">
-  {#if options.value.showTools}
-    <!-- <small>hasExpandedChildren: {hasExpandedChildren}</small> -->
+{#if options.value.showTools}
+  <div class="tools">
     {#if children.length}
       <button
         title={treeAction.hint}
@@ -113,13 +102,13 @@
         <Copy />
       </button>
     {/if}
-  {/if}
-  {#if level === 1}
-    <button title="options" aria-label="options" onclick={() => (options.value.open = true)}>
-      <Settings />
-    </button>
-  {/if}
-</div>
+    <!-- {#if level === 1}
+      <button title="options" aria-label="options" onclick={() => (options.value.open = true)}>
+        <Settings />
+        </button>
+        {/if} -->
+  </div>
+{/if}
 
 <style>
   :global(.line:hover) .tools,
