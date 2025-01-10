@@ -22,7 +22,6 @@
     borderless = false,
     theme = 'drak',
     expandLevel = 1,
-    draggable = false,
     customComponents = {},
     embedMedia = false,
     // Html Attributes
@@ -38,7 +37,6 @@
     showPreview,
     showTools,
     stringCollapse,
-    draggable,
     noanimate,
     customComponents,
     theme,
@@ -50,6 +48,8 @@
     ...(globalOptions ? globalOptions : {}),
   })
 
+  // FIXME: this is dumb and not good use of reactivity
+  // also global options should probably not take priority over passed props
   $effect(() => {
     options.setOptions({
       showLength,
@@ -57,7 +57,6 @@
       showPreview,
       showTools,
       stringCollapse,
-      draggable,
       noanimate,
       customComponents,
       theme,
@@ -285,7 +284,6 @@
     margin: 0;
     overflow-y: auto;
     overflow-x: hidden;
-    /* resize: horizontal; */
 
     &.borderless {
       background-color: transparent;
@@ -360,20 +358,6 @@
       --border-color: var(--error);
     }
   }
-
-  /* .ampled-json-inspect :global(.key) {
-    &.number {
-      color: var(--number);
-    }
-
-    &.string {
-      color: var(--fg);
-    }
-
-    &.symbol {
-      color: var(--symbol);
-    }
-  } */
 
   .ampled-json-inspect :global(.type) {
     color: var(--class);
@@ -513,8 +497,7 @@
       color: var(--object);
     }
 
-    &.function {
-      color: var(--function);
+    /* &.function {
 
       :global(&.hl) {
         color: var(--fg);
@@ -554,7 +537,7 @@
           color: var(--yellow);
         }
       }
-    }
+    } */
 
     &.symbol {
       color: var(--symbol);

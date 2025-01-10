@@ -132,7 +132,8 @@
 
   .tools {
     transition: 0.3s ease-in-out;
-    /* background-color: var(--bg); */
+    background-color: var(--bg);
+    border-left: 1px solid var(--border-color);
     /* border: 1px solid var(--border-color); */
     position: absolute;
     right: 0;

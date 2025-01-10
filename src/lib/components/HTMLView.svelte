@@ -12,7 +12,7 @@
 
   let { value, key = undefined, type, path, children }: Props = $props()
 
-  let element = $state(htmlState(value!))
+  let element = $state(htmlState(value))
   let scrollLeft = $state<number | undefined>(value?.scrollLeft)
   let scrollTop = $state<number | undefined>(value?.scrollTop)
 
@@ -35,7 +35,7 @@
   $effect(() => {
     if (value && value !== element.ele) {
       element.destroy()
-      element = htmlState(value!)
+      element = htmlState(value)
     }
   })
 
@@ -53,8 +53,6 @@
       const elementStyle = element.ele.style
       const out: [string, string][] = []
       for (const prop in elementStyle) {
-        // We check if the property belongs to the CSSStyleDeclaration instance
-        // We also ensure that the property is a numeric index (indicating an inline style)
         if (Object.hasOwn(elementStyle, prop) && !Number.isNaN(Number.parseInt(prop))) {
           const value = elementStyle.getPropertyValue(elementStyle[prop])
           if (value)
@@ -66,28 +64,19 @@
     return []
   })
 
-  // let eventListeners = $derived.by(() => {
-  //   if (element.ele) {
-  //     getEvent
-  //     element.ele.
-  //   }
-  // })
-
   let entries = $derived(
-    element.ele
-      ? Object.entries({
-          ...Object.fromEntries(attrs),
-          class: element.ele.className.split(' ').filter(Boolean),
-          styles: Object.fromEntries(styles),
-          data: Object.fromEntries(Object.entries(element.ele.dataset)),
-          scroll: {
-            left: scrollLeft,
-            top: scrollTop,
-          },
-        }).filter(([, v]) =>
-          isArray(v) ? v.length : isObject(v) ? Object.entries(v).length : v != null
-        )
-      : []
+    Object.entries({
+      ...Object.fromEntries(attrs),
+      class: element.ele.className.split(' ').filter(Boolean),
+      styles: Object.fromEntries(styles),
+      data: Object.fromEntries(Object.entries(element.ele.dataset)),
+      scroll: {
+        left: scrollLeft,
+        top: scrollTop,
+      },
+    }).filter(([, v]) =>
+      isArray(v) ? v.length : isObject(v) ? Object.entries(v).length : v != null
+    )
   )
 </script>
 

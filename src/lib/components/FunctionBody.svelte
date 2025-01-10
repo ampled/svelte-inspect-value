@@ -8,15 +8,22 @@
 </script>
 
 <script lang="ts">
+  import { useOptions } from '$lib/options.svelte.js'
   import type { TypeViewProps } from '$lib/types.js'
+  import { collapseString } from '$lib/util.js'
 
   type Props = TypeViewProps<string> & { inline?: boolean }
 
   let { value, inline = false }: Props = $props()
 
-  const highlight = (markup: string) => hljs.highlight(markup, { language: 'javascript' }).value
+  let options = useOptions()
 
-  let highlighted: string = $derived(highlight(value.replaceAll('\t', ' ')))
+  const highlight = (markup: string, stringCollapse: number) =>
+    hljs.highlight(collapseString(markup, stringCollapse), { language: 'javascript' }).value
+
+  let highlighted: string = $derived(
+    highlight(value.replaceAll('\t', ' '), options.value.stringCollapse)
+  )
 </script>
 
 <!-- eslint-disable-next-line svelte/no-at-html-tags -->

@@ -14,7 +14,9 @@
   <p>
     object properties where keys are symbols are displayed. these are skipped by
     <code>JSON.stringify()</code>
-    or <code>Object.keys()</code>
+    or <code>Object.keys()</code><br />
+
+    this is achieved using <code>Reflect.ownKeys</code>
   </p>
 
   <div class="flex row" style="width: 100%">

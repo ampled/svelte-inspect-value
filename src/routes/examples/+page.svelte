@@ -73,7 +73,7 @@
 
 <div class="flex col">
   <h2>functions</h2>
-  <p>display bodies of arrow functions (experimental)</p>
+  <p>display bodies of functions with <code>hljs</code> syntax highlighting</p>
 
   <div class="flex">
     <Inspect
@@ -154,29 +154,3 @@
     />
   </div>
 </div>
-
-<style>
-  /* .options {
-    margin: 4px;
-
-    gap: 1em;
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    flex-direction: row;
-    align-items: flex-start;
-    justify-items: flex-start;
-    border: 1px solid black;
-  }
-
-  label {
-    height: 3.5rem;
-    display: flex;
-    border: 1px solid;
-    flex-direction: row;
-    align-items: center;
-    justify-items: flex-start;
-    gap: 0.5rem;
-    padding: 1em;
-  } */
-</style>

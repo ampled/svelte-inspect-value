@@ -31,9 +31,6 @@
     ".": {
       "types": "./dist/index.d.ts",
       "svelte": "./dist/index.js"
-    },
-    "./custom-element": {
-      "default": "./dist/ele/index.js"
     }
   },
   "peerDependencies": {
