@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { CustomLine, type CustomComponentProps } from 'insert-final-package-name-here'
+  import { CustomLine, type CustomComponentProps } from 'svelte-inspect-value'
 
   let { value, ...rest }: CustomComponentProps<number> = $props()
 </script>

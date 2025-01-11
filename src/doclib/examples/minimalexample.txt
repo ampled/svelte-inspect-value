@@ -1,5 +1,5 @@
 <script lang="ts">
-  import {Inspect} from 'insert-final-package-name-here'
+  import {Inspect} from 'svelte-inspect-value'
 
   let demoObject = $state({
     id: undefined,

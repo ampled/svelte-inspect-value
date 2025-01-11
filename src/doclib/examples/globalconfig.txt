@@ -1,5 +1,5 @@
 <script>
-  import { setGlobalInspectOptions, Inspect } from 'the-package-name'
+  import { setGlobalInspectOptions, Inspect } from 'svelte-inspect-value'
 
   setGlobalInspectOptions({ stringCollapse: 20 })
 
