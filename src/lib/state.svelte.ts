@@ -2,6 +2,8 @@
 import type { KeyType } from './types.js'
 import { stringifyPath } from './util.js'
 
+export const STATE_CONTEXT_KEY = Symbol('inspect-state')
+
 export type NodeState = {
   collapsed: boolean
 }
@@ -12,23 +14,7 @@ export type InspectState = {
   }
 }
 
-export const STATE_CONTEXT_KEY = Symbol('inspect-state')
-
-function ensureStringPath(path: string | KeyType[]) {
-  let key: string
-  if (Array.isArray(path)) {
-    key = stringifyPath(path)
-  } else {
-    key = path
-  }
-  return key
-}
-
-export function createState(
-  init: InspectState,
-  title = 'svelte-value-inspect',
-  onChange?: (value: InspectState) => void
-) {
+export function createState(init: InspectState, onChange?: (value: InspectState) => void) {
   let state: InspectState | undefined = $state(init)
 
   return {
@@ -100,3 +86,13 @@ export function createState(
 }
 
 export type StateContext = ReturnType<typeof createState>
+
+export function ensureStringPath(path: string | KeyType[]) {
+  let key: string
+  if (Array.isArray(path)) {
+    key = stringifyPath(path)
+  } else {
+    key = path
+  }
+  return key
+}
