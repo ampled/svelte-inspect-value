@@ -4,9 +4,9 @@
 
 // Second argument of tuple is an optional function to transform props before they are passed to custom component 
 <Inspect
+  name="customNumbers"
   value={{
     oneBillion: 1_000_000_000,
   }}
   customComponents={{ number: [GoofyNumber, (props) => ({ value: props.value })] }}
-  name="customNumber"
 />

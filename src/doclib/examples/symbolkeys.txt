@@ -1,4 +1,4 @@
-  <script>
-    const obj = { [Symbol('key')]: 'foo' }
-    console.log(JSON.stringify(obj)) // outputs '{}'
-  </script>
+<script>
+  const obj = { [Symbol('key')]: 'foo' }
+  console.log(JSON.stringify(obj)) // outputs '{}'
+</script>
