@@ -81,8 +81,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
     min-width: 0;
-    /* gap: 0.25em; */
-    /* outline: 1px solid greenyellow; */
   }
 
   .inner {
@@ -108,11 +106,11 @@
 
   .pre {
     margin-right: 0.25em;
-    color: var(--cyan);
+    color: var(--fg);
   }
 
   .post {
     margin-left: 0.25em;
-    color: var(--cyan);
+    color: var(--fg);
   }
 </style>
