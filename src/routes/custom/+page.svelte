@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { dev } from '$app/environment'
   import Inspect from '$lib/Inspect.svelte'
   import Code from '../../doclib/Code.svelte'
   import CustomNumber from './CustomNumber.svelte'
@@ -15,13 +14,16 @@
   })
 </script>
 
-<h2>Custom Components</h2>
+<h2>Custom Components <sup>beta</sup></h2>
+
+<p>
+  <code>svelte-inspect-value</code> aims to (eventually) export all the building blocks to extend the
+  component with custom components.
+</p>
 
 <p>Better documentation soon! Here's a minimal example:</p>
 
 <h3>Custom line</h3>
-
-dev: {dev}
 
 <div class="center">
   <Code code={customNumberCode} label="GoofyNumber.svelte" />

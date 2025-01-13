@@ -498,7 +498,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    /* max-width: 1000px; */
 
     &.string {
       color: var(--string);
