@@ -5,7 +5,7 @@
   import HtmlView from './HTMLView.svelte'
   import InspectErrorView from './InspectErrorView.svelte'
   import Noop from './Noop.svelte'
-  import components from './types.js'
+  import { getComponent } from './types.js'
 
   type Props = TypeViewProps<unknown> & { usedefaults?: boolean }
 
@@ -17,11 +17,7 @@
   let type: ValueType = $derived(getType(value))
 
   function getTypeComponent(type: ValueType, custom: CustomComponents, useDefaults: boolean) {
-    let comps = { ...components, ...(useDefaults ? {} : custom) }
-
-    // let propfn:
-
-    let entry = comps[type]
+    let entry = getComponent(type, useDefaults ? {} : custom)
 
     if (entry) {
       let [component, propfn] = entry
@@ -34,9 +30,6 @@
     return [Noop, {}] as const
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  type TODO = any
-
   let [TypeComponent, componentProps] = $derived(
     getTypeComponent(type, customComponents, usedefaults)
   )
@@ -44,7 +37,7 @@
 </script>
 
 <svelte:boundary>
-  <TypeComponent value={value as TODO} {key} {type} {path} {...componentProps} />
+  <TypeComponent {value} {key} {type} {path} {...componentProps} />
 
   {#snippet failed(error, reset)}
     {@const inspectError = new InspectError(
