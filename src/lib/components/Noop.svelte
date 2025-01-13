@@ -10,7 +10,7 @@
 
 <OneLineView {value} {key} {type} {path}>
   {#snippet val()}
-    <Type type="noop" title="no handler for this type" />
+    ⚠️ <Type type="noop" title="no handler for this type" force /> ⚠️
     <span class="value {type}">{(value as object).toString()} </span>
   {/snippet}
 </OneLineView>
