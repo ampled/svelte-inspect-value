@@ -17,13 +17,13 @@ import TypedArrayView from './TypedArrayView.svelte'
 import UrlSearchParamsView from './URLSearchParamsView.svelte'
 import UrlView from './URLView.svelte'
 
-// type
 type ViewComponent<T> = Component<TypeViewProps<T>>
 
 export type CustomComponentEntry<T = unknown> =
   | [ViewComponent<T>, (props: TypeViewProps<T>) => Partial<TypeViewProps<T>>]
   | [ViewComponent<T>]
 
+// TODO proper typing
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ViewComponents = Record<string, CustomComponentEntry<any>>
 
@@ -62,6 +62,7 @@ const components = {
   string: [StringView],
   function: [FunctionView],
   asyncfunction: [FunctionView],
+  generatorfunction: [FunctionView],
   class: [ClassView],
   date: [DateView],
   error: [ErrorView],
@@ -98,5 +99,3 @@ export function getComponent(type: string, custom: CustomComponents) {
 
   return comps[type]
 }
-
-// export type ViewComponents = typeof components

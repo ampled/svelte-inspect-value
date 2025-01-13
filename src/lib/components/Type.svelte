@@ -23,7 +23,9 @@
       case 'function':
         return 'fn'
       case 'asyncfunction':
-        return 'async fn'
+        return 'async'
+      case 'generatorfunction':
+        return 'gen'
       case 'boolean':
         return 'bool'
       case 'url':

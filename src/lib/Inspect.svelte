@@ -390,7 +390,8 @@
     }
 
     &.function,
-    &.asyncfunction {
+    &.asyncfunction,
+    &.generatorfunction {
       --border-color: var(--function);
       overflow-x: auto;
     }
@@ -459,7 +460,8 @@
     }
 
     &.function,
-    &.asyncfunction {
+    &.asyncfunction,
+    &.generatorfunction {
       color: var(--keyword);
     }
 

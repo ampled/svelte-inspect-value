@@ -22,6 +22,12 @@ export type TypeViewProps<T = unknown | undefined> = {
   key?: KeyType
   path?: KeyType[]
   value: T
+  /**
+   * Representation of value.
+   *
+   * Use to customize how a value is represented while still being able to pass the original
+   * value for other purposes
+   */
   display?: string
   type?: ValueType | string
   collapsed?: boolean

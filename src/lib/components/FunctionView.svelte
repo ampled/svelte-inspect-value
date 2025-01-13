@@ -18,6 +18,16 @@
   )
 </script>
 
+{#snippet valuePreview({ showPreview }: { showPreview: boolean })}
+  {#if showPreview}
+    {#if previewLevel}
+      <span title={value.name} class="value function">{value.name}</span>
+    {:else}
+      <FunctionBody value={oneLine} inline />
+    {/if}
+  {/if}
+{/snippet}
+
 {#if isMultiLine}
   <Expandable {key} {type} {path} {value} length={1} showLength={false}>
     {#snippet valuePreview({ showPreview })}
@@ -33,12 +43,6 @@
   </Expandable>
 {:else}
   <OneLineView {key} {type} {path} {value}>
-    {#snippet val()}
-      {#if previewLevel}
-        <span class="value function">{value.name}</span>
-      {:else}
-        <FunctionBody value={oneLine} inline />
-      {/if}
-    {/snippet}
+    {@render valuePreview({ showPreview: true })}
   </OneLineView>
 {/if}
