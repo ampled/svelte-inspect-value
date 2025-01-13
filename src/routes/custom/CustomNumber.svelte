@@ -5,14 +5,13 @@
 </script>
 
 <CustomLine {value} {...rest}>
-  {#snippet val()}
-    <span>{value}</span>
-  {/snippet}
+  <span>{value}</span>
 </CustomLine>
 
 <style>
   span {
-    font-family: sans-serif;
+    rotate: 180deg;
+    /* font-family: sans-serif;
     font-weight: 900;
     font-size: 2em;
     background: linear-gradient(
@@ -29,6 +28,6 @@
     );
     -webkit-background-clip: text;
     background-clip: text;
-    -webkit-text-fill-color: transparent;
+    -webkit-text-fill-color: transparent; */
   }
 </style>

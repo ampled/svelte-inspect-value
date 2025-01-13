@@ -9,15 +9,13 @@
 </script>
 
 <CustomLine {value} {...rest}>
-  {#snippet val()}
-    <!-- svelte-ignore a11y_no_static_element_interactions -->
-    <span onmouseenter={() => (doAnError = true)}>
-      {value}
-    </span>
-    {#if doAnError}
-      err
-      <!-- eslint-disable-next-line @typescript-eslint/no-explicit-any -->
-      {(value as any).fdfsdfd.fsdfdsfdsfds.fdsfdsf}
-    {/if}
-  {/snippet}
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
+  <span onmouseenter={() => (doAnError = true)}>
+    {value}
+  </span>
+  {#if doAnError}
+    err
+    <!-- eslint-disable-next-line @typescript-eslint/no-explicit-any -->
+    {(value as any).doesNotExist.doesNotExist}
+  {/if}
 </CustomLine>

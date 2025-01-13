@@ -105,15 +105,20 @@ ${style
       d: {},
     }),
     a: { b: { name: 'b', c: { name: 'c', d: { name: 'd' } } }, g: [{}], d: {}, name: 'a' },
-    asyncfn: async function () {
-      const boop = await Promise.resolve('boop')
-      return boop
-    },
-    onelinerArrow: () => 2,
-    normalFunction: function (some: string, thing: string) {
-      const { log } = console
-      log(some + 'thing')
-      return 'some' + thing
+    functions: {
+      double: (value: number) => 2 * value,
+      normalFunction: function (some: string, thing: string) {
+        const { log } = console
+        log(some + 'thing')
+        return 'some' + thing
+      },
+      asyncfn: async function () {
+        const boop = await Promise.resolve('boop')
+        return boop
+      },
+      yieldTwo: function* () {
+        yield 2
+      },
     },
     errors: {
       error: new Error('oh no!'),

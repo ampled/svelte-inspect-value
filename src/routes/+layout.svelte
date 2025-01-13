@@ -262,9 +262,24 @@
   a {
     color: #fafafa;
     transition: color 300ms linear;
+
+    h1 {
+      text-decoration: none;
+    }
   }
 
   a.active {
     color: var(--red);
+    text-decoration: none;
+    position: relative;
+
+    &::before {
+      color: var(--comments);
+      content: '> ';
+      font-weight: bold;
+      text-decoration: none;
+      position: absolute;
+      transform: translateX(-100%);
+    }
   }
 </style>

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { dev } from '$app/environment'
   import Inspect from '$lib/Inspect.svelte'
   import Code from '../../doclib/Code.svelte'
   import CustomNumber from './CustomNumber.svelte'
@@ -20,9 +21,11 @@
 
 <h3>Custom line</h3>
 
+dev: {dev}
+
 <div class="center">
   <Code code={customNumberCode} label="GoofyNumber.svelte" />
-  <Code {code} label="" />
+  <Code {code} label="svelte" />
 </div>
 
 Result
@@ -40,7 +43,8 @@ Result
 
 <p>
   If any component, built-in or custom, should throw an error it will be caught by a boundary on an
-  entry-per-entry basis and render error details
+  entry-per-entry basis and render error details.<br />
+  The error value display component reverts to using default components to avoid further issues.
 </p>
 
 <Inspect
