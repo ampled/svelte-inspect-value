@@ -25,6 +25,9 @@
     ['array', 'object', 'number', 'string', 'undefined', 'null', 'date', 'boolean'].includes(type)
   )
 
+  let collapseState = $derived(inspectState?.value?.[stringifyPath(path)])
+  let collapsed = $derived(collapseState ? collapseState.collapsed : true)
+
   const children = $derived(
     inspectState?.value
       ? Object.entries(inspectState.value).filter(
@@ -44,7 +47,7 @@
     return false
   })
 
-  let timeout: number = $state(-1)
+  let timeout = $state<number>()
 
   async function copy(val: unknown) {
     try {
@@ -71,7 +74,7 @@
     icon: ExpandChildren,
   }
 
-  let treeAction = $derived(hasExpandedChildren ? collapseAction : expandAction)
+  let treeAction = $derived(hasExpandedChildren && !collapsed ? collapseAction : expandAction)
 </script>
 
 {#if options.value.showTools}
@@ -115,27 +118,38 @@
   :global(.line:focus-within) .tools,
   :global(.title-bar:hover) .tools,
   :global(.title-bar:focus-within) .tools {
-    /* opacity: 1; */
+    opacity: 1;
     display: flex;
+    transition: all 250ms ease-in-out allow-discrete;
+    width: auto;
+    width: calc-size(max-content, size);
   }
 
   .tools {
-    transition: 0.3s ease-in-out;
+    transition: all 0s ease-in-out allow-discrete;
     background-color: var(--bg);
     border-left: 1px solid var(--border-color);
-    /* border: 1px solid var(--border-color); */
     position: absolute;
     right: 0;
     top: 0;
     bottom: 0;
     padding-inline: 0.5em;
-    display: none;
+    /* display: flex; */
     justify-content: center;
     align-items: center;
     gap: 0.25em;
-    /* opacity: 0; */
+    opacity: 0;
     max-height: 1.5em;
-    overflow: visible;
+    z-index: calc(var(--index) + 1);
+    flex-wrap: nowrap;
+    width: 0;
+    overflow: clip;
+
+    @starting-style {
+      opacity: 0;
+      width: 0;
+      display: none;
+    }
 
     button {
       all: unset;
@@ -144,7 +158,9 @@
       border: none;
       /* transition: all 300ms ease-in-out; */
       height: 1.5em;
+      min-height: 1.5em;
       width: 1.5em;
+      min-width: 1.5em;
       color: var(--interactive);
 
       &.copied {
