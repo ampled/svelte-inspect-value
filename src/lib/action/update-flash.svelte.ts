@@ -6,11 +6,12 @@ export const flashOnUpdate: Action<
   HTMLElement,
   {
     value: () => unknown
+    enabled?: () => boolean
     cb?: (fn: () => void) => void
   },
   { oninspectvaluechange: () => void }
 > = (node, parameters) => {
-  const { value, cb } = parameters
+  const { value, cb, enabled = () => true } = parameters
 
   let prevValue = value()
   let timeout = $state<number>()
@@ -35,15 +36,17 @@ export const flashOnUpdate: Action<
   cb?.(flash)
 
   $effect(() => {
-    const newVal = value()
+    if (enabled()) {
+      const newValue = value()
 
-    untrack(() => {
-      if (!equal(prevValue, newVal)) {
-        node.dispatchEvent(new CustomEvent('inspectvaluechange', { bubbles: true }))
-        flash()
-        prevValue = newVal
-      }
-    })
+      untrack(() => {
+        if (!equal(prevValue, newValue)) {
+          node.dispatchEvent(new CustomEvent('inspectvaluechange', { bubbles: true }))
+          flash()
+          prevValue = newValue
+        }
+      })
+    }
   })
 
   onDestroy(() => {

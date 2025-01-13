@@ -23,6 +23,18 @@ export type JSONInspectOptions = {
    */
   showPreview: boolean
   /**
+   * How many levels of nested values to preview before showing only type
+   *
+   * Default: 1
+   */
+  previewDepth: number
+  /**
+   * Indicate when a value or child value is updated
+   *
+   * Default `true`
+   */
+  flashOnUpdate: boolean
+  /**
    *
    * Default `true`
    */
@@ -116,6 +128,8 @@ export function createOptions(options: Partial<JSONInspectOptions>) {
     quotes: 'single',
     showTypes: true,
     showPreview: true,
+    previewDepth: 1,
+    flashOnUpdate: false,
     showLength: true,
     showTools: true,
     stringCollapse: 0,
