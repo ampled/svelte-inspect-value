@@ -18,19 +18,24 @@
     if (!type) return ''
     switch (type) {
       case 'array':
+      case 'int8array':
+      case 'uint8array':
+      case 'uint8clampedarray':
+      case 'int16array':
+      case 'uint16array':
+      case 'int32array':
+      case 'uint32array':
+      case 'float32array':
+      case 'float64array':
+      case 'bigint64array':
+      case 'biguint64array':
         return 'items'
-      case 'set':
-      case 'map':
-      case 'object':
-        return 'entries'
       case 'string':
         return 'chars'
       default:
         return 'entries'
     }
   })
-
-  //
 </script>
 
 {#if options.value.showLength && typeof length === 'number'}

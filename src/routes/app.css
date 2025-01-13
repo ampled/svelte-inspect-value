@@ -143,6 +143,14 @@ h6 {
   /* width: 100%; */
 }
 
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.flex-nowrap {
+  flex-wrap: nowrap;
+}
+
 .row {
   flex-direction: row;
 }
@@ -162,8 +170,13 @@ button {
   border-radius: 4px;
   cursor: pointer;
 
-  &:hover {
+  &:hover:not(:disabled) {
     background-color: var(--border-color);
+  }
+
+  &:disabled {
+    cursor: auto;
+    color: var(--border-color);
   }
 }
 
@@ -181,6 +194,8 @@ label {
 code {
   font-family: monospace;
   background-color: var(--bg-lighter);
+  border-radius: 2px;
+  padding-inline: 0.5em;
 }
 
 a {

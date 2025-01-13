@@ -13,6 +13,7 @@
     showLength = true,
     showTypes = true,
     showPreview = true,
+    previewDepth = 1,
     showTools = true,
     quotes = 'single',
     expandAll = false,
@@ -34,6 +35,7 @@
     showLength,
     showTypes,
     showPreview,
+    previewDepth,
     showTools,
     stringCollapse,
     noanimate,
@@ -54,6 +56,7 @@
       showLength,
       showTypes,
       showPreview,
+      previewDepth,
       showTools,
       stringCollapse,
       noanimate,
@@ -68,7 +71,7 @@
     })
   })
 
-  const inspectState = createState({}, '[svelte-value-inspect]' + (name ?? ''), onCollapseChange)
+  const inspectState = createState({}, onCollapseChange)
 
   setContext(STATE_CONTEXT_KEY, inspectState)
   setContext(OPTIONS_CONTEXT, options)
@@ -119,6 +122,25 @@
         base0E  #ba8baf  Keywords, Storage, Selector, Markup Italic, Diff Changed
         base0F  #a16946  Deprecated, Opening/Closing Embedded Language Tags, e.g. <?php ?>
     */
+  .plain {
+    --base00: #ffffff;
+    --base01: #ffffff;
+    --base02: #ffffff;
+    --base03: #ffffff;
+    --base04: #ffffff;
+    --base05: #000000;
+    --base06: #ffffff;
+    --base07: #ffffff;
+    --base08: #ffffff;
+    --base09: #ffffff;
+    --base0A: #ffffff;
+    --base0B: #ffffff;
+    --base0C: #ffffff;
+    --base0D: #ffffff;
+    --base0E: #ffffff;
+    --base0F: #ffffff;
+  }
+
   .stereo {
     --base00: #272822;
     --base01: #383830;
@@ -253,6 +275,23 @@
     --indent: calc(0.5em * var(--indent-multiplier, 1));
   }
 
+  :global .ampled-json-inspect::selection {
+    background-color: var(--selection);
+  }
+
+  :global .ampled-json-inspect ::selection {
+    background-color: var(--selection);
+  }
+
+  :global .ampled-json-inspect:not(.noanimate) {
+    transition: all 250ms linear;
+    /* *,
+    *::before,
+    *::after {
+      transition: all 250ms linear;
+    } */
+  }
+
   :global .ampled-json-inspect {
     *,
     *::before,
@@ -260,6 +299,10 @@
       box-sizing: border-box;
       margin: 0;
     }
+  }
+
+  :global .ampled-json-inspect.noanimate * {
+    transition: none !important;
   }
 
   .ampled-json-inspect {
@@ -333,7 +376,8 @@
 
   .body {
     position: relative;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
     width: 100%;
     height: 100%;
     padding: 0.5em;
@@ -345,7 +389,8 @@
       overflow-x: auto;
     }
 
-    &.function {
+    &.function,
+    &.asyncfunction {
       --border-color: var(--function);
       overflow-x: auto;
     }
@@ -413,7 +458,8 @@
       color: var(--cyan);
     }
 
-    &.function {
+    &.function,
+    &.asyncfunction {
       color: var(--keyword);
     }
 
@@ -439,6 +485,10 @@
 
     &.class {
       color: var(--keyword);
+    }
+
+    &.noop {
+      color: var(--deprecated);
     }
   }
 
@@ -481,6 +531,14 @@
       color: var(--number);
     }
 
+    &.url {
+      color: var(--class);
+    }
+
+    &.urlsearchparams {
+      color: var(--class);
+    }
+
     &.error {
       color: var(--error);
     }
@@ -490,6 +548,14 @@
     }
 
     &.date {
+      color: var(--object);
+    }
+
+    &.function {
+      color: var(--green);
+    }
+
+    &.arraybuffer {
       color: var(--object);
     }
 

@@ -4,7 +4,7 @@
   import globalConfigCode from '../doclib/examples/globalconfig.txt?raw'
   import MinimalExample from '../doclib/examples/MinimalExample.svelte'
 
-  let packageName = 'svelte-value-inspect'
+  let packageName = 'svelte-inspect-value'
 
   import minimalcode from '../doclib/examples/minimalexample.txt?raw'
 </script>

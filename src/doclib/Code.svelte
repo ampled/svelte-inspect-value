@@ -1,33 +1,38 @@
-<script>
-  import hljs from 'highlight.js/lib/core'
-  import javascript from 'highlight.js/lib/languages/javascript'
-  import xml from 'highlight.js/lib/languages/xml'
-  // import svelte from 'highlight.js/lib/languages/svelte'
-  import 'highlight.js/styles/base16/dracula.min.css'
+<script lang="ts">
+  import { Highlight, HighlightSvelte } from 'svelte-highlight'
+  import 'svelte-highlight/styles/dracula.css'
 
-  const instance = hljs.newInstance()
-  // hljs.configure({ classPrefix: '' })
-  instance.registerLanguage('xml', xml)
-  instance.registerLanguage('javascript', javascript)
+  import css from 'svelte-highlight/languages/css'
+  import javascript from 'svelte-highlight/languages/javascript'
 
-  let { code, label = 'example', ...rest } = $props()
+  let { code, label = 'example', language = 'svelte', ...rest } = $props()
 
-  let highlighted = $derived(instance.highlight(code, { language: 'xml' }))
+  let supportedLanguages = {
+    javascript,
+    css,
+  }
 </script>
 
-<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-<pre class="hljs" {...rest}>{@html highlighted.value}{#if label}<div
-      class="label">{label}</div>{/if}
-</pre>
+<div class="code" {...rest}>
+  {#if label}
+    <div class="label">{label}</div>{/if}
+
+  {#if language === 'svelte'}
+    <HighlightSvelte {code} />
+  {:else}
+    <Highlight {code} language={supportedLanguages[language as keyof typeof supportedLanguages]} />
+  {/if}
+</div>
 
 <style>
-  pre {
+  .code {
     position: relative;
     border-radius: 8px;
     border: 1px solid var(--border-color);
     background-color: var(--bg-code);
-    padding: 1.25em;
+    /* padding: 1.25em; */
     font-size: 12px;
+    overflow: hidden;
   }
 
   .label {

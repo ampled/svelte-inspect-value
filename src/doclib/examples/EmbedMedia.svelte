@@ -4,11 +4,20 @@
   import squirteSprite from './media/squirtle.png'
   import squirtleCry from './media/squirtle_cry.ogg'
 
+  const doAttack = (attack: string) => attack
+
   const squirtle = {
     name: 'squirtle',
     type: 'water',
+    attacks: ['tackle', 'bubble'],
     sprite: squirteSprite,
     cry: squirtleCry,
+    attack: (attack: string) => (attack ? doAttack(attack) : void 0),
+    attributes: {
+      speed: 20,
+      strength: 42,
+      defense: 15,
+    },
   }
 </script>
 

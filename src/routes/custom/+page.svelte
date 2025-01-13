@@ -5,6 +5,7 @@
   import customNumberCode from './CustomNumber.txt?raw'
   import ErrorOnHover from './ErrorOnHover.svelte'
   import code from './example.txt?raw'
+  import ExpandableNumber from './ExpandableNumber.svelte'
 
   let anObject = $state({
     oneBillion: 1000000000,
@@ -17,6 +18,8 @@
 
 <p>Better documentation soon! Here's a minimal example:</p>
 
+<h3>Custom line</h3>
+
 <div class="center">
   <Code code={customNumberCode} label="GoofyNumber.svelte" />
   <Code {code} label="" />
@@ -28,6 +31,10 @@ Result
   customComponents={{ number: [CustomNumber, (props) => ({ value: props.value })] }}
   name="customNumber"
 />
+
+<h3>Custom expandable</h3>
+
+<Inspect value={2} customComponents={{ number: [ExpandableNumber] }} />
 
 <h2>Error handling</h2>
 

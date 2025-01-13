@@ -16,7 +16,7 @@
   </p>
 
   <div class="flex row" style="width: 100%">
-    <Code {code} />
+    <Code {code} language="javascript" />
 
     <Inspect
       value={{

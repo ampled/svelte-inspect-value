@@ -1,8 +1,21 @@
 <script lang="ts">
   import './app.css'
 
+  import { onNavigate } from '$app/navigation'
+  import { page } from '$app/stores'
   import Inspect from '$lib/Inspect.svelte'
   import { setGlobalInspectOptions, type JSONInspectOptions } from '$lib/options.svelte.js'
+
+  onNavigate((navigation) => {
+    if (!document.startViewTransition) return
+
+    return new Promise((resolve) => {
+      document.startViewTransition(async () => {
+        resolve()
+        await navigation.complete
+      })
+    })
+  })
 
   const { children } = $props()
 
@@ -13,6 +26,8 @@
     showTypes: true,
     showLength: true,
     showPreview: true,
+    previewDepth: 1,
+    flashOnUpdate: true,
     noanimate: false,
     quotes: 'single',
     borderless: false,
@@ -20,6 +35,12 @@
   })
 
   setGlobalInspectOptions(options)
+
+  let routes = [
+    { href: '/examples', title: 'examples' },
+    { href: '/custom', title: 'custom components' },
+    { href: '/theming', title: 'theming' },
+  ]
 </script>
 
 <svelte:boundary>
@@ -30,18 +51,23 @@
   {/snippet}
   <main>
     <a href="/">
-      <h1>Svelte Value Inspect</h1>
+      <h1>Svelte Inspect Value</h1>
     </a>
     <nav>
       <ul>
+        {#each routes as { href, title } (href)}
+          <li>
+            <a class:active={href === $page.url.pathname} {href}>{title}</a>
+          </li>
+        {/each}
         <li>
-          <a href="/examples">examples</a>
-        </li>
-        <!-- <li>
-            <a href="/theming">theming</a>
-          </li> -->
-        <li>
-          <a href="/custom">custom components</a>
+          <a
+            href="https://www.npmjs.com/package/svelte-inspect-value"
+            aria-label="npm"
+            target="_blank"
+          >
+            <img alt="npm" src="https://img.shields.io/npm/v/svelte-inspect-value" />
+          </a>
         </li>
       </ul>
     </nav>
@@ -80,6 +106,11 @@
       </label>
 
       <label>
+        flash on update
+        <input type="checkbox" bind:checked={options.flashOnUpdate} />
+      </label>
+
+      <label>
         embed media
         <input type="checkbox" bind:checked={options.embedMedia} />
       </label>
@@ -107,6 +138,11 @@
         collapse strings
         <input type="number" bind:value={options.stringCollapse} style="width: 5em" />
       </label>
+
+      <label>
+        preview depth
+        <input type="number" bind:value={options.previewDepth} style="width: 5em" />
+      </label>
     </div>
   </main>
 </svelte:boundary>
@@ -121,15 +157,16 @@
     padding-inline: 3em;
     width: 100%;
     padding-bottom: 25em;
-    border: 1px solid green;
   }
 
   nav {
-    display: flex;
-    flex-direction: row;
+    /* display: flex;
+    flex-direction: row; */
 
     ul {
       padding: 0;
+      display: flex;
+      gap: 1em;
 
       li {
         display: inline;
@@ -143,16 +180,17 @@
     /* opacity: 0.5; */
     position: fixed;
     display: flex;
-    flex-wrap: wrap;
+    overflow-y: auto;
+    flex-wrap: nowrap;
     align-items: flex-end;
-    justify-content: center;
+    justify-content: flex-start;
     margin-left: auto;
     margin-right: auto;
     bottom: 0;
     left: 0;
     right: 0;
     /* width: 80%; */
-    background-color: var(--bg);
+    background-color: var(--bg-lighter);
     gap: 2em;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
@@ -163,11 +201,15 @@
     scale: 0.75;
     transform-origin: center bottom;
     transition: all 100ms linear;
-    transform: translateY(40px);
+    transform: translateY(70%);
 
-    &:hover {
+    &:hover,
+    &:focus-within,
+    &:focus-visible,
+    &:has(*:focus) {
       opacity: 1;
       transform: translateY(0);
+      outline: 1px solid green;
     }
   }
 
@@ -210,5 +252,19 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
+  }
+
+  label {
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  a {
+    color: #fafafa;
+    transition: color 300ms linear;
+  }
+
+  a.active {
+    color: var(--red);
   }
 </style>

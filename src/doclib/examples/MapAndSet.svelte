@@ -19,6 +19,7 @@
           [{ name: 'object key' }, 3],
           [[1, 2], 3],
           [Symbol('1'), 4],
+          [/r(e+)gExp?/, 'regex key'],
         ]),
         set: new Set([1, 2, 3, 'four']),
       }}
