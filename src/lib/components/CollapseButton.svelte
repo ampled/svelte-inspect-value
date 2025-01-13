@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { useOptions } from '$lib/options.svelte.js'
   import type { HTMLButtonAttributes } from 'svelte/elements'
   import { flashOnUpdate } from '../action/update-flash.svelte.js'
   import Caret from '../icons/Caret.svelte'
@@ -10,6 +11,8 @@
   } & Omit<HTMLButtonAttributes, 'onchange' | 'value'>
 
   let { collapsed = $bindable(), onchange, disabled, value, ...rest }: Props = $props()
+
+  let options = useOptions()
 
   function onclick() {
     const newValue = !collapsed
@@ -54,7 +57,13 @@
 </script>
 
 <button type="button" class="collapse" {onclick} {disabled} {...rest} {onkeydown}>
-  <div use:flashOnUpdate={{ value: () => value, cb: (trigger) => (flashFn = trigger) }}>
+  <div
+    use:flashOnUpdate={{
+      value: () => value,
+      enabled: () => options.value.flashOnUpdate,
+      cb: (trigger) => (flashFn = trigger),
+    }}
+  >
     {#if disabled}
       &hyphen;
     {:else}
@@ -78,6 +87,12 @@
     aspect-ratio: 1 / 1;
     width: 1em;
     height: 1em;
+    user-select: none;
+    transition: all 100ms linear;
+
+    &:focus {
+      color: var(--fg);
+    }
 
     &:focus-visible {
       color: var(--fg);
