@@ -74,6 +74,7 @@
 
 <style>
   .collapse {
+    all: unset;
     margin: 0;
     padding: 0;
     border: none;
@@ -89,6 +90,11 @@
     height: 1em;
     user-select: none;
     transition: all 100ms linear;
+
+    &:hover {
+      background-color: transparent;
+      color: var(--fg);
+    }
 
     &:focus {
       color: var(--fg);

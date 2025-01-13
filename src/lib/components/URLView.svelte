@@ -2,10 +2,8 @@
   import type { TypeViewProps } from '$lib/types.js'
   import Entry from './Entry.svelte'
   import Expandable from './Expandable.svelte'
-  import Key from './Key.svelte'
-  import JsonViewer from './Node.svelte'
+  import Node from './Node.svelte'
   import StringValue from './StringValue.svelte'
-  import Type from './Type.svelte'
 
   type Props = TypeViewProps<URL>
 
@@ -42,24 +40,13 @@
   )
 </script>
 
-{#if entries.length}
-  <Expandable {...{ value, key, type, path }} length={entries.length} showLength={false}>
-    {#snippet valuePreview()}
-      <StringValue {type} value={value.toString()}>
-        {value.toString()}
-      </StringValue>
-    {/snippet}
-    {#each entries as [key, value], i (key)}
-      <Entry {i}>
-        <JsonViewer {value} {key} {path} />
-      </Entry>
-    {/each}
-  </Expandable>
-{:else}
-  <Key {key} {path} />
-  <Type {type} />
-  <span class="value {type}">
-    {value.toString()}
-  </span>
-{/if}
-<!-- <ObjectView {value} {key} {type} /> -->
+<Expandable {...{ value, key, type, path }} length={entries.length} showLength={false}>
+  {#snippet valuePreview()}
+    <StringValue {type} value={value.toString()} length />
+  {/snippet}
+  {#each entries as [key, value], i (key)}
+    <Entry {i}>
+      <Node {value} {key} {path} />
+    </Entry>
+  {/each}
+</Expandable>

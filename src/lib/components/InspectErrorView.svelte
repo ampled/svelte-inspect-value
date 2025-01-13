@@ -3,7 +3,7 @@
   import { InspectError, type TypeViewProps } from '../types.js'
   import Entry from './Entry.svelte'
   import Expandable from './Expandable.svelte'
-  import JsonViewer from './Node.svelte'
+  import Node from './Node.svelte'
   import StringValue from './StringValue.svelte'
 
   type Props = TypeViewProps<InspectError> & { reset: () => void }
@@ -26,13 +26,11 @@
   {#snippet valuePreview()}
     <span>⚠️</span>
     <button class="reset" onclick={reset}>[RESET]</button>
-    <StringValue {type} value={value.message}>
-      {value.message}
-    </StringValue>
+    <StringValue {type} value={value.message} />
   {/snippet}
   {#each entries as [key, value], i (key)}
     <Entry {i}>
-      <JsonViewer {value} {key} {path} usedefaults />
+      <Node {value} {key} {path} usedefaults />
     </Entry>
   {/each}
 </Expandable>

@@ -3,15 +3,17 @@
 TODO handle data: urls?
 -->
 <script lang="ts">
+  import { getContext } from 'svelte'
   import { useOptions } from '../options.svelte.js'
   import type { TypeViewProps } from '../types.js'
-  import { collapseString, stringify } from '../util.js'
+  import { stringify } from '../util.js'
   import Expandable from './Expandable.svelte'
   import OneLineView from './OneLineView.svelte'
   import StringValue from './StringValue.svelte'
 
   let { value = '', key, type, path }: TypeViewProps<string> = $props()
 
+  const previewLevel = getContext<number | undefined>('preview')
   const options = useOptions()
 
   let isMultiLine = $derived(value.includes('\n'))
@@ -21,15 +23,13 @@ TODO handle data: urls?
 
   let isImageUrl = $derived(IMAGE_EXTENSIONS.some((extension) => value.endsWith(extension)))
   let isAudioUrl = $derived(AUDIO_EXTENSIONS.some((extension) => value.endsWith(extension)))
-
-  let display = $derived(collapseString(value, options.value.stringCollapse))
 </script>
 
-{#if isMultiLine || isImageUrl || isAudioUrl}
+{#if (isMultiLine || isImageUrl || isAudioUrl) && !previewLevel}
   <Expandable {...{ value, key, type, path }} length={value.length} keepPreviewOnExpand>
     {#snippet valuePreview({ showPreview })}
       {#if showPreview}
-        <StringValue {value} />
+        <StringValue {value} length />
       {/if}
     {/snippet}
     {#if isImageUrl && options.value.embedMedia}
@@ -40,15 +40,14 @@ TODO handle data: urls?
       <div class="embed">
         <audio controls src={value}></audio>
       </div>
-    {:else}
+    {:else if isMultiLine}
       <pre class="value string multi" title={value}>{value}</pre>
     {/if}
   </Expandable>
 {:else}
-  <OneLineView {key} {type} {path} {value} {display} title={stringify(value)}>
-    {#snippet val()}
-      <StringValue {value} length />
-    {/snippet}
+  <!-- OneLineView should be more performant in nested preview mode as it has less initial logic -->
+  <OneLineView {key} {type} {path} {value} title={stringify(value)}>
+    <StringValue {value} length />
   </OneLineView>
 {/if}
 

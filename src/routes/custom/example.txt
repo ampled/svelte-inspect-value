@@ -1,12 +1,19 @@
 <script>
   import GoofyNumber from './GoofyNumber.svelte'
+
+  const value = {
+    oneBillion: 1000000000,
+  }
+
+  const components = { 
+    // Second item of tuple is an optional function that enables
+    // transforming props before they are passed to the custom component 
+    number: [GoofyNumber, (props) => ({ value: props.value })] 
+  }
 </script>
 
-// Second argument of tuple is an optional function to transform props before they are passed to custom component 
 <Inspect
   name="customNumbers"
-  value={{
-    oneBillion: 1_000_000_000,
-  }}
-  customComponents={{ number: [GoofyNumber, (props) => ({ value: props.value })] }}
+  {value}
+  customComponents={components}
 />

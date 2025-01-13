@@ -1,10 +1,6 @@
-<!-- @component
-
-TODO use children instead of named snippet
--->
 <script lang="ts" generics="T = unknown">
   import { useOptions } from '$lib/options.svelte.js'
-  import { getContext, type Snippet } from 'svelte'
+  import { getContext } from 'svelte'
   import type { HTMLAttributes } from 'svelte/elements'
   import { flashOnUpdate } from '../action/update-flash.svelte.js'
   import type { TypeViewProps } from '../types.js'
@@ -12,17 +8,16 @@ TODO use children instead of named snippet
   import Tools from './Tools.svelte'
   import Type from './Type.svelte'
 
-  type Props = TypeViewProps<T> & {
-    val?: Snippet
-  } & HTMLAttributes<HTMLDivElement>
+  type Props = TypeViewProps<T> & HTMLAttributes<HTMLDivElement>
 
-  let { value, display, key, type, path, val, ...rest }: Props = $props()
+  let { value, display, key, type, path, children, ...rest }: Props = $props()
 
   let displayOrValue = $derived(display != null ? display : (value?.toString?.() ?? ''))
+  let title = $derived(typeof value === 'string' ? value : display != null ? display : '')
 
   let options = useOptions()
   let previewLevel = getContext<number | undefined>('preview')
-  let isKey = getContext<boolean>('key')
+  let isKey = getContext<boolean | undefined>('key')
 </script>
 
 <div class="line" class:preview={previewLevel || isKey} {...rest}>
@@ -40,10 +35,10 @@ TODO use children instead of named snippet
   {#if !isKey}
     <Type {type} />
   {/if}
-  {#if val}
-    {@render val()}
+  {#if children}
+    {@render children()}
   {:else}
-    <span title={displayOrValue} class={`value ${type}`}>
+    <span {title} class="value {type}">
       {displayOrValue}
     </span>
   {/if}

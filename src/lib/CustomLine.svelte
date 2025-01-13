@@ -3,7 +3,7 @@
   import OneLineView from './components/OneLineView.svelte'
   import type { CustomComponentProps } from './types.js'
 
-  let { ...props }: CustomComponentProps<T> & { val: Snippet } = $props()
+  let { ...props }: CustomComponentProps<T> & { children?: Snippet } = $props()
 </script>
 
 <OneLineView {...props} />

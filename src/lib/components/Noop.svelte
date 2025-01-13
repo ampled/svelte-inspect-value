@@ -9,8 +9,6 @@
 </script>
 
 <OneLineView {value} {key} {type} {path}>
-  {#snippet val()}
-    ⚠️ <Type type="noop" title="no handler for this type" force /> ⚠️
-    <span class="value {type}">{(value as object).toString()} </span>
-  {/snippet}
+  ⚠️ <Type type="noop" title="no handler for this type" force /> ⚠️
+  <span title={value?.toString?.()} class="value {type}">{value?.toString?.()} </span>
 </OneLineView>
