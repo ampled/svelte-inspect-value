@@ -1,41 +1,55 @@
+<!-- 
+ @component StringValue 
+ 
+ Handles "smart" behavior of string value representation like collapsing
+ according to stringCollapse-prop or using an anchor tag if it's a link
+ 
+ -->
 <script lang="ts">
   import { collapseString, stringify } from '../util.js'
 
-  import { getContext, type Snippet } from 'svelte'
+  import LinkIcon from '$lib/icons/LinkIcon.svelte'
+  import { getContext } from 'svelte'
   import { useOptions } from '../options.svelte.js'
   import type { TypeViewProps } from '../types.js'
   import { isUrl as isurl } from '../util/is-url.js'
   import Entries from './Entries.svelte'
 
-  type Props = TypeViewProps<string> & { length?: boolean; children?: Snippet }
+  type Props = TypeViewProps<string> & { length?: boolean }
 
-  let { value = '', length = false, type = 'string', children }: Props = $props()
+  let { value, display, length = false, type = 'string' }: Props = $props()
+  const previewLevel = getContext<number | undefined>('preview')
+  const options = useOptions()
 
-  let isUrlOrPath = $derived(isurl(value) || value.startsWith('/'))
-
+  let displayOrValue = $derived(display != null ? display : value)
+  let isUrlOrPath = $derived(isurl(displayOrValue) || displayOrValue.startsWith('/'))
   let ele: 'a' | 'span' = $derived(isUrlOrPath ? 'a' : 'span')
 
-  let options = useOptions()
-
-  let display = $derived(collapseString(value, options.value.stringCollapse))
-
-  const previewLevel = getContext<number | undefined>('preview')
+  let collapsed = $derived(collapseString(displayOrValue, options.value.stringCollapse))
 </script>
 
 <svelte:element
   this={ele}
-  class="value {type}"
+  class="stringvalue value {type}"
   title={stringify(value)}
   href={isUrlOrPath ? value : null}
   target={isUrlOrPath ? '_blank' : null}
   rel={isUrlOrPath ? 'noreferrer' : null}
 >
-  {#if children}
-    {@render children()}
-  {:else}
-    {stringify(display, 0, options.value.quotes)}
-  {/if}
+  <!-- only use stringify (add quotes) if the original value is not a string (e.g. date or url)  -->
+  {type === 'string' ? stringify(collapsed, 0, options.value.quotes) : collapsed}
+
+  {#if isUrlOrPath}<span class="value url">
+      <LinkIcon />
+    </span>{/if}
 </svelte:element>
 {#if length && !previewLevel}
   <Entries type="string" length={value.length} />
 {/if}
+
+<style>
+  .stringvalue {
+    display: flex;
+    align-items: center;
+  }
+</style>

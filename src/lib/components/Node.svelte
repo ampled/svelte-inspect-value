@@ -12,7 +12,6 @@
   let { value = undefined, key, path: prevPath = [], usedefaults = false }: Props = $props()
 
   let options = useOptions()
-  let { customComponents } = $derived(options.value)
 
   let type: ValueType = $derived(getType(value))
 
@@ -31,7 +30,7 @@
   }
 
   let [TypeComponent, componentProps] = $derived(
-    getTypeComponent(type, customComponents, usedefaults)
+    getTypeComponent(type, options.value.customComponents, usedefaults)
   )
   let path = $derived(key != null && prevPath ? [...prevPath, key] : ['root'])
 </script>
