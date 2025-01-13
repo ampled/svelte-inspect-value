@@ -22,13 +22,21 @@
   let preview = $derived<[KeyType, unknown][]>(entries.slice(0, 3))
 </script>
 
-<Expandable type={objectType} length={entries.length} {key} {path} {value}>
-  {#snippet valuePreview()}
+<Expandable
+  type={objectType}
+  length={entries.length}
+  {key}
+  {path}
+  {value}
+  forceType={!!classInstance}
+>
+  {#snippet valuePreview({ showPreview })}
     <Preview
       keyValue={preview}
       prefix={'{'}
       postfix={'}'}
       hasMore={entries.length > preview.length}
+      {showPreview}
     />
   {/snippet}
   {#each entries as [key, value], i (key)}

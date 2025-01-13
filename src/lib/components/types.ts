@@ -1,4 +1,4 @@
-import type { TypeViewProps } from '$lib/types.js'
+import type { CustomComponents, TypeViewProps } from '$lib/types.js'
 import type { Component } from 'svelte'
 import ArrayView from './ArrayView.svelte'
 import ClassView from './ClassView.svelte'
@@ -28,7 +28,10 @@ export type CustomComponentEntry<T = unknown> =
 export type ViewComponents = Record<string, CustomComponentEntry<any>>
 
 const components = {
-  symbol: [OneLineView, (props: TypeViewProps<symbol>) => ({ display: props.value.toString() })],
+  symbol: [
+    OneLineView,
+    (props: TypeViewProps<symbol>) => ({ value: props.value, display: props.value.toString() }),
+  ],
   number: [OneLineView],
   boolean: [OneLineView],
   undefined: [OneLineView],
@@ -58,6 +61,7 @@ const components = {
   array: [ArrayView],
   string: [StringView],
   function: [FunctionView],
+  asyncfunction: [FunctionView],
   class: [ClassView],
   date: [DateView],
   error: [ErrorView],
@@ -68,15 +72,31 @@ const components = {
   htmlimageelement: [HtmlImageElementView],
   html: [HtmlView],
   promise: [PromiseView],
-  int32array: [TypedArrayView],
-  int16array: [TypedArrayView],
-  int8array: [TypedArrayView],
+  typedarray: [TypedArrayView],
 } as ViewComponents
 
 export default components
 
-export function getComponent(type: string) {
-  return components[type]
+const typedArrays = [
+  'int8array',
+  'uint8array',
+  'uint8clampedarray',
+  'int16array',
+  'uint16array',
+  'int32array',
+  'uint32array',
+  'float32array',
+  'float64array',
+  'bigint64array',
+  'biguint64array',
+]
+
+export function getComponent(type: string, custom: CustomComponents) {
+  const comps = { ...components, ...custom }
+
+  if (typedArrays.includes(type)) return comps['typedarray']
+
+  return comps[type]
 }
 
 // export type ViewComponents = typeof components

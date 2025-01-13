@@ -13,9 +13,14 @@
 </script>
 
 <Expandable {...{ value: arrayVal, key, type, path }} length={arrayVal.length}>
-  {#snippet valuePreview()}
-    <!-- <ArrayPreview value={arrayVal} /> -->
-    <Preview list={preview} hasMore={preview.length < arrayVal.length} prefix={'['} postfix={']'} />
+  {#snippet valuePreview({ showPreview })}
+    <Preview
+      list={preview}
+      hasMore={preview.length < arrayVal.length}
+      prefix={'['}
+      postfix={']'}
+      {showPreview}
+    />
   {/snippet}
   {#each arrayVal as value, i (i)}
     <Entry {i}>

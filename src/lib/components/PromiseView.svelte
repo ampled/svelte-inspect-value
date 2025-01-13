@@ -64,24 +64,16 @@
   })
 </script>
 
-<Expandable
-  {...{ value, key, type, path }}
-  length={entries.length}
-  showLength={false}
-  keepPreviewOnExpand
->
-  {#snippet valuePreview()}
+<Expandable {...{ value, key, type, path }} length={entries.length} showLength={false}>
+  {#snippet valuePreview({ showPreview })}
     {#key status}
       <span class="value promise {status}" in:fade
         ><span class="bracket">{'<'}</span
         >{`${status}`}{#if status === 'fulfilled' || status === 'rejected'}
-          <Preview prefix={':'} list={[result]} hasMore={false} />
-        {/if}<span class="bracket">{'>'}</span>
-      </span>
+          <Preview prefix={':'} singleValue={result} hasMore={false} startLevel={0} {showPreview} />
+        {/if}<span class="bracket">{'>'}</span></span
+      >
     {/key}
-    <!-- {#if result}
-      <Preview list={[result]} hasMore={false} />
-    {/if} -->
   {/snippet}
   {#each entries as [key, value], i (key)}
     <Entry {i}>
@@ -92,8 +84,10 @@
 
 <style>
   span.value {
-    /* width: auto; */
     font-size: 0.857em;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
   }
 
   .bracket {

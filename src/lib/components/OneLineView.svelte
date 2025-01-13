@@ -1,4 +1,9 @@
+<!-- @component
+
+TODO use children instead of named snippet
+-->
 <script lang="ts" generics="T = unknown">
+  import { useOptions } from '$lib/options.svelte.js'
   import { getContext, type Snippet } from 'svelte'
   import type { HTMLAttributes } from 'svelte/elements'
   import { flashOnUpdate } from '../action/update-flash.svelte.js'
@@ -11,28 +16,30 @@
     val?: Snippet
   } & HTMLAttributes<HTMLDivElement>
 
-  let { value, display, key, type, path, val, oninspectvaluechange, ...rest }: Props = $props()
+  let { value, display, key, type, path, val, ...rest }: Props = $props()
 
   let displayOrValue = $derived(display != null ? display : (value?.toString?.() ?? ''))
 
-  const preview = getContext<boolean>('preview')
+  let options = useOptions()
+  let previewLevel = getContext<number | undefined>('preview')
+  let isKey = getContext<boolean>('key')
 </script>
 
-<div class="line" class:preview {...rest}>
-  {#if !preview}
+<div class="line" class:preview={previewLevel || isKey} {...rest}>
+  {#if !previewLevel && !isKey}
     <div class="dash-key">
-      <div class="dash">
-        <span
-          use:flashOnUpdate={{ value: () => value }}
-          oninspectvaluechange={() => {
-            oninspectvaluechange?.()
-          }}>&hyphen;</span
-        >
+      <div
+        class="dash"
+        use:flashOnUpdate={{ value: () => value, enabled: () => options.value.flashOnUpdate }}
+      >
+        &hyphen;
       </div>
       <Key {key} {path} />
     </div>
   {/if}
-  <Type {type} />
+  {#if !isKey}
+    <Type {type} />
+  {/if}
   {#if val}
     {@render val()}
   {:else}
@@ -41,7 +48,7 @@
     </span>
   {/if}
 
-  {#if !preview}
+  {#if !previewLevel && !isKey}
     <Tools {value} {path} {type} />
   {/if}
 </div>
@@ -50,16 +57,12 @@
   .line {
     transition: background-color 0.2s ease-in-out;
     position: relative;
-    /* transition-delay: 0.2s; */
     padding-left: calc(var(--indent) * 0.5);
     display: flex;
     gap: 0.5em;
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-
-    /* padding-left: 0.5em; */
-    /* border: 1px solid salmon; */
 
     &:hover,
     &:focus-within {
@@ -69,7 +72,7 @@
 
   .line.preview {
     padding-left: 0;
-    gap: 0;
+    /* gap: 0; */
   }
 
   .dash-key {
@@ -77,6 +80,7 @@
     align-items: center;
     gap: calc(var(--indent) * 0.5);
     padding-left: 1px;
+    user-select: none;
 
     .dash {
       display: inline-flex;

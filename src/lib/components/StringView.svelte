@@ -23,8 +23,10 @@
 
 {#if isMultiLine || isImageUrl || isAudioUrl}
   <Expandable {...{ value, key, type, path }} length={value.length} keepPreviewOnExpand>
-    {#snippet valuePreview()}
-      <StringValue {value} />
+    {#snippet valuePreview({ showPreview })}
+      {#if showPreview}
+        <StringValue {value} />
+      {/if}
     {/snippet}
     {#if isImageUrl && options.value.embedMedia}
       <div class="embed">
@@ -39,7 +41,7 @@
     {/if}
   </Expandable>
 {:else}
-  <OneLineView {key} {type} {path} value={stringify(display)} title={stringify(value)}>
+  <OneLineView {key} {type} {path} {value} {display} title={stringify(value)}>
     {#snippet val()}
       <StringValue {value} length />
     {/snippet}

@@ -1,22 +1,21 @@
 <script lang="ts">
-  import { STATE_CONTEXT_KEY, type StateContext } from '../state.svelte.js'
-
   import { getContext, onMount, type Snippet } from 'svelte'
-  import CollapseButton from './CollapseButton.svelte'
-  import Entries from './Entries.svelte'
-
   import type { HTMLAttributes } from 'svelte/elements'
   import { slide } from 'svelte/transition'
   import { useOptions } from '../options.svelte.js'
+  import { STATE_CONTEXT_KEY, type StateContext } from '../state.svelte.js'
   import type { TypeViewProps } from '../types.js'
   import { stringifyPath } from '../util.js'
+  import CollapseButton from './CollapseButton.svelte'
+  import Entries from './Entries.svelte'
   import Key from './Key.svelte'
   import Tools from './Tools.svelte'
   import Type from './Type.svelte'
 
   type Props = TypeViewProps<unknown> & {
     length?: number
-    valuePreview?: Snippet
+    valuePreview: Snippet<[{ showPreview: boolean }]>
+    forceType?: boolean
     children?: Snippet
     keepPreviewOnExpand?: boolean
     showLength?: boolean
@@ -28,6 +27,7 @@
     length,
     value,
     valuePreview,
+    forceType = false,
     keepPreviewOnExpand = false,
     path = [],
     showLength = true,
@@ -37,9 +37,12 @@
 
   let options = useOptions()
   let inspectState: StateContext | undefined = getContext(STATE_CONTEXT_KEY)
-
   let collapseState = $derived(inspectState?.value?.[stringifyPath(path)])
   let collapsed = $derived(collapseState ? collapseState.collapsed : true)
+  let buttonComponent = $state<ReturnType<typeof CollapseButton>>()
+
+  const previewLevel = getContext<number | undefined>('preview') ?? 0
+  const isKey = getContext<boolean>('key')
 
   onMount(() => {
     if (inspectState) {
@@ -54,20 +57,13 @@
     }
   })
 
-  // let parentCollapsed = getContext<(() => boolean) | undefined>('parent-collapsed')
-  // setContext('parent-collapsed', () => parentCollapsed?.() || collapsed)
-
   function onCollapseChanged(newValue: boolean) {
     inspectState?.setCollapse(path, newValue)
   }
-
-  let buttonComponent = $state<ReturnType<typeof CollapseButton>>()
-
-  const isPreview = getContext<boolean>('preview')
 </script>
 
-<div class="title-bar" {...rest} class:isPreview>
-  {#if !isPreview}
+<div class={['title-bar', previewLevel && 'preview']} {...rest}>
+  {#if !previewLevel && !isKey}
     <div class="button-key">
       <CollapseButton
         bind:this={buttonComponent}
@@ -82,45 +78,35 @@
       <Key {key} {path} ondblclick={() => onCollapseChanged(!collapsed)} />
     </div>
   {/if}
-  <Type {type} />
-
-  {#if valuePreview && (collapsed || isPreview || keepPreviewOnExpand)}
-    {@render valuePreview()}
-    <!-- <div transition:slide={{ axis: 'x' }}>
-      <div transition:slide>
-      </div>
-    </div> -->
+  {#if !isKey}
+    <Type {type} force={forceType} />
   {/if}
 
-  {#if showLength && !isPreview}
+  {@render valuePreview({ showPreview: collapsed || previewLevel > 0 || keepPreviewOnExpand })}
+
+  {#if showLength && !previewLevel}
     <Entries {length} {type} />
   {/if}
 
-  {#if !isPreview}
+  {#if !previewLevel}
     <Tools {value} {path} {collapsed} {type} />
   {/if}
 </div>
 
-{#if children && length != null && length > 0 && !collapsed && !isPreview}
+{#if children && length != null && length > 0 && !collapsed && !previewLevel}
   <div
-    transition:slide={{ axis: 'x', duration: options.value.noanimate ? 0 : 400 }}
+    class="indent {type}"
     oninspectvaluechange={() => buttonComponent?.flash()}
+    in:slide={{ duration: options.value.noanimate ? 0 : 400 }}
+    out:slide={{ duration: options.value.noanimate ? 0 : 400 }}
   >
-    <div
-      class="indent {type}"
-      in:slide={{ duration: options.value.noanimate ? 0 : 400 }}
-      out:slide={{ duration: options.value.noanimate ? 0 : 400 }}
-    >
-      {@render children()}
-    </div>
+    {@render children()}
   </div>
 {/if}
 
 <style>
   .title-bar {
-    /* background-color: var(--bg); */
     z-index: var(--index);
-    /* width: 100%; */
     position: sticky;
     top: 0;
     border-color: var(--border-color);
@@ -129,7 +115,6 @@
     border-top-width: 0;
     border-left-width: 0;
     border-style: solid;
-    /* z-index: 10000; */
     white-space: nowrap;
     display: flex;
     flex-direction: row;
@@ -138,10 +123,7 @@
     gap: 0.5em;
     min-height: 1.5em;
     padding-left: calc(var(--indent) * 0.5);
-    /* margin-left: -0.5em; */
-    /* padding-left: calc(0.25em); */
-    /* width: calc(100% + 0.5em); */
-    /* transition: all 0.2s ease-in-out; */
+    transition: background-color 0.2s ease-in-out;
 
     &:hover {
       background-color: var(--bg-lighter);
@@ -158,12 +140,15 @@
 
   .title-bar.preview {
     background-color: transparent;
+    padding: 0;
   }
 
   .indent {
     margin-left: calc(var(--indent) * 1.5);
     padding-block: calc(var(--indent) * 0.5);
     border-left: 1px solid var(--border-color);
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: relative;
   }
 </style>

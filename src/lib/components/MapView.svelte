@@ -15,13 +15,14 @@
 </script>
 
 <Expandable {...{ value, key, type, path }} length={entries.length}>
-  {#snippet valuePreview()}
+  {#snippet valuePreview({ showPreview })}
     <Preview
       keyValue={preview}
       prefix={'{'}
       postfix={'}'}
       hasMore={entries.length > preview.length}
       map
+      {showPreview}
     />
   {/snippet}
 
@@ -32,14 +33,14 @@
       {:else}
         <Expandable
           key=""
-          type="MapEntry"
+          type="Entry"
           value={[mapKey, mapValue]}
           path={[...path, i]}
           length={2}
           showLength={false}
         >
-          {#snippet valuePreview()}
-            <Preview keyValue={[[mapKey, mapValue]]} hasMore={false} map />
+          {#snippet valuePreview({ showPreview })}
+            <Preview keyValue={[[mapKey, mapValue]]} hasMore={false} map {showPreview} />
           {/snippet}
           <Entry i={0}>
             <Node key="key" value={mapKey} path={[...path, i]} />

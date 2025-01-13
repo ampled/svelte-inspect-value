@@ -8,7 +8,8 @@
 
   type Props = TypeViewProps<Error>
 
-  let { value = new Error(''), key, type = 'error', path }: Props = $props()
+  let { value, key, type = 'error', path }: Props = $props()
+  let useDefaults = getContext<boolean>('error-use-defaults')
 
   let entries: [string, unknown][] = $state(
     Object.entries({
@@ -18,14 +19,12 @@
       cause: value.cause,
     }).filter(([, v]) => v != null)
   )
-
-  let useDefaults = getContext<boolean>('error-use-defaults')
 </script>
 
-<Expandable {value} {key} {type} {path} length={entries.length}>
+<Expandable {value} {key} {type} {path} length={entries.length} keepPreviewOnExpand>
   {#snippet valuePreview()}
     <StringValue {type} value={value.message}>
-      {value.name}: {value.message}
+      {value.toString()}
     </StringValue>
   {/snippet}
   {#each entries as [key, value], i (key)}

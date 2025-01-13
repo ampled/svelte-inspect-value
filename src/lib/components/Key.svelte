@@ -1,7 +1,9 @@
 <script lang="ts">
+  import { setContext } from 'svelte'
   import type { HTMLButtonAttributes } from 'svelte/elements'
   import type { TypeViewProps } from '../types.js'
-  import { getType, stringifyPath } from '../util.js'
+  import { getType, stringifyPath, type ValueType } from '../util.js'
+  import Node from './Node.svelte'
   import Type from './Type.svelte'
 
   type Props = {
@@ -11,11 +13,18 @@
     delim?: string
   } & HTMLButtonAttributes
 
-  let { key, path = [], ondblclick, delim = ':', force = false }: Props = $props()
+  let { key, path = [], ondblclick, delim = ':', force = false, ...rest }: Props = $props()
+
+  const simpleKeys = ['string', 'number', 'symbol', 'bigint', 'regexp']
 
   let keyType = $derived(getType(key))
 
-  let display = $derived(typeof key === 'symbol' ? key.toString() : key)
+  function isKeySimpleType(
+    key: unknown,
+    keyType: ValueType
+  ): key is string | number | symbol | bigint | RegExp {
+    return simpleKeys.includes(keyType)
+  }
 
   let showKey = $derived.by(() => {
     if (key != null) {
@@ -27,20 +36,17 @@
     return false
   })
 
-  let simpleKeys = ['string', 'number', 'symbol']
+  setContext('key', true)
 </script>
 
 {#if showKey || force}
-  <button
-    tabindex="-1"
-    class="key-button"
-    {ondblclick}
-    onclick={() => console.log(path, stringifyPath(path))}
-  >
-    {#if simpleKeys.includes(keyType)}
+  <button tabindex="-1" class="key-button" {ondblclick} title={stringifyPath(path)} {...rest}>
+    {#if keyType === 'string'}
       <span class="key {keyType}">
-        {display}
+        {(key as string).toString()}
       </span>
+    {:else if isKeySimpleType(key, keyType)}
+      <Node value={key} />
     {:else}
       <Type type={keyType} force />
     {/if}

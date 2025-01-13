@@ -3,37 +3,66 @@
   import type { KeyType } from '$lib/types.js'
   import { getType } from '$lib/util.js'
   import { getContext, setContext } from 'svelte'
+  import { fly, slide } from 'svelte/transition'
   import Key from './Key.svelte'
   import Node from './Node.svelte'
   import Type from './Type.svelte'
+
+  type List =
+    | unknown[]
+    | Int8Array
+    | Uint8Array
+    | Uint8ClampedArray
+    | Int16Array
+    | Uint16Array
+    | Int32Array
+    | Uint32Array
+    | Float32Array
+    | Float64Array
+    | BigInt64Array
+    | BigUint64Array
 
   type PreviewProps = {
     prefix?: string
     postfix?: string
     hasMore: boolean
-    list?: unknown[]
+    list?: List
     keyValue?: [KeyType, unknown][]
+    singleValue?: unknown
     map?: boolean
+    startLevel?: number
+    showPreview?: boolean
   }
 
-  let { list, prefix, postfix, hasMore, keyValue, map = false }: PreviewProps = $props()
+  let {
+    list,
+    prefix,
+    postfix,
+    hasMore,
+    keyValue,
+    singleValue,
+    startLevel = 1,
+    showPreview = false,
+    map = false,
+  }: PreviewProps = $props()
 
-  const nestedPreview = getContext<boolean>('preview')
+  const previewLevel = getContext<number | undefined>('preview') ?? startLevel
   let options = useOptions()
 
-  setContext('preview', true)
+  setContext('preview', (previewLevel ?? 0) + 1)
 
   function alwaysRender(type: string) {
-    return ['boolean', 'string', 'number', 'bigint', 'symbol'].includes(type)
+    return ['boolean', 'string', 'number', 'bigint', 'symbol', 'regexp'].includes(type)
   }
 </script>
 
-{#snippet valuePreview(value: unknown)}
+<!-- At configured previewDepth, stop rendering nested item previews and just render their types -->
+{#snippet valuePreview(value: unknown, force = false)}
   {@const valType = getType(value)}
-  {#if nestedPreview && !alwaysRender(valType)}
-    <Type type={valType} force />
-  {:else}
+  {#if alwaysRender(valType) || previewLevel < options.value.previewDepth || force}
     <Node {value} />
+  {:else}
+    <Type type={valType} force />
   {/if}
 {/snippet}
 
@@ -41,27 +70,43 @@
   <span class="comma">,</span>
 {/snippet}
 
-{#if options.value.showPreview}
-  <div class="preview">
+{#if options.value.showPreview && showPreview}
+  <div
+    class="preview"
+    transition:slide={{
+      axis: 'x',
+      duration: options.value.noanimate ? 0 : 400,
+    }}
+  >
     {#if prefix}
-      <span class="pre">{prefix}</span>
+      <span class="pre level-{previewLevel}">{prefix}</span>
     {/if}
-    <div class="inner">
+    <div
+      class="inner"
+      transition:fly={{
+        y: 20,
+        opacity: 1,
+        duration: options.value.noanimate ? 0 : 400,
+      }}
+    >
       {#if keyValue}
         {#each keyValue as [key, value], i}
           <div class="key-value">
-            <Key {key} delim={map ? '=>' : ':'} />
-            {@render valuePreview(value)}{#if i < keyValue.length - 1}{@render comma()}{/if}
+            <Key {key} delim={map ? '=>' : ':'} style={map ? 'gap: 0.25em' : ''} />
+            {@render valuePreview(value)}
           </div>
+          {#if i < keyValue.length - 1}{@render comma()}{/if}
         {/each}
       {:else if list}
         {#each list as value, i}
           {@render valuePreview(value)}{#if i < list.length - 1}{@render comma()}{/if}
         {/each}
+      {:else if singleValue}
+        {@render valuePreview(singleValue, false)}
       {/if}{#if hasMore}{@render comma()}&hellip;{/if}
     </div>
     {#if postfix}
-      <span class="post">{postfix}</span>
+      <span class="post level-{previewLevel}">{postfix}</span>
     {/if}
   </div>
 {/if}
@@ -69,48 +114,84 @@
 <style>
   .comma {
     margin-left: 0;
-    margin-right: 0.5em;
+    margin-right: 0.25em;
     color: var(--fg);
   }
 
   .preview {
-    display: inline-flex;
+    font-size: 12px;
+    display: flex;
     flex-direction: row;
+    flex-wrap: nowrap;
     align-items: center;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     min-width: 0;
+    color: var(--fg);
+    transform-origin: bottom right;
   }
 
   .inner {
     min-width: 0;
-    display: inline-flex;
+    display: flex;
     flex-direction: row;
+    flex-wrap: nowrap;
     align-items: center;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    gap: 0.25em;
-    /* outline: 1px solid hotpink; */
   }
 
   .key-value {
     display: inline-flex;
     align-items: center;
     justify-content: flex-start;
-    /* white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis; */
+    gap: 0.25em;
   }
 
   .pre {
     margin-right: 0.25em;
-    color: var(--fg);
   }
 
   .post {
     margin-left: 0.25em;
+  }
+
+  .pre,
+  .post {
+    /* margin-inline: 0.125em; */
     color: var(--fg);
+
+    &.level-1 {
+      color: var(--fg);
+    }
+    &.level-2 {
+      color: var(--green);
+    }
+    &.level-3 {
+      color: var(--cyan);
+    }
+    &.level-4 {
+      color: var(--red);
+    }
+    &.level-5 {
+      color: var(--green);
+    }
+    &.level-6 {
+      color: var(--fg);
+    }
+    &.level-7 {
+      color: var(--red);
+    }
+    &.level-8 {
+      color: var(--orange);
+    }
+    &.level-9 {
+      color: var(--yellow);
+    }
+    &.level-10 {
+      color: var(--green);
+    }
   }
 </style>

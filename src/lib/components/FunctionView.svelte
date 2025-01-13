@@ -11,21 +11,34 @@
 
   let isMultiLine = $derived(value.toString().includes('\n'))
 
-  const preview = getContext<boolean>('preview')
+  const previewLevel = getContext<number | undefined>('preview')
+
+  const oneLine = $derived(
+    type === 'asyncfunction' ? value.toString().replace('async', '') : value.toString()
+  )
 </script>
 
-{#snippet valuePreview()}
-  {#if preview}
-    <span class="value function">{value.name}</span>
-  {:else}
-    <FunctionBody value={value.toString()} inline />
-  {/if}
-{/snippet}
-
 {#if isMultiLine}
-  <Expandable {key} {type} {path} {value} {valuePreview} length={1} showLength={false}>
+  <Expandable {key} {type} {path} {value} length={1} showLength={false}>
+    {#snippet valuePreview({ showPreview })}
+      {#if showPreview}
+        {#if previewLevel}
+          <span class="value function">{value.name}</span>
+        {:else}
+          <FunctionBody value={oneLine} inline />
+        {/if}
+      {/if}
+    {/snippet}
     <FunctionBody value={value.toString()} />
   </Expandable>
 {:else}
-  <OneLineView {key} {type} val={valuePreview} {path} {value} />
+  <OneLineView {key} {type} {path} {value}>
+    {#snippet val()}
+      {#if previewLevel}
+        <span class="value function">{value.name}</span>
+      {:else}
+        <FunctionBody value={oneLine} inline />
+      {/if}
+    {/snippet}
+  </OneLineView>
 {/if}

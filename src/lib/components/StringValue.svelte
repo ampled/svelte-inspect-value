@@ -19,7 +19,7 @@
 
   let display = $derived(collapseString(value, options.value.stringCollapse))
 
-  const preview = getContext<boolean>('preview')
+  const previewLevel = getContext<number | undefined>('preview')
 </script>
 
 <svelte:element
@@ -36,6 +36,6 @@
     {stringify(display, 0, options.value.quotes)}
   {/if}
 </svelte:element>
-{#if length && !preview}
+{#if length && !previewLevel}
   <Entries type="string" length={value.length} />
 {/if}

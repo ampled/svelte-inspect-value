@@ -18,8 +18,12 @@
     switch (type) {
       case 'number':
         return 'num'
+      case 'string':
+        return 'str'
       case 'function':
         return 'fn'
+      case 'asyncfunction':
+        return 'async fn'
       case 'boolean':
         return 'bool'
       case 'url':
@@ -33,9 +37,9 @@
       case 'date':
         return 'Date'
       case 'object':
-        return '{obj}'
+        return 'obj'
       case 'array':
-        return '[arr]'
+        return 'arr'
       case 'promise':
         return 'Promise'
       case 'null':
@@ -51,7 +55,7 @@
     'class',
     'function',
     'promise',
-    'MapEntry',
+    'Entry',
     'map',
     'set',
     'date',
@@ -60,11 +64,17 @@
 
   let required = $derived(ALWAYS_VISIBLE_TYPES.includes(type))
 
-  const preview = getContext<boolean>('preview')
+  const previewLevel = getContext<number | undefined>('preview')
 </script>
 
-{#if (type && options.value.showTypes && !preview) || required || force}
-  <span class={`type ${type}`} {...rest} title={type}>
+{#if (type && options.value.showTypes && !previewLevel) || required || force}
+  <span class={`type ${type}`} title={type} {...rest}>
     {display}
   </span>
 {/if}
+
+<style>
+  .type {
+    font-weight: 900;
+  }
+</style>

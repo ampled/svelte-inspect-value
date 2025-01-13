@@ -40,7 +40,7 @@
 
   :global code.value.function.hl {
     background-color: unset;
-    color: var(--fg);
+    color: var(--fg) !important;
     white-space: pre;
     padding: var(--indent);
     padding-left: calc(var(--indent) * 2);
