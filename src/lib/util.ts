@@ -6,8 +6,6 @@ export function getType(value: unknown) {
   if (typeof value === 'function') {
     if (value.toString().startsWith('class') || value.toLocaleString().startsWith('class')) {
       return 'class'
-    } else {
-      return 'function'
     }
   }
 
