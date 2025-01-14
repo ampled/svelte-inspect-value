@@ -56,7 +56,15 @@
   }
 </script>
 
-<button type="button" class="collapse" {onclick} {disabled} {...rest} {onkeydown}>
+<button
+  data-testid="collapse-button"
+  type="button"
+  class="collapse"
+  {onclick}
+  {disabled}
+  {...rest}
+  {onkeydown}
+>
   <div
     use:flashOnUpdate={{
       value: () => value,

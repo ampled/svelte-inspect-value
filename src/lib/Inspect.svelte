@@ -87,6 +87,7 @@
   {/snippet}
 
   <div
+    data-testid="inspect"
     class={[
       'ampled-json-inspect',
       classValue,

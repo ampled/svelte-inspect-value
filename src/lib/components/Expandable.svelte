@@ -62,7 +62,7 @@
   }
 </script>
 
-<div class={['title-bar', previewLevel && 'preview']} {...rest}>
+<div class={['title-bar', previewLevel && 'preview']} aria-expanded={!collapsed} {...rest}>
   {#if !previewLevel && !isKey}
     <div class="button-key">
       <CollapseButton
@@ -71,8 +71,8 @@
         {value}
         onchange={onCollapseChanged}
         disabled={length === 0}
-        aria-label="expand {key?.toString()}"
-        title="expand {key?.toString()}"
+        aria-label={`${collapsed ? 'expand' : 'collapse'} ${key?.toString()}`}
+        title={`${collapsed ? 'expand' : 'collapse'} ${key?.toString()}`}
       />
 
       <Key {key} {path} ondblclick={() => onCollapseChanged(!collapsed)} />
@@ -95,6 +95,7 @@
 
 {#if children && length != null && length > 0 && !collapsed && !previewLevel}
   <div
+    data-testid="indent"
     class="indent {type}"
     oninspectvaluechange={() => buttonComponent?.flash()}
     in:slide={{ duration: options.value.noanimate ? 0 : 400 }}
