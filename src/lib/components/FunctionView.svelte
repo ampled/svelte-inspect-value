@@ -14,7 +14,9 @@
   const previewLevel = getContext<number | undefined>('preview')
 
   const oneLine = $derived(
-    type === 'asyncfunction' ? value.toString().replace('async', '') : value.toString()
+    type === 'asyncfunction' || type === 'asyncgeneratorfunction'
+      ? value.toString().replace('async', '')
+      : value.toString()
   )
 </script>
 

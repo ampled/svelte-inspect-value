@@ -63,6 +63,7 @@ const components = {
   function: [FunctionView],
   asyncfunction: [FunctionView],
   generatorfunction: [FunctionView],
+  asyncgeneratorfunction: [FunctionView],
   class: [ClassView],
   date: [DateView],
   error: [ErrorView],

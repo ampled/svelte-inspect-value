@@ -79,10 +79,6 @@ ${style
     bools: true,
     bigint: 1n + 1n,
     symb: Symbol('abcd'),
-    builtIns: {
-      string: String,
-      asdf: (a: number) => a * 2,
-    },
     undef: undefined,
     reg: /cake/,
     nil: null,
@@ -112,11 +108,16 @@ ${style
         log(some + 'thing')
         return 'some' + thing
       },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      asyncOneLiner: async (v: any) => new Promise((r) => setTimeout(() => r(v), v)),
       asyncfn: async function () {
         const boop = await Promise.resolve('boop')
         return boop
       },
       yieldTwo: function* () {
+        yield 2
+      },
+      asynchronousGenerator: async function* () {
         yield 2
       },
     },

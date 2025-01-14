@@ -26,6 +26,8 @@
         return 'async'
       case 'generatorfunction':
         return 'gen'
+      case 'asyncgeneratorfunction':
+        return 'async gen'
       case 'boolean':
         return 'bool'
       case 'url':
@@ -56,6 +58,9 @@
     'null',
     'class',
     'function',
+    'asyncfunction',
+    'generatorfunction',
+    'asyncgeneratorfunction',
     'promise',
     'Entry',
     'map',

@@ -391,6 +391,7 @@
 
     &.function,
     &.asyncfunction,
+    &.asyncgeneratorfunction,
     &.generatorfunction {
       --border-color: var(--function);
       overflow-x: auto;
@@ -461,6 +462,7 @@
 
     &.function,
     &.asyncfunction,
+    &.asyncgeneratorfunction,
     &.generatorfunction {
       color: var(--keyword);
     }
