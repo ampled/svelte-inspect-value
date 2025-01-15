@@ -18,10 +18,10 @@ export type InspectProps = {
 
 export type KeyType = string | number | symbol
 
-export type TypeViewProps<T = unknown | undefined> = {
+export type TypeViewProps<Value = unknown, Type = ValueType> = {
   key?: KeyType
   path?: KeyType[]
-  value: T
+  value: Value
   /**
    * Representation of value.
    *
@@ -29,7 +29,7 @@ export type TypeViewProps<T = unknown | undefined> = {
    * value for other purposes
    */
   display?: string
-  type?: ValueType | string
+  type?: Type
   collapsed?: boolean
 }
 
