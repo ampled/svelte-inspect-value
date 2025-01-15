@@ -69,6 +69,14 @@
             <img alt="npm" src="https://img.shields.io/npm/v/svelte-inspect-value" />
           </a>
         </li>
+        <li>
+          <a href="https://github.com/ampled/svelte-inspect-value">
+            <img
+              alt="github"
+              src="https://img.shields.io/github/stars/ampled/svelte-inspect-value?style=social"
+            />
+          </a>
+        </li>
       </ul>
     </nav>
     {@render children()}
@@ -179,6 +187,7 @@
   .options {
     /* opacity: 0.5; */
     position: fixed;
+    font-size: 10px;
     display: flex;
     overflow-y: auto;
     flex-wrap: nowrap;
@@ -187,8 +196,8 @@
     margin-left: auto;
     margin-right: auto;
     bottom: 0;
-    left: 0;
-    right: 0;
+    left: 1em;
+    right: 1em;
     /* width: 80%; */
     background-color: var(--bg-lighter);
     gap: 2em;
@@ -198,7 +207,7 @@
     z-index: 10;
     border: 1px solid var(--border-color);
     border-bottom: 0;
-    scale: 0.75;
+    scale: 1;
     transform-origin: center bottom;
     transition: all 100ms linear;
     transform: translateY(70%);
