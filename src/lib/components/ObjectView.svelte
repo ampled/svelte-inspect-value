@@ -8,7 +8,7 @@
 
   type Props = TypeViewProps<object>
 
-  let { value = {}, key = undefined, type = 'object', path = [] }: Props = $props()
+  let { value = {}, key = undefined, type, path = [] }: Props = $props()
 
   let classInstance = $derived(
     value.constructor.toString().startsWith('class') ? value.constructor.name : false
