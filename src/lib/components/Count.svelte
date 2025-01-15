@@ -39,7 +39,7 @@
 </script>
 
 {#if options.value.showLength && typeof length === 'number'}
-  <span class="length">
+  <span data-testid="count" class="count">
     {#if length > 0}
       {length} {unit}
     {:else}
@@ -49,7 +49,7 @@
 {/if}
 
 <style>
-  .length {
+  .count {
     color: var(--comments);
     font-style: italic;
     font-size: 0.857em;
