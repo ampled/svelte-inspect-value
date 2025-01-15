@@ -310,7 +310,7 @@
     font-size: 12px;
     box-sizing: border-box;
     color: var(--fg);
-    font-family: monospace;
+    font-family: var(--inspect-font, monospace);
     line-height: 1.5em;
     white-space: nowrap;
     background-color: var(--bg);
