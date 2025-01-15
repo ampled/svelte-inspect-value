@@ -5,19 +5,29 @@
   import FunctionBody from './FunctionBody.svelte'
   import OneLineView from './OneLineView.svelte'
 
-  type Props = TypeViewProps<() => unknown>
+  type Props = TypeViewProps<
+    () => unknown,
+    'function' | 'asyncfunction' | 'generatorfunction' | 'asyncgeneratorfunction'
+  >
 
-  let { value, key, type, path }: Props = $props()
+  let { value, key, type = 'function', path }: Props = $props()
 
   let isMultiLine = $derived(value.toString().includes('\n'))
 
   const previewLevel = getContext<number | undefined>('preview')
 
-  const oneLine = $derived(
-    type === 'asyncfunction' || type === 'asyncgeneratorfunction'
-      ? value.toString().replace('async', '')
-      : value.toString()
-  )
+  const oneLine = $derived.by(() => {
+    switch (type) {
+      case 'asyncfunction':
+        return value.toString().replace('async', '')
+      case 'generatorfunction':
+        return value.toString().replace('function*', '').replace('*', '')
+      case 'asyncgeneratorfunction':
+        return value.toString().replace('async', '').replace('function*', '').replace('*', '')
+    }
+
+    return value.toString()
+  })
 </script>
 
 {#snippet valuePreview({ showPreview }: { showPreview: boolean })}
