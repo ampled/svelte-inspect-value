@@ -1,5 +1,8 @@
 # Svelte Inspect Value
 
+[![NPM Version](https://img.shields.io/npm/v/svelte-inspect-value)](https://www.npmjs.com/package/svelte-inspect-value)
+[![GitHub Repo stars](https://img.shields.io/github/stars/ampled/svelte-inspect-value)](https://github.com/ampled/svelte-inspect-value)
+
 <!-- ![alt text](insert url here) -->
 
 - [Demo and documentation](https://svelte-inspect-value.vercel.app)
