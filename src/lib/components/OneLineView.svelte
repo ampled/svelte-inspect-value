@@ -20,7 +20,7 @@
   let isKey = getContext<boolean | undefined>('key')
 </script>
 
-<div class="line" class:preview={previewLevel || isKey} {...rest}>
+<div data-testid="line" class="line" class:preview={previewLevel || isKey} {...rest}>
   {#if !previewLevel && !isKey}
     <div class="dash-key">
       <div
@@ -37,8 +37,8 @@
   {/if}
   {#if children}
     {@render children()}
-  {:else}
-    <span {title} class="value {type}">
+  {:else if displayOrValue}
+    <span data-testid="value" {title} class="value {type}">
       {displayOrValue}
     </span>
   {/if}
