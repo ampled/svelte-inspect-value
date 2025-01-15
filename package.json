@@ -26,6 +26,7 @@
     "lint": "prettier --check . && eslint .",
     "eslint": "eslint .",
     "test:unit": "vitest",
+    "test:ui": "npm run test:unit -- --ui",
     "test": "npm run test:unit -- --run"
   },
   "files": [
@@ -54,12 +55,18 @@
     "@sveltejs/package": "^2.3.7",
     "@sveltejs/vite-plugin-svelte": "^5.0.3",
     "@tanstack/svelte-query": "^5.62.9",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/svelte": "^5.2.6",
+    "@testing-library/user-event": "^14.5.2",
+    "@vitest/ui": "^3.0.0-beta.4",
     "colord": "^2.9.3",
     "eslint": "^9.17.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-only-warn": "^1.1.0",
     "eslint-plugin-svelte": "^2.46.1",
     "globals": "^15.0.0",
+    "happy-dom": "^16.5.3",
+    "jsdom": "^26.0.0",
     "prettier": "^3.4.2",
     "prettier-plugin-organize-imports": "^4.1.0",
     "prettier-plugin-svelte": "^3.3.2",
@@ -73,7 +80,7 @@
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.0.0",
     "vite": "6.0.0",
-    "vitest": "^2.0.4"
+    "vitest": "3.0.0-beta.4"
   },
   "dependencies": {
     "fast-deep-equal": "^3.1.3",
