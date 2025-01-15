@@ -20,14 +20,16 @@
         return 'num'
       case 'string':
         return 'str'
+      case 'regexp':
+        return 'regex'
       case 'function':
         return 'fn'
       case 'asyncfunction':
-        return 'async'
+        return 'async fn'
       case 'generatorfunction':
-        return 'gen'
+        return 'fn*'
       case 'asyncgeneratorfunction':
-        return 'async gen'
+        return 'async fn*'
       case 'boolean':
         return 'bool'
       case 'url':
@@ -74,8 +76,8 @@
   const previewLevel = getContext<number | undefined>('preview')
 </script>
 
-{#if (type && options.value.showTypes && !previewLevel) || required || force}
-  <span class={`type ${type}`} title={type} {...rest}>
+{#if (options.value.showTypes && !previewLevel) || required || force}
+  <span data-testid="type" class={`type ${type}`} title={type} {...rest}>
     {display}
   </span>
 {/if}
@@ -83,5 +85,6 @@
 <style>
   .type {
     font-weight: 900;
+    flex-shrink: 0;
   }
 </style>

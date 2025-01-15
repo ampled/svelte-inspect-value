@@ -29,7 +29,7 @@ TODO handle data: urls?
   <Expandable {...{ value, key, type, path }} length={value.length} keepPreviewOnExpand>
     {#snippet valuePreview({ showPreview })}
       {#if showPreview}
-        <StringValue {value} length />
+        <StringValue {value} length={false} />
       {/if}
     {/snippet}
     {#if isImageUrl && options.value.embedMedia}

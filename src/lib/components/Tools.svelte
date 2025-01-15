@@ -10,9 +10,9 @@
   import type { KeyType, TypeViewProps } from '../types.js'
   import { stringifyPath } from '../util.js'
 
-  type Props = Partial<TypeViewProps<unknown>> & { collapsed?: boolean }
+  type Props = Partial<TypeViewProps<unknown, string>> & { collapsed?: boolean }
 
-  let { value, type = '', path = [] }: Props = $props()
+  let { value, type, path = [] }: Props = $props()
 
   let copied = $state(false)
 
@@ -22,7 +22,9 @@
   let level = $derived(path.length)
 
   let canCopy = $derived(
-    ['array', 'object', 'number', 'string', 'undefined', 'null', 'date', 'boolean'].includes(type)
+    ['array', 'object', 'number', 'string', 'undefined', 'null', 'date', 'boolean'].includes(
+      type ?? ''
+    )
   )
 
   let collapseState = $derived(inspectState?.value?.[stringifyPath(path)])
@@ -78,7 +80,7 @@
 </script>
 
 {#if options.value.showTools}
-  <div class="tools">
+  <div class="tools" class:borderless={options.value.borderless}>
     {#if children.length}
       <button
         title={treeAction.hint}
@@ -121,7 +123,6 @@
     opacity: 1;
     display: flex;
     transition: all 250ms ease-in-out allow-discrete;
-    width: auto;
     width: calc-size(max-content, size);
   }
 
@@ -172,5 +173,14 @@
         color: var(--fg);
       }
     }
+  }
+
+  .tools.borderless {
+    position: relative;
+    transition-property: opacity !important;
+    /* transition: all 0ms !important; */
+    background-color: var(--bg-lighter);
+    border-left: 0;
+    /* padding: 0; */
   }
 </style>

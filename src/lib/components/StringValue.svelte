@@ -13,7 +13,7 @@
   import { useOptions } from '../options.svelte.js'
   import type { TypeViewProps } from '../types.js'
   import { isUrl as isurl } from '../util/is-url.js'
-  import Entries from './Entries.svelte'
+  import Count from './Count.svelte'
 
   type Props = TypeViewProps<string> & { length?: boolean }
 
@@ -30,6 +30,7 @@
 
 <svelte:element
   this={ele}
+  data-testid="value"
   class="stringvalue value {type}"
   title={stringify(value)}
   href={isUrlOrPath ? value : null}
@@ -44,7 +45,7 @@
     </span>{/if}
 </svelte:element>
 {#if length && !previewLevel}
-  <Entries type="string" length={value.length} />
+  <Count type="string" length={value.length} />
 {/if}
 
 <style>
