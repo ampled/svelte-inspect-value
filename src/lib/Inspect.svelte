@@ -307,7 +307,7 @@
   }
 
   .ampled-json-inspect {
-    font-size: 12px;
+    font-size: var(--inspect-font-size, 12px);
     box-sizing: border-box;
     color: var(--fg);
     font-family: var(--inspect-font, monospace);
