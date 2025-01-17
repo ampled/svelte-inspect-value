@@ -129,7 +129,7 @@ export function createOptions(options: Partial<JSONInspectOptions>) {
     showTypes: true,
     showPreview: true,
     previewDepth: 1,
-    flashOnUpdate: false,
+    flashOnUpdate: true,
     showLength: true,
     showTools: true,
     stringCollapse: 0,
