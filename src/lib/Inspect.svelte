@@ -23,7 +23,6 @@
     noanimate = false,
     borderless = false,
     theme = 'drak',
-    expandLevel = 1,
     customComponents = {},
     embedMedia = false,
     // Html Attributes
