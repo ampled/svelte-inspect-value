@@ -206,18 +206,13 @@ describe('expandable values', () => {
       component.setAllCollapsed()
     })
 
-    console.log(screen.queryAllByTestId('indent').length)
+    expect(screen.queryAllByTestId('indent').length).toBe(0)
 
     await act(() => {
       component.setAllExpanded()
     })
 
-    console.log(screen.queryAllByTestId('indent').length)
-
-    await act(() => {
-      component.setAllCollapsed()
-    })
-
-    console.log(screen.queryAllByTestId('indent').length)
+    expect(screen.queryAllByTestId('indent').length).toBe(6)
+    expect(onCollapseChange).toHaveBeenCalledTimes(6)
   })
 })
