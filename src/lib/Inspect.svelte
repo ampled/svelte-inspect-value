@@ -78,6 +78,23 @@
 
   setContext(STATE_CONTEXT_KEY, inspectState)
   setContext(OPTIONS_CONTEXT, options)
+
+  function setAllNodes(collapsed: boolean) {
+    if (inspectState.value) {
+      inspectState.value = Object.fromEntries(
+        Object.entries(inspectState.value).map(([key]) => [key, { collapsed }])
+      )
+    }
+  }
+
+  export function setAllCollapsed() {
+    options.value.expandAll = false
+    setAllNodes(true)
+  }
+  export function setAllExpanded() {
+    options.value.expandAll = true
+    setAllNodes(false)
+  }
 </script>
 
 <svelte:boundary>
