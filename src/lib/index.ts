@@ -4,5 +4,5 @@
 export { default as CustomExpandable } from './CustomExpandable.svelte'
 export { default as CustomLine } from './CustomLine.svelte'
 export { default as Inspect } from './Inspect.svelte'
-export { setGlobalInspectOptions } from './options.svelte.js'
+export { GLOBAL_OPTIONS_CONTEXT, setGlobalInspectOptions } from './options.svelte.js'
 export type { CustomComponentProps } from './types.js'
