@@ -15,7 +15,11 @@ export type InspectState = {
 }
 
 export function createState(init: InspectState, onChange?: (value: InspectState) => void) {
-  let state: InspectState | undefined = $state(init)
+  let state: InspectState = $state(init)
+
+  function emitChanged() {
+    onChange?.($state.snapshot(state))
+  }
 
   return {
     get value(): InspectState | undefined {
@@ -32,7 +36,7 @@ export function createState(init: InspectState, onChange?: (value: InspectState)
         changed = true
       }
       if (changed && state) {
-        onChange?.(state)
+        emitChanged()
       }
     },
     getCollapse: (keyOrPath: string | KeyType[]) => {
@@ -58,7 +62,7 @@ export function createState(init: InspectState, onChange?: (value: InspectState)
           }
         })
         if (changed) {
-          onChange?.(state)
+          emitChanged()
         }
       }
     },
@@ -78,7 +82,7 @@ export function createState(init: InspectState, onChange?: (value: InspectState)
         })
 
         if (changed) {
-          onChange?.(state)
+          emitChanged()
         }
       }
     },

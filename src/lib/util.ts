@@ -27,6 +27,9 @@ function typeofAsFunction(value: unknown) {
 
 export type ValueType =
   | ReturnType<typeof typeofAsFunction>
+  | 'asyncfunction'
+  | 'generatorfunction'
+  | 'asyncgeneratorfunction'
   | 'regexp'
   | 'date'
   | 'class'

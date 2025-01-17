@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getContext, setContext } from 'svelte'
-  import JsonViewer from './components/Node.svelte'
+  import Node from './components/Node.svelte'
   import { createOptions, GLOBAL_OPTIONS_CONTEXT, OPTIONS_CONTEXT } from './options.svelte.js'
   import { createState, STATE_CONTEXT_KEY } from './state.svelte.js'
   import type { InspectProps } from './types.js'
@@ -17,17 +17,20 @@
     showTools = true,
     quotes = 'single',
     expandAll = false,
+    expandLevel = 1,
+    flashOnUpdate = true,
     stringCollapse = 0,
     noanimate = false,
     borderless = false,
     theme = 'drak',
-    expandLevel = 1,
     customComponents = {},
     embedMedia = false,
     // Html Attributes
     class: classValue = '',
     ...rest
   }: InspectProps = $props()
+
+  const inspectState = createState({}, (state) => onCollapseChange?.(state))
 
   let globalOptions = getContext(GLOBAL_OPTIONS_CONTEXT)
 
@@ -43,6 +46,7 @@
     theme,
     expandAll,
     expandLevel,
+    flashOnUpdate,
     quotes,
     borderless,
     embedMedia,
@@ -64,6 +68,7 @@
       theme,
       expandAll,
       expandLevel,
+      flashOnUpdate,
       quotes,
       borderless,
       embedMedia,
@@ -71,10 +76,25 @@
     })
   })
 
-  const inspectState = createState({}, onCollapseChange)
-
   setContext(STATE_CONTEXT_KEY, inspectState)
   setContext(OPTIONS_CONTEXT, options)
+
+  function setAllNodes(collapsed: boolean) {
+    if (inspectState.value) {
+      inspectState.value = Object.fromEntries(
+        Object.entries(inspectState.value).map(([key]) => [key, { collapsed }])
+      )
+    }
+  }
+
+  export function setAllCollapsed() {
+    options.value.expandAll = false
+    setAllNodes(true)
+  }
+  export function setAllExpanded() {
+    options.value.expandAll = true
+    setAllNodes(false)
+  }
 </script>
 
 <svelte:boundary>
@@ -87,6 +107,7 @@
   {/snippet}
 
   <div
+    data-testid="inspect"
     class={[
       'ampled-json-inspect',
       classValue,
@@ -98,7 +119,7 @@
   >
     <div class="body">
       <!-- <Options /> -->
-      <JsonViewer {value} key={name} />
+      <Node {value} key={name} />
     </div>
   </div>
 </svelte:boundary>
@@ -306,10 +327,10 @@
   }
 
   .ampled-json-inspect {
-    font-size: 12px;
+    font-size: var(--inspect-font-size, 12px);
     box-sizing: border-box;
     color: var(--fg);
-    font-family: monospace;
+    font-family: var(--inspect-font, monospace);
     line-height: 1.5em;
     white-space: nowrap;
     background-color: var(--bg);
@@ -404,23 +425,14 @@
 
   .ampled-json-inspect :global(.type) {
     color: var(--class);
-    margin-top: 1px;
     font-size: 0.857em;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    line-height: 1.5em;
-    padding-block: 2px;
-    height: 1em;
-    border-radius: 2px;
-    vertical-align: bottom;
 
     &.null,
     &.undefined {
       background-color: var(--bg-lighter);
       color: var(--fg);
-      padding: 4px 0.5em;
-      height: 1.25em;
+      padding-inline: 0.5em;
+      border-radius: 2px;
     }
 
     &.string {
@@ -493,6 +505,9 @@
 
     &.noop {
       color: var(--deprecated);
+      padding-inline: 0.5em;
+      outline: 2px solid var(--border-color);
+      border-radius: 2px;
     }
   }
 
@@ -641,5 +656,10 @@
     &:hover {
       text-decoration: underline;
     }
+  }
+
+  .ampled-json-inspect :global(code) {
+    font-family: inherit;
+    font-size: inherit;
   }
 </style>

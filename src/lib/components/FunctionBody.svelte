@@ -26,8 +26,10 @@
   )
 </script>
 
-<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-<code title={value} class:inline class="value function hl">{@html highlighted}</code>
+<!-- eslint-disable svelte/no-at-html-tags -->
+<code data-testid="value" title={value} class:inline class="value function hl"
+  >{@html highlighted}</code
+>
 
 <style>
   code.value.function.hl.inline {

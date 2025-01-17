@@ -15,14 +15,12 @@
 
   let { key, path = [], ondblclick, delim = ':', force = false, ...rest }: Props = $props()
 
-  const simpleKeys = ['string', 'number', 'symbol', 'bigint', 'regexp']
+  const keyTypes = ['string', 'number', 'symbol']
+  const simpleKeys = ['bigint', 'regexp']
 
   let keyType = $derived(getType(key))
 
-  function isKeySimpleType(
-    key: unknown,
-    keyType: ValueType
-  ): key is string | number | symbol | bigint | RegExp {
+  function isKeySimpleType(key: unknown, keyType: ValueType): key is bigint | RegExp {
     return simpleKeys.includes(keyType)
   }
 
@@ -40,10 +38,18 @@
 </script>
 
 {#if showKey || force}
-  <button tabindex="-1" class="key-button" {ondblclick} title={stringifyPath(path)} {...rest}>
-    {#if keyType === 'string'}
+  <button
+    data-testid="key"
+    tabindex="-1"
+    class="key-button"
+    {ondblclick}
+    aria-label={key?.toString()}
+    title={stringifyPath(path)}
+    {...rest}
+  >
+    {#if keyTypes.includes(keyType)}
       <span class="key {keyType}">
-        {(key as string).toString()}
+        {key?.toString()}
       </span>
     {:else if isKeySimpleType(key, keyType)}
       <Node value={key} />

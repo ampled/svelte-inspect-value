@@ -1,18 +1,18 @@
-<script lang="ts">
+<script lang="ts" generics="Type extends string = ValueType">
   import { getContext, onMount, type Snippet } from 'svelte'
   import type { HTMLAttributes } from 'svelte/elements'
   import { slide } from 'svelte/transition'
   import { useOptions } from '../options.svelte.js'
   import { STATE_CONTEXT_KEY, type StateContext } from '../state.svelte.js'
   import type { TypeViewProps } from '../types.js'
-  import { stringifyPath } from '../util.js'
+  import { stringifyPath, type ValueType } from '../util.js'
   import CollapseButton from './CollapseButton.svelte'
-  import Entries from './Entries.svelte'
+  import Count from './Count.svelte'
   import Key from './Key.svelte'
   import Tools from './Tools.svelte'
   import Type from './Type.svelte'
 
-  type Props = TypeViewProps<unknown> & {
+  type Props = TypeViewProps<unknown, Type> & {
     length?: number
     valuePreview: Snippet<[{ showPreview: boolean }]>
     forceType?: boolean
@@ -39,6 +39,7 @@
   let inspectState: StateContext | undefined = getContext(STATE_CONTEXT_KEY)
   let collapseState = $derived(inspectState?.value?.[stringifyPath(path)])
   let collapsed = $derived(collapseState ? collapseState.collapsed : true)
+  let keyOrType = $derived((key ?? type)?.toString())
   let buttonComponent = $state<ReturnType<typeof CollapseButton>>()
 
   const previewLevel = getContext<number | undefined>('preview') ?? 0
@@ -62,7 +63,12 @@
   }
 </script>
 
-<div class={['title-bar', previewLevel && 'preview']} {...rest}>
+<div
+  data-testid="expandable"
+  class={['title-bar', previewLevel && 'preview']}
+  aria-expanded={!collapsed}
+  {...rest}
+>
   {#if !previewLevel && !isKey}
     <div class="button-key">
       <CollapseButton
@@ -71,8 +77,8 @@
         {value}
         onchange={onCollapseChanged}
         disabled={length === 0}
-        aria-label="expand {key?.toString()}"
-        title="expand {key?.toString()}"
+        aria-label={`${collapsed ? 'expand' : 'collapse'} ${keyOrType}`}
+        title={`${collapsed ? 'expand' : 'collapse'} ${keyOrType}`}
       />
 
       <Key {key} {path} ondblclick={() => onCollapseChanged(!collapsed)} />
@@ -84,17 +90,19 @@
 
   {@render valuePreview({ showPreview: collapsed || previewLevel > 0 || keepPreviewOnExpand })}
 
-  {#if showLength && !previewLevel}
-    <Entries {length} {type} />
-  {/if}
-
   {#if !previewLevel}
+    {#if showLength}
+      <Count {length} {type} />
+    {/if}
+
     <Tools {value} {path} {collapsed} {type} />
   {/if}
 </div>
 
 {#if children && length != null && length > 0 && !collapsed && !previewLevel}
   <div
+    role="list"
+    data-testid="indent"
     class="indent {type}"
     oninspectvaluechange={() => buttonComponent?.flash()}
     in:slide={{ duration: options.value.noanimate ? 0 : 400 }}
