@@ -63,7 +63,12 @@
   }
 </script>
 
-<div class={['title-bar', previewLevel && 'preview']} aria-expanded={!collapsed} {...rest}>
+<div
+  data-testid="expandable"
+  class={['title-bar', previewLevel && 'preview']}
+  aria-expanded={!collapsed}
+  {...rest}
+>
   {#if !previewLevel && !isKey}
     <div class="button-key">
       <CollapseButton
@@ -96,6 +101,7 @@
 
 {#if children && length != null && length > 0 && !collapsed && !previewLevel}
   <div
+    role="list"
     data-testid="indent"
     class="indent {type}"
     oninspectvaluechange={() => buttonComponent?.flash()}
