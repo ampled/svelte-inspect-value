@@ -17,6 +17,8 @@
     showTools = true,
     quotes = 'single',
     expandAll = false,
+    expandLevel = 1,
+    flashOnUpdate = true,
     stringCollapse = 0,
     noanimate = false,
     borderless = false,
@@ -28,6 +30,8 @@
     class: classValue = '',
     ...rest
   }: InspectProps = $props()
+
+  const inspectState = createState({}, (state) => onCollapseChange?.(state))
 
   let globalOptions = getContext(GLOBAL_OPTIONS_CONTEXT)
 
@@ -43,6 +47,7 @@
     theme,
     expandAll,
     expandLevel,
+    flashOnUpdate,
     quotes,
     borderless,
     embedMedia,
@@ -64,14 +69,13 @@
       theme,
       expandAll,
       expandLevel,
+      flashOnUpdate,
       quotes,
       borderless,
       embedMedia,
       ...(globalOptions ? globalOptions : {}),
     })
   })
-
-  const inspectState = createState({}, onCollapseChange)
 
   setContext(STATE_CONTEXT_KEY, inspectState)
   setContext(OPTIONS_CONTEXT, options)
