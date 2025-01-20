@@ -1,26 +1,16 @@
-<script lang="ts">
+<script
+  lang="ts"
+  generics="V extends Record<KeyType, unknown> | List = Record<KeyType, unknown> | List, K extends keyof V = keyof V"
+>
   import { useOptions } from '$lib/options.svelte.js'
   import type { KeyType } from '$lib/types.js'
-  import { getType } from '$lib/util.js'
+  import { descriptorPrefix, getType } from '$lib/util.js'
   import { getContext, setContext } from 'svelte'
   import { fly, slide } from 'svelte/transition'
+  import type { List } from '../types.js'
   import Key from './Key.svelte'
   import Node from './Node.svelte'
   import Type from './Type.svelte'
-
-  type List =
-    | unknown[]
-    | Int8Array
-    | Uint8Array
-    | Uint8ClampedArray
-    | Int16Array
-    | Uint16Array
-    | Int32Array
-    | Uint32Array
-    | Float32Array
-    | Float64Array
-    | BigInt64Array
-    | BigUint64Array
 
   type PreviewProps = {
     prefix?: string
@@ -28,11 +18,15 @@
     hasMore: boolean
     list?: List
     keyValue?: [KeyType, unknown][]
+    keys?: K[]
+    value?: V
     singleValue?: unknown
     map?: boolean
     startLevel?: number
     showPreview?: boolean
   }
+
+  const EMPTY = Symbol('EMPTY')
 
   let {
     list,
@@ -40,7 +34,9 @@
     postfix,
     hasMore,
     keyValue,
-    singleValue,
+    singleValue = EMPTY,
+    keys,
+    value,
     startLevel = 1,
     showPreview = false,
     map = false,
@@ -66,6 +62,24 @@
   {/if}
 {/snippet}
 
+{#snippet previewValue(key: K, _force = false)}
+  {@const valType = getType(value)}
+  {#if valType === 'object'}
+    {@const descriptor = Object.getOwnPropertyDescriptor(value, key)}
+    {#if descriptor?.get || descriptor?.set}
+      <!-- <Getter {descriptor} value={value as Record<string, unknown>} /> -->
+    {:else}
+      {@render valuePreview(value?.[key])}
+    {/if}
+  {/if}
+
+  <!-- {#if alwaysRender(valType) || previewLevel < options.value.previewDepth || force}
+    <Node {value} />
+  {:else}
+    <Type type={valType} force />
+  {/if} -->
+{/snippet}
+
 {#snippet comma()}
   <span class="comma">,</span>
 {/snippet}
@@ -89,6 +103,21 @@
         duration: options.value.noanimate ? 0 : 400,
       }}
     >
+      {#if keys && value}
+        {#each keys as key, i (i)}
+          {@const descriptor = Object.getOwnPropertyDescriptor(value, key)}
+          <div class="key-value">
+            <Key
+              prefix={descriptorPrefix(descriptor)}
+              {key}
+              delim={map ? '=>' : descriptor?.get || descriptor?.set ? '' : ':'}
+              style={map ? 'gap: 0.25em' : ''}
+            />
+            {@render previewValue(key)}
+          </div>
+          {#if i < keys.length - 1}{@render comma()}{/if}
+        {/each}
+      {/if}
       {#if keyValue}
         {#each keyValue as [key, value], i}
           <div class="key-value">
@@ -101,9 +130,11 @@
         {#each list as value, i}
           {@render valuePreview(value)}{#if i < list.length - 1}{@render comma()}{/if}
         {/each}
-      {:else if singleValue}
+      {:else if singleValue !== EMPTY}
         {@render valuePreview(singleValue, false)}
-      {/if}{#if hasMore}{@render comma()}&hellip;{/if}
+      {/if}
+
+      {#if hasMore}{@render comma()}<span class="ellipsis">&hellip;</span>{/if}
     </div>
     {#if postfix}
       <span class="post level-{previewLevel}">{postfix}</span>
@@ -118,8 +149,12 @@
     color: var(--fg);
   }
 
+  .ellipsis {
+    color: var(--comments);
+  }
+
   .preview {
-    font-size: 12px;
+    font-size: var(--inspect-font-size);
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;

@@ -8,9 +8,15 @@
 </script>
 
 <div
+  role="listitem"
   class="entry"
-  style="--index: {i}"
-  transition:slide={{
+  style="--i: {i}"
+  in:slide={{
+    axis: 'y',
+    duration: options.value.noanimate ? 0 : 200,
+  }}
+  out:slide={{
+    axis: 'x',
     duration: options.value.noanimate ? 0 : 200,
   }}
 >
@@ -20,6 +26,5 @@
 <style>
   .entry {
     margin-left: 0;
-    opacity: 1;
   }
 </style>

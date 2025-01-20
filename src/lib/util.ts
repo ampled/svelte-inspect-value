@@ -104,3 +104,9 @@ export function collapseString(value: string, length: undefined | number) {
     ? value.slice(0, length).trimEnd().trimStart() + '…'
     : value
 }
+
+export function descriptorPrefix(descriptor?: PropertyDescriptor) {
+  return [descriptor?.set ? 'set' : undefined, descriptor?.get ? 'get' : undefined]
+    .filter(Boolean)
+    .join('|')
+}

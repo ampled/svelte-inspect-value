@@ -1,10 +1,11 @@
 <script lang="ts">
-  import type { KeyType, TypeViewProps } from '../types.js'
+  import type { TypeViewProps } from '../types.js'
   import { type ValueType } from '../util.js'
-  import Entry from './Entry.svelte'
   import Expandable from './Expandable.svelte'
+  import GetterSetter from './GetterSetter.svelte'
   import Node from './Node.svelte'
   import Preview from './Preview.svelte'
+  import PropertyList from './PropertyList.svelte'
 
   type Props = TypeViewProps<object>
 
@@ -15,33 +16,44 @@
   )
 
   let objectType = $derived(classInstance ? (classInstance as ValueType) : type)
-  let entries: [string | symbol, unknown][] = $derived(
-    // @ts-expect-error nope
-    Reflect.ownKeys(value).map((key) => [key, value[key]])
-  )
-  let preview = $derived<[KeyType, unknown][]>(entries.slice(0, 3))
+  let keys = $derived(Reflect.ownKeys(value))
+  let previewKeys = $derived(keys.slice(0, 3))
 </script>
 
-<Expandable
-  type={objectType}
-  length={entries.length}
-  {key}
-  {path}
-  {value}
-  forceType={!!classInstance}
->
+<Expandable type={objectType} length={keys.length} {key} {path} {value} forceType={!!classInstance}>
   {#snippet valuePreview({ showPreview })}
     <Preview
-      keyValue={preview}
       prefix={'{'}
       postfix={'}'}
-      hasMore={entries.length > preview.length}
+      keys={previewKeys}
+      value={value as Record<string | symbol, unknown>}
+      hasMore={keys.length > previewKeys.length}
       {showPreview}
     />
   {/snippet}
-  {#each entries as [key, value], i (key)}
+  <PropertyList {keys} {value}>
+    {#snippet item({ key, descriptor })}
+      {#if descriptor?.get || descriptor?.set}
+        <GetterSetter {value} {descriptor} {key} {path} />
+      {:else}
+        <Node value={value[key as keyof typeof value]} {key} {path} />
+      {/if}
+    {/snippet}
+  </PropertyList>
+
+  <!-- {#each keys as key, i (key)}
+    {@const descriptor = getDescriptor(key)}
     <Entry {i}>
-      <Node {value} {key} {path} />
+      {#if descriptor?.get || descriptor?.set}
+        {#if descriptor.get}
+          <Getter {descriptor} value={value as Record<string, unknown>} {key} {path} />
+        {/if}
+        {#if descriptor.set}
+          <Node value={descriptor.set} {key} {path} />
+        {/if}
+      {:else}
+        <Node value={value[key as keyof typeof value]} {key} {path} />
+      {/if}
     </Entry>
-  {/each}
+  {/each} -->
 </Expandable>

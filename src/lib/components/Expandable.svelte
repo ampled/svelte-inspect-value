@@ -23,6 +23,7 @@
 
   let {
     key,
+    keyPrefix,
     type,
     length,
     value,
@@ -80,8 +81,7 @@
         aria-label={`${collapsed ? 'expand' : 'collapse'} ${keyOrType}`}
         title={`${collapsed ? 'expand' : 'collapse'} ${keyOrType}`}
       />
-
-      <Key {key} {path} ondblclick={() => onCollapseChanged(!collapsed)} />
+      <Key prefix={keyPrefix} {key} {path} ondblclick={() => onCollapseChanged(!collapsed)} />
     </div>
   {/if}
   {#if !isKey}

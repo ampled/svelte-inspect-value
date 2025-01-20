@@ -52,7 +52,7 @@
 </script>
 
 <!-- eslint-disable-next-line svelte/no-at-html-tags -->
-<code class="value html hl" title="">{@html highlighted}</code>
+<code data-testid="value" class="value html hl" title="">{@html highlighted}</code>
 
 <style>
   :global code.value.html.hl {
