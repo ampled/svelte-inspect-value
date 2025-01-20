@@ -1,10 +1,15 @@
 <script lang="ts">
+  import { browser, dev } from '$app/environment'
   import Console from '$lib/icons/Console.svelte'
   import Inspect from '$lib/Inspect.svelte'
   import { colord } from 'colord'
   import Code from '../../doclib/Code.svelte'
+  import HueRotate from './HueRotate.svelte'
   import { themes } from './themes.js'
 
+  let font = $state('monospace')
+  let fontSize = $state(12)
+  let fontSizePx = $derived(fontSize + 'px')
   let colors = $state({ ...themes.drak })
   let keys = $derived(Object.keys(colors) as (keyof typeof colors)[])
   let rotated = $state<typeof colors>()
@@ -72,7 +77,40 @@ ${style
     public nonStatic = 'yo'
   }
 
-  const allTypes = {
+  const allTypes = $state({
+    objectWithGetter: {
+      count: 0,
+      get current() {
+        this.getterAccessedTimes++
+        return this.count
+      },
+      set current(value: number) {
+        console.log(value)
+        this.count = value
+      },
+      get throws() {
+        throw 'yeet'
+      },
+      set throws(value: unknown) {
+        throw 'throwing'
+      },
+      getterAccessedTimes: 0,
+      get getterWithSideEffect() {
+        this.test = 'hahaha'
+        return 'something'
+      },
+      get throwSomething() {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        let goof: any
+        goof.doesNotExist.doesNotExist()
+        // throw new Error('yayaya')
+        return 'blah'
+      },
+      get anObject() {
+        return this
+      },
+      test: 'test',
+    },
     str: 'string',
     multiline: 'line\nline\nline\nline\nline\nline\nline\nline\nline',
     number: 1234,
@@ -114,6 +152,8 @@ ${style
         const boop = await Promise.resolve('boop')
         return boop
       },
+      test: eval(`(function* generator() { yield 'a' })`),
+      test2: eval(`(async function* generator() { yield 'a' })`),
       yieldTwo: function* () {
         yield 2
       },
@@ -121,6 +161,7 @@ ${style
         yield 2
       },
     },
+    body: browser ? document.body : null,
     errors: {
       error: new Error('oh no!'),
       typeerror: new TypeError('snapple'),
@@ -159,7 +200,7 @@ ${style
     test: {
       [Symbol('hi')]: 'hi',
     },
-  }
+  })
 </script>
 
 <div class="flex row gap">
@@ -174,25 +215,29 @@ ${style
   <button onclick={loadPreset}> load </button>
 </div>
 
-<Inspect value={{ steps, currentStep }} />
-<Inspect {style} value={allTypes} />
+<Inspect {style} --inspect-font={font} --inspect-font-size={fontSizePx} value={allTypes} />
+{#if dev}
+  <Inspect value={{ steps, currentStep }} />
+{/if}
 
 <div class="flex row flex-wrap">
   {#each keys as key}
     <label>
       {key.replaceAll('--base', '')}
-      <input
-        type="color"
-        bind:value={currentColors[key]}
-        onchange={() => saveStep()}
-        defaultValue="#ffffff"
-        disabled={rotated != null}
-      />
+      <div class="colorpicker">
+        <input
+          type="color"
+          bind:value={currentColors[key]}
+          onchange={() => saveStep()}
+          defaultValue="#ffffff"
+          disabled={rotated != null}
+        />
+      </div>
       <button
         type="button"
         disabled={rotated != null || currentColors[key] === 'transparent'}
         title="set transparent"
-        class="set-transparent"
+        class="unstyled"
         onclick={() => {
           colors[key] = 'transparent'
           saveStep()
@@ -200,49 +245,56 @@ ${style
       >
     </label>
   {/each}
+</div>
+
+<div class="flex row flex-wrap gap">
+  <!-- <label>
+    font (local)
+    <select bind:value={font}>
+      <option>monospace</option>
+      <option>Menlo</option>
+      <option>Monaco</option>
+      <option>Consolas</option>
+      <option>Pixel Code</option>
+      <option>Dank Mono</option>
+      <option>Fira Code</option>
+      <option>Andale Mono</option>
+      <option>Comic Sans MS</option>
+    </select>
+  </label>
+  <label>
+    font-size
+    <input type="number" bind:value={fontSize} />
+  </label> -->
   <button
+    class="unstyled"
     onclick={() => console.log($state.snapshot(currentColors))}
     style="width: 2em; height: 2em;"
   >
     <Console />
   </button>
-  <button type="button" disabled={steps[currentStep - 1] == null} onclick={undo}>undo</button>
-  <button type="button" disabled={steps[currentStep + 1] == null} onclick={redo}>redo</button>
-</div>
-
-<label>
-  hue rotate
-  <div class="flex row">
-    <input type="number" min={-360} max={360} bind:value={rotation} defaultValue={0} />
-    <input type="range" min={-360} max={360} bind:value={rotation} defaultValue={0} />
-  </div>
-  {rotation}
-</label>
-<div class="flex row gap">
-  <button
-    type="button"
-    title="clear rotation"
-    class="set-transparent"
-    disabled={rotation === 0}
-    onclick={() => {
-      rotated = undefined
-      rotation = 0
-    }}>cancel</button
+  <button class="unstyled" type="button" disabled={steps[currentStep - 1] == null} onclick={undo}
+    >undo</button
   >
-
-  <button
-    type="button"
-    title="set transparent"
-    disabled={rotation === 0}
-    class="set-transparent"
-    onclick={() => {
-      if (rotated) colors = { ...rotated }
-      saveStep()
-      rotated = undefined
-      rotation = 0
-    }}>apply</button
+  <button class="unstyled" type="button" disabled={steps[currentStep + 1] == null} onclick={redo}
+    >redo</button
   >
 </div>
+
+<HueRotate
+  bind:rotation
+  oncancel={() => {
+    rotated = undefined
+    rotation = 0
+  }}
+  onapply={() => {
+    if (rotated) colors = { ...rotated }
+    saveStep()
+    rotated = undefined
+    rotation = 0
+  }}
+/>
+
 <pre>
 base00  Default Background
 base01  Lighter Background (Used for status bars, line number and folding marks)
@@ -270,38 +322,31 @@ base0F  Deprecated, Opening/Closing Embedded Language Tags, e.g. {'<?php ?>'}
     align-items: center;
   }
 
-  .gap {
-    gap: 1em;
-  }
-
   label {
     display: flex;
     /* border-right: 1px solid var(--border-color);
     border-bottom: 1px solid var(--border-color); */
-    padding: 0.5em;
+    /* padding: 0.5em; */
   }
 
-  input[type='range'] {
-    flex-basis: 100%;
-    width: 100%;
+  .colorpicker {
+    width: 3.5em;
+    height: 3.5em;
+    overflow: hidden;
+    position: relative;
   }
 
   input[type='color'] {
     aspect-ratio: 1 / 1;
-    height: 2em;
-    width: 2em;
+    height: 50em;
+    width: 40em;
+    position: absolute;
+    top: -5px;
+    left: -5px;
     border: none;
     padding: 0;
     margin: 0;
     background-color: transparent;
-  }
-
-  .set-transparent {
-    all: unset;
     cursor: pointer;
-
-    &:disabled {
-      color: var(--border-color);
-    }
   }
 </style>

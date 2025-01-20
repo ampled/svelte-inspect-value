@@ -76,7 +76,7 @@
   const previewLevel = getContext<number | undefined>('preview')
 </script>
 
-{#if (options.value.showTypes && !previewLevel) || required || force}
+{#if (type && options.value.showTypes && !previewLevel) || required || force}
   <span data-testid="type" class={`type ${type}`} title={type} {...rest}>
     {display}
   </span>

@@ -59,7 +59,8 @@
       timeout = window.setTimeout(() => {
         copied = false
       }, 5000)
-    } catch {
+    } catch (e) {
+      console.error(e)
       copied = false
     }
   }
@@ -93,7 +94,7 @@
     <button
       title="log value to console"
       aria-label="log value to console"
-      onclick={() => logToConsole(path, value)}
+      onclick={() => logToConsole(path, $state.snapshot(value))}
     >
       <Console />
     </button>

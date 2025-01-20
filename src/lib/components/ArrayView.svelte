@@ -2,7 +2,7 @@
   import type { TypeViewProps } from '../types.js'
   import Entry from './Entry.svelte'
   import Expandable from './Expandable.svelte'
-  import JsonViewer from './Node.svelte'
+  import Node from './Node.svelte'
   import Preview from './Preview.svelte'
 
   type Props = TypeViewProps<unknown[]>
@@ -24,7 +24,7 @@
   {/snippet}
   {#each arrayVal as value, i (i)}
     <Entry {i}>
-      <JsonViewer key={i} {value} {path} />
+      <Node key={i} {value} {path} />
     </Entry>
   {/each}
 </Expandable>

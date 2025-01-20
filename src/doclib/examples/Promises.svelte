@@ -32,7 +32,7 @@
   <button onclick={run}>rerun</button>
 
   <div class="flex row" style="width: 100%">
-    <Code {code} language="svelte" />
+    <Code {code} label="" />
     {#if promises}
       <Inspect style="max-width: 360px" value={promises} name="promises" theme="drak" expandAll />
     {/if}

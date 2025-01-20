@@ -15,7 +15,7 @@
     if (!options.value.showLength) {
       return ''
     }
-    if (!type) return ''
+    // if (!type) return ''
     switch (type) {
       case 'array':
       case 'int8array':

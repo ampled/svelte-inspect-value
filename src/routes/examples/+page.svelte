@@ -4,7 +4,7 @@
   import { onMount } from 'svelte'
   import BasicEditable from '../../doclib/examples/BasicEditable.svelte'
   import EmbedMedia from '../../doclib/examples/EmbedMedia.svelte'
-  import HtmlElements from '../../doclib/examples/HTMLElements.svelte'
+  import GettersAndSetters from '../../doclib/examples/GettersAndSetters.svelte'
   import MapAndSet from '../../doclib/examples/MapAndSet.svelte'
   import Promises from '../../doclib/examples/Promises.svelte'
   import SymbolKeys from '../../doclib/examples/SymbolKeys.svelte'
@@ -55,7 +55,7 @@
 
 <Promises />
 
-<HtmlElements />
+<!-- <HtmlElements /> -->
 
 <div class="flex col">
   <h2>class</h2>
@@ -137,6 +137,8 @@
     <Inspect value={['normal boring string', 'cool \n multi-line \n  render 😎']} name="strings" />
   </div>
 </div>
+
+<GettersAndSetters />
 
 <EmbedMedia />
 

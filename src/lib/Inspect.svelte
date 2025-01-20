@@ -524,6 +524,7 @@
       padding: var(--indent);
       padding-left: calc(var(--indent) * 2);
       white-space: pre;
+      line-height: 1;
       text-overflow: unset;
       overflow-x: auto;
       overflow-y: clip;

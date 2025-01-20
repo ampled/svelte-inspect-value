@@ -20,6 +20,7 @@ export type KeyType = string | number | symbol
 
 export type TypeViewProps<Value = unknown, Type = ValueType> = {
   key?: KeyType
+  keyPrefix?: string
   path?: KeyType[]
   value: Value
   /**
@@ -48,3 +49,17 @@ export class InspectError extends Error {
 }
 
 export type CustomComponentProps<T = unknown> = TypeViewProps<T>
+
+export type List =
+  | unknown[]
+  | Int8Array
+  | Uint8Array
+  | Uint8ClampedArray
+  | Int16Array
+  | Uint16Array
+  | Int32Array
+  | Uint32Array
+  | Float32Array
+  | Float64Array
+  | BigInt64Array
+  | BigUint64Array

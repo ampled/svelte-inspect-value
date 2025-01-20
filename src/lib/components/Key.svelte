@@ -7,13 +7,14 @@
   import Type from './Type.svelte'
 
   type Props = {
+    prefix?: string
     key: TypeViewProps<unknown>['key'] | unknown
     force?: boolean
     path?: TypeViewProps<unknown>['path']
     delim?: string
   } & HTMLButtonAttributes
 
-  let { key, path = [], ondblclick, delim = ':', force = false, ...rest }: Props = $props()
+  let { key, path = [], ondblclick, delim = ':', prefix, force = false, ...rest }: Props = $props()
 
   const keyTypes = ['string', 'number', 'symbol']
   const simpleKeys = ['bigint', 'regexp']
@@ -47,6 +48,9 @@
     title={stringifyPath(path)}
     {...rest}
   >
+    {#if prefix}
+      <span class="prefix">{prefix}</span>
+    {/if}
     {#if keyTypes.includes(keyType)}
       <span class="key {keyType}">
         {key?.toString()}
@@ -56,7 +60,9 @@
     {:else}
       <Type type={keyType} force />
     {/if}
-    <span class="delim">{delim}</span>
+    {#if delim}
+      <span class="delim">{delim}</span>
+    {/if}
   </button>
 {/if}
 
@@ -87,6 +93,11 @@
 
   .delim {
     color: var(--delimiter);
+  }
+
+  .prefix {
+    color: var(--delimiter);
+    margin-right: 0.5em;
   }
 
   button {

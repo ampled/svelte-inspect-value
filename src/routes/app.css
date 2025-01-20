@@ -137,6 +137,9 @@ input[type='number'],
 input[type='text'],
 select {
   height: 1.5em;
+  background-color: var(--bg);
+  color: var(--fg);
+  border: 1px solid var(--border-color);
 }
 
 .flex {
@@ -206,4 +209,43 @@ code {
 
 a {
   color: var(--fg);
+}
+
+button.unstyled {
+  all: unset;
+  cursor: pointer;
+
+  &:disabled {
+    color: var(--border-color);
+  }
+}
+
+.gap {
+  gap: 1em !important;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.align-start {
+  align-items: flex-start;
+}
+
+.align-end {
+  align-items: flex-end;
+}
+
+.justify-center {
+  justify-content: center;
+}
+.justify-start {
+  justify-content: flex-start;
+}
+.justify-end {
+  justify-content: flex-end;
+}
+
+.w-max {
+  width: 100%;
 }

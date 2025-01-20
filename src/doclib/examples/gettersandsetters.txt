@@ -1,0 +1,20 @@
+<script lang="ts">
+  import { Inspect } from '$lib/index.js'
+
+  let value = $state({
+    value: 10,
+    multiplier: 4.2,
+    get current() { return this.count },
+    set current(value) {
+      if (typeof value !== 'number') throw 'not a number'
+      this.value = value
+    },
+    get double() { return this.value * 2 },
+    set currentMultiplier(value: number) { this.multiplier = value },
+    get multiplied() {
+      return this.value * this.multiplier
+    },
+  })
+</script>
+
+<Inspect {value} />
