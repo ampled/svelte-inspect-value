@@ -169,6 +169,27 @@ describe('expandable values', () => {
     expect(indent).toHaveClass('indent', 'function')
   })
 
+  test('it can display properties of html elements', async () => {
+    document.body.classList.add('test')
+    document.body.dataset['test'] = 'test'
+
+    await rerender({
+      value: document.body,
+      noanimate: true,
+      expandAll: true,
+      showPreview: false,
+    })
+
+    const type = screen.queryAllByTestId('type')[0]
+    expect(type).toHaveTextContent('htmlbodyelement')
+    const value = screen.queryAllByTestId('value')[0]
+    console.log(value?.innerText)
+    expect(value).toHaveTextContent(`<body class="test" data-test="test">`)
+    const indent = screen.queryAllByTestId('indent')[0]
+    expect(indent).toBeInTheDocument()
+    expect(indent).toHaveClass('indent', 'htmlbodyelement')
+  })
+
   test('it can be opened and closed', async () => {
     const onCollapseChange = vi.fn((state) => console.log(state))
     await rerender({
