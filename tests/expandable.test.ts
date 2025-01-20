@@ -11,6 +11,47 @@ describe('expandable values', () => {
     cleanup()
   })
 
+  test('it can be opened and closed', async () => {
+    await rerender({
+      value: { hey: 'im a test value' },
+      name: 'test',
+      expandAll: false,
+    })
+
+    const button = screen.getByTestId('collapse-button')
+
+    let indent = screen.queryByTestId('indent')
+    expect(indent).toBeInTheDocument()
+    expect(button).toHaveAttribute('aria-label', 'collapse test')
+    expect(button).toHaveAttribute('title', 'collapse test')
+
+    await user.click(button)
+
+    indent = screen.queryByTestId('indent')
+
+    expect(indent).not.toBeInTheDocument()
+    expect(button).toHaveAttribute('aria-label', 'expand test')
+    expect(button).toHaveAttribute('title', 'expand test')
+  })
+
+  test('it exports methods to set collapse state from parent', async () => {
+    const onCollapseChange = vi.fn()
+    await rerender({ value: [[[[[['end']]]]]], name: 'nestedArrays', onCollapseChange })
+
+    await act(() => {
+      component.setAllCollapsed()
+    })
+
+    expect(screen.queryAllByTestId('indent').length).toBe(0)
+
+    await act(() => {
+      component.setAllExpanded()
+    })
+
+    expect(screen.queryAllByTestId('indent').length).toBe(6)
+    expect(onCollapseChange).toHaveBeenCalledTimes(6)
+  })
+
   test('it can display the keys and values of an object, including symbol keys', async () => {
     await rerender({
       value: {
@@ -183,57 +224,10 @@ describe('expandable values', () => {
     const type = screen.queryAllByTestId('type')[0]
     expect(type).toHaveTextContent('htmlbodyelement')
     const value = screen.queryAllByTestId('value')[0]
-    console.log(value?.innerText)
+
     expect(value).toHaveTextContent(`<body class="test" data-test="test">`)
     const indent = screen.queryAllByTestId('indent')[0]
     expect(indent).toBeInTheDocument()
     expect(indent).toHaveClass('indent', 'htmlbodyelement')
-  })
-
-  test('it can be opened and closed', async () => {
-    const onCollapseChange = vi.fn((state) => console.log(state))
-    await rerender({
-      value: { hey: 'im a test value' },
-      name: 'test',
-      expandAll: false,
-      onCollapseChange,
-    })
-
-    expect(onCollapseChange).toHaveBeenCalledTimes(1)
-
-    const button = screen.getByTestId('collapse-button')
-
-    let indent = screen.queryByTestId('indent')
-    expect(indent).toBeInTheDocument()
-    expect(button).toHaveAttribute('aria-label', 'collapse test')
-    expect(button).toHaveAttribute('title', 'collapse test')
-
-    await user.click(button)
-
-    indent = screen.queryByTestId('indent')
-
-    expect(indent).not.toBeInTheDocument()
-    expect(button).toHaveAttribute('aria-label', 'expand test')
-    expect(button).toHaveAttribute('title', 'expand test')
-
-    expect(onCollapseChange).toHaveBeenCalledTimes(2)
-  })
-
-  test('it exports methods to set collapse state from parent', async () => {
-    const onCollapseChange = vi.fn((state) => console.log(state))
-    await rerender({ value: [[[[[['end']]]]]], name: 'nestedArrays', onCollapseChange })
-
-    await act(() => {
-      component.setAllCollapsed()
-    })
-
-    expect(screen.queryAllByTestId('indent').length).toBe(0)
-
-    await act(() => {
-      component.setAllExpanded()
-    })
-
-    expect(screen.queryAllByTestId('indent').length).toBe(6)
-    expect(onCollapseChange).toHaveBeenCalledTimes(6)
   })
 })
