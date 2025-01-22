@@ -3,6 +3,7 @@
   import Console from '$lib/icons/Console.svelte'
   import Inspect from '$lib/Inspect.svelte'
   import { colord } from 'colord'
+  import { onMount } from 'svelte'
   import Code from '../../doclib/Code.svelte'
   import HueRotate from './HueRotate.svelte'
   import { themes } from './themes.js'
@@ -78,8 +79,14 @@ ${style
   }
 
   const allTypes = $state({
+    battery: undefined,
     objectWithGetter: {
-      count: 0,
+      get anObject() {
+        return {
+          a: { b: { c: { d: { e: 'end' } } } },
+        }
+      },
+      count: 1,
       get current() {
         this.getterAccessedTimes++
         return this.count
@@ -89,6 +96,7 @@ ${style
         this.count = value
       },
       get throws() {
+        console.trace('throwing getter accessed')
         throw 'yeet'
       },
       set throws(value: unknown) {
@@ -106,7 +114,7 @@ ${style
         // throw new Error('yayaya')
         return 'blah'
       },
-      get anObject() {
+      get self() {
         return this
       },
       test: 'test',
@@ -129,7 +137,7 @@ ${style
       2,
       1,
     ],
-    object: { normalKey: 'string value', [Symbol('key')]: 'oh\n\n\n\n      hi' },
+    object: { normalKey: 'string value', [Symbol('key')]: 'oh\n\n\n\n      hi', boolean: false },
     date: new Date(),
     url: new URL('https://alicebob.website/?ref=abcdefg#about'),
     promise: Promise.resolve({
@@ -162,15 +170,27 @@ ${style
       },
     },
     body: browser ? document.body : null,
+    navigator: browser ? navigator : null,
     errors: {
       error: new Error('oh no!'),
       typeerror: new TypeError('snapple'),
     },
     set: new Set([1, 2, 3]),
-    weakSet: new WeakSet(),
+    weakSet: new WeakSet([{}, {}, {}]),
+    weakMap: new WeakMap([[{}, 1]]),
     map: new Map<unknown, unknown>([
       [0, 0],
       [{ id: 123 }, 1],
+      [[1, 2, 3], 2],
+      [Symbol('key'), 'value'],
+      [
+        Promise.resolve('foo'),
+        {
+          get something() {
+            return 'something'
+          },
+        },
+      ],
     ]),
     typedArrays: {
       eight: new Int8Array([1, 2, 3]),
@@ -195,11 +215,20 @@ ${style
     classCtr: Greeter,
     classInstance: new Greeter(),
     classNoEntries: class Foo {},
-    emptyObject: {},
-    [Symbol('hi')]: 'hi',
-    test: {
-      [Symbol('hi')]: 'hi',
+    empties: {
+      object: {},
+      array: [],
+      set: new Set(),
+      map: new Map(),
+      string: '',
     },
+  })
+
+  onMount(() => {
+    // // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // ;(navigator as any).getBattery().then((batt: unknown) => {
+    //   allTypes.battery = batt as unknown as undefined
+    // })
   })
 </script>
 
@@ -215,7 +244,13 @@ ${style
   <button onclick={loadPreset}> load </button>
 </div>
 
-<Inspect {style} --inspect-font={font} --inspect-font-size={fontSizePx} value={allTypes} />
+<Inspect
+  name="allTypes"
+  {style}
+  --inspect-font={font}
+  --inspect-font-size={fontSizePx}
+  value={allTypes}
+/>
 {#if dev}
   <Inspect value={{ steps, currentStep }} />
 {/if}

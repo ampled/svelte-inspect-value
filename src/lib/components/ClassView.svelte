@@ -1,35 +1,39 @@
 <script lang="ts">
   import type { TypeViewProps } from '$lib/types.js'
-  import Entry from './Entry.svelte'
   import Expandable from './Expandable.svelte'
-  import JsonViewer from './Node.svelte'
+  import GetterSetter from './GetterSetter.svelte'
+  import Node from './Node.svelte'
   import Preview from './Preview.svelte'
+  import PropertyList from './PropertyList.svelte'
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   type Props = TypeViewProps<Function>
 
   let { value, key, type, path }: Props = $props()
 
-  let entries = $derived(Object.entries(value))
-  let preview = $derived(entries.slice(0, 3))
+  let keys = $derived(Object.keys(value))
 </script>
 
-<Expandable {...{ value, key, type, path }} length={entries.length}>
+<Expandable {...{ value, key, type, path }} length={keys.length}>
   {#snippet valuePreview({ showPreview })}
     <span class="value {type}">
       {value.name}
     </span>
     <Preview
-      keyValue={preview}
       prefix={'{'}
       postfix={'}'}
-      hasMore={entries.length > preview.length}
+      {keys}
+      value={value as unknown as Record<string | symbol, unknown>}
       {showPreview}
     />
   {/snippet}
-  {#each entries as [key, value], i (key)}
-    <Entry {i}>
-      <JsonViewer {value} {key} {path} />
-    </Entry>
-  {/each}
+  <PropertyList {keys} {value}>
+    {#snippet item({ key, descriptor })}
+      {#if descriptor?.get || descriptor?.set}
+        <GetterSetter {value} {descriptor} {key} {path} />
+      {:else}
+        <Node value={value[key as keyof typeof value]} {key} {path} />
+      {/if}
+    {/snippet}
+  </PropertyList>
 </Expandable>

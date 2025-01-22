@@ -110,3 +110,53 @@ export function descriptorPrefix(descriptor?: PropertyDescriptor) {
     .filter(Boolean)
     .join('|')
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function getAllProperties(object: any) {
+  const enumerableKeys = []
+  for (const enumerableKey in object) {
+    enumerableKeys.push(enumerableKey)
+  }
+  return [
+    ...new Set([
+      ...enumerableKeys,
+      ...Object.getOwnPropertyNames(object),
+      ...Object.getOwnPropertySymbols(object),
+      // ...(object['__proto__'] ? ['__proto__'] : []),
+    ]),
+  ]
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function getPropertyDescriptor(object: any, prop: PropertyKey) {
+  if (!object) {
+    return {}
+  } else if (prop === '__proto__') {
+    return {
+      value: Object.getPrototypeOf(object),
+    }
+  } else {
+    const ownPropertyDescriptor = Object.getOwnPropertyDescriptor(object, prop)
+    if (ownPropertyDescriptor) {
+      return ownPropertyDescriptor
+    } else {
+      const prototype = Object.getPrototypeOf(object)
+      return getPropertyDescriptor(prototype, prop)
+    }
+  }
+}
+
+export function ensureStringPath(path: string | KeyType[]) {
+  let key: string
+  if (Array.isArray(path)) {
+    key = stringifyPath(path)
+  } else {
+    key = path
+  }
+  return key
+}
+
+export function hasGetters(value: object) {
+  const descriptors = Object.getOwnPropertyDescriptors(value)
+  return Object.values(descriptors).some((descriptor) => !!descriptor.get)
+}

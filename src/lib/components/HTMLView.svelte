@@ -1,12 +1,13 @@
 <script lang="ts">
   import { type Snippet } from 'svelte'
   import type { TypeViewProps } from '../types.js'
-  import { isArray, isObject } from '../util.js'
+  import { getAllProperties, isArray, isObject } from '../util.js'
   import { htmlState } from '../util/mutation-observer.svelte.js'
-  import Entry from './Entry.svelte'
   import Expandable from './Expandable.svelte'
+  import GetterSetter from './GetterSetter.svelte'
   import HtmlValue from './HTMLValue.svelte'
-  import JsonViewer from './Node.svelte'
+  import Node from './Node.svelte'
+  import PropertyList from './PropertyList.svelte'
 
   type Props = TypeViewProps<HTMLElement> & { children?: Snippet }
 
@@ -78,6 +79,8 @@
       isArray(v) ? v.length : isObject(v) ? Object.entries(v).length : v != null
     )
   )
+
+  let keys = $derived(getAllProperties(element.ele))
 </script>
 
 <Expandable {...{ value, key, type, path }} length={entries.length} keepPreviewOnExpand>
@@ -89,9 +92,13 @@
   {#if children}
     {@render children()}
   {/if}
-  {#each entries as [key, value], i (key)}
-    <Entry {i}>
-      <JsonViewer {value} {key} {path} />
-    </Entry>
-  {/each}
+  <PropertyList {keys} value={element.ele}>
+    {#snippet item({ key, descriptor })}
+      {#if descriptor?.get || descriptor?.set}
+        <GetterSetter value={element.ele} {descriptor} {key} {path} />
+      {:else}
+        <Node value={element.ele[key as keyof typeof value]} {key} {path} />
+      {/if}
+    {/snippet}
+  </PropertyList>
 </Expandable>

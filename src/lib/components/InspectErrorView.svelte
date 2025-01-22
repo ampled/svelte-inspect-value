@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { setContext } from 'svelte'
+  import { getContext, setContext } from 'svelte'
   import { InspectError, type TypeViewProps } from '../types.js'
   import Entry from './Entry.svelte'
   import Expandable from './Expandable.svelte'
@@ -28,16 +28,22 @@
   )
 
   setContext('error-use-defaults', true)
+  const depth = getContext<number | undefined>('inspect-error-depth') ?? 0
+  setContext('inspect-error-depth', depth + 1)
 </script>
 
-<Expandable {value} {key} {keyPrefix} {path} {type} length={entries.length} keepPreviewOnExpand>
-  {#snippet valuePreview()}
-    <NodeActionButton onclick={reset}>RESET</NodeActionButton>
-    <StringValue type="error" value={value.message} />
-  {/snippet}
-  {#each entries as [key, value], i (key)}
-    <Entry {i}>
-      <Node {value} {key} {path} usedefaults />
-    </Entry>
-  {/each}
-</Expandable>
+{#if depth <= 3}
+  <Expandable {value} {key} {keyPrefix} {path} {type} length={entries.length} keepPreviewOnExpand>
+    {#snippet valuePreview()}
+      <NodeActionButton onclick={reset}>RESET</NodeActionButton>
+      <StringValue type="error" value={value.message} />
+    {/snippet}
+    {#each entries as [key, value], i (key)}
+      <Entry {i}>
+        <Node {value} {key} {path} usedefaults />
+      </Entry>
+    {/each}
+  </Expandable>
+{:else}
+  max error depth exceeded
+{/if}

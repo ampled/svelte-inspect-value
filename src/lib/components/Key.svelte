@@ -98,6 +98,8 @@
   .prefix {
     color: var(--delimiter);
     margin-right: 0.5em;
+    /* font-style: italic; */
+    font-weight: 900;
   }
 
   button {

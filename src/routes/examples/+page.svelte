@@ -1,24 +1,17 @@
 <script lang="ts">
-  import { browser } from '$app/environment'
   import Inspect from '$lib/Inspect.svelte'
   import { onMount } from 'svelte'
   import BasicEditable from '../../doclib/examples/BasicEditable.svelte'
   import EmbedMedia from '../../doclib/examples/EmbedMedia.svelte'
   import GettersAndSetters from '../../doclib/examples/GettersAndSetters.svelte'
+  import HtmlElements from '../../doclib/examples/HTMLElements.svelte'
   import MapAndSet from '../../doclib/examples/MapAndSet.svelte'
   import Promises from '../../doclib/examples/Promises.svelte'
   import SymbolKeys from '../../doclib/examples/SymbolKeys.svelte'
 
-  let image: HTMLImageElement | undefined = $state()
-
   let error: Error | undefined = $state()
 
   onMount(() => {
-    if (browser) {
-      image = new Image()
-      image.src = 'favicon.png'
-    }
-
     try {
       let lol: unknown
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions, @typescript-eslint/no-explicit-any
@@ -55,7 +48,7 @@
 
 <Promises />
 
-<!-- <HtmlElements /> -->
+<HtmlElements />
 
 <div class="flex col">
   <h2>class</h2>

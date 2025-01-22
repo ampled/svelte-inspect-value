@@ -3,47 +3,70 @@
   generics="V extends Record<KeyType, unknown> | List = Record<KeyType, unknown> | List, K extends keyof V = keyof V"
 >
   import { useOptions } from '$lib/options.svelte.js'
-  import type { KeyType } from '$lib/types.js'
-  import { descriptorPrefix, getType } from '$lib/util.js'
+  import type { KeyType, TypeViewProps } from '$lib/types.js'
+  import { descriptorPrefix, getPropertyDescriptor, getType } from '$lib/util.js'
   import { getContext, setContext } from 'svelte'
+  import type { HTMLButtonAttributes } from 'svelte/elements'
   import { fly, slide } from 'svelte/transition'
   import type { List } from '../types.js'
+  import GetterSetter from './GetterSetter.svelte'
   import Key from './Key.svelte'
   import Node from './Node.svelte'
+  import NodeActionButton from './NodeActionButton.svelte'
   import Type from './Type.svelte'
 
   type PreviewProps = {
     prefix?: string
     postfix?: string
-    hasMore: boolean
     list?: List
     keyValue?: [KeyType, unknown][]
     keys?: K[]
     value?: V
     singleValue?: unknown
     map?: boolean
+    type?: TypeViewProps['type']
     startLevel?: number
     showPreview?: boolean
+    path?: TypeViewProps['path']
+    keyDelim?: string
+    keyStyle?: HTMLButtonAttributes['style']
   }
 
   const EMPTY = Symbol('EMPTY')
 
   let {
-    list,
+    list: previewList,
+    keyValue: previewKeyValue,
+    keys: previewKeys,
+    path,
+    value,
     prefix,
     postfix,
-    hasMore,
-    keyValue,
     singleValue = EMPTY,
-    keys,
-    value,
+    keyDelim = ':',
+    keyStyle,
     startLevel = 1,
     showPreview = false,
     map = false,
   }: PreviewProps = $props()
 
   const previewLevel = getContext<number | undefined>('preview') ?? startLevel
-  let options = useOptions()
+  const options = useOptions()
+
+  let list = $derived(previewList?.slice(0, options.value.previewEntries))
+  let keyValue = $derived(previewKeyValue?.slice(0, options.value.previewEntries))
+  let keys = $derived(previewKeys?.slice(0, options.value.previewEntries))
+
+  let hasMore = $derived.by(() => {
+    if (list && previewList) {
+      return list.length < previewList.length
+    } else if (keyValue && previewKeyValue) {
+      return keyValue.length < previewKeyValue.length
+    } else if (keys && previewKeys) {
+      return keys.length < previewKeys.length
+    }
+    return false
+  })
 
   setContext('preview', (previewLevel ?? 0) + 1)
 
@@ -53,99 +76,95 @@
 </script>
 
 <!-- At configured previewDepth, stop rendering nested item previews and just render their types -->
-{#snippet valuePreview(value: unknown, force = false)}
+{#snippet valuePreview(value: unknown, key: KeyType, force = false)}
   {@const valType = getType(value)}
   {#if alwaysRender(valType) || previewLevel < options.value.previewDepth || force}
-    <Node {value} />
+    <Node {path} {key} {value} />
   {:else}
     <Type type={valType} force />
   {/if}
 {/snippet}
 
-{#snippet previewValue(key: K, _force = false)}
-  {@const valType = getType(value)}
-  {#if valType === 'object'}
-    {@const descriptor = Object.getOwnPropertyDescriptor(value, key)}
-    {#if descriptor?.get || descriptor?.set}
-      <!-- <Getter {descriptor} value={value as Record<string, unknown>} /> -->
-    {:else}
-      {@render valuePreview(value?.[key])}
-    {/if}
-  {/if}
-
-  <!-- {#if alwaysRender(valType) || previewLevel < options.value.previewDepth || force}
-    <Node {value} />
+{#snippet previewValue(key: K, _force = false, descriptor?: PropertyDescriptor)}
+  {#if descriptor?.set || descriptor?.get}
+    <GetterSetter {key} {descriptor} {value} {path} />
+    <!-- -->
   {:else}
-    <Type type={valType} force />
-  {/if} -->
+    {@render valuePreview(value?.[key], key)}
+  {/if}
 {/snippet}
 
 {#snippet comma()}
   <span class="comma">,</span>
 {/snippet}
 
-{#if options.value.showPreview && showPreview}
-  <div
-    class="preview"
-    transition:slide={{
-      axis: 'x',
-      duration: options.value.noanimate ? 0 : 400,
-    }}
-  >
-    {#if prefix}
-      <span class="pre level-{previewLevel}">{prefix}</span>
-    {/if}
+<svelte:boundary onerror={(e) => console.log('preview failed:', e)}>
+  {#snippet failed(_, reset)}
+    preview error. check console <NodeActionButton onclick={reset}>reset</NodeActionButton>
+  {/snippet}
+  {#if options.value.showPreview && showPreview}
     <div
-      class="inner"
-      transition:fly={{
-        y: 20,
-        opacity: 1,
+      class="preview"
+      transition:slide={{
+        axis: 'x',
         duration: options.value.noanimate ? 0 : 400,
       }}
     >
-      {#if keys && value}
-        {#each keys as key, i (i)}
-          {@const descriptor = Object.getOwnPropertyDescriptor(value, key)}
-          <div class="key-value">
-            <Key
-              prefix={descriptorPrefix(descriptor)}
-              {key}
-              delim={map ? '=>' : descriptor?.get || descriptor?.set ? '' : ':'}
-              style={map ? 'gap: 0.25em' : ''}
-            />
-            {@render previewValue(key)}
-          </div>
-          {#if i < keys.length - 1}{@render comma()}{/if}
-        {/each}
+      {#if prefix}
+        <span class="pre level-{previewLevel}">{prefix}</span>
       {/if}
-      {#if keyValue}
-        {#each keyValue as [key, value], i}
-          <div class="key-value">
-            <Key {key} delim={map ? '=>' : ':'} style={map ? 'gap: 0.25em' : ''} />
-            {@render valuePreview(value)}
-          </div>
-          {#if i < keyValue.length - 1}{@render comma()}{/if}
-        {/each}
-      {:else if list}
-        {#each list as value, i}
-          {@render valuePreview(value)}{#if i < list.length - 1}{@render comma()}{/if}
-        {/each}
-      {:else if singleValue !== EMPTY}
-        {@render valuePreview(singleValue, false)}
-      {/if}
-
+      <div
+        class="inner"
+        transition:fly={{
+          y: 20,
+          opacity: 1,
+          duration: options.value.noanimate ? 0 : 400,
+        }}
+      >
+        {#if keys && value}
+          {#each keys as key, i (i)}
+            {@const descriptor = getPropertyDescriptor(value, key)}
+            <div class="key-value">
+              <Key
+                {key}
+                {path}
+                prefix={descriptorPrefix(descriptor)}
+                delim={keyDelim}
+                style={map ? 'gap: 0.25em' : ''}
+              />
+              {@render previewValue(key, false, descriptor)}
+            </div>
+            {#if i < keys.length - 1}{@render comma()}{/if}
+          {/each}
+        {/if}
+        {#if keyValue}
+          {#each keyValue as [key, value], i}
+            <div class="key-value">
+              <Key {key} {path} delim={keyDelim} style={map ? 'gap: 0.25em' : ''} />
+              {@render valuePreview(value, key)}
+            </div>
+            {#if i < keyValue.length - 1}{@render comma()}{/if}
+          {/each}
+        {:else if list}
+          {#each list as value, i}
+            {@render valuePreview(value, i)}{#if i < list.length - 1}{@render comma()}{/if}
+          {/each}
+        {:else if singleValue !== EMPTY}
+          {@render valuePreview(singleValue, 'preview', false)}
+        {/if}
+      </div>
       {#if hasMore}{@render comma()}<span class="ellipsis">&hellip;</span>{/if}
+      {#if postfix}
+        <span class="post level-{previewLevel}">{postfix}</span>
+      {/if}
     </div>
-    {#if postfix}
-      <span class="post level-{previewLevel}">{postfix}</span>
-    {/if}
-  </div>
-{/if}
+  {/if}
+</svelte:boundary>
 
 <style>
   .comma {
     margin-left: 0;
-    margin-right: 0.25em;
+    margin-right: 0.5em;
     color: var(--fg);
   }
 
@@ -197,6 +216,10 @@
   .post {
     /* margin-inline: 0.125em; */
     color: var(--fg);
+
+    &.level-0 {
+      color: var(--comments);
+    }
 
     &.level-1 {
       color: var(--fg);
