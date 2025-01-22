@@ -57,6 +57,8 @@ const components = {
     (_props: TypeViewProps<MapIterator<unknown>>) => ({ display: `MapIterator` }),
   ],
   regexp: [OneLineView, (props: TypeViewProps<RegExp>) => ({ display: props.value.toString() })],
+  weakset: [OneLineView, () => ({ display: ``, forceType: true })],
+  weakmap: [OneLineView, () => ({ display: ``, forceType: true })],
   object: [ObjectView],
   array: [ArrayView],
   string: [StringView],
