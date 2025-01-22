@@ -5,7 +5,7 @@
   import HtmlView from './HTMLView.svelte'
   import InspectErrorView from './InspectErrorView.svelte'
   import Noop from './Noop.svelte'
-  import { getComponent } from './types.js'
+  import { getComponent } from './index.js'
 
   type Props = TypeViewProps<unknown> & { usedefaults?: boolean }
 
