@@ -21,6 +21,9 @@ export type KeyType = string | number | symbol
 export type TypeViewProps<Value = unknown, Type = ValueType> = {
   key?: KeyType
   keyPrefix?: string
+  showKey?: boolean
+  keyDelim?: string
+  keyStyle?: HTMLAttributes<HTMLDivElement>['style']
   path?: KeyType[]
   value: Value
   /**

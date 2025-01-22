@@ -16,6 +16,8 @@
     length?: number
     valuePreview: Snippet<[{ showPreview: boolean }]>
     forceType?: boolean
+    keyDelim?: string
+    showKey?: boolean
     children?: Snippet
     keepPreviewOnExpand?: boolean
     showLength?: boolean
@@ -24,6 +26,8 @@
   let {
     key,
     keyPrefix,
+    keyDelim = ':',
+    showKey = true,
     type,
     length,
     value,
@@ -66,12 +70,12 @@
 
 <div
   data-testid="expandable"
-  class={['title-bar', previewLevel && 'preview']}
+  class={['title-bar', previewLevel && 'preview', !showKey && 'nokey']}
   aria-expanded={!collapsed}
   {...rest}
 >
-  {#if !previewLevel && !isKey}
-    <div class="button-key">
+  <div class="button-key">
+    {#if !previewLevel && !isKey}
       <CollapseButton
         bind:this={buttonComponent}
         {collapsed}
@@ -81,9 +85,18 @@
         aria-label={`${collapsed ? 'expand' : 'collapse'} ${keyOrType}`}
         title={`${collapsed ? 'expand' : 'collapse'} ${keyOrType}`}
       />
-      <Key prefix={keyPrefix} {key} {path} ondblclick={() => onCollapseChanged(!collapsed)} />
-    </div>
-  {/if}
+    {/if}
+    {#if showKey}
+      <Key
+        delim={keyDelim}
+        prefix={keyPrefix}
+        {key}
+        {path}
+        ondblclick={() => onCollapseChanged(!collapsed)}
+      />
+    {/if}
+  </div>
+
   {#if !isKey}
     <Type {type} force={forceType} />
   {/if}
@@ -149,6 +162,13 @@
   .title-bar.preview {
     background-color: transparent;
     padding: 0;
+    gap: 0;
+  }
+
+  .title-bar.preview.nokey {
+    .button-key {
+      margin-left: -0.5em;
+    }
   }
 
   .indent {

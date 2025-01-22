@@ -79,7 +79,6 @@ ${style
   }
 
   const allTypes = $state({
-    battery: undefined,
     objectWithGetter: {
       get anObject() {
         return {

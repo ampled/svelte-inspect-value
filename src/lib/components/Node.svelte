@@ -9,7 +9,15 @@
 
   type Props = TypeViewProps<unknown> & { usedefaults?: boolean }
 
-  let { value = undefined, key, path: prevPath = [], usedefaults = false }: Props = $props()
+  let {
+    value = undefined,
+    key,
+    showKey,
+    keyDelim = ':',
+    keyStyle,
+    path: prevPath = [],
+    usedefaults = false,
+  }: Props = $props()
 
   let options = useOptions()
 
@@ -36,7 +44,7 @@
 </script>
 
 <svelte:boundary>
-  <TypeComponent {value} {key} {type} {path} {...componentProps} />
+  <TypeComponent {value} {key} {showKey} {keyDelim} {keyStyle} {type} {path} {...componentProps} />
 
   {#snippet failed(error, reset)}
     {@const inspectError = new InspectError(

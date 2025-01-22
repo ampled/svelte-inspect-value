@@ -19,15 +19,7 @@
   let keys = $derived(getAllProperties(value))
 </script>
 
-<Expandable
-  type={objectType}
-  length={keys.length}
-  {key}
-  {path}
-  {value}
-  forceType={!!classInstance}
-  keepPreviewOnExpand
->
+<Expandable type={objectType} length={keys.length} {key} {path} {value} forceType={!!classInstance}>
   {#snippet valuePreview({ showPreview })}
     <Preview
       prefix={'{'}

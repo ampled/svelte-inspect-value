@@ -294,7 +294,7 @@
     --symbol: var(--cyan);
     --function: var(--green);
     --object-type: var(--cyan);
-    --object: var(--blue);
+    --object: var(--cyan);
     --interactive: var(--base0E);
     --deprecated: var(--base0F);
 

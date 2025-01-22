@@ -10,7 +10,19 @@
 
   type Props = TypeViewProps<T> & HTMLAttributes<HTMLDivElement>
 
-  let { value, display, key, type, forceType, path, children, ...rest }: Props = $props()
+  let {
+    value,
+    display,
+    key,
+    showKey = true,
+    keyDelim = ':',
+    keyStyle,
+    type,
+    forceType,
+    path,
+    children,
+    ...rest
+  }: Props = $props()
 
   let displayOrValue = $derived(display != null ? display : (value?.toString?.() ?? ''))
   let title = $derived(typeof value === 'string' ? value : display != null ? display : '')
@@ -21,17 +33,19 @@
 </script>
 
 <div data-testid="line" class="line" class:preview={previewLevel || isKey} {...rest}>
-  {#if !previewLevel && !isKey}
-    <div class="dash-key">
+  <div class="dash-key">
+    {#if !previewLevel && !isKey}
       <div
         class="dash"
         use:flashOnUpdate={{ value: () => value, enabled: () => options.value.flashOnUpdate }}
       >
         &hyphen;
       </div>
-      <Key {key} {path} />
-    </div>
-  {/if}
+    {/if}
+    {#if showKey}
+      <Key delim={keyDelim} style={keyStyle} {key} {path} />
+    {/if}
+  </div>
   {#if !isKey}
     <Type {type} force={forceType} />
   {/if}
@@ -67,7 +81,7 @@
 
   .line.preview {
     padding-left: 0;
-    /* gap: 0; */
+    gap: 0;
   }
 
   .dash-key {

@@ -11,7 +11,7 @@ TODO handle data: urls?
   import OneLineView from './OneLineView.svelte'
   import StringValue from './StringValue.svelte'
 
-  let { value = '', key, type, path }: TypeViewProps<string> = $props()
+  let { value = '', key, type, path, showKey }: TypeViewProps<string> = $props()
 
   const previewLevel = getContext<number | undefined>('preview')
   const options = useOptions()
@@ -21,12 +21,18 @@ TODO handle data: urls?
   const IMAGE_EXTENSIONS = ['.png', '.svg', '.jpg', '.jpeg', '.webp']
   const AUDIO_EXTENSIONS = ['.mp3', '.ogg', '.wav']
 
-  let isImageUrl = $derived(IMAGE_EXTENSIONS.some((extension) => value.endsWith(extension)))
-  let isAudioUrl = $derived(AUDIO_EXTENSIONS.some((extension) => value.endsWith(extension)))
+  let isUrl = $derived(URL.canParse(value) || value.startsWith('/'))
+  let isImageUrl = $derived(
+    (IMAGE_EXTENSIONS.some((extension) => value.endsWith(extension)) && isUrl) ||
+      value.startsWith('data:image')
+  )
+  let isAudioUrl = $derived(
+    AUDIO_EXTENSIONS.some((extension) => value.endsWith(extension)) && isUrl
+  )
 </script>
 
-{#if (isMultiLine || isImageUrl || isAudioUrl) && !previewLevel}
-  <Expandable {...{ value, key, type, path }} length={value.length} keepPreviewOnExpand>
+{#if (isMultiLine || ((isImageUrl || isAudioUrl) && options.value.embedMedia)) && !previewLevel}
+  <Expandable {...{ value, key, type, path }} length={value.length} {showKey} keepPreviewOnExpand>
     {#snippet valuePreview({ showPreview })}
       {#if showPreview}
         <StringValue {value} length={false} />
@@ -46,7 +52,7 @@ TODO handle data: urls?
   </Expandable>
 {:else}
   <!-- OneLineView should be more performant in nested preview mode as it has less initial logic -->
-  <OneLineView {key} {type} {path} {value} title={stringify(value)}>
+  <OneLineView {showKey} {key} {type} {path} {value} title={stringify(value)}>
     <StringValue {value} length />
   </OneLineView>
 {/if}

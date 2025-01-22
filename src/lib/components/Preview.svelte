@@ -4,7 +4,7 @@
 >
   import { useOptions } from '$lib/options.svelte.js'
   import type { KeyType, TypeViewProps } from '$lib/types.js'
-  import { descriptorPrefix, getPropertyDescriptor, getType } from '$lib/util.js'
+  import { getPropertyDescriptor, getType } from '$lib/util.js'
   import { getContext, setContext } from 'svelte'
   import type { HTMLButtonAttributes } from 'svelte/elements'
   import { fly, slide } from 'svelte/transition'
@@ -23,13 +23,13 @@
     keys?: K[]
     value?: V
     singleValue?: unknown
-    map?: boolean
     type?: TypeViewProps['type']
     startLevel?: number
     showPreview?: boolean
     path?: TypeViewProps['path']
     keyDelim?: string
     keyStyle?: HTMLButtonAttributes['style']
+    showKey?: boolean
   }
 
   const EMPTY = Symbol('EMPTY')
@@ -43,11 +43,11 @@
     prefix,
     postfix,
     singleValue = EMPTY,
+    showKey = true,
     keyDelim = ':',
-    keyStyle,
+    keyStyle = '',
     startLevel = 1,
     showPreview = false,
-    map = false,
   }: PreviewProps = $props()
 
   const previewLevel = getContext<number | undefined>('preview') ?? startLevel
@@ -76,19 +76,23 @@
 </script>
 
 <!-- At configured previewDepth, stop rendering nested item previews and just render their types -->
-{#snippet valuePreview(value: unknown, key: KeyType, force = false)}
+{#snippet valuePreview(value: unknown, key?: KeyType, force = false)}
   {@const valType = getType(value)}
   {#if alwaysRender(valType) || previewLevel < options.value.previewDepth || force}
-    <Node {path} {key} {value} />
+    <Node {path} {key} {value} {showKey} {keyDelim} {keyStyle} />
   {:else}
-    <Type type={valType} force />
+    <div class="key-type-preview">
+      {#if showKey}
+        <Key {path} {key} delim={keyDelim} style={keyStyle} />
+      {/if}
+      <Type type={valType} force />
+    </div>
   {/if}
 {/snippet}
 
 {#snippet previewValue(key: K, _force = false, descriptor?: PropertyDescriptor)}
   {#if descriptor?.set || descriptor?.get}
     <GetterSetter {key} {descriptor} {value} {path} />
-    <!-- -->
   {:else}
     {@render valuePreview(value?.[key], key)}
   {/if}
@@ -102,8 +106,9 @@
   {#snippet failed(_, reset)}
     preview error. check console <NodeActionButton onclick={reset}>reset</NodeActionButton>
   {/snippet}
-  {#if options.value.showPreview && showPreview}
+  {#if options.value.showPreview && options.value.previewEntries > 0 && showPreview}
     <div
+      data-testid="preview"
       class="preview"
       transition:slide={{
         axis: 'x',
@@ -124,25 +129,13 @@
         {#if keys && value}
           {#each keys as key, i (i)}
             {@const descriptor = getPropertyDescriptor(value, key)}
-            <div class="key-value">
-              <Key
-                {key}
-                {path}
-                prefix={descriptorPrefix(descriptor)}
-                delim={keyDelim}
-                style={map ? 'gap: 0.25em' : ''}
-              />
-              {@render previewValue(key, false, descriptor)}
-            </div>
+            {@render previewValue(key, false, descriptor)}
             {#if i < keys.length - 1}{@render comma()}{/if}
           {/each}
         {/if}
         {#if keyValue}
           {#each keyValue as [key, value], i}
-            <div class="key-value">
-              <Key {key} {path} delim={keyDelim} style={map ? 'gap: 0.25em' : ''} />
-              {@render valuePreview(value, key)}
-            </div>
+            {@render valuePreview(value, key)}
             {#if i < keyValue.length - 1}{@render comma()}{/if}
           {/each}
         {:else if list}
@@ -150,7 +143,7 @@
             {@render valuePreview(value, i)}{#if i < list.length - 1}{@render comma()}{/if}
           {/each}
         {:else if singleValue !== EMPTY}
-          {@render valuePreview(singleValue, 'preview', false)}
+          {@render valuePreview(singleValue, undefined, false)}
         {/if}
       </div>
       {#if hasMore}{@render comma()}<span class="ellipsis">&hellip;</span>{/if}
@@ -164,7 +157,7 @@
 <style>
   .comma {
     margin-left: 0;
-    margin-right: 0.5em;
+    margin-right: 0.25em;
     color: var(--fg);
   }
 
@@ -197,7 +190,7 @@
     text-overflow: ellipsis;
   }
 
-  .key-value {
+  .key-type-preview {
     display: inline-flex;
     align-items: center;
     justify-content: flex-start;

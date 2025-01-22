@@ -16,13 +16,7 @@
 
 <Expandable {...{ value, key, type, path }} length={entries.length}>
   {#snippet valuePreview({ showPreview })}
-    <Preview
-      list={preview}
-      hasMore={preview.length < entries.length}
-      prefix={'['}
-      postfix={']'}
-      {showPreview}
-    />
+    <Preview list={preview} prefix={'['} postfix={']'} showKey={false} {showPreview} />
   {/snippet}
   {#each entries as value, i (i)}
     <Entry {i}>

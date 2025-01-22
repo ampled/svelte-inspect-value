@@ -22,10 +22,9 @@
       keyValue={entries}
       prefix={'{'}
       postfix={'}'}
-      map
       type="map"
       keyDelim="=>"
-      keyStyle="gap: 0.25em;"
+      keyStyle="gap: 0.25em;margin-right: 0.25em;"
       {showPreview}
     />
   {/snippet}
@@ -48,9 +47,8 @@
               prefix={'{'}
               postfix={'}'}
               keyDelim="=>"
-              keyStyle="gap: 0.25em;"
+              keyStyle="gap: 0.25em;margin-right: 0.25em;"
               type="map"
-              map
               {showPreview}
             />
           {/snippet}

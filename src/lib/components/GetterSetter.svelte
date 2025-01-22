@@ -26,7 +26,7 @@
   let getterValue = $state<unknown>()
   let error = $state<InspectError>()
   let isSetting = $state(false)
-  let inputText = $state<string>()
+  let inputText = $state<string>('')
   let inputState = $state<'valid' | 'invalid' | 'untouched'>('untouched')
   let inputValue = $state<unknown>()
   let path = $derived(key != null && prevPath ? [...prevPath, key] : ['root'])
@@ -114,6 +114,7 @@
     {key}
     {keyPrefix}
     {path}
+    keyDelim={typeof previewLevel === 'number' ? '' : ':'}
     value={descriptor}
     showLength={false}
     keepPreviewOnExpand
@@ -166,10 +167,12 @@
           <Preview
             showPreview={(hasCachedValue || valueRetrieved) && showPreview}
             singleValue={retrievedValue}
+            showKey={false}
             startLevel={0}
             prefix="("
             postfix=")"
-            path={[...path, 'PREVIEW']}
+            keyDelim=""
+            {path}
           />
         {/if}
       {/if}

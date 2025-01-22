@@ -1,15 +1,28 @@
 <script lang="ts">
   import { Inspect } from '$lib/index.js'
+  import * as w from 'svelte/reactivity/window'
 
   let div = $state()
-  let activeElement: Element | null = $state(null)
+  // let activeElement: Element | null = $state(null)
 
   let width = $state(500)
   let classes = $state('radius')
   let testid = $state('demo-div')
+
+  const _window = $derived(
+    Object.fromEntries(
+      Object.entries(w).map(([key, p]) => {
+        if (typeof p === 'string') {
+          return [key, p]
+        } else {
+          return [key, p.current]
+        }
+      })
+    )
+  )
 </script>
 
-<svelte:document bind:activeElement />
+<!-- <svelte:document bind:activeElement /> -->
 
 <div class="flex col">
   <h2>HTML Elements</h2>
@@ -42,6 +55,8 @@
     </ul>
   </div>
   <Inspect value={div} name="htmlElement" theme="drak" style="flex-basis: 100%" />
+
+  <Inspect value={_window} />
 
   <!-- <p>This instance inspects <code>document.activeElement</code>:</p>
   <Inspect

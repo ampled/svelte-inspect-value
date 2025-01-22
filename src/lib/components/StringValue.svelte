@@ -12,7 +12,6 @@
   import { getContext } from 'svelte'
   import { useOptions } from '../options.svelte.js'
   import type { TypeViewProps } from '../types.js'
-  import { isUrl as isurl } from '../util/is-url.js'
   import Count from './Count.svelte'
 
   type Props = TypeViewProps<string> & { length?: boolean }
@@ -22,7 +21,9 @@
   const options = useOptions()
 
   let displayOrValue = $derived(display != null ? display : value)
-  let isUrlOrPath = $derived(isurl(displayOrValue) || displayOrValue.startsWith('/'))
+  let isUrlOrPath = $derived(
+    URL.canParse(displayOrValue) || displayOrValue.startsWith('/') || value.startsWith('data:')
+  )
   let ele: 'a' | 'span' = $derived(isUrlOrPath ? 'a' : 'span')
 
   let collapsed = $derived(collapseString(displayOrValue, options.value.stringCollapse))

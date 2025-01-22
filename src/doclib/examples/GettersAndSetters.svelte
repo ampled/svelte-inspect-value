@@ -4,6 +4,17 @@
   import code from './gettersandsetters.txt?raw'
 
   let value = $state({
+    name: {
+      first: 'Ringo',
+      last: 'Starr',
+      get full() {
+        return `${this.first} ${this.last}`
+      },
+      set firstName(value: string) {
+        console.assert(typeof value === 'string')
+        this.first = value
+      },
+    },
     value: 10,
     multiplier: 4.2,
     lastChecked: '',

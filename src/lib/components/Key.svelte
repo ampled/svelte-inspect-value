@@ -15,7 +15,6 @@
   } & HTMLButtonAttributes
 
   let { key, path = [], ondblclick, delim = ':', prefix, force = false, ...rest }: Props = $props()
-
   const keyTypes = ['string', 'number', 'symbol']
   const simpleKeys = ['bigint', 'regexp']
 

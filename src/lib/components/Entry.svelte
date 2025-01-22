@@ -25,6 +25,6 @@
 
 <style>
   .entry {
-    margin-left: 0;
+    margin-left: 0.25em;
   }
 </style>

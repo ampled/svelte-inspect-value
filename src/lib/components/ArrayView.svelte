@@ -7,12 +7,12 @@
 
   type Props = TypeViewProps<unknown[]>
 
-  let { value: arrayVal = [], key = undefined, type, path }: Props = $props()
+  let { value: arrayVal = [], key = undefined, type, path, showKey }: Props = $props()
 </script>
 
-<Expandable {...{ value: arrayVal, key, type, path }} length={arrayVal.length}>
+<Expandable {...{ value: arrayVal, key, type, path }} length={arrayVal.length} {showKey}>
   {#snippet valuePreview({ showPreview })}
-    <Preview {path} list={arrayVal} prefix={'['} postfix={']'} {showPreview} />
+    <Preview {path} list={arrayVal} prefix={'['} postfix={']'} {showPreview} showKey={false} />
   {/snippet}
   {#each arrayVal as value, i (i)}
     <Entry {i}>

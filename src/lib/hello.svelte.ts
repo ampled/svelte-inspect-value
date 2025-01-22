@@ -22,7 +22,7 @@ export function logToConsole(path: KeyType[] = [], value: unknown, type: string 
       '[Inspect] caught error trying to log snapshot of value. retrying without cloning. error:',
       e
     )
-    console[method]('retry:', value)
+    console.log('retry:', value)
   }
 }
 
