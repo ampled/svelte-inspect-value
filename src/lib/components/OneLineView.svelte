@@ -10,7 +10,7 @@
 
   type Props = TypeViewProps<T> & HTMLAttributes<HTMLDivElement>
 
-  let { value, display, key, type, path, children, ...rest }: Props = $props()
+  let { value, display, key, type, forceType, path, children, ...rest }: Props = $props()
 
   let displayOrValue = $derived(display != null ? display : (value?.toString?.() ?? ''))
   let title = $derived(typeof value === 'string' ? value : display != null ? display : '')
@@ -33,7 +33,7 @@
     </div>
   {/if}
   {#if !isKey}
-    <Type {type} />
+    <Type {type} force={forceType} />
   {/if}
   {#if children}
     {@render children()}

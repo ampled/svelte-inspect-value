@@ -1,5 +1,6 @@
 <script lang="ts">
   import { getContext, setContext } from 'svelte'
+  import { SvelteMap } from 'svelte/reactivity'
   import Node from './components/Node.svelte'
   import { createOptions, GLOBAL_OPTIONS_CONTEXT, OPTIONS_CONTEXT } from './options.svelte.js'
   import { createState, STATE_CONTEXT_KEY } from './state.svelte.js'
@@ -14,6 +15,7 @@
     showTypes = true,
     showPreview = true,
     previewDepth = 1,
+    previewEntries = 3,
     showTools = true,
     quotes = 'single',
     expandAll = false,
@@ -39,6 +41,7 @@
     showTypes,
     showPreview,
     previewDepth,
+    previewEntries,
     showTools,
     stringCollapse,
     noanimate,
@@ -61,6 +64,7 @@
       showTypes,
       showPreview,
       previewDepth,
+      previewEntries,
       showTools,
       stringCollapse,
       noanimate,
@@ -78,6 +82,7 @@
 
   setContext(STATE_CONTEXT_KEY, inspectState)
   setContext(OPTIONS_CONTEXT, options)
+  setContext('value-cache', new SvelteMap<string, unknown>())
 
   function setAllNodes(collapsed: boolean) {
     if (inspectState.value) {

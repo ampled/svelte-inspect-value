@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { getContext } from 'svelte'
 import type { KeyType } from './types.js'
-import { stringifyPath } from './util.js'
+import { ensureStringPath, stringifyPath } from './util.js'
 
 export const STATE_CONTEXT_KEY = Symbol('inspect-state')
 
@@ -11,6 +12,7 @@ export type NodeState = {
 export type InspectState = {
   [key: string]: {
     collapsed: boolean
+    getterValue?: unknown
   }
 }
 
@@ -29,19 +31,28 @@ export function createState(init: InspectState, onChange?: (value: InspectState)
       state = val
     },
     setCollapse: (keyOrPath: string | KeyType[], collapsed: boolean) => {
-      const key = ensureStringPath(keyOrPath)
-      let changed = false
-      if (state) {
-        state[key] = { collapsed }
-        changed = true
-      }
-      if (changed && state) {
-        emitChanged()
+      try {
+        const key = ensureStringPath(keyOrPath)
+        let changed = false
+        if (state) {
+          const existing = state[key] ?? {}
+          state[key] = { ...existing, collapsed }
+          changed = true
+        }
+        if (changed && state) {
+          emitChanged()
+        }
+      } catch (e) {
+        console.error(e)
       }
     },
-    getCollapse: (keyOrPath: string | KeyType[]) => {
+    getCollapse(keyOrPath: string | KeyType[]) {
       const key = ensureStringPath(keyOrPath)
-      return state?.[key]
+      return this.value?.[key]
+    },
+    getNode(keyOrPath: () => string | KeyType[]) {
+      const key = ensureStringPath(keyOrPath())
+      return this.value?.[key]
     },
     hasExpandedChildren: (path: KeyType[]) => {
       if (state) {
@@ -86,17 +97,23 @@ export function createState(init: InspectState, onChange?: (value: InspectState)
         }
       }
     },
+    setGetterValue(keyOrPath: string | KeyType[], value: unknown) {
+      const key = ensureStringPath(keyOrPath)
+      if (this.value) {
+        this.value[key].getterValue = value
+      }
+    },
   }
 }
 
 export type StateContext = ReturnType<typeof createState>
 
-export function ensureStringPath(path: string | KeyType[]) {
-  let key: string
-  if (Array.isArray(path)) {
-    key = stringifyPath(path)
-  } else {
-    key = path
-  }
-  return key
+export function useState(): StateContext {
+  return getContext<StateContext>(STATE_CONTEXT_KEY)
+}
+
+export function useNodeState(keyOrPath: () => string | KeyType[]) {
+  const ctx = useState()
+  const key = ensureStringPath(keyOrPath())
+  return () => ctx.value?.[key]
 }

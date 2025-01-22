@@ -1,6 +1,6 @@
 import type { Component } from 'svelte'
 import type { HTMLAttributes } from 'svelte/elements'
-import type { ViewComponents } from './components/types.js'
+import type { ViewComponents } from './components/index.js'
 import type { JSONInspectOptions } from './options.svelte.js'
 import type { InspectState } from './state.svelte.js'
 import type { ValueType } from './util.js'
@@ -31,7 +31,7 @@ export type TypeViewProps<Value = unknown, Type = ValueType> = {
    */
   display?: string
   type?: Type
-  collapsed?: boolean
+  forceType?: boolean
 }
 
 export type CustomComponent = Component<TypeViewProps>

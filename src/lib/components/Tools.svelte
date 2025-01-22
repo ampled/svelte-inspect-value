@@ -1,6 +1,6 @@
 <script lang="ts">
   import { getContext } from 'svelte'
-  import { copyToClipBoard, logToConsole } from '../hello.js'
+  import { copyToClipBoard, logToConsole } from '../hello.svelte.js'
   import CollapseChildren from '../icons/CollapseChildren.svelte'
   import Console from '../icons/Console.svelte'
   import Copy from '../icons/Copy.svelte'
@@ -94,7 +94,7 @@
     <button
       title="log value to console"
       aria-label="log value to console"
-      onclick={() => logToConsole(path, $state.snapshot(value))}
+      onclick={() => logToConsole(path, value, type)}
     >
       <Console />
     </button>

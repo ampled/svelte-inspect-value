@@ -13,17 +13,19 @@
   let keys = $derived([...value.keys()])
   let entries = $derived<[KeyType, unknown][]>([...value.entries()] as [KeyType, unknown][])
 
-  let preview = $derived<[KeyType, unknown][]>(entries.slice(0, 3))
+  // let preview = $derived<[KeyType, unknown][]>(entries.slice(0, 3))
 </script>
 
 <Expandable {...{ value, key, type, path }} length={entries.length}>
   {#snippet valuePreview({ showPreview })}
     <Preview
-      keyValue={preview}
+      keyValue={entries}
       prefix={'{'}
       postfix={'}'}
-      hasMore={entries.length > preview.length}
       map
+      type="map"
+      keyDelim="=>"
+      keyStyle="gap: 0.25em;"
       {showPreview}
     />
   {/snippet}
@@ -43,7 +45,11 @@
           {#snippet valuePreview({ showPreview })}
             <Preview
               keyValue={[[key as string, value.get(key)]]}
-              hasMore={false}
+              prefix={'{'}
+              postfix={'}'}
+              keyDelim="=>"
+              keyStyle="gap: 0.25em;"
+              type="map"
               map
               {showPreview}
             />

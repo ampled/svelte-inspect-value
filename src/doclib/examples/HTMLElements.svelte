@@ -41,16 +41,16 @@
       {/each}
     </ul>
   </div>
-  <Inspect value={div} name="htmlElement" theme="drak" style="flex-basis: 100%" expandAll />
+  <Inspect value={div} name="htmlElement" theme="drak" style="flex-basis: 100%" />
 
-  <p>This instance inspects <code>document.activeElement</code>:</p>
+  <!-- <p>This instance inspects <code>document.activeElement</code>:</p>
   <Inspect
     value={activeElement}
     name="activeElement"
     theme="drak"
     style="flex-basis: 100%; max-height: 100px"
     expandAll
-  />
+  /> -->
 </div>
 
 <style>

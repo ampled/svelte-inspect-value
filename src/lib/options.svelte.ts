@@ -23,6 +23,12 @@ export type JSONInspectOptions = {
    */
   showPreview: boolean
   /**
+   * How many entries / items of arrays, objects, maps, sets etc. to preview
+   *
+   * Default 3
+   */
+  previewEntries: number
+  /**
    * How many levels of nested values to preview before showing only type
    *
    * Default: 1
@@ -129,6 +135,7 @@ export function createOptions(options: Partial<JSONInspectOptions>) {
     showTypes: true,
     showPreview: true,
     previewDepth: 1,
+    previewEntries: 3,
     flashOnUpdate: true,
     showLength: true,
     showTools: true,

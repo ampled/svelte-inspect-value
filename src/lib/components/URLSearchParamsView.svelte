@@ -2,7 +2,7 @@
   import type { TypeViewProps } from '../types.js'
   import Entry from './Entry.svelte'
   import Expandable from './Expandable.svelte'
-  import JsonViewer from './Node.svelte'
+  import Node from './Node.svelte'
   import Preview from './Preview.svelte'
 
   type Props = TypeViewProps<URLSearchParams>
@@ -41,7 +41,7 @@
   {/snippet}
   {#each entries as [key, value], i (key)}
     <Entry {i}>
-      <JsonViewer {value} {key} {path} />
+      <Node {value} {key} {path} />
     </Entry>
   {/each}
 </Expandable>

@@ -27,6 +27,7 @@
     showLength: true,
     showPreview: true,
     previewDepth: 1,
+    previewEntries: 3,
     flashOnUpdate: true,
     noanimate: false,
     quotes: 'single',
@@ -150,6 +151,10 @@
       <label>
         preview depth
         <input type="number" bind:value={options.previewDepth} style="width: 5em" />
+      </label>
+      <label>
+        preview entries
+        <input type="number" bind:value={options.previewEntries} style="width: 5em" />
       </label>
     </div>
   </main>

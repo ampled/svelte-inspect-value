@@ -1,8 +1,9 @@
 <script lang="ts">
   import { useOptions } from '$lib/options.svelte.js'
-  import { descriptorPrefix } from '$lib/util.js'
-  import { tick } from 'svelte'
+  import { descriptorPrefix, stringifyPath } from '$lib/util.js'
+  import { getContext, tick } from 'svelte'
   import type { HTMLAttributes } from 'svelte/elements'
+  import type { SvelteMap } from 'svelte/reactivity'
   import { slide } from 'svelte/transition'
   import { InspectError, type TypeViewProps } from '../types.js'
   import Entry from './Entry.svelte'
@@ -19,6 +20,8 @@
   let { value, display, key, path: prevPath = [], descriptor, children, ...rest }: Props = $props()
 
   const options = useOptions()
+  const previewLevel = getContext<number | undefined>('preview')
+  const valueCache = getContext<SvelteMap<string, unknown>>('value-cache')
   let valueRetrieved = $state(false)
   let getterValue = $state<unknown>()
   let error = $state<InspectError>()
@@ -31,12 +34,23 @@
   let inputElement = $state<HTMLInputElement>()
   let setButton = $state<ReturnType<typeof NodeActionButton>>()
 
+  let stringifiedPath = $derived(stringifyPath(path))
+  let hasCachedValue = $derived(valueCache.has(stringifiedPath))
+
+  let retrievedValue = $derived(
+    valueRetrieved ? getterValue : hasCachedValue ? valueCache.get(stringifiedPath) : undefined
+  )
+
   function callGetter() {
     try {
-      getterValue = descriptor.get?.call(value)
       valueRetrieved = true
+      const newGetterValue = descriptor.get?.call(value)
+      getterValue = newGetterValue
+      valueCache.set(stringifiedPath, getterValue)
     } catch (e: unknown) {
+      valueCache.delete(stringifiedPath)
       error = new InspectError('getter call failed', descriptor.get, { cause: e })
+      valueRetrieved = false
     }
   }
 
@@ -44,8 +58,10 @@
     if (inputState === 'valid') {
       try {
         descriptor.set?.call(value, inputValue)
+        // stateContext.setGetterValue(path, inputValue)
       } catch (e: unknown) {
         error = new InspectError('setter call failed', descriptor.set, { cause: e })
+        // stateContext.setGetterValue(path, undefined)
       } finally {
         isSetting = false
         inputText = ''
@@ -61,6 +77,7 @@
     error = undefined
     getterValue = undefined
     valueRetrieved = false
+    valueCache.delete(stringifiedPath)
   }
 
   async function onkeyup(event: KeyboardEvent & { currentTarget: EventTarget & HTMLInputElement }) {
@@ -127,7 +144,7 @@
           >x
         </NodeActionButton>
       {:else}
-        {#if descriptor.set}
+        {#if descriptor.set && previewLevel == null}
           <NodeActionButton
             bind:this={setButton}
             title={`set ${key?.toString()}`}
@@ -141,32 +158,37 @@
           </NodeActionButton>
         {/if}
         {#if descriptor.get}
-          <NodeActionButton title={`get ${key?.toString()} value`} onclick={callGetter}>
-            get
-          </NodeActionButton>
+          {#if previewLevel == null}
+            <NodeActionButton title={`get ${key?.toString()} value`} onclick={callGetter}>
+              get
+            </NodeActionButton>
+          {/if}
           <Preview
-            showPreview={valueRetrieved && showPreview}
-            singleValue={getterValue}
+            showPreview={(hasCachedValue || valueRetrieved) && showPreview}
+            singleValue={retrievedValue}
+            startLevel={0}
             prefix="("
             postfix=")"
-            hasMore={false}
+            path={[...path, 'PREVIEW']}
           />
         {/if}
       {/if}
     {/snippet}
+    <!-- children -->
     {#if descriptor.get}
       <Entry i={0}>
-        <Node key="value" value={getterValue} {path} />
+        <Node key="value" value={retrievedValue} {path} />
       </Entry>
       <Entry i={1}>
         <Node key="getter" value={descriptor.get} {path} />
       </Entry>
     {/if}
     {#if descriptor.set}
-      <Entry i={3}>
+      <Entry i={2}>
         <Node key="setter" value={descriptor.set} {path} />
       </Entry>
     {/if}
+    <!-- /children -->
   </Expandable>
 {/if}
 
