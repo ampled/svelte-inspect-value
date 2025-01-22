@@ -1,19 +1,29 @@
-import type { KeyType } from './types.js'
+import { type KeyType } from './types.js'
 import { stringifyOrToString } from './util.js'
 
 export function logToConsole(path: KeyType[] = [], value: unknown, type: string | undefined) {
   const prefix = [
-    `%cInspect ${path.join('.')}`,
+    `%cInspect ${type} at ${path.join('.')} :`,
     'background-color: black; padding: 5px; color: hotpink; border-radius: 8px;',
   ]
 
+  console.log(...prefix)
+
+  let method: keyof typeof console = 'log'
+
   if (type === 'object') {
-    console.log(...prefix)
-    console.dir(value)
-  } else {
-    console.log(...prefix, '\n', value)
+    method = 'dir'
   }
-  // console.dirxml(...items);
+
+  try {
+    console[method]($state.snapshot(value))
+  } catch (e) {
+    console.error(
+      '[Inspect] caught error trying to log snapshot of value. retrying without cloning. error:',
+      e
+    )
+    console[method]('retry:', value)
+  }
 }
 
 export function copyToClipBoard(item: unknown) {
