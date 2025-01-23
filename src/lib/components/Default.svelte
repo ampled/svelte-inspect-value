@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { TypeViewProps } from '../types.js'
+  import { getAllProperties } from '../util.js'
   import Expandable from './Expandable.svelte'
   import GetterSetter from './GetterSetter.svelte'
   import Node from './Node.svelte'
@@ -9,22 +10,6 @@
   type Props = TypeViewProps<object>
 
   let { value, key, type, path }: Props = $props()
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  export const getAllProperties = (object: any) => {
-    const enumerableKeys = []
-    for (const enumerableKey in object) {
-      enumerableKeys.push(enumerableKey)
-    }
-    return [
-      ...new Set([
-        ...enumerableKeys,
-        ...Object.getOwnPropertyNames(object),
-        ...Object.getOwnPropertySymbols(object),
-        // ...(object['__proto__'] ? ['__proto__'] : []),
-      ]),
-    ]
-  }
 
   let keys = $derived(getAllProperties(value))
 </script>
