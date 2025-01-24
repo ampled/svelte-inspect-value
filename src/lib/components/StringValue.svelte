@@ -22,7 +22,8 @@
 
   let displayOrValue = $derived(display != null ? display : value)
   let isUrlOrPath = $derived(
-    URL.canParse(displayOrValue) || displayOrValue.startsWith('/') || value.startsWith('data:')
+    (type === 'string' || type === 'url') &&
+      (URL.canParse(displayOrValue) || displayOrValue.startsWith('/') || value.startsWith('data:'))
   )
   let ele: 'a' | 'span' = $derived(isUrlOrPath ? 'a' : 'span')
 

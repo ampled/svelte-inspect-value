@@ -1,7 +1,3 @@
-<!-- @component
-
-TODO handle data: urls?
--->
 <script lang="ts">
   import { getContext } from 'svelte'
   import { useOptions } from '../options.svelte.js'
@@ -11,14 +7,14 @@ TODO handle data: urls?
   import OneLineView from './OneLineView.svelte'
   import StringValue from './StringValue.svelte'
 
-  let { value = '', key, type, path, showKey }: TypeViewProps<string> = $props()
+  let { value = '', key, type, path, showKey, ...rest }: TypeViewProps<string> = $props()
 
   const previewLevel = getContext<number | undefined>('preview')
   const options = useOptions()
 
   let isMultiLine = $derived(value.includes('\n'))
 
-  const IMAGE_EXTENSIONS = ['.png', '.svg', '.jpg', '.jpeg', '.webp']
+  const IMAGE_EXTENSIONS = ['.gif', '.png', '.svg', '.jpg', '.jpeg', '.webp']
   const AUDIO_EXTENSIONS = ['.mp3', '.ogg', '.wav']
 
   let isUrl = $derived(URL.canParse(value) || value.startsWith('/'))
@@ -32,7 +28,13 @@ TODO handle data: urls?
 </script>
 
 {#if (isMultiLine || ((isImageUrl || isAudioUrl) && options.value.embedMedia)) && !previewLevel}
-  <Expandable {...{ value, key, type, path }} length={value.length} {showKey} keepPreviewOnExpand>
+  <Expandable
+    {...{ value, key, type, path }}
+    length={value.length}
+    {showKey}
+    keepPreviewOnExpand
+    {...rest}
+  >
     {#snippet valuePreview({ showPreview })}
       {#if showPreview}
         <StringValue {value} length={false} />
@@ -52,7 +54,7 @@ TODO handle data: urls?
   </Expandable>
 {:else}
   <!-- OneLineView should be more performant in nested preview mode as it has less initial logic -->
-  <OneLineView {showKey} {key} {type} {path} {value} title={stringify(value)}>
+  <OneLineView {showKey} {key} {type} {path} {value} title={stringify(value)} {...rest}>
     <StringValue {value} length />
   </OneLineView>
 {/if}
