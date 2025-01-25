@@ -24,7 +24,7 @@
       postfix={'}'}
       type="map"
       keyDelim="=>"
-      keyStyle="gap: 0.25em;margin-right: 0.25em;"
+      keyStyle="gap: 0.5em;"
       {showPreview}
     />
   {/snippet}
@@ -47,7 +47,7 @@
               prefix={'{'}
               postfix={'}'}
               keyDelim="=>"
-              keyStyle="gap: 0.25em;margin-right: 0.25em;"
+              keyStyle="gap: 0.5em;"
               type="map"
               {showPreview}
             />
@@ -62,31 +62,4 @@
       {/if}
     {/snippet}
   </PropertyList>
-
-  <!-- {#each entries as [mapKey, mapValue], i (mapKey)}
-    <Entry {i}>
-      {#if ['string', 'number', 'symbol'].includes(typeof mapKey)}
-        <Node key={mapKey as string} value={mapValue} {path} />
-      {:else}
-        <Expandable
-          key=""
-          type="Entry"
-          value={[mapKey, mapValue]}
-          path={[...path, i]}
-          length={2}
-          showLength={false}
-        >
-          {#snippet valuePreview({ showPreview })}
-            <Preview keyValue={[[mapKey, mapValue]]} hasMore={false} map {showPreview} />
-          {/snippet}
-          <Entry i={0}>
-            <Node key="key" value={mapKey} path={[...path, i]} />
-          </Entry>
-          <Entry i={1}>
-            <Node key="value" value={mapValue} path={[...path, i]} />
-          </Entry>
-        </Expandable>
-      {/if}
-    </Entry>
-  {/each} -->
 </Expandable>
