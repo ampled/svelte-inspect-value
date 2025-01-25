@@ -22,9 +22,3 @@
 >
   {@render children?.()}
 </div>
-
-<style>
-  .entry {
-    margin-left: 0.25em;
-  }
-</style>
