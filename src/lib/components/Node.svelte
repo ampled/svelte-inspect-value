@@ -2,21 +2,20 @@
   import { useOptions } from '../options.svelte.js'
   import { InspectError, type CustomComponents, type TypeViewProps } from '../types.js'
   import { getType, type ValueType } from '../util.js'
+  import Default from './Default.svelte'
   import HtmlView from './HTMLView.svelte'
-  import InspectErrorView from './InspectErrorView.svelte'
-  import Noop from './Noop.svelte'
   import { getComponent } from './index.js'
+  import InspectErrorView from './InspectErrorView.svelte'
 
   type Props = TypeViewProps<unknown> & { usedefaults?: boolean }
 
   let {
     value = undefined,
     key,
-    showKey,
     keyDelim = ':',
-    keyStyle,
     path: prevPath = [],
     usedefaults = false,
+    ...rest
   }: Props = $props()
 
   let options = useOptions()
@@ -34,7 +33,7 @@
       return [HtmlView, {}] as const
     }
 
-    return [Noop, {}] as const
+    return [Default, {}] as const
   }
 
   let [TypeComponent, componentProps] = $derived(
@@ -44,7 +43,7 @@
 </script>
 
 <svelte:boundary>
-  <TypeComponent {value} {key} {showKey} {keyDelim} {keyStyle} {type} {path} {...componentProps} />
+  <TypeComponent {value} {key} {keyDelim} {type} {path} {...rest} {...componentProps} />
 
   {#snippet failed(error, reset)}
     {@const inspectError = new InspectError(
