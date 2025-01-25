@@ -126,32 +126,45 @@ export type JSONInspectOptions = {
   embedMedia: boolean
 }
 
-export function createOptions(options: Partial<JSONInspectOptions>) {
-  let value: JSONInspectOptions = $state({
-    open: false,
-    draggable: false,
-    noanimate: false,
-    quotes: 'single',
-    showTypes: true,
-    showPreview: true,
-    previewDepth: 1,
-    previewEntries: 3,
-    flashOnUpdate: true,
-    showLength: true,
-    showTools: true,
-    stringCollapse: 0,
-    theme: 'drak',
-    expandAll: false,
-    borderless: false,
-    customComponents: {},
-    expandLevel: 1,
-    embedMedia: false,
-    ...options,
-  })
+const DEFAULT_OPTIONS: JSONInspectOptions = {
+  open: false,
+  draggable: false,
+  noanimate: false,
+  quotes: 'single',
+  showTypes: true,
+  showPreview: true,
+  previewDepth: 1,
+  previewEntries: 3,
+  flashOnUpdate: true,
+  showLength: true,
+  showTools: true,
+  stringCollapse: 0,
+  theme: 'drak',
+  expandAll: false,
+  borderless: false,
+  customComponents: {},
+  expandLevel: 1,
+  embedMedia: false,
+} as const
+
+export function mergeOptions(
+  fromProps: Partial<JSONInspectOptions>,
+  fromContext: Partial<JSONInspectOptions> = {}
+) {
+  const definedPropOptions = Object.entries(fromProps).filter(([, v]) => v != null)
+
+  return {
+    ...DEFAULT_OPTIONS,
+    ...fromContext,
+    ...Object.fromEntries(definedPropOptions),
+  }
+}
+
+export function createOptions(options: () => JSONInspectOptions) {
+  let value: JSONInspectOptions = $state(options())
 
   return {
     get value() {
-      // createSub
       return value
     },
     set value(val: JSONInspectOptions) {

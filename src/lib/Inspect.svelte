@@ -2,7 +2,13 @@
   import { getContext, setContext } from 'svelte'
   import { SvelteMap } from 'svelte/reactivity'
   import Node from './components/Node.svelte'
-  import { createOptions, GLOBAL_OPTIONS_CONTEXT, OPTIONS_CONTEXT } from './options.svelte.js'
+  import {
+    createOptions,
+    GLOBAL_OPTIONS_CONTEXT,
+    mergeOptions,
+    OPTIONS_CONTEXT,
+    type JSONInspectOptions,
+  } from './options.svelte.js'
   import { createState, STATE_CONTEXT_KEY } from './state.svelte.js'
   import type { InspectProps } from './types.js'
 
@@ -11,22 +17,22 @@
     name = undefined,
     onCollapseChange,
     // options
-    showLength = true,
-    showTypes = true,
-    showPreview = true,
-    previewDepth = 1,
-    previewEntries = 3,
-    showTools = true,
-    quotes = 'single',
-    expandAll = false,
-    expandLevel = 1,
-    flashOnUpdate = true,
-    stringCollapse = 0,
-    noanimate = false,
-    borderless = false,
-    theme = 'drak',
-    customComponents = {},
-    embedMedia = false,
+    showLength,
+    showTypes,
+    showPreview,
+    previewDepth,
+    previewEntries,
+    showTools,
+    quotes,
+    expandAll,
+    expandLevel,
+    flashOnUpdate,
+    stringCollapse,
+    noanimate,
+    borderless,
+    theme,
+    customComponents,
+    embedMedia,
     // Html Attributes
     class: classValue = '',
     ...rest
@@ -34,50 +40,43 @@
 
   const inspectState = createState({}, (state) => onCollapseChange?.(state))
 
-  let globalOptions = getContext(GLOBAL_OPTIONS_CONTEXT)
+  let globalOptions = getContext<Partial<JSONInspectOptions>>(GLOBAL_OPTIONS_CONTEXT)
 
-  let options = createOptions({
-    showLength,
-    showTypes,
-    showPreview,
-    previewDepth,
-    previewEntries,
-    showTools,
-    stringCollapse,
-    noanimate,
-    customComponents,
-    theme,
-    expandAll,
-    expandLevel,
-    flashOnUpdate,
-    quotes,
-    borderless,
-    embedMedia,
-    ...(globalOptions ? globalOptions : {}),
+  let mergedOptions = $derived(
+    mergeOptions(
+      {
+        showLength,
+        showTypes,
+        showPreview,
+        previewDepth,
+        previewEntries,
+        showTools,
+        quotes,
+        expandAll,
+        expandLevel,
+        flashOnUpdate,
+        stringCollapse,
+        noanimate,
+        borderless,
+        theme,
+        customComponents,
+        embedMedia,
+      },
+      globalOptions
+    )
+  )
+
+  $effect(() => {
+    if (name === 'squirtle') {
+      console.log(mergedOptions)
+    }
   })
 
+  let options = createOptions(() => mergedOptions)
+
   // FIXME: this is dumb and not good use of reactivity
-  // also global options should probably not take priority over passed props
   $effect(() => {
-    options.setOptions({
-      showLength,
-      showTypes,
-      showPreview,
-      previewDepth,
-      previewEntries,
-      showTools,
-      stringCollapse,
-      noanimate,
-      customComponents,
-      theme,
-      expandAll,
-      expandLevel,
-      flashOnUpdate,
-      quotes,
-      borderless,
-      embedMedia,
-      ...(globalOptions ? globalOptions : {}),
-    })
+    options.setOptions(mergedOptions)
   })
 
   setContext(STATE_CONTEXT_KEY, inspectState)
