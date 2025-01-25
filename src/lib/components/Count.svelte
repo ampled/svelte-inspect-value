@@ -11,12 +11,27 @@
 
   const options = useOptions()
 
+  let prefix = $derived.by(() => {
+    if (!options.value.showLength) {
+      return ''
+    }
+    // if (!type) return ''
+    switch (type) {
+      case 'urlsearchparams':
+        return 'size:'
+      default:
+        return ''
+    }
+  })
+
   let unit = $derived.by(() => {
     if (!options.value.showLength) {
       return ''
     }
     // if (!type) return ''
     switch (type) {
+      case 'urlsearchparams':
+        return
       case 'array':
       case 'int8array':
       case 'uint8array':
@@ -41,7 +56,13 @@
 {#if options.value.showLength && typeof length === 'number'}
   <span data-testid="count" class="count">
     {#if length > 0}
-      {length} {unit}
+      {#if prefix}
+        {prefix}
+      {/if}
+      {length}
+      {#if unit}
+        {unit}
+      {/if}
     {:else}
       empty
     {/if}
@@ -52,6 +73,7 @@
   .count {
     color: var(--comments);
     font-style: italic;
+    font-weight: bold;
     font-size: 0.857em;
   }
 </style>
