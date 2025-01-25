@@ -8,8 +8,8 @@
 <script lang="ts">
   import { collapseString, stringify } from '../util.js'
 
+  import { getPreviewLevel } from '$lib/contexts.js'
   import LinkIcon from '$lib/icons/LinkIcon.svelte'
-  import { getContext } from 'svelte'
   import { useOptions } from '../options.svelte.js'
   import type { TypeViewProps } from '../types.js'
   import Count from './Count.svelte'
@@ -17,7 +17,7 @@
   type Props = TypeViewProps<string> & { length?: boolean }
 
   let { value, display, length = false, type = 'string' }: Props = $props()
-  const previewLevel = getContext<number | undefined>('preview')
+  const previewLevel = getPreviewLevel()
   const options = useOptions()
 
   let displayOrValue = $derived(display != null ? display : value)
@@ -25,7 +25,7 @@
     (type === 'string' || type === 'url') &&
       (URL.canParse(displayOrValue) || displayOrValue.startsWith('/') || value.startsWith('data:'))
   )
-  let ele: 'a' | 'span' = $derived(isUrlOrPath ? 'a' : 'span')
+  let ele: 'a' | 'pre' = $derived(isUrlOrPath ? 'a' : 'pre')
 
   let collapsed = $derived(collapseString(displayOrValue, options.value.stringCollapse))
 </script>
@@ -42,9 +42,11 @@
   <!-- only use stringify (add quotes) if the original value is not a string (e.g. date or url)  -->
   {type === 'string' ? stringify(collapsed, 0, options.value.quotes) : collapsed}
 
-  {#if isUrlOrPath}<span class="value url">
+  {#if isUrlOrPath}
+    <span class="value url">
       <LinkIcon />
-    </span>{/if}
+    </span>
+  {/if}
 </svelte:element>
 {#if length && !previewLevel}
   <Count type="string" length={value.length} />
@@ -54,5 +56,8 @@
   .stringvalue {
     display: flex;
     align-items: center;
+    text-wrap: nowrap;
+    white-space: pre !important;
+    white-space-collapse: preserve-spaces;
   }
 </style>

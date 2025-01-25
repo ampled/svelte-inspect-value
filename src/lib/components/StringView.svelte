@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getContext } from 'svelte'
+  import { getPreviewLevel } from '$lib/contexts.js'
   import { useOptions } from '../options.svelte.js'
   import type { TypeViewProps } from '../types.js'
   import { stringify } from '../util.js'
@@ -9,7 +9,7 @@
 
   let { value = '', key, type, path, showKey, ...rest }: TypeViewProps<string> = $props()
 
-  const previewLevel = getContext<number | undefined>('preview')
+  const previewLevel = getPreviewLevel()
   const options = useOptions()
 
   let isMultiLine = $derived(value.includes('\n'))
