@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { getPreviewLevel } from '$lib/contexts.js'
   import { useOptions } from '$lib/options.svelte.js'
   import { descriptorPrefix, stringifyPath } from '$lib/util.js'
   import { getContext, tick } from 'svelte'
@@ -17,10 +18,19 @@
     descriptor: PropertyDescriptor
   } & HTMLAttributes<HTMLDivElement>
 
-  let { value, display, key, path: prevPath = [], descriptor, children, ...rest }: Props = $props()
+  let {
+    value,
+    display,
+    key,
+    path: prevPath = [],
+    descriptor,
+    children,
+    keyPrefix: _keyPrefix,
+    ...rest
+  }: Props = $props()
 
   const options = useOptions()
-  const previewLevel = getContext<number | undefined>('preview')
+  const previewLevel = getPreviewLevel()
   const valueCache = getContext<SvelteMap<string, unknown>>('value-cache')
   let valueRetrieved = $state(false)
   let getterValue = $state<unknown>()
@@ -30,7 +40,7 @@
   let inputState = $state<'valid' | 'invalid' | 'untouched'>('untouched')
   let inputValue = $state<unknown>()
   let path = $derived(key != null && prevPath ? [...prevPath, key] : ['root'])
-  let keyPrefix = $derived(descriptorPrefix(descriptor))
+  let keyPrefix = $derived(`${_keyPrefix ?? ''} ${descriptorPrefix(descriptor)}`)
   let inputElement = $state<HTMLInputElement>()
   let setButton = $state<ReturnType<typeof NodeActionButton>>()
 
@@ -114,7 +124,7 @@
     {key}
     {keyPrefix}
     {path}
-    keyDelim={typeof previewLevel === 'number' ? '' : ':'}
+    keyDelim={previewLevel > 0 ? '' : ':'}
     value={descriptor}
     showLength={false}
     keepPreviewOnExpand
@@ -145,7 +155,7 @@
           >x
         </NodeActionButton>
       {:else}
-        {#if descriptor.set && previewLevel == null}
+        {#if descriptor.set && previewLevel === 0}
           <NodeActionButton
             bind:this={setButton}
             title={`set ${key?.toString()}`}
@@ -159,7 +169,7 @@
           </NodeActionButton>
         {/if}
         {#if descriptor.get}
-          {#if previewLevel == null}
+          {#if previewLevel === 0}
             <NodeActionButton title={`get ${key?.toString()} value`} onclick={callGetter}>
               get
             </NodeActionButton>

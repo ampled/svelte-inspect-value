@@ -3,14 +3,17 @@ import type { Component } from 'svelte'
 import ArrayView from './ArrayView.svelte'
 import ClassView from './ClassView.svelte'
 import DateView from './DateView.svelte'
+import Default from './Default.svelte'
 import ErrorView from './ErrorView.svelte'
 import FunctionView from './FunctionView.svelte'
 import HtmlImageElementView from './HTMLImageElementView.svelte'
 import HtmlView from './HTMLView.svelte'
+import IteratorView from './IteratorView.svelte'
 import MapView from './MapView.svelte'
 import ObjectView from './ObjectView.svelte'
 import OneLineView from './OneLineView.svelte'
 import PromiseView from './PromiseView.svelte'
+import RegexpView from './RegexpView.svelte'
 import SetView from './SetView.svelte'
 import StringView from './StringView.svelte'
 import TypedArrayView from './TypedArrayView.svelte'
@@ -36,6 +39,7 @@ const components = {
   boolean: [OneLineView],
   undefined: [OneLineView],
   null: [OneLineView],
+  regexp: [RegexpView],
   bigint: [
     OneLineView,
     (props: TypeViewProps<bigint>) => ({ display: props.value.toString() + 'n' }),
@@ -44,19 +48,10 @@ const components = {
     OneLineView,
     (props: TypeViewProps<ArrayBuffer>) => ({ display: `ArrayBuffer(${props.value.byteLength})` }),
   ],
-  setiterator: [
-    OneLineView,
-    (_props: TypeViewProps<SetIterator<unknown>>) => ({ display: `SetIterator` }),
-  ],
-  arrayiterator: [
-    OneLineView,
-    (_props: TypeViewProps<ArrayIterator<unknown>>) => ({ display: `ArrayIterator` }),
-  ],
-  mapiterator: [
-    OneLineView,
-    (_props: TypeViewProps<MapIterator<unknown>>) => ({ display: `MapIterator` }),
-  ],
-  regexp: [OneLineView, (props: TypeViewProps<RegExp>) => ({ display: props.value.toString() })],
+  setiterator: [IteratorView],
+  arrayiterator: [IteratorView],
+  mapiterator: [IteratorView],
+  generator: [IteratorView],
   weakset: [OneLineView, () => ({ display: ``, forceType: true })],
   weakmap: [OneLineView, () => ({ display: ``, forceType: true })],
   object: [ObjectView],
@@ -73,6 +68,7 @@ const components = {
   set: [SetView],
   url: [UrlView],
   urlsearchparams: [UrlSearchParamsView],
+  htmlcollection: [Default],
   htmlimageelement: [HtmlImageElementView],
   html: [HtmlView],
   promise: [PromiseView],
@@ -99,6 +95,7 @@ export function getComponent(type: string, custom: CustomComponents) {
   const comps = { ...components, ...custom }
 
   if (typedArrays.includes(type)) return comps['typedarray']
+  if (type.includes('iterator')) return comps['arrayiterator']
 
   return comps[type]
 }
