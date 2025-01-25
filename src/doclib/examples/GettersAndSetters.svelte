@@ -1,6 +1,9 @@
 <script lang="ts">
   import { Inspect } from '$lib/index.js'
+  import { getContext } from 'svelte'
+  import type { SvelteMap } from 'svelte/reactivity'
   import Code from '../Code.svelte'
+  import Stack from '../Stack.svelte'
   import code from './gettersandsetters.txt?raw'
 
   let value = $state({
@@ -55,24 +58,20 @@
       })
     },
   })
+
+  getContext<SvelteMap<string, string>>('toc')?.set('Getters & Setters', 'getters')
 </script>
 
 <div class="flex col">
-  <h2>Getters and Setters</h2>
+  <h3 id="getters">Getters and Setters</h3>
   <p>
-    Getters and setters render as interactive nodes as to not execute potential side effects by
-    inspecting them.<br />
+    Getters and setters render as interactive nodes as to avoid executing potential side effects
+    until they are manually called.<br />
     Setters can be called with valid json input.
   </p>
 
-  <div class="flex row" style="width: 100%">
+  <Stack>
     <Code {code} />
     <Inspect name="gettersAndSetters" style="flex-basis: 50%" {value} />
-  </div>
+  </Stack>
 </div>
-
-<style>
-  .flex.row {
-    align-items: flex-start;
-  }
-</style>

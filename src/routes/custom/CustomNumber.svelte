@@ -5,7 +5,7 @@
 </script>
 
 <CustomLine {value} {...rest}>
-  <span>{value}</span>
+  <span class="value number">{value}</span>
 </CustomLine>
 
 <style>
@@ -13,7 +13,7 @@
     rotate: 180deg;
     /* font-family: sans-serif;
     font-weight: 900;
-    font-size: 2em;
+    font-size: 1em;
     background: linear-gradient(
       to right,
       #ef5350,

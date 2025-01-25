@@ -1,7 +1,8 @@
 <script lang="ts">
   import Inspect from '$lib/Inspect.svelte'
-
+  import type { SvelteMap } from 'svelte/reactivity'
   // import squirteSprite from './media/squirtle.png'
+  import { getContext } from 'svelte'
   import squirtleCry from './media/squirtle_cry.ogg'
 
   const doAttack = (attack: string) => attack
@@ -20,14 +21,18 @@
       defense: 15,
     },
   }
+
+  getContext<SvelteMap<string, string>>('toc')?.set('Media', 'media')
 </script>
 
 <div class="flex col">
-  <h2>embed media</h2>
+  <h3 id="media">URL-strings and image/audio links</h3>
   <p>
     if a string is a url and ends with a known file extension for image or audio,<br /> embed the
     media as an <code>img</code> or <code>audio</code>-tag. this is disabled by default.
   </p>
+
+  <p>note: this example has the option set to true and won't be affected by global options</p>
 
   <div class="flex">
     <Inspect expandAll embedMedia value={squirtle} name="squirtle" />

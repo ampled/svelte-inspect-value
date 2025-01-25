@@ -1,9 +1,13 @@
 <script lang="ts">
   import Inspect from '$lib/Inspect.svelte'
+  import { getContext } from 'svelte'
+  import type { SvelteMap } from 'svelte/reactivity'
+
+  getContext<SvelteMap<string, string>>('toc')?.set('Map & Set', 'map-and-set')
 </script>
 
 <div class="flex col">
-  <h2>Map & Set</h2>
+  <h3 id="map-and-set">Map & Set</h3>
   <p><code>Inspect</code> handles map and set instances.</p>
   <p>
     For maps, if keys are not of type <code>number|string|symbol</code>, the entry is shown as an

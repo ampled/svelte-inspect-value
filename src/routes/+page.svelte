@@ -1,20 +1,37 @@
 <script lang="ts">
+  import { page } from '$app/stores'
   import Inspect from '$lib/Inspect.svelte'
   import Code from '../doclib/Code.svelte'
   import globalConfigCode from '../doclib/examples/globalconfig.txt?raw'
   import MinimalExample from '../doclib/examples/MinimalExample.svelte'
 
+  let { data } = $props()
+
+  $effect(() => {
+    console.log($page.url)
+  })
+
   let packageName = 'svelte-inspect-value'
 
   import minimalcode from '../doclib/examples/minimalexample.txt?raw'
+  import inspectProps from '../doclib/props.js'
+
+  const propsDocObj = $derived(
+    Object.fromEntries(
+      inspectProps($page.url.origin).map(({ name, ...rest }) => [name, { ...rest }])
+    )
+  )
 </script>
 
-<h2>What it is</h2>
-
 <div class="center">
-  <Inspect style="max-width: 400px;" name="helloWorld" value={{ key: 'value' }} />
+  <Inspect
+    style="max-width: 400px;"
+    name="packageMetadata"
+    value={data.packageMetaData.versions[data.packageMetaData['dist-tags'].latest]}
+  />
 </div>
 
+<h2>What it is</h2>
 <p>
   Svelte Value Inspect is a "json tree"-like inspector inspired by the likes of <code
     >react-json-view</code
@@ -89,12 +106,14 @@ Result:
   />
 </div> -->
 
+<Inspect name="props" value={propsDocObj} expandAll />
+
 <table>
   <thead>
     <tr>
-      <th>Name</th>
-      <th>Description</th>
-      <th>Default</th>
+      <th>name</th>
+      <th>description</th>
+      <th>defaultValue</th>
     </tr>
   </thead>
   <tbody>
@@ -208,9 +227,9 @@ Result:
 
 <Code code={globalConfigCode} label="GlobalConfigExample.svelte" />
 
-<Inspect value={'no long strings in this neighbourhood thanks'} />
+<Inspect value={'no long strings in this neighbourhood thanks'} stringCollapse={20} />
 
-<p>Options set with the function will have priority over options passed as props.</p>
+<p>Options set with props will override any global options</p>
 
 <!-- <BasicEditable /> -->
 <style>

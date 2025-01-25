@@ -5,7 +5,7 @@
 </script>
 
 <CustomLine {value} {...rest}>
-  <span>{value}</span>
+  <span class="value number">{value}</span>
 </CustomLine>
 
 <style>

@@ -1,5 +1,7 @@
 <script lang="ts">
   import { Inspect } from '$lib/index.js'
+  import { getContext } from 'svelte'
+  import type { SvelteMap } from 'svelte/reactivity'
   import * as w from 'svelte/reactivity/window'
 
   let div = $state()
@@ -20,12 +22,14 @@
       })
     )
   )
+
+  getContext<SvelteMap<string, string>>('toc')?.set('HTML Elements', 'html')
 </script>
 
 <!-- <svelte:document bind:activeElement /> -->
 
 <div class="flex col">
-  <h2>HTML Elements</h2>
+  <h3 id="html">HTML Elements</h3>
   <p>inspect attributes of html elements</p>
 
   <div bind:this={div} class="demo-div {classes}" style="width: {width}px;" data-testid={testid}>

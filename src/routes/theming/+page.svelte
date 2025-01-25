@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { browser, dev } from '$app/environment'
+  import { dev } from '$app/environment'
   import Console from '$lib/icons/Console.svelte'
   import Inspect from '$lib/Inspect.svelte'
   import { colord } from 'colord'
-  import { onMount } from 'svelte'
   import Code from '../../doclib/Code.svelte'
+  import AllTypes from '../../doclib/examples/AllTypes.svelte'
   import HueRotate from './HueRotate.svelte'
   import { themes } from './themes.js'
 
@@ -12,6 +12,7 @@
   let fontSize = $state(12)
   let fontSizePx = $derived(fontSize + 'px')
   let colors = $state({ ...themes.drak })
+  let lockedColors = $state<string[]>([])
   let keys = $derived(Object.keys(colors) as (keyof typeof colors)[])
   let rotated = $state<typeof colors>()
   let rotation = $state(0)
@@ -38,15 +39,34 @@ ${style
 
   function rotateColors(value: number) {
     rotated = {
-      ...Object.fromEntries(keys.map((k) => [k, colord(colors[k]).rotate(value).toHex()])),
+      ...Object.fromEntries(
+        keys.map((k) => [
+          k,
+          lockedColors.includes(k)
+            ? colors[k as keyof typeof colors]
+            : colord(colors[k]).rotate(value).toHex(),
+        ])
+      ),
     } as typeof colors
   }
 
   function loadPreset() {
-    colors = { ...themes[selectedPreset] }
+    applyToUnlocked({ ...themes[selectedPreset] })
     saveStep()
     rotated = undefined
     rotation = 0
+  }
+
+  function applyToUnlocked(newColors: typeof colors) {
+    colors = Object.fromEntries(
+      keys.map((k) => {
+        if (lockedColors.includes(k)) {
+          return [k, colors[k]]
+        } else {
+          return [k, newColors[k]]
+        }
+      })
+    ) as typeof colors
   }
 
   function undo() {
@@ -68,167 +88,9 @@ ${style
   }
 
   function saveStep(changeCurrentStep = true) {
-    console.log('saveStep')
     steps.push($state.snapshot(colors))
     if (changeCurrentStep) currentStep = steps.length - 1
   }
-
-  class Greeter {
-    static staticProperty = 'hi'
-    public nonStatic = 'yo'
-  }
-
-  const allTypes = $state({
-    objectWithGetter: {
-      get anObject() {
-        return {
-          a: { b: { c: { d: { e: 'end' } } } },
-        }
-      },
-      count: 1,
-      get current() {
-        this.getterAccessedTimes++
-        return this.count
-      },
-      set current(value: number) {
-        console.log(value)
-        this.count = value
-      },
-      get throws() {
-        console.trace('throwing getter accessed')
-        throw 'yeet'
-      },
-      set throws(value: unknown) {
-        throw 'throwing'
-      },
-      getterAccessedTimes: 0,
-      get getterWithSideEffect() {
-        this.test = 'hahaha'
-        return 'something'
-      },
-      get throwSomething() {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        let goof: any
-        goof.doesNotExist.doesNotExist()
-        // throw new Error('yayaya')
-        return 'blah'
-      },
-      get self() {
-        return this
-      },
-      test: 'test',
-    },
-    str: 'string',
-    multiline: 'line\nline\nline\nline\nline\nline\nline\nline\nline',
-    number: 1234,
-    bools: true,
-    bigint: 1n + 1n,
-    symb: Symbol('abcd'),
-    undef: undefined,
-    reg: /cake/,
-    nil: null,
-    array: [1, 2, 3],
-    nestedArrays: [
-      14,
-      [[[[[[[[[13], 12], 11], 10], 9], 8], 7], 6], 5],
-      'ffffffoooooooouuuuuuurrrrrrrrrrrr',
-      3,
-      2,
-      1,
-    ],
-    object: { normalKey: 'string value', [Symbol('key')]: 'oh\n\n\n\n      hi', boolean: false },
-    date: new Date(),
-    url: new URL('https://alicebob.website/?ref=abcdefg#about'),
-    promise: Promise.resolve({
-      name: 'a',
-      b: { name: 'b', c: { name: 'c', d: { name: 'd' } } },
-      g: [{ name: 'b', c: { name: 'c', d: { name: 'd' } } }],
-      d: {},
-    }),
-    a: { b: { name: 'b', c: { name: 'c', d: { name: 'd' } } }, g: [{}], d: {}, name: 'a' },
-    functions: {
-      double: (value: number) => 2 * value,
-      normalFunction: function (some: string, thing: string) {
-        const { log } = console
-        log(some + 'thing')
-        return 'some' + thing
-      },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      asyncOneLiner: async (v: any) => new Promise((r) => setTimeout(() => r(v), v)),
-      asyncfn: async function () {
-        const boop = await Promise.resolve('boop')
-        return boop
-      },
-      test: eval(`(function* generator() { yield 'a' })`),
-      test2: eval(`(async function* generator() { yield 'a' })`),
-      yieldTwo: function* () {
-        yield 2
-      },
-      asynchronousGenerator: async function* () {
-        yield 2
-      },
-    },
-    body: browser ? document.body : null,
-    navigator: browser ? navigator : null,
-    errors: {
-      error: new Error('oh no!'),
-      typeerror: new TypeError('snapple'),
-    },
-    set: new Set([1, 2, 3]),
-    weakSet: new WeakSet([{}, {}, {}]),
-    weakMap: new WeakMap([[{}, 1]]),
-    map: new Map<unknown, unknown>([
-      [0, 0],
-      [{ id: 123 }, 1],
-      [[1, 2, 3], 2],
-      [Symbol('key'), 'value'],
-      [
-        Promise.resolve('foo'),
-        {
-          get something() {
-            return 'something'
-          },
-        },
-      ],
-    ]),
-    typedArrays: {
-      eight: new Int8Array([1, 2, 3]),
-      Uint8Array: new Uint8Array([1, 2, 3]),
-      Uint8ClampedArray: new Uint8ClampedArray([1, 2, 3]),
-      sixteen: new Int16Array([1, 2, 3, 4, 5]),
-      Uint16Array: new Uint16Array([1, 2, 3]),
-      thirtytwo: new Int32Array([1, 2, 3, 4, 5]),
-      Uint32Array: new Uint32Array([1, 2, 3]),
-      Float32Array: new Float32Array([1.2, 3.4, 5.6]),
-      Float64Array: new Float64Array([1.2345, 3.4, 5.6]),
-      BigInt64Array: new BigInt64Array([1n, 2n, 3n]),
-      BigUint64Array: new BigUint64Array([1n]),
-    },
-    nestedTypedArrays: [
-      {
-        eight: new Int8Array([1, 2, 3]),
-        sixteen: new Int16Array([1, 2, 3, 4, 5]),
-        thirtytwo: new Int32Array([1, 2, 3, 4, 5]),
-      },
-    ],
-    classCtr: Greeter,
-    classInstance: new Greeter(),
-    classNoEntries: class Foo {},
-    empties: {
-      object: {},
-      array: [],
-      set: new Set(),
-      map: new Map(),
-      string: '',
-    },
-  })
-
-  onMount(() => {
-    // // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    // ;(navigator as any).getBattery().then((batt: unknown) => {
-    //   allTypes.battery = batt as unknown as undefined
-    // })
-  })
 </script>
 
 <div class="flex row gap">
@@ -243,19 +105,14 @@ ${style
   <button onclick={loadPreset}> load </button>
 </div>
 
-<Inspect
-  name="allTypes"
-  {style}
-  --inspect-font={font}
-  --inspect-font-size={fontSizePx}
-  value={allTypes}
-/>
+<AllTypes {style} --inspect-font={font} --inspect-font-size={fontSizePx} />
 {#if dev}
   <Inspect value={{ steps, currentStep }} />
 {/if}
 
 <div class="flex row flex-wrap">
   {#each keys as key}
+    {@const locked = lockedColors.includes(key)}
     <label>
       {key.replaceAll('--base', '')}
       <div class="colorpicker">
@@ -277,12 +134,24 @@ ${style
           saveStep()
         }}>x</button
       >
+      <button
+        type="button"
+        title="set transparent"
+        class="unstyled sm"
+        onclick={() => {
+          if (locked) {
+            lockedColors = lockedColors.filter((k) => k !== key)
+          } else {
+            lockedColors.push(key)
+          }
+        }}><small>{locked ? 'unlock' : 'lock'}</small></button
+      >
     </label>
   {/each}
 </div>
 
 <div class="flex row flex-wrap gap">
-  <!-- <label>
+  <label>
     font (local)
     <select bind:value={font}>
       <option>monospace</option>
@@ -299,12 +168,8 @@ ${style
   <label>
     font-size
     <input type="number" bind:value={fontSize} />
-  </label> -->
-  <button
-    class="unstyled"
-    onclick={() => console.log($state.snapshot(currentColors))}
-    style="width: 2em; height: 2em;"
-  >
+  </label>
+  <button class="unstyled" style="width: 2em; height: 2em;">
     <Console />
   </button>
   <button class="unstyled" type="button" disabled={steps[currentStep - 1] == null} onclick={undo}
@@ -322,7 +187,7 @@ ${style
     rotation = 0
   }}
   onapply={() => {
-    if (rotated) colors = { ...rotated }
+    if (rotated) applyToUnlocked({ ...rotated })
     saveStep()
     rotated = undefined
     rotation = 0

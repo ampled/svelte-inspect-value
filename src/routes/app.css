@@ -117,6 +117,10 @@ h6 {
   overflow-wrap: break-word;
 }
 
+h3 {
+  margin-top: 2em;
+}
+
 /* 8. Improve line wrapping */
 p {
   text-wrap: pretty;
@@ -178,6 +182,7 @@ button {
   padding: 0.5em;
   border-radius: 4px;
   cursor: pointer;
+  transition: all 100ms linear;
 
   &:hover:not(:disabled) {
     background-color: var(--border-color);

@@ -1,3 +1,4 @@
+<!-- eslint-disable svelte/valid-compile svelte/a11y_click_events_have_key_events  -->
 <script lang="ts">
   import { CustomLine, type CustomComponentProps } from '$lib/index.js'
 
@@ -9,8 +10,9 @@
 </script>
 
 <CustomLine {value} {...rest}>
+  <!-- svelte-ignore a11y_click_events_have_key_events -->
   <!-- svelte-ignore a11y_no_static_element_interactions -->
-  <span onmouseenter={() => (doAnError = true)}>
+  <span onclick={() => (doAnError = true)}>
     {value}
   </span>
   {#if doAnError}

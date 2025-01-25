@@ -1,9 +1,12 @@
 <script lang="ts">
+  import type { HTMLAttributes } from 'svelte/elements'
+
   import { Highlight, HighlightSvelte } from 'svelte-highlight'
-  import 'svelte-highlight/styles/dracula.css'
+  import './code.css'
   // import github from 'svelte-highlight/styles/horizon-dark'
 
-  import type { Snippet } from 'svelte'
+  import Inspect from '$lib/Inspect.svelte'
+  import { getContext, type Snippet } from 'svelte'
   import css from 'svelte-highlight/languages/css'
   import javascript from 'svelte-highlight/languages/javascript'
 
@@ -12,7 +15,7 @@
     code: string
     label?: string
     language?: 'svelte' | 'xml' | 'css' | 'javascript'
-  }
+  } & HTMLAttributes<HTMLDivElement>
 
   let { code, label = 'example', language = 'svelte', children, ...rest }: CodeProps = $props()
 
@@ -20,17 +23,16 @@
     javascript,
     css,
   }
+
+  const multi = getContext<boolean | undefined>('multi')
 </script>
 
 <svelte:boundary>
   {#snippet failed(error, reset)}
-    {#if error instanceof Error}
-      {error.name}<br />
-      {error.message}<br />
-    {/if}
+    <Inspect value={error} />
     <button onclick={reset}>retry</button>
   {/snippet}
-  <div class="code" {...rest}>
+  <div class="code" class:multi {...rest}>
     {#if label}
       <div class="label">{label}</div>
     {/if}
@@ -56,6 +58,15 @@
     background-color: var(--bg-code);
     font-size: 12px;
     overflow: hidden;
+  }
+
+  .code.multi {
+    border-top-left-radius: 0;
+
+    .label {
+      display: hidden;
+      opacity: 0;
+    }
   }
 
   .label {

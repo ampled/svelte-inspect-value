@@ -1,7 +1,9 @@
 <script lang="ts">
   import { Inspect } from '$lib/index.js'
-  import { onMount } from 'svelte'
+  import { getContext, onMount } from 'svelte'
+  import type { SvelteMap } from 'svelte/reactivity'
   import Code from '../Code.svelte'
+  import Stack from '../Stack.svelte'
   import code from './promises.txt?raw'
 
   let promises = $state.raw<Record<string, Promise<unknown>>>()
@@ -12,35 +14,30 @@
       neverResolve: new Promise(() => {}),
       resolveInAFew: new Promise((resolve) => {
         setTimeout(() => {
-          resolve('yes!')
+          resolve('yep')
         }, 2000)
       }),
       rejectsInAFew: new Promise((_, reject) => {
         setTimeout(() => {
-          reject('oh no!')
+          reject('nope')
         }, 3500)
       }),
     }
   }
 
   onMount(run)
+  getContext<SvelteMap<string, string>>('toc')?.set('Promises', 'promises')
 </script>
 
 <div class="flex col">
-  <h2>Promises</h2>
-  <p>show status and eventual result of promises</p>
+  <h3 id="promises">Promises</h3>
+  <p>Show status and eventual result of promises</p>
   <button onclick={run}>rerun</button>
 
-  <div class="flex row" style="width: 100%">
-    <Code {code} label="" />
+  <Stack>
+    <Code {code} />
     {#if promises}
       <Inspect style="max-width: 360px" value={promises} name="promises" theme="drak" expandAll />
     {/if}
-  </div>
+  </Stack>
 </div>
-
-<style>
-  .flex.row {
-    align-items: stretch;
-  }
-</style>

@@ -6,7 +6,7 @@
       neverResolve: new Promise(() => {}),
       resolveInAFew: new Promise((resolve) => {
         setTimeout(() => {
-          resolve('yeah')
+          resolve('yep')
         }, 2000)
       }),
       rejectsInAFew: new Promise((_, reject) => {

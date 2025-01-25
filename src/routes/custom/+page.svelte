@@ -1,11 +1,12 @@
 <script lang="ts">
   import Inspect from '$lib/Inspect.svelte'
-  import Code from '../../doclib/Code.svelte'
+  import MultiCode from '../../doclib/examples/MultiCode.svelte'
   import CustomNumber from './CustomNumber.svelte'
   import customNumberCode from './CustomNumber.txt?raw'
   import ErrorOnHover from './ErrorOnHover.svelte'
   import code from './example.txt?raw'
   import ExpandableNumber from './ExpandableNumber.svelte'
+  import HexString from './HexString.svelte'
 
   let anObject = $state({
     oneBillion: 1000000000,
@@ -25,16 +26,42 @@
 
 <h3>Custom line</h3>
 
-<div class="center">
-  <Code code={customNumberCode} label="GoofyNumber.svelte" />
-  <Code {code} label="svelte" />
-</div>
+<!-- <div class="center"> -->
+<!-- <Code code={customNumberCode} label="GoofyNumber.svelte" />
+  <Code {code} label="svelte" /> -->
+
+<MultiCode
+  examples={[
+    { code: customNumberCode, label: 'GoofyNumber.svelte', language: 'svelte' },
+    { code, label: '+page.svelte', language: 'svelte' },
+  ]}
+/>
+<!-- </div> -->
 
 Result
 <Inspect
   value={anObject}
   customComponents={{ number: [CustomNumber, (props) => ({ value: props.value })] }}
   name="customNumber"
+/>
+
+<Inspect
+  name="previewColors"
+  value={{
+    black: '#000',
+    gray: '#808080',
+    white: '#FFF',
+    red: '#FF0000',
+    pink: '#FF00FF',
+    yella: '#FFFF00',
+    green: '#00FF00',
+    cyan: '#00FFFF',
+    blue: '#0000FF',
+
+    badass: '#b4d455',
+    notAColor: 'hello',
+  }}
+  customComponents={{ string: [HexString] }}
 />
 
 <h3>Custom expandable</h3>
@@ -51,8 +78,8 @@ Result
 
 <Inspect
   value={{
-    hoverToError: 'hover me',
-    hey: 'dont hover me i will error',
+    hoverToError: 'click me',
+    hey: 'dont click me i will error',
   }}
   name="customString"
   customComponents={{ string: [ErrorOnHover] }}

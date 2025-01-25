@@ -161,6 +161,10 @@
 </svelte:boundary>
 
 <style>
+  h1 {
+    max-width: max-content;
+  }
+
   main {
     display: flex;
     position: relative;
@@ -170,6 +174,12 @@
     padding-inline: 3em;
     width: 100%;
     padding-bottom: 25em;
+  }
+
+  @media (min-width: 1024px) {
+    main {
+      width: 90%;
+    }
   }
 
   nav {
