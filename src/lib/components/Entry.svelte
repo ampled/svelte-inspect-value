@@ -12,11 +12,9 @@
   class="entry"
   style="--i: {i}"
   in:slide={{
-    axis: 'y',
     duration: options.value.noanimate ? 0 : 200,
   }}
   out:slide={{
-    axis: 'x',
     duration: options.value.noanimate ? 0 : 200,
   }}
 >
