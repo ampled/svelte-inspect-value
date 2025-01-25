@@ -65,7 +65,8 @@ html {
   /* padding: 0; */
   background-color: var(--bg);
   color: var(--fg);
-  font-family: monospace;
+  font-family: 'EB Garamond', serif;
+  font-optical-sizing: auto;
   max-width: 100vw;
 }
 
@@ -107,7 +108,6 @@ select {
 }
 
 /* 7. Avoid text overflows */
-p,
 h1,
 h2,
 h3,
@@ -115,6 +115,7 @@ h4,
 h5,
 h6 {
   overflow-wrap: break-word;
+  font-weight: bold;
 }
 
 h3 {
@@ -195,6 +196,7 @@ button {
 }
 
 label {
+  font-family: monospace;
   /* height: 3.5rem; */
   display: flex;
   /* border: 1px solid; */
@@ -203,6 +205,10 @@ label {
   justify-items: flex-start;
   /* gap: 0.5rem; */
   /* padding: 1em; */
+}
+
+button {
+  font-family: monospace;
 }
 
 code {
@@ -218,6 +224,7 @@ a {
 
 button.unstyled {
   all: unset;
+  font-family: monospace;
   cursor: pointer;
 
   &:disabled {
@@ -253,4 +260,11 @@ button.unstyled {
 
 .w-max {
   width: 100%;
+}
+
+.eb-garamond {
+  font-family: 'EB Garamond', serif;
+  font-optical-sizing: auto;
+  /* font-weight: <weight>;
+  font-style: normal; */
 }
