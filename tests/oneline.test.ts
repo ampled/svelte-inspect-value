@@ -30,22 +30,31 @@ const fixtures = [
 ]
 
 test('it can display simple values', async () => {
-  const { unmount, rerender } = renderInspect({ value: undefined, showLength: true })
+  const { unmount, rerender } = renderInspect({
+    value: undefined,
+    showLength: true,
+    showTypes: true,
+  })
 
   for (const { value, expectedType, expectedValue, expectedCount } of fixtures) {
-    await rerender({ value, showLength: expectedCount != null })
-    // check type
-    const type = screen.getByTestId('type')
-    expect(type).toHaveTextContent(expectedType)
-    // check count
-    if (expectedCount) {
-      const count = screen.getByTestId('count')
-      expect(count).toHaveTextContent(expectedCount)
-    }
-    // check value
-    if (expectedValue) {
-      const valueElement = screen.getByTestId('value')
-      expect(valueElement).toHaveTextContent(expectedValue)
+    try {
+      await rerender({ value, showLength: expectedCount != null, showTypes: true })
+      // check type
+      const type = screen.getByTestId('type')
+      expect(type).toHaveTextContent(expectedType)
+      // check count
+      if (expectedCount) {
+        const count = screen.getByTestId('count')
+        expect(count).toHaveTextContent(expectedCount)
+      }
+      // check value
+      if (expectedValue) {
+        const valueElement = screen.getByTestId('value')
+        expect(valueElement).toHaveTextContent(expectedValue)
+      }
+    } catch (e) {
+      console.error(`Test failed for value ${value}`)
+      throw e
     }
   }
 
