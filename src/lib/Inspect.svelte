@@ -66,12 +66,6 @@
     )
   )
 
-  $effect(() => {
-    if (name === 'squirtle') {
-      console.log(mergedOptions)
-    }
-  })
-
   let options = createOptions(() => mergedOptions)
 
   // FIXME: this is dumb and not good use of reactivity
