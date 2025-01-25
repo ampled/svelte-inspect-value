@@ -7,6 +7,7 @@
   import Functions from '../../doclib/examples/Functions.svelte'
   import GettersAndSetters from '../../doclib/examples/GettersAndSetters.svelte'
   import HtmlElements from '../../doclib/examples/HTMLElements.svelte'
+  import Iterators from '../../doclib/examples/Iterators.svelte'
   import MapAndSet from '../../doclib/examples/MapAndSet.svelte'
   import MultiLineStrings from '../../doclib/examples/MultiLineStrings.svelte'
   import Other from '../../doclib/examples/Other.svelte'
@@ -22,27 +23,17 @@
 <h2>Examples</h2>
 
 <BasicEditable />
-
-<MapAndSet />
-
-<Promises />
-
-<HtmlElements />
-
-<Classes />
-
-<Functions />
-
-<SymbolKeys />
-
-<Urls />
-
-<GettersAndSetters />
-
 <MultiLineStrings />
-
+<MapAndSet />
+<Promises />
+<HtmlElements />
+<Classes />
+<Functions />
+<SymbolKeys />
+<Urls />
+<GettersAndSetters />
+<Iterators />
 <EmbedMedia />
-
 <Other />
 
 <div class="toc">
