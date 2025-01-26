@@ -70,6 +70,7 @@
   }
 
   .label {
+    font-family: monospace;
     position: absolute;
     top: 0;
     right: 0;

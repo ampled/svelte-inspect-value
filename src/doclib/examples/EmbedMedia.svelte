@@ -28,15 +28,15 @@
 <div class="flex col">
   <h3 id="media">URL-strings and image/audio links</h3>
   <p>
-    if a string is a url and ends with a known file extension for image or audio,<br /> embed the
-    media as an <code>img</code> or <code>audio</code>-tag. this is disabled by default.
+    If a string is a url and ends with a known file extension for image or audio,<br /> embed the
+    media as an <code>img</code> or <code>audio</code>-tag. This is disabled by default.
   </p>
 
-  <p>note: this example has the option set to true and won't be affected by global options</p>
+  <p>Note: This example has the option set to true and won't be affected by global options</p>
 
   <div class="flex">
     <Inspect expandAll embedMedia value={squirtle} name="squirtle" />
   </div>
 
-  <p>sprite and audio courtesy of pokeapi.co</p>
+  <p><em>Sprite and audio courtesy of pokeapi.co</em></p>
 </div>

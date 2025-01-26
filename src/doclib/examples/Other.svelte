@@ -1,7 +1,7 @@
 <script lang="ts">
   import Inspect from '$lib/Inspect.svelte'
-  import { onMount } from 'svelte'
-  import { SvelteDate } from 'svelte/reactivity'
+  import { getContext, onMount } from 'svelte'
+  import { SvelteDate, SvelteMap } from 'svelte/reactivity'
   import { intervalEffect } from '../interval-effect.svelte.js'
 
   let error = $state()
@@ -48,17 +48,23 @@
   }, 500)
 
   let value = $derived({
+    error,
     date,
     reg: /^[re(g)ex]$/,
-    number,
-    error,
     dash,
+    number,
   })
+
+  getContext<SvelteMap<string, string>>('toc')?.set('Other', 'other')
 </script>
 
 <div class="flex col">
   <h3>Other</h3>
-  <p>Other types handled includes Error, Date, regexp</p>
+  <p>
+    Other types handled includes Error, Date, regexp, and just about any object with enumerable
+    properties.<br />This example also demonstrates the entry indicators flashing when their values
+    are updated (enabled / disabled with the <code>flashOnUpdate</code>-prop)
+  </p>
 
   <div class="flex">
     <Inspect {value} />

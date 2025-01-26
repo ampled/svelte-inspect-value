@@ -9,6 +9,11 @@
   class Greeter {
     static staticProperty = 'hi'
     public nonStatic = 'yo'
+    public name = 'World'
+
+    constructor(name: string) {
+      this.name = name
+    }
   }
 
   function* fibonacci() {
@@ -30,6 +35,18 @@
   const segments = $state(segmenterFrGrapheme.segment(string1)[Symbol.iterator]())
 
   const allTypes = $derived({
+    str: 'string',
+    multiline: 'line\nline\nline\nline\nline\nline\nline\nline\nline',
+    number: 1234,
+    bools: true,
+    bigint: 9007199254740991n,
+    symb: Symbol('abcd'),
+    reg: /([\w.\-_]+)?\w+@[\w-_]+(\.\w+){1,}/gim,
+    nil: [undefined, null],
+    array: [1, 2, 3],
+    date: new Date(),
+    url: new URL('https://alicebob.website/?ref=abcdefg#about'),
+
     objectWithGetter: {
       get anObject() {
         return {
@@ -68,34 +85,27 @@
       },
       test: 'test',
     },
-    str: 'string',
-    multiline: 'line\nline\nline\nline\nline\nline\nline\nline\nline',
-    number: 1234,
-    bools: true,
-    bigint: 1n + 1n,
-    symb: Symbol('abcd'),
-    undef: undefined,
-    reg: /cake/,
-    nil: null,
-    array: [1, 2, 3],
-    nestedArrays: [
-      14,
-      [[[[[[[[[13], 12], 11], 10], 9], 8], 7], 6], 5],
-      'ffffffoooooooouuuuuuurrrrrrrrrrrr',
-      3,
-      2,
-      1,
-    ],
-    object: { normalKey: 'string value', [Symbol('key')]: 'oh\n\n\n\n      hi', boolean: false },
-    date: new Date(),
-    url: new URL('https://alicebob.website/?ref=abcdefg#about'),
+
     promise: Promise.resolve({
       name: 'a',
       b: { name: 'b', c: { name: 'c', d: { name: 'd' } } },
       g: [{ name: 'b', c: { name: 'c', d: { name: 'd' } } }],
       d: {},
     }),
-    a: { b: { name: 'b', c: { name: 'c', d: { name: 'd' } } }, g: [{}], d: {}, name: 'a' },
+    nestedObjects: {
+      b: { name: 'b', c: { name: 'c', d: { name: 'd' } } },
+      g: [{}],
+      d: {},
+      name: 'a',
+    },
+    nestedArrays: [
+      14,
+      [[[[[[[[[15, 14, 13], 12], 11], 10], 9], 8], 'sept'], 6], 5],
+      'four',
+      3,
+      2,
+      1,
+    ],
     functions: {
       double: (value: number) => 2 * value,
       normalFunction: function (some: string = 'some', thing: string) {
@@ -192,9 +202,9 @@
         ],
       ]).entries(),
       fib: fibonacci(),
-      stringIterator: 'abdcdefg'[Symbol.iterator](),
-      args,
+      stringIterator: 'abdcdefghijklmnopqrstuvwxyzæøå'[Symbol.iterator](),
       elements: browser ? document.body.childNodes.values() : null,
+      args,
       segments,
       string: {
         value: 'test1test2',
@@ -204,12 +214,6 @@
         },
         get exec() {
           return this.regExp.exec(this.value)
-        },
-        get test() {
-          return this.regExp.test(this.value)
-        },
-        get search() {
-          return this.value.search(/test/)
         },
         get match() {
           return this.value.match(this.regExp)
@@ -224,7 +228,7 @@
       },
     ],
     classCtr: Greeter,
-    classInstance: new Greeter(),
+    classInstance: new Greeter('You'),
     classNoEntries: class Foo {},
     empties: {
       object: {},

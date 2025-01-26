@@ -31,13 +31,12 @@
 
 <div class="flex col">
   <h3 id="promises">Promises</h3>
-  <p>Show status and eventual result of promises</p>
   <button onclick={run}>rerun</button>
 
   <Stack>
-    <Code {code} />
+    <Code style="flex-basis: 50%" {code} />
     {#if promises}
-      <Inspect style="max-width: 360px" value={promises} name="promises" theme="drak" expandAll />
+      <Inspect style="flex-basis: 50%" value={promises} name="promises" theme="drak" expandAll />
     {/if}
   </Stack>
 </div>

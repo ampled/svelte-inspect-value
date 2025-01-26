@@ -67,7 +67,7 @@
   <p>
     Getters and setters render as interactive nodes as to avoid executing potential side effects
     until they are manually called.<br />
-    Setters can be called with valid json input.
+    Setters can be called with valid JSON input.
   </p>
 
   <Stack>

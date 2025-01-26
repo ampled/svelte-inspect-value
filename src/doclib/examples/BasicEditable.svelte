@@ -71,6 +71,7 @@
     background-color: var(--bg);
     color: var(--fg);
     font-size: 12px;
+    font-family: monospace;
 
     &:focus.demoInputValid {
       outline: 1px solid lightgreen;

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { browser } from '$app/environment'
   import { Inspect } from '$lib/index.js'
   import { getContext } from 'svelte'
   import type { SvelteMap } from 'svelte/reactivity'
@@ -33,6 +34,8 @@
         },
       ],
     ]).entries(),
+    stringIterator: 'abdcdefghijklmnopqrstuvwxyzæøå'[Symbol.iterator](),
+    elements: browser ? document.body.childNodes.values() : null,
   })
 
   getContext<SvelteMap<string, string>>('toc')?.set('Iterators & Generators', 'iterators')

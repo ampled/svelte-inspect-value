@@ -2,7 +2,7 @@
   import { Inspect } from '$lib/index.js'
   import { getContext } from 'svelte'
   import type { SvelteMap } from 'svelte/reactivity'
-  import * as w from 'svelte/reactivity/window'
+  // import * as w from 'svelte/reactivity/window'
 
   let div = $state()
   // let activeElement: Element | null = $state(null)
@@ -11,17 +11,17 @@
   let classes = $state('radius')
   let testid = $state('demo-div')
 
-  const _window = $derived(
-    Object.fromEntries(
-      Object.entries(w).map(([key, p]) => {
-        if (typeof p === 'string') {
-          return [key, p]
-        } else {
-          return [key, p.current]
-        }
-      })
-    )
-  )
+  // const _window = $derived(
+  //   Object.fromEntries(
+  //     Object.entries(w).map(([key, p]) => {
+  //       if (typeof p === 'string') {
+  //         return [key, p]
+  //       } else {
+  //         return [key, p.current]
+  //       }
+  //     })
+  //   )
+  // )
 
   getContext<SvelteMap<string, string>>('toc')?.set('HTML Elements', 'html')
 </script>
@@ -30,7 +30,6 @@
 
 <div class="flex col">
   <h3 id="html">HTML Elements</h3>
-  <p>inspect attributes of html elements</p>
 
   <div bind:this={div} class="demo-div {classes}" style="width: {width}px;" data-testid={testid}>
     <div>
@@ -58,9 +57,9 @@
       {/each}
     </ul>
   </div>
-  <Inspect value={div} name="htmlElement" theme="drak" style="flex-basis: 100%" />
+  <Inspect value={div} name="htmlElement" theme="drak" style="flex-basis: 100%" expandLevel={0} />
 
-  <Inspect value={_window} />
+  <!-- <Inspect value={_window} /> -->
 
   <!-- <p>This instance inspects <code>document.activeElement</code>:</p>
   <Inspect
