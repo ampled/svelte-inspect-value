@@ -147,6 +147,7 @@
     width: 0;
     overflow: clip;
 
+    /* TODO aint work in ff */
     @starting-style {
       opacity: 0;
       width: 0;

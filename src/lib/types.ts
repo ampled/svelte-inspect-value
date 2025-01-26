@@ -19,13 +19,16 @@ export type InspectProps = {
 export type KeyType = string | number | symbol
 
 export type TypeViewProps<Value = unknown, Type = ValueType> = {
+  value: Value
   key?: KeyType
   keyPrefix?: string
   showKey?: boolean
   keyDelim?: string
   keyStyle?: HTMLAttributes<HTMLDivElement>['style']
+  /**
+   * Path of the node
+   */
   path?: KeyType[]
-  value: Value
   /**
    * Representation of value.
    *
@@ -33,7 +36,13 @@ export type TypeViewProps<Value = unknown, Type = ValueType> = {
    * value for other purposes
    */
   display?: string
+  /**
+   * Type of the value
+   */
   type?: Type
+  /**
+   * Force type indicator visibility for this node
+   */
   forceType?: boolean
 }
 
@@ -51,7 +60,7 @@ export class InspectError extends Error {
   }
 }
 
-export type CustomComponentProps<T = unknown> = TypeViewProps<T>
+export type CustomComponentProps<T = unknown, Type = string | undefined> = TypeViewProps<T, Type>
 
 export type List =
   | unknown[]

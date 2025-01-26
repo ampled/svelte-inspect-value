@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { getContext } from 'svelte'
-
+  import { getPreviewLevel } from '$lib/contexts.js'
   import type { HTMLAttributes } from 'svelte/elements'
   import { useOptions } from '../options.svelte.js'
   import type { ValueType } from '../util.js'
@@ -73,10 +72,10 @@
 
   let required = $derived(ALWAYS_VISIBLE_TYPES.includes(type))
 
-  const previewLevel = getContext<number | undefined>('preview')
+  const previewLevel = getPreviewLevel()
 </script>
 
-{#if (type && options.value.showTypes && !previewLevel) || required || force}
+{#if (type && options.value.showTypes && previewLevel === 0) || required || force}
   <span data-testid="type" class={`type ${type}`} title={type} {...rest}>
     {display}
   </span>

@@ -1,7 +1,9 @@
 <script lang="ts" generics="T = unknown">
+  import { getPreviewLevel } from '$lib/contexts.js'
   import { useOptions } from '$lib/options.svelte.js'
   import { getContext } from 'svelte'
   import type { HTMLAttributes } from 'svelte/elements'
+  import { slide } from 'svelte/transition'
   import { flashOnUpdate } from '../action/update-flash.svelte.js'
   import type { TypeViewProps } from '../types.js'
   import Key from './Key.svelte'
@@ -16,6 +18,7 @@
     key,
     showKey = true,
     keyDelim = ':',
+    keyPrefix,
     keyStyle,
     type,
     forceType,
@@ -25,14 +28,22 @@
   }: Props = $props()
 
   let displayOrValue = $derived(display != null ? display : (value?.toString?.() ?? ''))
-  let title = $derived(typeof value === 'string' ? value : display != null ? display : '')
+  let title = $derived(
+    typeof value === 'string' ? value : display != null ? display : value?.toString()
+  )
 
   let options = useOptions()
-  let previewLevel = getContext<number | undefined>('preview')
+  let previewLevel = getPreviewLevel()
   let isKey = getContext<boolean | undefined>('key')
 </script>
 
-<div data-testid="line" class="line" class:preview={previewLevel || isKey} {...rest}>
+<div
+  data-testid="line"
+  class="line"
+  class:preview={previewLevel || isKey}
+  class:nokey={!showKey}
+  {...rest}
+>
   <div class="dash-key">
     {#if !previewLevel && !isKey}
       <div
@@ -43,7 +54,7 @@
       </div>
     {/if}
     {#if showKey}
-      <Key delim={keyDelim} style={keyStyle} {key} {path} />
+      <Key prefix={keyPrefix} delim={keyDelim} style={keyStyle} {key} {path} />
     {/if}
   </div>
   {#if !isKey}
@@ -52,7 +63,7 @@
   {#if children}
     {@render children()}
   {:else if displayOrValue}
-    <span data-testid="value" {title} class="value {type}">
+    <span data-testid="value" {title} class="value {type}" transition:slide>
       {displayOrValue}
     </span>
   {/if}
@@ -66,7 +77,6 @@
   .line {
     transition: background-color 0.2s ease-in-out;
     position: relative;
-    padding-left: calc(var(--indent) * 0.5);
     display: flex;
     gap: 0.5em;
     flex-direction: row;
@@ -81,14 +91,17 @@
 
   .line.preview {
     padding-left: 0;
+  }
+
+  .line.preview.nokey {
     gap: 0;
   }
 
   .dash-key {
     display: inline-flex;
     align-items: center;
-    gap: calc(var(--indent) * 0.5);
-    padding-left: 1px;
+    gap: 0.5em;
+    padding-left: 0.25em;
     user-select: none;
 
     .dash {

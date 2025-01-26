@@ -71,14 +71,14 @@
   setContext('preview', (previewLevel ?? 0) + 1)
 
   function alwaysRender(type: string) {
-    return ['boolean', 'string', 'number', 'bigint', 'symbol', 'regexp'].includes(type)
+    return ['boolean', 'string', 'number', 'bigint', 'symbol', 'regexp', 'class'].includes(type)
   }
 </script>
 
 <!-- At configured previewDepth, stop rendering nested item previews and just render their types -->
-{#snippet valuePreview(value: unknown, key?: KeyType, force = false)}
+{#snippet valuePreview(value: unknown, key?: KeyType)}
   {@const valType = getType(value)}
-  {#if alwaysRender(valType) || previewLevel < options.value.previewDepth || force}
+  {#if alwaysRender(valType) || previewLevel < options.value.previewDepth}
     <Node {path} {key} {value} {showKey} {keyDelim} {keyStyle} />
   {:else}
     <div class="key-type-preview">
@@ -129,21 +129,23 @@
         {#if keys && value}
           {#each keys as key, i (i)}
             {@const descriptor = getPropertyDescriptor(value, key)}
-            {@render previewValue(key, false, descriptor)}
-            {#if i < keys.length - 1}{@render comma()}{/if}
+            {@render previewValue(
+              key,
+              false,
+              descriptor
+            )}{#if i < keys.length - 1}{@render comma()}{/if}
           {/each}
         {/if}
         {#if keyValue}
           {#each keyValue as [key, value], i}
-            {@render valuePreview(value, key)}
-            {#if i < keyValue.length - 1}{@render comma()}{/if}
+            {@render valuePreview(value, key)}{#if i < keyValue.length - 1}{@render comma()}{/if}
           {/each}
         {:else if list}
           {#each list as value, i}
             {@render valuePreview(value, i)}{#if i < list.length - 1}{@render comma()}{/if}
           {/each}
         {:else if singleValue !== EMPTY}
-          {@render valuePreview(singleValue, undefined, false)}
+          {@render valuePreview(singleValue, undefined)}
         {/if}
       </div>
       {#if hasMore}{@render comma()}<span class="ellipsis">&hellip;</span>{/if}

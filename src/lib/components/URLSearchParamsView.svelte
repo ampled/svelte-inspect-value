@@ -7,7 +7,7 @@
 
   type Props = TypeViewProps<URLSearchParams>
 
-  let { value = new URLSearchParams(), key = undefined, type, path }: Props = $props()
+  let { value = new URLSearchParams(), key = undefined, path, ...rest }: Props = $props()
 
   let entries = $derived.by(() => {
     let entries: Record<string, string | string[]> = {}
@@ -29,15 +29,9 @@
   let preview = $derived(entries.slice(0, 3))
 </script>
 
-<Expandable {...{ value, key, type, path }} length={entries.length}>
+<Expandable {...{ value, key, path }} length={value.size} {...rest}>
   {#snippet valuePreview({ showPreview })}
-    <Preview
-      keyValue={preview}
-      prefix={'{'}
-      postfix={'}'}
-      hasMore={entries.length > preview.length}
-      {showPreview}
-    />
+    <Preview keyValue={preview} prefix={'{'} postfix={'}'} {showPreview} />
   {/snippet}
   {#each entries as [key, value], i (key)}
     <Entry {i}>

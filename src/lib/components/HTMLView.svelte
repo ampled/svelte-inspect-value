@@ -11,7 +11,7 @@
 
   type Props = TypeViewProps<HTMLElement> & { children?: Snippet }
 
-  let { value, key = undefined, type, path, children }: Props = $props()
+  let { value, key = undefined, path, children, ...rest }: Props = $props()
 
   let element = $state(htmlState(value))
   let scrollLeft = $state<number | undefined>(value?.scrollLeft)
@@ -80,10 +80,17 @@
     )
   )
 
-  let keys = $derived(getAllProperties(element.ele))
+  let keys = $derived(
+    getAllProperties(element.ele).filter(
+      (prop) =>
+        !['__svelte_meta', '__className', '__attributes', '__styles', '__t'].includes(
+          prop.toString()
+        )
+    )
+  )
 </script>
 
-<Expandable {...{ value, key, type, path }} length={entries.length} keepPreviewOnExpand>
+<Expandable {...{ value, key, path }} length={entries.length} keepPreviewOnExpand {...rest}>
   {#snippet valuePreview()}
     {#key element.ele}
       <HtmlValue value={element.ele} />

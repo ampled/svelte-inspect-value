@@ -59,7 +59,7 @@ const plainDark = {
   '--base00': '#000000',
   '--base01': '#333333',
   '--base02': '#FFFFFF',
-  '--base03': '#FFFFFF',
+  '--base03': '#808080',
   '--base04': '#FFFFFF',
   '--base05': '#FFFFFF',
   '--base06': '#FFFFFF',

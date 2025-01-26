@@ -9,17 +9,32 @@
 
   type Props = TypeViewProps<object>
 
-  let { value = {}, key = undefined, type, path = [] }: Props = $props()
+  let { value, key = undefined, type, path, ...rest }: Props = $props()
 
   let classInstance = $derived(
-    value.constructor.toString().startsWith('class') ? value.constructor.name : false
+    value.constructor?.toString().startsWith('class') ? value.constructor?.name : false
   )
 
   let objectType = $derived(classInstance ? (classInstance as ValueType) : type)
-  let keys = $derived(getAllProperties(value))
+  let keys = $derived(
+    [
+      ...getAllProperties(value).filter(
+        (p) => !['constructor', 'prototype'].includes(p.toString())
+      ),
+      classInstance ? 'constructor' : undefined,
+    ].filter((v) => v != null)
+  )
 </script>
 
-<Expandable type={objectType} length={keys.length} {key} {path} {value} forceType={!!classInstance}>
+<Expandable
+  type={objectType}
+  length={keys.length}
+  {key}
+  {path}
+  {value}
+  forceType={!!classInstance}
+  {...rest}
+>
   {#snippet valuePreview({ showPreview })}
     <Preview
       prefix={'{'}

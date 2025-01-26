@@ -1,5 +1,3 @@
-// import type { Action } from "svelte/action";
-
 import type { KeyType } from './types.js'
 
 export function getType(value: unknown) {
@@ -43,9 +41,13 @@ export type ValueType =
   | 'promise'
   | 'iterator'
 
-export function stringify(value: unknown, indent = 2, quotes: 'single' | 'double' = 'single') {
+export function stringify(
+  value: unknown,
+  indent: number | string = 2,
+  quotes: 'single' | 'double' = 'single'
+) {
   if (typeof value === 'string' && quotes === 'single') {
-    const str = `'${JSON.stringify(value).slice(1, -1)}'`
+    const str = `'${JSON.stringify(value, null, indent).slice(1, -1)}'`
     return str
   }
   return JSON.stringify(
@@ -73,6 +75,7 @@ export function stringifyOrToString(val: unknown): string {
   if (stringified !== '{}') {
     return stringified
   }
+  // TODO ??
   try {
     return getType(val)
     // return (val as object).toString()
@@ -89,8 +92,6 @@ export function typeOf(obj: unknown): ValueType {
 
   return (t.replace(' ', '').toLowerCase() ?? 'undefined') as unknown as ValueType
 }
-
-// export const noopAction: Action<HTMLElement, any> = (el) => { };
 
 export const stringifyPath = (path: KeyType[]) => {
   return path.map((k) => k.toString()).join('.')
@@ -131,11 +132,13 @@ export function getAllProperties(object: any) {
 export function getPropertyDescriptor(object: any, prop: PropertyKey) {
   if (!object) {
     return {}
-  } else if (prop === '__proto__') {
-    return {
-      value: Object.getPrototypeOf(object),
-    }
-  } else {
+  }
+  // else if (prop === '__proto__') {
+  //   return {
+  //     value: Object.getPrototypeOf(object),
+  //   }
+  // }
+  else {
     const ownPropertyDescriptor = Object.getOwnPropertyDescriptor(object, prop)
     if (ownPropertyDescriptor) {
       return ownPropertyDescriptor
@@ -154,9 +157,4 @@ export function ensureStringPath(path: string | KeyType[]) {
     key = path
   }
   return key
-}
-
-export function hasGetters(value: object) {
-  const descriptors = Object.getOwnPropertyDescriptors(value)
-  return Object.values(descriptors).some((descriptor) => !!descriptor.get)
 }

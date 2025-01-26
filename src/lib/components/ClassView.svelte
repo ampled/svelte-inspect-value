@@ -11,14 +11,14 @@
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   type Props = TypeViewProps<Function>
 
-  let { value, key, type, path }: Props = $props()
+  let { value, key, type, path, ...rest }: Props = $props()
 
   const previewLevel = getPreviewLevel()
 
   let keys = $derived(getAllProperties(value))
 </script>
 
-<Expandable {...{ value, key, type, path }} length={keys.length}>
+<Expandable {...{ value, key, type, path }} length={keys.length} {...rest}>
   {#snippet valuePreview({ showPreview })}
     <span class="value {type}">
       {value.name}

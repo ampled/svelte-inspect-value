@@ -1,6 +1,6 @@
 <script lang="ts">
+  import { getPreviewLevel } from '$lib/contexts.js'
   import type { TypeViewProps } from '$lib/types.js'
-  import { getContext } from 'svelte'
   import Expandable from './Expandable.svelte'
   import FunctionBody from './FunctionBody.svelte'
   import OneLineView from './OneLineView.svelte'
@@ -10,11 +10,11 @@
     'function' | 'asyncfunction' | 'generatorfunction' | 'asyncgeneratorfunction'
   >
 
-  let { value, key, type = 'function', path }: Props = $props()
+  let { value, key, type, path, ...rest }: Props = $props()
 
   let isMultiLine = $derived(value.toString().includes('\n'))
 
-  const previewLevel = getContext<number | undefined>('preview')
+  const previewLevel = getPreviewLevel()
 
   const oneLine = $derived.by(() => {
     switch (type) {
@@ -41,7 +41,7 @@
 {/snippet}
 
 {#if isMultiLine}
-  <Expandable {key} {type} {path} {value} length={1} showLength={false}>
+  <Expandable {key} {type} {path} {value} length={1} showLength={false} {...rest}>
     {#snippet valuePreview({ showPreview })}
       {#if showPreview}
         {#if previewLevel}

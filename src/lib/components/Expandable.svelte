@@ -1,4 +1,5 @@
 <script lang="ts" generics="Type extends string = ValueType">
+  import { getPreviewLevel } from '$lib/contexts.js'
   import { getContext, onMount, type Snippet } from 'svelte'
   import type { HTMLAttributes } from 'svelte/elements'
   import { slide } from 'svelte/transition'
@@ -27,6 +28,7 @@
     key,
     keyPrefix,
     keyDelim = ':',
+    keyStyle,
     showKey = true,
     type,
     length,
@@ -47,7 +49,7 @@
   let keyOrType = $derived((key ?? type)?.toString())
   let buttonComponent = $state<ReturnType<typeof CollapseButton>>()
 
-  const previewLevel = getContext<number | undefined>('preview') ?? 0
+  const previewLevel = getPreviewLevel()
   const isKey = getContext<boolean>('key')
 
   onMount(() => {
@@ -90,6 +92,7 @@
       <Key
         delim={keyDelim}
         prefix={keyPrefix}
+        style={keyStyle}
         {key}
         {path}
         ondblclick={() => onCollapseChanged(!collapsed)}
@@ -118,8 +121,8 @@
     data-testid="indent"
     class="indent {type}"
     oninspectvaluechange={() => buttonComponent?.flash()}
-    in:slide={{ duration: options.value.noanimate ? 0 : 400 }}
-    out:slide={{ duration: options.value.noanimate ? 0 : 400 }}
+    in:slide={{ duration: options.value.noanimate ? 0 : 200 }}
+    out:slide={{ duration: options.value.noanimate ? 0 : 200 }}
   >
     {@render children()}
   </div>
@@ -130,12 +133,6 @@
     z-index: var(--index);
     position: sticky;
     top: 0;
-    border-color: var(--border-color);
-    border-bottom-width: 0;
-    border-right-width: 0;
-    border-top-width: 0;
-    border-left-width: 0;
-    border-style: solid;
     white-space: nowrap;
     display: flex;
     flex-direction: row;
@@ -155,25 +152,20 @@
       align-items: center;
       gap: calc(var(--indent) * 0.5);
       padding-left: 1px;
-      /* gap: 0.25em; */
     }
   }
 
   .title-bar.preview {
     background-color: transparent;
     padding: 0;
-    gap: 0;
   }
 
   .title-bar.preview.nokey {
-    .button-key {
-      margin-left: -0.5em;
-    }
+    gap: 0;
   }
 
   .indent {
     margin-left: calc(var(--indent) * 1.5);
-    padding-block: calc(var(--indent) * 0.5);
     border-left: 1px solid var(--border-color);
     overflow-x: hidden;
     overflow-y: auto;

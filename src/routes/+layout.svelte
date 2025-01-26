@@ -51,7 +51,7 @@
     <button onclick={reset}>reset</button>
   {/snippet}
   <main>
-    <a href="/">
+    <a href="/" class="title">
       <h1>Svelte Inspect Value</h1>
     </a>
     <nav>
@@ -161,8 +161,16 @@
 </svelte:boundary>
 
 <style>
+  .title {
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.5rem;
+    width: max-content;
+  }
+
   h1 {
     max-width: max-content;
+    text-decoration: none;
   }
 
   main {
@@ -189,6 +197,7 @@
     ul {
       padding: 0;
       display: flex;
+      align-items: flex-end;
       gap: 1em;
 
       li {
@@ -281,11 +290,15 @@
   label {
     white-space: nowrap;
     flex-shrink: 0;
+    font-family: monospace;
   }
 
   a {
     color: #fafafa;
     transition: color 300ms linear;
+    text-decoration: none;
+    font-size: 1.5rem;
+    line-height: 1;
 
     h1 {
       text-decoration: none;
@@ -294,16 +307,7 @@
 
   a.active {
     color: var(--red);
-    text-decoration: none;
+    text-decoration: underline;
     position: relative;
-
-    &::before {
-      color: var(--comments);
-      content: '> ';
-      font-weight: bold;
-      text-decoration: none;
-      position: absolute;
-      transform: translateX(-100%);
-    }
   }
 </style>

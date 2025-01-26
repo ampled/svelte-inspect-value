@@ -9,12 +9,12 @@
 
   type Props = TypeViewProps<object>
 
-  let { value, key, type, path }: Props = $props()
+  let { value, key, path, ...rest }: Props = $props()
 
   let keys = $derived(getAllProperties(value))
 </script>
 
-<Expandable {type} length={keys.length} {key} {path} {value}>
+<Expandable length={keys.length} {key} {path} {value} {...rest}>
   {#snippet valuePreview({ showPreview })}
     <Preview
       prefix={'{'}
