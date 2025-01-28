@@ -3,7 +3,7 @@ import { stringifyOrToString } from './util.js'
 
 export function logToConsole(path: KeyType[] = [], value: unknown, type: string | undefined) {
   const prefix = [
-    `%cInspect ${type} at ${path.join('.')} :`,
+    `%cInspect ${type} at ${path.join('.')}:`,
     'background-color: black; padding: 5px; color: hotpink; border-radius: 8px;',
   ]
 
