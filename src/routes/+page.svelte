@@ -1,41 +1,56 @@
 <script lang="ts">
-  import { page } from '$app/stores'
+  // import { page } from '$app/stores'
   import Inspect from '$lib/Inspect.svelte'
   import Code from '../doclib/Code.svelte'
   import globalConfigCode from '../doclib/examples/globalconfig.txt?raw'
+  import globalConfigCodeLayout from '../doclib/examples/globalconfiglayout.txt?raw'
   import MinimalExample from '../doclib/examples/MinimalExample.svelte'
 
   let { data } = $props()
 
-  $effect(() => {
-    console.log($page.url)
-  })
-
   let packageName = 'svelte-inspect-value'
 
   import minimalcode from '../doclib/examples/minimalexample.txt?raw'
-  import inspectProps from '../doclib/props.js'
+  import MultiCode from '../doclib/examples/MultiCode.svelte'
+  // import inspectProps from '../doclib/props.js'
 
-  const propsDocObj = $derived(
-    Object.fromEntries(
-      inspectProps($page.url.origin).map(({ name, ...rest }) => [name, { ...rest }])
-    )
-  )
+  // const propsDocObj = $derived(
+  //   Object.fromEntries(
+  //     inspectProps($page.url.origin).map(({ name, ...rest }) => [name, { ...rest }])
+  //   )
+  // )
 </script>
 
 <div class="center">
   <Inspect
-    style="max-width: 400px;"
-    name="packageMetadata"
-    value={data.packageMetaData.versions[data.packageMetaData['dist-tags'].latest]}
+    showTools
+    style="max-width: 640px"
+    name="packageInfo"
+    value={{
+      name: 'svelte-inspect-value',
+      installCommands: [
+        'copy to clipboard 👉',
+        'npm install svelte-inspect-value',
+        'pnpm add svelte-inspect-value',
+        'bun add svelte-inspect-value',
+        'yarn add svelte-inspect-value',
+      ],
+      npm: {
+        package: 'https://www.npmjs.com/package/svelte-inspect-value',
+        'dist-tags': data.packageMetaData['dist-tags'],
+        versions: data.packageMetaData.versions,
+      },
+      github: 'https://github.com/ampled/svelte-inspect-value',
+      docs: 'https://svelte-inspect-value.vercel.app/',
+      playground: 'https://svelte.dev/playground/956365d6905c44298234ff4d9c60741e?version=5.17.3',
+    }}
   />
 </div>
 
 <h2>What it is</h2>
 <p>
-  Svelte Value Inspect is a "json tree"-like inspector inspired by the likes of <code
-    >react-json-view</code
-  >, and <code>svelte-json-tree</code>. <br />
+  Svelte Inspect Value is a "json tree"-like inspector inspired by the likes of
+  <code>react-json-view</code> and <code>svelte-json-tree</code>. <br />
 
   The main purpose of the component is to be a developer utility. When developing apps it can be
   useful to have a "live" preview of state like API data, form values, the state of a promise and so
@@ -84,29 +99,7 @@ Result:
 
 <h2>Props</h2>
 
-<!-- <div class="center">
-  <Inspect
-    style="max-width: 1000px"
-    name="props"
-    expandAll
-    value={{
-      value: {
-        description: 'required. value to inspect. can be any javascript value',
-        default: null,
-      },
-      name: {
-        description: `name of outer value. \n displayed as key, e.g. 'props' in this instance`,
-        default: undefined,
-      },
-      stringCollapse: {
-        description: `set a max display length for string values.\n0 means full string will be displayed`,
-        default: 0,
-      },
-    }}
-  />
-</div> -->
-
-<Inspect name="props" value={propsDocObj} expandAll />
+<!-- <Inspect name="props" value={propsDocObj} expandAll /> -->
 
 <table>
   <thead>
@@ -225,7 +218,14 @@ Result:
   (hover it)
 </p>
 
-<Code code={globalConfigCode} label="GlobalConfigExample.svelte" />
+<MultiCode
+  examples={[
+    { code: globalConfigCodeLayout, label: '+layout.svelte', language: 'svelte' },
+    { code: globalConfigCode, label: '+page.svelte', language: 'svelte' },
+  ]}
+/>
+
+<!-- <Code code={globalConfigCode} label="GlobalConfigExample.svelte" language="svelte" /> -->
 
 <Inspect value={'no long strings in this neighbourhood thanks'} stringCollapse={20} />
 
@@ -240,13 +240,15 @@ Result:
 
   table {
     border-collapse: collapse;
-    border: 2px solid rgb(140 140 140);
-    background-color: var(--bg-lighter);
+    border: 1px solid var(--border-color);
+    background-color: var(--bg);
+    font-family: monospace;
+    font-size: 0.7em;
   }
 
   th,
   td {
-    border: 1px solid rgb(160 160 160);
+    border: 1px solid var(--border-color);
     padding: 8px 10px;
     text-align: left;
   }

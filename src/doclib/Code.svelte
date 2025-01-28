@@ -1,30 +1,22 @@
 <script lang="ts">
-  import type { HTMLAttributes } from 'svelte/elements'
-
-  import { Highlight, HighlightSvelte } from 'svelte-highlight'
-  import './code.css'
-  // import github from 'svelte-highlight/styles/horizon-dark'
-
   import Inspect from '$lib/Inspect.svelte'
   import { getContext, type Snippet } from 'svelte'
-  import css from 'svelte-highlight/languages/css'
-  import javascript from 'svelte-highlight/languages/javascript'
+  import type { HTMLAttributes } from 'svelte/elements'
+  import { fade } from 'svelte/transition'
+  import { highlight } from './shiki.js'
 
   type CodeProps = {
     children?: Snippet
     code: string
     label?: string
-    language?: 'svelte' | 'xml' | 'css' | 'javascript'
+    language?: 'svelte' | 'css' | 'javascript'
   } & HTMLAttributes<HTMLDivElement>
 
   let { code, label = 'example', language = 'svelte', children, ...rest }: CodeProps = $props()
 
-  let supportedLanguages = {
-    javascript,
-    css,
-  }
-
   const multi = getContext<boolean | undefined>('multi')
+
+  let highlighted = $derived(highlight(code, language))
 </script>
 
 <svelte:boundary>
@@ -39,13 +31,15 @@
 
     {#if children}
       {@render children()}
-    {:else if language === 'svelte'}
-      <HighlightSvelte {code}></HighlightSvelte>
     {:else}
-      <Highlight
-        {code}
-        language={supportedLanguages[language as keyof typeof supportedLanguages]}
-      />
+      {#await highlighted}
+        ...
+      {:then result}
+        <div in:fade>
+          <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+          {@html result}
+        </div>
+      {/await}
     {/if}
   </div>
 </svelte:boundary>
@@ -58,6 +52,7 @@
     background-color: var(--bg-code);
     font-size: 12px;
     overflow: hidden;
+    padding: 1em;
   }
 
   .code.multi {
@@ -70,6 +65,7 @@
   }
 
   .label {
+    font-size: 14px;
     font-family: monospace;
     position: absolute;
     top: 0;

@@ -1,23 +1,19 @@
 <script>
   import { Inspect } from 'svelte-inspect-value'
 
-  function getPromises () { 
-    return {
-      neverResolve: new Promise(() => {}),
-      resolveInAFew: new Promise((resolve) => {
-        setTimeout(() => {
-          resolve('yep')
-        }, 2000)
-      }),
-      rejectsInAFew: new Promise((_, reject) => {
-        setTimeout(() => {
-          reject('nope')
-        }, 3500)
-      }),
-    }
+  const value = {
+    neverResolve: new Promise(() => {}),
+    resolveInAFew: new Promise((resolve) => {
+      setTimeout(() => {
+        resolve('yep')
+      }, 2000)
+    }),
+    rejectsInAFew: new Promise((_, reject) => {
+      setTimeout(() => {
+        reject('nope')
+      }, 3500)
+    })
   }
-
-  const promises = getPromises()
 </script>
 
-<Inspect value={promises} name="promises"></Inspect>
+<Inspect {value} name="promises" />

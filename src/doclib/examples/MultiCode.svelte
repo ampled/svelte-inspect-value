@@ -1,6 +1,6 @@
 <script lang="ts">
   import { setContext, type ComponentProps } from 'svelte'
-  import { slide } from 'svelte/transition'
+  // import Shiki from '../Shiki.svelte'
   import Code from '../Code.svelte'
 
   type Props = {
@@ -18,17 +18,13 @@
 <div class="examples">
   <div class="tabs">
     {#each examples as { label } (label)}
-      <button class:active={currentLabel === label} onclick={() => (currentLabel = label)}
-        >{label}</button
-      >
+      <button class:active={currentLabel === label} onclick={() => (currentLabel = label)}>
+        {label}
+      </button>
     {/each}
   </div>
   {#if currentExample}
-    {#key currentExample}
-      <div transition:slide>
-        <Code {...currentExample} />
-      </div>
-    {/key}
+    <Code {...currentExample} />
   {/if}
 </div>
 
@@ -48,6 +44,7 @@
 
   .tabs {
     /* background-color: rgba(0 0 0 / 0.1); */
+    font-size: 14px;
     width: 100%;
   }
 </style>

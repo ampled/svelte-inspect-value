@@ -20,7 +20,7 @@
 
   let demoInputValid = $state(true)
 
-  let demoObject = $state({
+  let value = $state({
     id: undefined,
     firstName: 'Bob',
     lastName: 'Alice',
@@ -35,16 +35,16 @@
     interests: ['radio', 'tv', 'internet', 'kayaks'],
   })
 
-  let value = $state(original)
+  let sourceValue = $state(original)
 
   function reset() {
-    value = original
+    sourceValue = original
   }
 
   $effect(() => {
     try {
-      const obj = eval(value)
-      demoObject = obj
+      const obj = eval(sourceValue)
+      value = obj
       demoInputValid = true
     } catch {
       demoInputValid = false
@@ -59,8 +59,8 @@
   <p>works pretty well for basic object and array-values aka "json"</p>
   <button onclick={() => reset()}>reset</button>
   <Stack>
-    <Inspect value={demoObject} name="demo" />
-    <textarea rows={13} class:demoInputValid bind:value></textarea>
+    <Inspect {value} name="demo" />
+    <textarea rows={13} class:demoInputValid bind:value={sourceValue}></textarea>
   </Stack>
 </div>
 

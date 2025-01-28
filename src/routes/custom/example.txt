@@ -1,14 +1,23 @@
-<script>
+<script lang="ts">
+  import { Inspect, CustomComponents } from 'svelte-inspect-value'
   import GoofyNumber from './GoofyNumber.svelte'
+  import HexString from './HexString.svelte'
+
+  const components: CustomComponents = { 
+    // Second item of tuple is an optional function that enables
+    // transforming props before they are passed to the custom component 
+    number: [GoofyNumber, (props) => ({ value: props.value })],
+    string: [HexString]
+  }
 
   const value = {
     oneBillion: 1000000000,
-  }
-
-  const components = { 
-    // Second item of tuple is an optional function that enables
-    // transforming props before they are passed to the custom component 
-    number: [GoofyNumber, (props) => ({ value: props.value })] 
+    oneTwoThreeFourEtc: 1234567890,
+    maxSafe: Number.MAX_SAFE_INTEGER,
+    red: '#FF0000',
+    pink: '#FF00FF',
+    yella: '#FFFF00',
+    notAColor: 'hello',
   }
 </script>
 

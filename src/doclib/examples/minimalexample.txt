@@ -1,7 +1,7 @@
-<script lang="ts">
-  import {Inspect} from 'svelte-inspect-value'
+<script>
+  import {Inspect} from 'svelte-inspect-value';
 
-  let demoObject = $state({
+  let value = $state({
     id: undefined,
     firstName: 'Bob',
     lastName: 'Alice',
@@ -14,7 +14,7 @@
     age: -42,
     emailVerified: true,
     interests: ['radio', 'tv', 'internet', 'kayaks'],
-  })
+  });
 </script>
 
-<Inspect value={demoObject} name="demo" />
+<Inspect {value} name="demo" />

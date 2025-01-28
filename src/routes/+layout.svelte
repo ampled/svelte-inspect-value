@@ -1,6 +1,8 @@
 <script lang="ts">
   import './app.css'
 
+  import { DEV } from 'esm-env'
+
   import { onNavigate } from '$app/navigation'
   import { page } from '$app/stores'
   import Inspect from '$lib/Inspect.svelte'
@@ -38,9 +40,10 @@
   setGlobalInspectOptions(options)
 
   let routes = [
-    { href: '/examples', title: 'examples' },
-    { href: '/custom', title: 'custom components' },
-    { href: '/theming', title: 'theming' },
+    { href: '/examples', title: 'Examples' },
+    { href: '/custom', title: 'Custom components', devonly: true },
+    { href: '/theming', title: 'Theming', devonly: true },
+    { href: '/alltypes', title: 'alltypes', devonly: true },
   ]
 </script>
 
@@ -52,14 +55,23 @@
   {/snippet}
   <main>
     <a href="/" class="title">
-      <h1>Svelte Inspect Value</h1>
+      <h1>
+        Svelte
+        <code
+          >{'<'}<span class="inspect">Inspect</span>
+          {'{'}<span class="value">{'value'}</span>{'}'}
+          {'/>'}
+        </code>
+      </h1>
     </a>
     <nav>
       <ul>
-        {#each routes as { href, title } (href)}
-          <li>
-            <a class:active={href === $page.url.pathname} {href}>{title}</a>
-          </li>
+        {#each routes as { href, title, devonly } (href)}
+          {#if !devonly || (devonly && DEV)}
+            <li>
+              <a class:active={href === $page.url.pathname} {href}>{title}</a>
+            </li>
+          {/if}
         {/each}
         <li>
           <a
@@ -164,7 +176,7 @@
   .title {
     text-decoration: none;
     font-weight: bold;
-    font-size: 1.5rem;
+    font-size: 0.8rem;
     width: max-content;
   }
 
@@ -179,25 +191,16 @@
     flex-direction: column;
     gap: 1em;
     padding: 1em;
-    padding-inline: 3em;
     width: 100%;
-    padding-bottom: 25em;
-  }
-
-  @media (min-width: 1024px) {
-    main {
-      width: 90%;
-    }
+    margin-bottom: 400px;
   }
 
   nav {
-    /* display: flex;
-    flex-direction: row; */
-
     ul {
       padding: 0;
       display: flex;
       align-items: flex-end;
+      flex-wrap: wrap;
       gap: 1em;
 
       li {
@@ -247,6 +250,7 @@
   }
 
   .options-title {
+    font-family: monospace;
     position: absolute;
     top: 2px;
     left: 5px;
@@ -297,11 +301,29 @@
     color: #fafafa;
     transition: color 300ms linear;
     text-decoration: none;
-    font-size: 1.5rem;
+    font-size: 1rem;
     line-height: 1;
+    white-space: nowrap;
 
     h1 {
       text-decoration: none;
+
+      code {
+        font-size: 0.8em;
+        padding-inline: 0.2em;
+        font-weight: normal;
+        background: transparent;
+
+        .inspect {
+          color: var(--red);
+          font-weight: bold;
+        }
+
+        .value {
+          font-weight: normal;
+          color: var(--blue);
+        }
+      }
     }
   }
 
@@ -309,5 +331,21 @@
     color: var(--red);
     text-decoration: underline;
     position: relative;
+  }
+
+  @media (min-width: 1024px) {
+    main {
+      width: 90%;
+      padding: 1em;
+      padding-inline: 3em;
+    }
+
+    .title {
+      font-size: 1.5rem;
+    }
+
+    a {
+      font-size: 1.5rem;
+    }
   }
 </style>

@@ -1,0 +1,18 @@
+<script>
+  import { setGlobalInspectOptions } from 'svelte-inspect-value'
+
+  setGlobalInspectOptions({ stringCollapse: 20 })
+
+  // or reactive global options
+  let globalConfig = $state({ stringCollapse: 20 });
+  setGlobalInspectOptions(globalConfig);
+
+  let { children } = $props();
+</script>
+
+<input bind:value={globalConfig.stringCollapse} />
+
+<main>
+ {@render children()}
+</main>
+
