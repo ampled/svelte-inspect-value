@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { useOptions } from '$lib/options.svelte.js'
   import type { TypeViewProps } from '$lib/types.js'
   import { untrack } from 'svelte'
   import { fade } from 'svelte/transition'
@@ -11,9 +12,9 @@
 
   let { value = Promise.resolve(), key, type, path }: Props = $props()
 
+  const options = useOptions()
   let status = $state<'pending' | 'fulfilled' | 'rejected'>('pending')
   let result = $state<unknown>(undefined)
-
   let currentPromise = $state<Promise<unknown>>()
 
   let entries = $derived(
@@ -67,10 +68,10 @@
 <Expandable {...{ value, key, type, path }} length={entries.length} showLength={false}>
   {#snippet valuePreview({ showPreview })}
     {#key status}
-      <span class="value promise {status}" in:fade
+      <span class="value promise {status}" in:fade={{ duration: options.value.noanimate ? 0 : 200 }}
         ><span class="bracket">{'<'}</span
         >{`${status}`}{#if status === 'fulfilled' || status === 'rejected'}
-          <Preview prefix={':'} singleValue={result} hasMore={false} startLevel={0} {showPreview} />
+          <Preview prefix={':'} singleValue={result} startLevel={0} {showPreview} showKey={false} />
         {/if}<span class="bracket">{'>'}</span></span
       >
     {/key}
