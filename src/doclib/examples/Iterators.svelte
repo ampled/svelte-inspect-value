@@ -1,11 +1,10 @@
 <script lang="ts">
-  import { browser } from '$app/environment'
   import { Inspect } from '$lib/index.js'
   import { getContext } from 'svelte'
   import type { SvelteMap } from 'svelte/reactivity'
   import Code from '../Code.svelte'
   import Stack from '../Stack.svelte'
-  import code from './gettersandsetters.txt?raw'
+  import code from './iterators.txt?raw'
 
   function* fibonacci() {
     let current = 1
@@ -35,7 +34,6 @@
       ],
     ]).entries(),
     stringIterator: 'abdcdefghijklmnopqrstuvwxyzæøå'[Symbol.iterator](),
-    elements: browser ? document.body.childNodes.values() : null,
   })
 
   getContext<SvelteMap<string, string>>('toc')?.set('Iterators & Generators', 'iterators')
@@ -49,6 +47,6 @@
 
   <Stack>
     <Code {code} />
-    <Inspect name="gettersAndSetters" style="flex-basis: 50%" {value} />
+    <Inspect name="iteratorsAndGenerators" style="flex-basis: 50%; max-height: 400px;" {value} />
   </Stack>
 </div>

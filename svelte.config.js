@@ -15,7 +15,7 @@ const config = {
   },
   compilerOptions: {
     sourcemap: true,
-    // runes: true,
+    runes: true,
     // customElement: true,
   },
 }

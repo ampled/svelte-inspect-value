@@ -254,7 +254,7 @@ button.unstyled {
 }
 
 .align-end {
-  align-items: flex-end;
+  align-items: flex-end !important;
 }
 
 .justify-center {

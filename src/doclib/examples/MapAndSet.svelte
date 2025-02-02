@@ -14,20 +14,19 @@
     expandable <code>Entry</code>
   </p>
 
-  <div class="flex">
-    <Inspect
-      value={{
-        map: new Map<unknown, unknown>([
-          ['yeah', 1],
-          [3, 2],
-          [{ name: 'object key' }, 3],
-          [[1, 2], 3],
-          [Symbol('1'), 4],
-          [/r(e+)gExp?/, 'regex key'],
-        ]),
-        set: new Set([1, 2, 3, 'four']),
-      }}
-      name="mapAndSet"
-    />
-  </div>
+  <Inspect
+    style="width: 400px"
+    value={{
+      map: new Map<unknown, unknown>([
+        ['yeah', 1],
+        [3, 2],
+        [{ name: 'object key' }, 3],
+        [[1, 2], 3],
+        [Symbol('1'), 4],
+        [/r(e+)gExp?/, 'regex key'],
+      ]),
+      set: new Set([1, 2, 3, 'four']),
+    }}
+    name="mapAndSet"
+  />
 </div>

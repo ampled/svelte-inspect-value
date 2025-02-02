@@ -66,7 +66,5 @@
     are updated (enabled / disabled with the <code>flashOnUpdate</code>-prop)
   </p>
 
-  <div class="flex">
-    <Inspect {value} />
-  </div>
+  <Inspect {value} />
 </div>

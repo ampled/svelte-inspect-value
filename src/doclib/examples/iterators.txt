@@ -1,0 +1,26 @@
+<script>
+  import Inspect from 'svelte-inspect-value'
+
+  function* fibonacci() {
+    let current = 1
+    let next = 1
+    while (true) {
+      yield current
+      ;[current, next] = [next, current + next]
+    }
+  }
+
+  let value = $state({
+    fibonacci: fibonacci(),
+    array: [1, 2, 3, 4].values(),
+    set: new Set([12, 34, 45]).values(),
+    map: new Map<unknown, unknown>([
+      [0, 0],
+      [{ id: 123 }, 1],
+      [[1, 2, 3], 2],
+    ]).entries(),
+    stringIterator: 'abdcdefghijklmnopqrstuvwxyz'[Symbol.iterator](),
+  })
+</script>
+
+<Inspect {value} />

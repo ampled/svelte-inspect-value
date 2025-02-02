@@ -1,14 +1,21 @@
 <script lang="ts">
-  import { Inspect, CustomComponents } from 'svelte-inspect-value'
+  import { Inspect, CustomComponents, addComponent } from 'svelte-inspect-value'
   import GoofyNumber from './GoofyNumber.svelte'
   import HexString from './HexString.svelte'
 
-  const components: CustomComponents = { 
+  let showString = $state(false)
+
+  const components: CustomComponents = $derived({
     // Second item of tuple is an optional function that enables
     // transforming props before they are passed to the custom component 
     number: [GoofyNumber, (props) => ({ value: props.value })],
-    string: [HexString]
-  }
+    // if no transform is needed:
+    number: [GoofyNumber],
+    // Using the exported helper function enables proper typing for props
+    // NOTE: the returned props can be considered overrides for props passed by Inspect
+    // and does not need to be complete
+    string: addComponent(HexString, (props) => ({ showString, value: props.value }))
+  })
 
   const value = {
     oneBillion: 1000000000,
@@ -22,7 +29,12 @@
 </script>
 
 <Inspect
-  name="customNumbers"
+  name="numbersAndColors"
   {value}
   customComponents={components}
 />
+
+<label>
+  show string for custom string component
+  <input type="checkbox" bind:checked={showString} />
+</label>

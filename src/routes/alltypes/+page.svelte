@@ -3,5 +3,5 @@
 </script>
 
 <div style="padding: 2em">
-  <AllTypes />
+  <AllTypes debug />
 </div>

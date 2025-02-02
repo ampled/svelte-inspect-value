@@ -9,7 +9,9 @@
   <h3 id="multiline">Multi-line strings</h3>
   <p>Expandable view for multi-line strings</p>
 
-  <div class="flex">
-    <Inspect value={['normal boring string', 'cool \n multi-line \n  render 😎']} name="strings" />
-  </div>
+  <Inspect
+    style="width: 400px"
+    value={['normal boring string', 'cool \n multi-line \n  render 😎']}
+    name="strings"
+  />
 </div>

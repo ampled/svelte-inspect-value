@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Inspect from '$lib/Inspect.svelte'
+  import { type CustomComponents, Inspect, addComponent } from '$lib/index.js'
   import MultiCode from '../../doclib/examples/MultiCode.svelte'
   import CustomNumber from './CustomNumber.svelte'
   import customNumberCode from './CustomNumber.txt?raw'
@@ -7,11 +7,23 @@
   import code from './example.txt?raw'
   import ExpandableNumber from './ExpandableNumber.svelte'
   import HexString from './HexString.svelte'
+  import customStringCode from './HexString.txt?raw'
 
-  let anObject = $state({
+  const anObject = {
     oneBillion: 1000000000,
     oneTwoThreeFourEtc: 1234567890,
     maxSafe: Number.MAX_SAFE_INTEGER,
+    red: '#FF0000',
+    pink: '#FF00FF',
+    yella: '#FFFF00',
+    notAColor: 'hello',
+  }
+
+  let showString = $state(false)
+
+  const customComponents: CustomComponents = $derived({
+    number: [CustomNumber],
+    string: addComponent(HexString, (props) => ({ showString, value: props.value })),
   })
 </script>
 
@@ -32,37 +44,20 @@
 
 <MultiCode
   examples={[
-    { code: customNumberCode, label: 'GoofyNumber.svelte', language: 'svelte' },
     { code, label: '+page.svelte', language: 'svelte' },
+    { code: customNumberCode, label: 'GoofyNumber.svelte', language: 'svelte' },
+    { code: customStringCode, label: 'HexString.svelte', language: 'svelte' },
   ]}
 />
 <!-- </div> -->
 
 Result
-<Inspect
-  value={anObject}
-  customComponents={{ number: [CustomNumber, (props) => ({ value: props.value })] }}
-  name="customNumber"
-/>
+<Inspect value={anObject} {customComponents} name="numbersAndColors" />
 
-<Inspect
-  name="previewColors"
-  value={{
-    black: '#000',
-    gray: '#808080',
-    white: '#FFF',
-    red: '#FF0000',
-    pink: '#FF00FF',
-    yella: '#FFFF00',
-    green: '#00FF00',
-    cyan: '#00FFFF',
-    blue: '#0000FF',
-
-    badass: '#b4d455',
-    notAColor: 'hello',
-  }}
-  customComponents={{ string: [HexString] }}
-/>
+<label class="flex row align-center">
+  show string for custom string component
+  <input type="checkbox" bind:checked={showString} />
+</label>
 
 <h3>Custom expandable</h3>
 

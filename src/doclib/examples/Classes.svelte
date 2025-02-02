@@ -33,12 +33,10 @@
   <h3 id="classes">Classes</h3>
   <p>Display "static" properties of classes</p>
 
-  <div class="flex">
-    <Inspect
-      value={{
-        class: Greeter,
-        classInstance: new Greeter('world'),
-      }}
-    />
-  </div>
+  <Inspect
+    value={{
+      class: Greeter,
+      classInstance: new Greeter('world'),
+    }}
+  />
 </div>

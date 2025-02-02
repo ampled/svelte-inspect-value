@@ -34,9 +34,7 @@
 
   <p>Note: This example has the option set to true and won't be affected by global options</p>
 
-  <div class="flex">
-    <Inspect expandAll embedMedia value={squirtle} name="squirtle" />
-  </div>
+  <Inspect expandAll embedMedia value={squirtle} name="squirtle" />
 
   <p><em>Sprite and audio courtesy of pokeapi.co</em></p>
 </div>

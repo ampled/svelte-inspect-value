@@ -1,12 +1,11 @@
 <script lang="ts">
-  import { dev } from '$app/environment'
+  import DevOnly from '$lib/components/DevOnly.svelte'
   import Console from '$lib/icons/Console.svelte'
   import Inspect from '$lib/Inspect.svelte'
   import { colord } from 'colord'
-  import Code from '../../doclib/Code.svelte'
-  import AllTypes from '../../doclib/examples/AllTypes.svelte'
   import HueRotate from './HueRotate.svelte'
   import { themes } from './themes.js'
+  import Theming from './Theming.svelte'
 
   let font = $state('monospace')
   let fontSize = $state(12)
@@ -22,13 +21,17 @@
   let currentColors = $derived(rotated == null ? colors : rotated)
 
   let style = $derived(keys.map((k) => `${k}: ${currentColors[k]};`).join(''))
-  let classPreview = $derived(`.inspect-theme {
-${style
-  .split(';')
-  .filter(Boolean)
-  .map((s) => `  ${s};\n`)
-  .join('')}}
-`)
+  // let classPreview = $state('.inspect-theme { }')
+
+  //   function _createClassPreview(style: string) {
+  //     return `.inspect-theme {
+  // ${style
+  //   .split(';')
+  //   .filter(Boolean)
+  //   .map((s) => `  ${s};\n`)
+  //   .join('')}}
+  // `
+  //   }
 
   let presets = Object.keys(themes) as (keyof typeof themes)[]
   let selectedPreset = $state<keyof typeof themes>('drak')
@@ -93,7 +96,21 @@ ${style
   }
 </script>
 
-<div class="flex row gap">
+<h2>Theming</h2>
+
+<p>
+  <code>Inspect</code> has 16 css variables that can be set directly on the component or via a
+  (global) class.<br />
+  If you have favorite <a href="https://github.com/chriskempson/base16">base16</a> color-scheme it
+  should probably be supported very well. The variables <code>base04, base06, base07</code> and
+  <code>base0F</code>
+  is currently no used by any default components, but is still defined and can be used in
+  <a href="/custom">custom components.</a><br />
+
+  More fine-grained control might be implemented in the future.
+</p>
+
+<div class="flex row gap align-end">
   <label>
     presets
     <select bind:value={selectedPreset}>
@@ -105,10 +122,11 @@ ${style
   <button onclick={loadPreset}> load </button>
 </div>
 
-<AllTypes {style} --inspect-font={font} --inspect-font-size={fontSizePx} />
-{#if dev}
-  <Inspect value={{ steps, currentStep }} />
-{/if}
+<!-- <AllTypes {style} --inspect-font={font} --inspect-font-size={fontSizePx} /> -->
+
+<div {style}>
+  <Theming --inspect-font={font} --inspect-font-size={fontSizePx} {style} {colors} />
+</div>
 
 <div class="flex row flex-wrap">
   {#each keys as key}
@@ -169,7 +187,11 @@ ${style
     font-size
     <input type="number" bind:value={fontSize} />
   </label>
-  <button class="unstyled" style="width: 2em; height: 2em;">
+  <button
+    class="unstyled"
+    style="width: 2em; height: 2em;"
+    onclick={() => console.log($state.snapshot(colors))}
+  >
     <Console />
   </button>
   <button class="unstyled" type="button" disabled={steps[currentStep - 1] == null} onclick={undo}
@@ -194,7 +216,11 @@ ${style
   }}
 />
 
-<pre>
+<DevOnly>
+  <Inspect value={{ steps, currentStep }} />
+</DevOnly>
+
+<!-- <pre>
 base00  Default Background
 base01  Lighter Background (Used for status bars, line number and folding marks)
 base02  Selection Background
@@ -211,8 +237,13 @@ base0C  Support, Regular Expressions, Escape Characters, Markup Quotes
 base0D  Functions, Methods, Attribute IDs, Headings
 base0E  Keywords, Storage, Selector, Markup Italic, Diff Changed
 base0F  Deprecated, Opening/Closing Embedded Language Tags, e.g. {'<?php ?>'}
-</pre>
-<Code code={classPreview} language="css" />
+</pre> -->
+
+<pre>
+<span class="selector">.inspect-theme</span> {'{'}
+{#each keys as key, i (key)}<span class="key">{key}</span>: <span class="value">{colors[key]}</span
+    >;{#if i !== 15}<br />{/if}{/each}
+{'}'}</pre>
 
 <style>
   .row {
@@ -247,5 +278,25 @@ base0F  Deprecated, Opening/Closing Embedded Language Tags, e.g. {'<?php ?>'}
     margin: 0;
     background-color: transparent;
     cursor: pointer;
+  }
+
+  pre {
+    font-size: 12px;
+    background-color: var(--bg-lighter);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    padding: 1em;
+
+    .key {
+      padding-left: 1em;
+    }
+
+    .selector {
+      color: var(--green);
+    }
+
+    .value {
+      color: var(--blue);
+    }
   }
 </style>

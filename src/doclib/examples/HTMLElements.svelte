@@ -57,6 +57,7 @@
       {/each}
     </ul>
   </div>
+
   <Inspect value={div} name="htmlElement" theme="drak" style="flex-basis: 100%" expandLevel={0} />
 
   <!-- <Inspect value={_window} /> -->

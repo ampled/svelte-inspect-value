@@ -26,7 +26,6 @@
     lastName: 'Alice',
     email: 'bob@alice.lol',
     introduction: `The name is Alice.
-
     Bob Alice.`,
     birthDate: new Date(),
     website: new URL('https://alicebob.website/?ref=abcdefg#about'),
@@ -56,7 +55,7 @@
 
 <div class="flex col">
   <h3 id="json">JSON</h3>
-  <p>works pretty well for basic object and array-values aka "json"</p>
+  <p><code>Inspect</code> works well for basic object and array-values aka "json"</p>
   <button onclick={() => reset()}>reset</button>
   <Stack>
     <Inspect {value} name="demo" />

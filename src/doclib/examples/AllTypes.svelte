@@ -2,7 +2,8 @@
   import { browser } from '$app/environment'
   import Inspect from '$lib/Inspect.svelte'
   import type { InspectProps } from '$lib/types.js'
-  import { onMount } from 'svelte'
+  import sprite from './media/squirtle.png'
+  import audio from './media/squirtle_cry.ogg'
 
   const props: InspectProps = $props()
 
@@ -25,8 +26,6 @@
     }
   }
 
-  let args = $state()
-
   const string1 = 'Que ma joie demeure'
 
   const segmenterFrGrapheme = new Intl.Segmenter('fr', {
@@ -34,78 +33,55 @@
   })
   const segments = $state(segmenterFrGrapheme.segment(string1)[Symbol.iterator]())
 
-  const allTypes = $derived({
-    str: 'string',
-    multiline: 'line\nline\nline\nline\nline\nline\nline\nline\nline',
+  const allTypes = $state({
+    strings: {
+      basic: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
+      multilineString: 'check\n\tthis\n\t\tout',
+      urlString: 'https://zombo.com',
+      mediaStrings: {
+        image: sprite,
+        audio,
+      },
+    },
     number: 1234,
-    bools: true,
+    numberOrString: browser ? 'string!' : /straaaang/,
     bigint: 9007199254740991n,
+    bools: [true, false],
     symb: Symbol('abcd'),
     reg: /([\w.\-_]+)?\w+@[\w-_]+(\.\w+){1,}/gim,
-    nil: [undefined, null],
+    nil: [undefined, null, NaN],
     array: [1, 2, 3],
-    date: new Date(),
+    set: new Set([1, 2, 3]),
+    map: new Map<unknown, unknown>([
+      [0, 0],
+      [{ id: 123 }, 1],
+      [[1, 2, 3], 2],
+      [Symbol('key'), 'value'],
+      [
+        Promise.resolve('foo'),
+        {
+          get something() {
+            return 'something'
+          },
+        },
+      ],
+    ]),
+    date: new Date('1970-01-02 03:45:57'),
     url: new URL('https://alicebob.website/?ref=abcdefg#about'),
-
-    objectWithGetter: {
-      get anObject() {
-        return {
-          a: { b: { c: { d: { e: 'end' } } } },
-        }
-      },
-      count: 1,
-      get current() {
-        this.getterAccessedTimes++
-        return this.count
-      },
-      set current(value: number) {
-        this.count = value
-      },
-      get throws() {
-        console.trace('throwing getter accessed')
-        throw 'yeet'
-      },
-      set throws(value: unknown) {
-        throw 'throwing'
-      },
-      getterAccessedTimes: 0,
-      get getterWithSideEffect() {
-        this.test = 'hahaha'
-        return 'something'
-      },
-      get throwSomething() {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        let goof: any
-        goof.doesNotExist.doesNotExist()
-        // throw new Error('yayaya')
-        return 'blah'
-      },
-      get self() {
-        return this
-      },
-      test: 'test',
-    },
-
     promise: Promise.resolve({
       name: 'a',
       b: { name: 'b', c: { name: 'c', d: { name: 'd' } } },
       g: [{ name: 'b', c: { name: 'c', d: { name: 'd' } } }],
       d: {},
     }),
-    nestedObjects: {
-      b: { name: 'b', c: { name: 'c', d: { name: 'd' } } },
-      g: [{}],
-      d: {},
-      name: 'a',
+    nesting: {
+      nestedObjects: {
+        b: { name: 'b', c: { name: 'c', d: { name: 'd' } } },
+        g: [{ test: 1, a: 2, b: 2 }],
+        name: 'a',
+      },
+      nestedArrays: [[[[[[[[[[[[[[[[['end']]]]]]]]]]]]]]]]],
     },
-    nestedArrays: [
-      14,
-      [[[[[[[[[15, 14, 13], 12], 11], 10], 9], 8], 'sept'], 6], 5],
-      'four',
-      3,
-      2,
-      1,
-    ],
     functions: {
       double: (value: number) => 2 * value,
       normalFunction: function (some: string = 'some', thing: string) {
@@ -148,29 +124,47 @@
         })
       },
     },
-    body: browser ? document.body : null,
-    navigator: browser ? navigator : null,
-    errors: {
-      error: new Error('oh no!'),
-      typeerror: new TypeError('snapple'),
+    gettersAndSetters: {
+      get anObject() {
+        return {
+          a: { b: { c: { d: { e: 'end' } } } },
+        }
+      },
+      count: 1,
+      get current() {
+        this.getterAccessedTimes++
+        return this.count
+      },
+      set current(value: number) {
+        this.count = value
+      },
+      get throws() {
+        console.trace('throwing getter accessed')
+        throw 'yeet'
+      },
+      set throws(value: unknown) {
+        throw 'throwing'
+      },
+      getterAccessedTimes: 0,
+      get getterWithSideEffect() {
+        this.test += '@'
+        return 'something'
+      },
+      get throwSomething() {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        let goof: any
+        goof.doesNotExist.doesNotExist()
+        // throw new Error('yayaya')
+        return 'blah'
+      },
+      set throwSomething(value: string) {
+        JSON.parse('t')
+      },
+      get self() {
+        return this
+      },
+      test: '@',
     },
-    set: new Set([1, 2, 3]),
-    weakSet: new WeakSet([{}, {}, {}]),
-    weakMap: new WeakMap([[{}, 1]]),
-    map: new Map<unknown, unknown>([
-      [0, 0],
-      [{ id: 123 }, 1],
-      [[1, 2, 3], 2],
-      [Symbol('key'), 'value'],
-      [
-        Promise.resolve('foo'),
-        {
-          get something() {
-            return 'something'
-          },
-        },
-      ],
-    ]),
     typedArrays: {
       eight: new Int8Array([1, 2, 3]),
       Uint8Array: new Uint8Array([1, 2, 3]),
@@ -184,6 +178,16 @@
       BigInt64Array: new BigInt64Array([1n, 2n, 3n]),
       BigUint64Array: new BigUint64Array([1n]),
     },
+    classes: {
+      classCtr: Greeter,
+      classInstance: new Greeter('You'),
+      classNoEntries: class Foo {},
+    },
+    errors: {
+      error: new Error('oh no!'),
+      typeerror: new TypeError('snapple'),
+    },
+    body: browser ? document.body : null,
     iterators: {
       array: [1, 2, 3, 4].values(),
       set: new Set([12, 34, 45]).values(),
@@ -204,7 +208,6 @@
       fib: fibonacci(),
       stringIterator: 'abdcdefghijklmnopqrstuvwxyzæøå'[Symbol.iterator](),
       elements: browser ? document.body.childNodes.values() : null,
-      args,
       segments,
       string: {
         value: 'test1test2',
@@ -220,16 +223,14 @@
         },
       },
     },
-    nestedTypedArrays: [
-      {
-        eight: new Int8Array([1, 2, 3]),
-        sixteen: new Int16Array([1, 2, 3, 4, 5]),
-        thirtytwo: new Int32Array([1, 2, 3, 4, 5]),
-      },
-    ],
-    classCtr: Greeter,
-    classInstance: new Greeter('You'),
-    classNoEntries: class Foo {},
+    arbitraryObjects: {
+      notice:
+        'objects without a defined specialized view component.\nproperties are enumerated and nested.',
+      navigator: browser ? navigator : null,
+      registry: new FinalizationRegistry(() => {}),
+    },
+    weakSet: new WeakSet([{}, {}, {}]),
+    weakMap: new WeakMap([[{}, 1]]),
     empties: {
       object: {},
       array: [],
@@ -237,14 +238,6 @@
       map: new Map(),
       string: '',
     },
-  })
-
-  function setSomeArguments(..._args: unknown[]) {
-    return arguments
-  }
-
-  onMount(() => {
-    args = setSomeArguments(1, 2, 3, 4, 5)[Symbol.iterator]()
   })
 </script>
 
