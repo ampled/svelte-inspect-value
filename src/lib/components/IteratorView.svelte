@@ -51,6 +51,7 @@
       result = iterator.next()
       if (typeof result.done === 'boolean') isDone = result.done
     }
+    valueCache.set(stringifiedPath, { unwrap: $state.snapshot(unwrap), done: isDone as boolean })
   }
 </script>
 
@@ -65,7 +66,7 @@
       <NodeActionButton disabled={isDone} onclick={next}>
         {isDone ? 'done' : 'next'}
       </NodeActionButton>
-      <NodeActionButton disabled={isDone} onclick={complete}>all</NodeActionButton>
+      <NodeActionButton disabled={isDone} onclick={complete}>100</NodeActionButton>
     {/if}
     <Preview {path} list={unwrap} prefix={'['} postfix={']'} {showPreview} showKey={false} />
   {/snippet}
