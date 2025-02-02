@@ -47,6 +47,12 @@
 
   <Stack>
     <Code {code} />
-    <Inspect name="iteratorsAndGenerators" style="flex-basis: 50%; max-height: 400px;" {value} />
+    <Inspect
+      name="iteratorsAndGenerators"
+      style="flex-basis: 50%"
+      {value}
+      previewEntries={10}
+      previewDepth={2}
+    />
   </Stack>
 </div>
