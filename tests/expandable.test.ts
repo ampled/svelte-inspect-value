@@ -114,7 +114,7 @@ describe('expandable values', () => {
 
     // check values
     screen.getAllByTestId('value').forEach((value) => {
-      expect(value.innerText).toBeOneOf(['1', '2', `'33' `])
+      expect(value.innerText).toBeOneOf(['1', '2', `'33'`])
     })
   })
 

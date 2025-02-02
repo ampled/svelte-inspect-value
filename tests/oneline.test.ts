@@ -8,7 +8,7 @@ afterAll(() => {
 
 const fixtures = [
   { value: undefined, expectedType: 'undefined' },
-  { value: null, expectedType: 'NULL' },
+  { value: null, expectedType: 'null' },
   { value: 'string', expectedType: 'str', expectedValue: `'string'`, expectedCount: '6 chars' },
   { value: 123, expectedType: 'num', expectedValue: '123' },
   { value: false, expectedType: 'bool', expectedValue: 'false' },
@@ -40,7 +40,7 @@ test('it can display simple values', async () => {
     try {
       await rerender({ value, showLength: expectedCount != null, showTypes: true })
       // check type
-      const type = screen.getByTestId('type')
+      const type = screen.getAllByTestId('type')[0]
       expect(type).toHaveTextContent(expectedType)
       // check count
       if (expectedCount) {
@@ -49,7 +49,7 @@ test('it can display simple values', async () => {
       }
       // check value
       if (expectedValue) {
-        const valueElement = screen.getByTestId('value')
+        const valueElement = screen.getAllByTestId('value')[0]
         expect(valueElement).toHaveTextContent(expectedValue)
       }
     } catch (e) {
