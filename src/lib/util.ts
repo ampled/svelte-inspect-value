@@ -1,4 +1,5 @@
-import type { KeyType } from './types.js'
+import type { Component, ComponentProps } from 'svelte'
+import type { CustomComponentEntry, KeyType } from './types.js'
 
 export function getType(value: unknown) {
   if (typeof value === 'function') {
@@ -40,6 +41,7 @@ export type ValueType =
   | 'urlsearchparams'
   | 'promise'
   | 'iterator'
+  | 'NaN'
 
 export function stringify(
   value: unknown,
@@ -157,4 +159,36 @@ export function ensureStringPath(path: string | KeyType[]) {
     key = path
   }
   return key
+}
+
+/**
+ * Helper-function for adding custom components with a props transform function.
+ *
+ * The function ensures proper typing for the props parameter of the transform function
+ *
+ * @example
+ * <script lang="ts">
+ *  import {Inspect, addComponent} from 'svelte-inspect-value';
+ *  import CustomNumber from './CustomNumber.svelte';
+ *  import CustomString from './CustomString.svelte';
+ * </script>
+ *
+ * <Inspect value={1234} customComponents={{
+ *   number: addComponent(
+ *    CustomNumber,
+ *    // props here is properly typed with props of CustomNumber
+ *    (props) => ({ value: Math.floor(props.value) })
+ *   ),
+ *   // custom component without props transform function
+ *   string: [CustomString]
+ *  }}
+ * />
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function addComponent<TComponent extends Component<any> = Component<any>>(
+  component: TComponent,
+  transformProps?: (props: ComponentProps<TComponent>) => Partial<ComponentProps<TComponent>>
+): CustomComponentEntry<TComponent> {
+  if (transformProps) return [component, transformProps]
+  return [component]
 }

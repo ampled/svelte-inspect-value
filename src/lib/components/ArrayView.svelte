@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { getPreviewLevel } from '$lib/contexts.js'
   import { getAllProperties } from '$lib/util.js'
   import type { TypeViewProps } from '../types.js'
   import Expandable from './Expandable.svelte'
@@ -8,7 +9,9 @@
 
   type Props = TypeViewProps<unknown[]>
 
-  let { value: array = [], path, type, ...rest }: Props = $props()
+  let { value: array = [], path, type, showKey, ...rest }: Props = $props()
+
+  const previewLevel = getPreviewLevel()
 
   let otherprops = $derived(
     getAllProperties(array).filter((prop) => {
@@ -22,7 +25,14 @@
   let keys = $derived([...array.keys(), ...otherprops])
 </script>
 
-<Expandable value={array} length={array.length} {type} {path} {...rest}>
+<Expandable
+  value={array}
+  length={array.length}
+  {type}
+  {path}
+  showKey={showKey && previewLevel === 0}
+  {...rest}
+>
   {#snippet valuePreview({ showPreview })}
     <Preview {path} list={array} prefix={'['} postfix={']'} {showPreview} showKey={false} />
   {/snippet}

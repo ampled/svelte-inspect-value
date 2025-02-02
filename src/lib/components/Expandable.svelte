@@ -1,6 +1,6 @@
 <script lang="ts" generics="Type extends string = ValueType">
   import { getPreviewLevel } from '$lib/contexts.js'
-  import { getContext, onMount, type Snippet } from 'svelte'
+  import { getContext, onMount, untrack, type Snippet } from 'svelte'
   import type { HTMLAttributes } from 'svelte/elements'
   import { slide } from 'svelte/transition'
   import { useOptions } from '../options.svelte.js'
@@ -42,15 +42,27 @@
     ...rest
   }: Props = $props()
 
-  let options = useOptions()
-  let inspectState: StateContext | undefined = getContext(STATE_CONTEXT_KEY)
-  let collapseState = $derived(inspectState?.value?.[stringifyPath(path)])
-  let collapsed = $derived(collapseState ? collapseState.collapsed : true)
-  let keyOrType = $derived((key ?? type)?.toString())
   let buttonComponent = $state<ReturnType<typeof CollapseButton>>()
-
+  const options = useOptions()
+  const inspectState: StateContext | undefined = getContext(STATE_CONTEXT_KEY)
   const previewLevel = getPreviewLevel()
   const isKey = getContext<boolean>('key')
+  let collapseState = $derived.by(() => {
+    const storedState = inspectState?.value?.[stringifyPath(path)]
+    if (storedState) {
+      return storedState
+    } else {
+      return untrack(() => ({
+        collapsed: path.length > options.value.expandLevel && !options.value.expandAll,
+      }))
+    }
+  })
+
+  let collapsed = $derived(collapseState.collapsed)
+
+  function onCollapseChanged(newValue: boolean) {
+    inspectState?.setCollapse(path, newValue)
+  }
 
   onMount(() => {
     if (inspectState) {
@@ -64,10 +76,6 @@
       }
     }
   })
-
-  function onCollapseChanged(newValue: boolean) {
-    inspectState?.setCollapse(path, newValue)
-  }
 </script>
 
 <div
@@ -76,26 +84,26 @@
   aria-expanded={!collapsed}
   {...rest}
 >
-  <div class="button-key">
+  <div class="indicator-and-key">
     {#if !previewLevel && !isKey}
       <CollapseButton
         bind:this={buttonComponent}
         {collapsed}
         {value}
+        {key}
+        {type}
         onchange={onCollapseChanged}
         disabled={length === 0}
-        aria-label={`${collapsed ? 'expand' : 'collapse'} ${keyOrType}`}
-        title={`${collapsed ? 'expand' : 'collapse'} ${keyOrType}`}
       />
     {/if}
     {#if showKey}
       <Key
+        ondblclick={() => onCollapseChanged(!collapsed)}
         delim={keyDelim}
         prefix={keyPrefix}
         style={keyStyle}
         {key}
         {path}
-        ondblclick={() => onCollapseChanged(!collapsed)}
       />
     {/if}
   </div>
@@ -131,27 +139,28 @@
 <style>
   .title-bar {
     z-index: var(--index);
-    position: sticky;
-    top: 0;
     white-space: nowrap;
+    top: 0;
+    transition: background-color 0.2s ease-in-out;
+    position: sticky;
     display: flex;
+    gap: 0.5em;
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-    gap: 0.5em;
     min-height: 1.5em;
     padding-left: calc(var(--indent) * 0.5);
-    transition: background-color 0.2s ease-in-out;
 
     &:hover {
       background-color: var(--bg-lighter);
     }
 
-    .button-key {
+    .indicator-and-key {
       display: inline-flex;
       align-items: center;
-      gap: calc(var(--indent) * 0.5);
-      padding-left: 1px;
+      gap: 0.25em;
+      /* padding-left: 0.25em; */
+      /* padding-left: 1px; */
     }
   }
 
@@ -162,6 +171,10 @@
 
   .title-bar.preview.nokey {
     gap: 0;
+
+    .indicator-and-key {
+      display: none;
+    }
   }
 
   .indent {
@@ -170,5 +183,6 @@
     overflow-x: hidden;
     overflow-y: auto;
     position: relative;
+    max-height: calc(52 * 1.5em);
   }
 </style>

@@ -8,9 +8,11 @@
     collapsed?: boolean
     onchange?: (collapsed: boolean) => void
     value: unknown
-  } & Omit<HTMLButtonAttributes, 'onchange' | 'value'>
+    key?: string | symbol | number
+    type?: string
+  } & Omit<HTMLButtonAttributes, 'onchange' | 'value' | 'type'>
 
-  let { collapsed = $bindable(), onchange, disabled, value, ...rest }: Props = $props()
+  let { collapsed = $bindable(), onchange, disabled, value, key, type, ...rest }: Props = $props()
 
   let options = useOptions()
 
@@ -54,12 +56,16 @@
   export function flash() {
     flashFn?.()
   }
+
+  let keyOrType = $derived((key ?? type)?.toString())
 </script>
 
 <button
   data-testid="collapse-button"
   type="button"
   class="collapse"
+  aria-label={`${collapsed ? 'expand' : 'collapse'} ${keyOrType}`}
+  title={`${collapsed ? 'expand' : 'collapse'} ${keyOrType}`}
   {onclick}
   {disabled}
   {...rest}

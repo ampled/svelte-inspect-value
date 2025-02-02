@@ -52,6 +52,7 @@
 
   const previewLevel = getContext<number | undefined>('preview') ?? startLevel
   const options = useOptions()
+  setContext('preview', (previewLevel ?? 0) + 1)
 
   let list = $derived(previewList?.slice(0, options.value.previewEntries))
   let keyValue = $derived(previewKeyValue?.slice(0, options.value.previewEntries))
@@ -68,45 +69,27 @@
     return false
   })
 
-  setContext('preview', (previewLevel ?? 0) + 1)
+  // let notEmpty = $derived.by(() => {
+  //   if (list) {
+  //     return list.length > 0
+  //   } else if (keyValue) {
+  //     return keyValue.length > 0
+  //   } else if (keys) {
+  //     return keys.length > 0
+  //   }
+  //   return singleValue !== EMPTY
+  // })
 
   function alwaysRender(type: string) {
     return ['boolean', 'string', 'number', 'bigint', 'symbol', 'regexp', 'class'].includes(type)
   }
 </script>
 
-<!-- At configured previewDepth, stop rendering nested item previews and just render their types -->
-{#snippet valuePreview(value: unknown, key?: KeyType)}
-  {@const valType = getType(value)}
-  {#if alwaysRender(valType) || previewLevel < options.value.previewDepth}
-    <Node {path} {key} {value} {showKey} {keyDelim} {keyStyle} />
-  {:else}
-    <div class="key-type-preview">
-      {#if showKey}
-        <Key {path} {key} delim={keyDelim} style={keyStyle} />
-      {/if}
-      <Type type={valType} force />
-    </div>
-  {/if}
-{/snippet}
-
-{#snippet previewValue(key: K, _force = false, descriptor?: PropertyDescriptor)}
-  {#if descriptor?.set || descriptor?.get}
-    <GetterSetter {key} {descriptor} {value} {path} />
-  {:else}
-    {@render valuePreview(value?.[key], key)}
-  {/if}
-{/snippet}
-
-{#snippet comma()}
-  <span class="comma">,</span>
-{/snippet}
-
-<svelte:boundary onerror={(e) => console.log('preview failed:', e)}>
-  {#snippet failed(_, reset)}
-    preview error. check console <NodeActionButton onclick={reset}>reset</NodeActionButton>
-  {/snippet}
-  {#if options.value.showPreview && options.value.previewEntries > 0 && showPreview}
+{#if options.value.showPreview && options.value.previewEntries > 0 && showPreview}
+  <svelte:boundary onerror={(e) => console.log('preview failed:', e)}>
+    {#snippet failed(_, reset)}
+      preview error. check console <NodeActionButton onclick={reset}>reset</NodeActionButton>
+    {/snippet}
     <div
       data-testid="preview"
       class="preview"
@@ -153,13 +136,40 @@
         <span class="post level-{previewLevel}">{postfix}</span>
       {/if}
     </div>
+  </svelte:boundary>
+{/if}
+
+<!-- At configured previewDepth, stop rendering nested item previews and just render their types -->
+{#snippet valuePreview(value: unknown, key?: KeyType)}
+  {@const valType = getType(value)}
+  {#if alwaysRender(valType) || previewLevel < options.value.previewDepth}
+    <Node {path} {key} {value} {showKey} {keyDelim} {keyStyle} />
+  {:else}
+    <div class="key-type-preview">
+      {#if showKey}
+        <Key {path} {key} delim={keyDelim} style={keyStyle} />
+      {/if}
+      <Type type={valType} force />
+    </div>
   {/if}
-</svelte:boundary>
+{/snippet}
+
+{#snippet previewValue(key: K, _force = false, descriptor?: PropertyDescriptor)}
+  {#if descriptor?.set || descriptor?.get}
+    <GetterSetter {key} {descriptor} {value} {path} />
+  {:else}
+    {@render valuePreview(value?.[key], key)}
+  {/if}
+{/snippet}
+
+{#snippet comma()}
+  <span class="comma">,</span>
+{/snippet}
 
 <style>
   .comma {
     margin-left: 0;
-    margin-right: 0.25em;
+    margin-right: 0.5em;
     color: var(--fg);
   }
 
@@ -215,36 +225,62 @@
     &.level-0 {
       color: var(--comments);
     }
-
     &.level-1 {
       color: var(--fg);
     }
     &.level-2 {
-      color: var(--green);
-    }
-    &.level-3 {
       color: var(--cyan);
     }
-    &.level-4 {
-      color: var(--red);
-    }
-    &.level-5 {
+    &.level-3 {
       color: var(--green);
     }
+    &.level-4 {
+      color: var(--orange);
+    }
+    &.level-5 {
+      color: var(--blue);
+    }
     &.level-6 {
-      color: var(--fg);
+      color: var(--yellow);
     }
     &.level-7 {
       color: var(--red);
     }
     &.level-8 {
-      color: var(--orange);
+      color: var(--cyan);
     }
     &.level-9 {
-      color: var(--yellow);
+      color: var(--green);
     }
     &.level-10 {
+      color: var(--orange);
+    }
+    &.level-11 {
+      color: var(--blue);
+    }
+    &.level-12 {
+      color: var(--yellow);
+    }
+    &.level-13 {
+      color: var(--red);
+    }
+    &.level-14 {
+      color: var(--cyan);
+    }
+    &.level-15 {
       color: var(--green);
+    }
+    &.level-16 {
+      color: var(--orange);
+    }
+    &.level-17 {
+      color: var(--blue);
+    }
+    &.level-18 {
+      color: var(--yellow);
+    }
+    &.level-19 {
+      color: var(--red);
     }
   }
 </style>

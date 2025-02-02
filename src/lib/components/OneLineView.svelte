@@ -3,7 +3,6 @@
   import { useOptions } from '$lib/options.svelte.js'
   import { getContext } from 'svelte'
   import type { HTMLAttributes } from 'svelte/elements'
-  import { slide } from 'svelte/transition'
   import { flashOnUpdate } from '../action/update-flash.svelte.js'
   import type { TypeViewProps } from '../types.js'
   import Key from './Key.svelte'
@@ -44,7 +43,7 @@
   class:nokey={!showKey}
   {...rest}
 >
-  <div class="dash-key">
+  <div class="indicator-and-key">
     {#if !previewLevel && !isKey}
       <div
         class="dash"
@@ -63,7 +62,7 @@
   {#if children}
     {@render children()}
   {:else if displayOrValue}
-    <span data-testid="value" {title} class="value {type}" transition:slide>
+    <span data-testid="value" {title} class="value {type}">
       {displayOrValue}
     </span>
   {/if}
@@ -95,12 +94,16 @@
 
   .line.preview.nokey {
     gap: 0;
+
+    .indicator-and-key {
+      display: none;
+    }
   }
 
-  .dash-key {
+  .indicator-and-key {
     display: inline-flex;
     align-items: center;
-    gap: 0.5em;
+    gap: 0.25em;
     padding-left: 0.25em;
     user-select: none;
 

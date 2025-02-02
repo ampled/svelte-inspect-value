@@ -1,4 +1,6 @@
 <script lang="ts">
+  // eslint-disable @typescript-eslint/no-explicit-any
+  import type { Component } from 'svelte'
   import { useOptions } from '../options.svelte.js'
   import { InspectError, type CustomComponents, type TypeViewProps } from '../types.js'
   import { getType, type ValueType } from '../util.js'
@@ -22,7 +24,12 @@
 
   let type: ValueType = $derived(getType(value))
 
-  function getTypeComponent(type: ValueType, custom: CustomComponents, useDefaults: boolean) {
+  function getTypeComponent(
+    type: ValueType,
+    custom: CustomComponents,
+    useDefaults: boolean
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  ): [Component<TypeViewProps<any>>, Partial<TypeViewProps>] {
     let entry = getComponent(type, useDefaults ? {} : custom)
 
     if (entry) {
@@ -42,7 +49,11 @@
   let path = $derived(key != null && prevPath ? [...prevPath, key] : ['root'])
 </script>
 
-<svelte:boundary>
+<svelte:boundary
+  onerror={(e) => {
+    console.error(e)
+  }}
+>
   <TypeComponent {value} {key} {keyDelim} {type} {path} {...rest} {...componentProps} />
 
   {#snippet failed(error, reset)}

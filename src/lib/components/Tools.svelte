@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { DEV } from 'esm-env'
   import { getContext } from 'svelte'
   import { copyToClipBoard, logToConsole } from '../hello.svelte.js'
   import CollapseChildren from '../icons/CollapseChildren.svelte'
@@ -8,7 +9,7 @@
   import { useOptions } from '../options.svelte.js'
   import { STATE_CONTEXT_KEY, type StateContext } from '../state.svelte.js'
   import type { KeyType, TypeViewProps } from '../types.js'
-  import { stringifyPath } from '../util.js'
+  import { getType, stringifyPath } from '../util.js'
 
   type Props = Partial<TypeViewProps<unknown, string>> & { collapsed?: boolean }
 
@@ -82,6 +83,9 @@
 
 {#if options.value.showTools}
   <div class="tools" class:borderless={options.value.borderless}>
+    {#if DEV}
+      <button onclick={() => console.log(getType(value))}>d</button>
+    {/if}
     {#if children.length}
       <button
         title={treeAction.hint}
@@ -147,13 +151,6 @@
     width: 0;
     overflow: clip;
 
-    /* TODO aint work in ff */
-    @starting-style {
-      opacity: 0;
-      width: 0;
-      display: none;
-    }
-
     button {
       all: unset;
       padding: 2px;
@@ -165,6 +162,11 @@
       width: 1.5em;
       min-width: 1.5em;
       color: var(--interactive);
+      cursor: pointer;
+
+      :global(svg) {
+        transition: color 250ms ease-in-out;
+      }
 
       &.copied {
         color: var(--green) !important;
@@ -172,6 +174,7 @@
 
       &:hover,
       &:focus-visible {
+        background-color: transparent;
         color: var(--fg);
       }
     }
@@ -180,8 +183,8 @@
   .tools.borderless {
     position: relative;
     transition-property: opacity !important;
-    /* transition: all 0ms !important; */
-    background-color: var(--bg-lighter);
+    /* background-color: var(--bg-lighter); */
+    background-color: transparent;
     border-left: 0;
     /* padding: 0; */
   }

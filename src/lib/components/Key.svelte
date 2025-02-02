@@ -35,42 +35,47 @@
   })
 
   setContext('key', true)
+
+  function onerror(error: unknown): void {
+    throw new Error('Error in Key.svelte', { cause: error })
+  }
 </script>
 
-{#if showKey || force}
-  <button
-    data-testid="key"
-    tabindex="-1"
-    class="key-button"
-    {ondblclick}
-    aria-label={key?.toString()}
-    title={stringifyPath(path)}
-    {...rest}
-  >
-    {#if prefix}
-      <span class="prefix">{prefix}</span>
-    {/if}
-    {#if keyTypes.includes(keyType)}
-      <span class="key {keyType}">
-        {key?.toString()}
-      </span>
-    {:else if isKeySimpleType(key, keyType)}
-      <Node value={key} />
-    {:else}
-      <Type type={keyType} force />
-    {/if}
-    {#if delim}
-      <span class="delim">{delim}</span>
-    {/if}
-  </button>
-{/if}
+<svelte:boundary {onerror}>
+  {#if showKey || force}
+    <button
+      data-testid="key"
+      tabindex="-1"
+      class="key-button"
+      {ondblclick}
+      aria-label={key?.toString()}
+      title={stringifyPath(path)}
+      {...rest}
+    >
+      {#if prefix}
+        <span class="prefix">{prefix}</span>
+      {/if}
+      {#if keyTypes.includes(keyType)}
+        <span class="key {keyType}">
+          {key?.toString()}
+        </span>
+      {:else if isKeySimpleType(key, keyType)}
+        <Node value={key} />
+      {:else}
+        <Type type={keyType} force />
+      {/if}
+      {#if delim}
+        <span class="delim">{delim}</span>
+      {/if}
+    </button>
+  {/if}
+</svelte:boundary>
 
 <style>
   .key-button {
     all: unset;
     padding: 0;
     margin: 0;
-    border: none;
     display: flex;
     flex-direction: row;
     align-items: center;

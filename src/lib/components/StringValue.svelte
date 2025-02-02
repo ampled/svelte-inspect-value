@@ -40,15 +40,12 @@
   rel={isUrlOrPath ? 'noreferrer' : null}
 >
   <!-- only use stringify (add quotes) if the original value is not a string (e.g. date or url)  -->
-  {type === 'string' ? stringify(collapsed, 0, options.value.quotes) : collapsed}
-
-  {#if isUrlOrPath}
+  {type === 'string' ? stringify(collapsed, 0, options.value.quotes) : collapsed}{#if isUrlOrPath}
     <span class="value url">
       <LinkIcon />
     </span>
   {/if}
-</svelte:element>
-{#if length && !previewLevel}
+</svelte:element>{#if length && !previewLevel}
   <Count type="string" length={value.length} />
 {/if}
 

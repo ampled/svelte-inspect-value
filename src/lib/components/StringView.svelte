@@ -42,7 +42,9 @@
     {/snippet}
     {#if isImageUrl && options.value.embedMedia}
       <div class="embed">
-        <img alt={key!.toString()} src={value} style="max-height: 100px" />
+        <div class="image">
+          <img alt={key!.toString()} src={value} style="height: 100%" />
+        </div>
       </div>
     {:else if isAudioUrl && options.value.embedMedia}
       <div class="embed">
@@ -61,6 +63,17 @@
 
 <style>
   .embed {
-    margin-left: 1em;
+    padding: 1em;
+  }
+
+  .image {
+    height: 100px;
+    width: 100px;
+    resize: both;
+    overflow: scroll;
+  }
+
+  img {
+    object-fit: contain;
   }
 </style>

@@ -1,6 +1,7 @@
 <script lang="ts">
   import { getPreviewLevel } from '$lib/contexts.js'
   import type { TypeViewProps } from '$lib/types.js'
+  import { BROWSER } from 'esm-env'
   import Expandable from './Expandable.svelte'
   import FunctionBody from './FunctionBody.svelte'
   import OneLineView from './OneLineView.svelte'
@@ -33,8 +34,8 @@
 {#snippet valuePreview({ showPreview }: { showPreview: boolean })}
   {#if showPreview}
     {#if previewLevel}
-      <span title={value.name} class="value function">{value.name}</span>
-    {:else}
+      <span title={value.name} class="preview value function">{value.name}</span>
+    {:else if BROWSER}
       <FunctionBody value={oneLine} inline />
     {/if}
   {/if}
@@ -45,8 +46,8 @@
     {#snippet valuePreview({ showPreview })}
       {#if showPreview}
         {#if previewLevel}
-          <span class="value function">{value.name}</span>
-        {:else}
+          <span class="preview value function">{value.name}</span>
+        {:else if BROWSER}
           <FunctionBody value={oneLine} inline />
         {/if}
       {/if}
@@ -54,7 +55,13 @@
     <FunctionBody value={value.toString()} />
   </Expandable>
 {:else}
-  <OneLineView {key} {type} {path} {value}>
+  <OneLineView {key} {type} {path} {value} {...rest}>
     {@render valuePreview({ showPreview: true })}
   </OneLineView>
 {/if}
+
+<style>
+  .preview.value.function {
+    margin-left: 0.5em;
+  }
+</style>

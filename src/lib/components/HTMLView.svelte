@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { BROWSER } from 'esm-env'
   import { type Snippet } from 'svelte'
   import type { TypeViewProps } from '../types.js'
   import { getAllProperties, isArray, isObject } from '../util.js'
@@ -17,21 +18,21 @@
   let scrollLeft = $state<number | undefined>(value?.scrollLeft)
   let scrollTop = $state<number | undefined>(value?.scrollTop)
 
-  $effect(() => {
-    const onscroll = (event: Event) => {
-      const target = event.target as HTMLElement
-      scrollLeft = target.scrollLeft
-      scrollTop = target.scrollTop
-    }
+  // $effect(() => {
+  //   const onscroll = (event: Event) => {
+  //     const target = event.target as HTMLElement
+  //     scrollLeft = target.scrollLeft
+  //     scrollTop = target.scrollTop
+  //   }
 
-    if (value) {
-      value.addEventListener('scroll', onscroll)
-    }
+  //   if (value) {
+  //     value.addEventListener('scroll', onscroll)
+  //   }
 
-    return () => {
-      value.removeEventListener('scroll', onscroll)
-    }
-  })
+  //   return () => {
+  //     value.removeEventListener('scroll', onscroll)
+  //   }
+  // })
 
   $effect(() => {
     if (value && value !== element.ele) {
@@ -90,22 +91,24 @@
   )
 </script>
 
-<Expandable {...{ value, key, path }} length={entries.length} keepPreviewOnExpand {...rest}>
-  {#snippet valuePreview()}
-    {#key element.ele}
-      <HtmlValue value={element.ele} />
-    {/key}
-  {/snippet}
-  {#if children}
-    {@render children()}
-  {/if}
-  <PropertyList {keys} value={element.ele}>
-    {#snippet item({ key, descriptor })}
-      {#if descriptor?.get || descriptor?.set}
-        <GetterSetter value={element.ele} {descriptor} {key} {path} />
-      {:else}
-        <Node value={element.ele[key as keyof typeof value]} {key} {path} />
-      {/if}
+{#if BROWSER}
+  <Expandable {...{ value, key, path }} length={keys.length} keepPreviewOnExpand {...rest}>
+    {#snippet valuePreview()}
+      {#key element.ele}
+        <HtmlValue value={element.ele} />
+      {/key}
     {/snippet}
-  </PropertyList>
-</Expandable>
+    {#if children}
+      {@render children()}
+    {/if}
+    <PropertyList {keys} value={element.ele}>
+      {#snippet item({ key, descriptor })}
+        {#if descriptor?.get || descriptor?.set}
+          <GetterSetter value={element.ele} {descriptor} {key} {path} />
+        {:else}
+          <Node value={element.ele[key as keyof typeof value]} {key} {path} />
+        {/if}
+      {/snippet}
+    </PropertyList>
+  </Expandable>
+{/if}

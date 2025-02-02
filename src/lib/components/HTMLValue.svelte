@@ -8,6 +8,7 @@
 </script>
 
 <script lang="ts">
+  import { BROWSER } from 'esm-env'
   import { onMount } from 'svelte'
   import { useOptions } from '../options.svelte.js'
   import type { TypeViewProps } from '../types.js'
@@ -51,8 +52,10 @@
   })
 </script>
 
-<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-<code data-testid="value" class="value html hl" title="">{@html highlighted}</code>
+{#if BROWSER}
+  <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+  <code data-testid="value" class="value html hl" title="">{@html highlighted}</code>
+{/if}
 
 <style>
   :global code.value.html.hl {

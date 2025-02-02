@@ -47,8 +47,6 @@
         return 'arr'
       case 'promise':
         return 'Promise'
-      case 'null':
-        return 'NULL'
       default:
         return type
     }

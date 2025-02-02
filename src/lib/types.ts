@@ -1,6 +1,6 @@
-import type { Component } from 'svelte'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type { Component, ComponentProps } from 'svelte'
 import type { HTMLAttributes } from 'svelte/elements'
-import type { ViewComponents } from './components/index.js'
 import type { JSONInspectOptions } from './options.svelte.js'
 import type { InspectState } from './state.svelte.js'
 import type { ValueType } from './util.js'
@@ -13,6 +13,7 @@ export type InspectProps = {
    * @param state
    */
   onCollapseChange?: (state: InspectState) => void
+  debug?: boolean
 } & Partial<JSONInspectOptions> &
   HTMLAttributes<HTMLDivElement>
 
@@ -46,9 +47,11 @@ export type TypeViewProps<Value = unknown, Type = ValueType> = {
   forceType?: boolean
 }
 
-export type CustomComponent = Component<TypeViewProps>
+export type CustomComponentEntry<TComponent extends Component<any> = Component<any>> =
+  | [TComponent]
+  | [TComponent, (props: ComponentProps<TComponent>) => Partial<ComponentProps<TComponent>>]
 
-export type CustomComponents = Partial<ViewComponents>
+export type CustomComponents = Record<string, CustomComponentEntry>
 
 export class InspectError extends Error {
   value: unknown
@@ -60,7 +63,15 @@ export class InspectError extends Error {
   }
 }
 
-export type CustomComponentProps<T = unknown, Type = string | undefined> = TypeViewProps<T, Type>
+/**
+ * Props received by custom components.
+ * Define extra props using third generic parameter
+ */
+export type CustomComponentProps<
+  T = unknown,
+  Type = string | undefined,
+  ExtraProps extends Record<string, any> = Record<string, any>,
+> = TypeViewProps<T, Type> & ExtraProps
 
 export type List =
   | unknown[]

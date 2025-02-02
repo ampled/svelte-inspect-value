@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { BROWSER } from 'esm-env'
   import { getContext, setContext } from 'svelte'
   import { SvelteMap } from 'svelte/reactivity'
   import Node from './components/Node.svelte'
@@ -16,6 +17,7 @@
     value = undefined,
     name = undefined,
     onCollapseChange,
+    debug = false,
     // options
     showLength,
     showTypes,
@@ -75,7 +77,8 @@
 
   setContext(STATE_CONTEXT_KEY, inspectState)
   setContext(OPTIONS_CONTEXT, options)
-  setContext('value-cache', new SvelteMap<string, unknown>())
+  const valueCache = new SvelteMap<string, unknown>()
+  setContext('value-cache', valueCache)
 
   function setAllNodes(collapsed: boolean) {
     if (inspectState.value) {
@@ -93,34 +96,53 @@
     options.value.expandAll = true
     setAllNodes(false)
   }
+
+  let clientWidth = $state()
 </script>
 
-<svelte:boundary>
-  {#snippet failed(error, reset)}
-    {#if error instanceof Error}
-      {error.name}<br />
-      {error.message}<br />
-    {/if}
-    <button onclick={reset}>retry</button>
-  {/snippet}
+{#if BROWSER}
+  <svelte:boundary onerror={(error) => console.error(error)}>
+    {#snippet failed(error, reset)}
+      {#if error instanceof Error}
+        {error.name}<br />
+        {error.message}<br />
+      {:else}
+        <Node value={error} />
+      {/if}
+      <button onclick={reset}>retry</button>
+    {/snippet}
 
-  <div
-    data-testid="inspect"
-    class={[
-      'ampled-json-inspect',
-      classValue,
-      options.value.theme,
-      options.value.noanimate && 'noanimate',
-      options.value.borderless && 'borderless',
-    ]}
-    {...rest}
-  >
-    <div class="body">
-      <!-- <Options /> -->
-      <Node {value} key={name} />
+    <div
+      bind:clientWidth
+      data-testid="inspect"
+      class={[
+        'ampled-json-inspect',
+        classValue,
+        options.value.theme,
+        options.value.noanimate && 'noanimate',
+        options.value.borderless && 'borderless',
+      ]}
+      {...rest}
+    >
+      <div class="body">
+        <!-- <Options /> -->
+        <Node {value} key={name} />
+      </div>
+      {#if debug}
+        <hr />
+        <Node
+          key="DEBUG"
+          value={{
+            state: inspectState.value,
+            options: options,
+            valueCache,
+            clientWidth,
+          }}
+        />
+      {/if}
     </div>
-  </div>
-</svelte:boundary>
+  </svelte:boundary>
+{/if}
 
 <style>
   /*
@@ -203,7 +225,7 @@
     --base01: #3a3c4e;
     --base02: #44475a;
     --base03: #6272a4;
-    --base04: #8be9fd;
+    --base04: #1c1d26;
     --base05: #f8f8f2;
     --base06: #f1f2f8;
     --base07: #f7f7fb;
@@ -325,15 +347,16 @@
   }
 
   .ampled-json-inspect {
+    container-type: inline-size;
+    background-color: var(--bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
     font-size: var(--inspect-font-size, 12px);
     box-sizing: border-box;
     color: var(--fg);
     font-family: var(--inspect-font, monospace);
     line-height: 1.5em;
     white-space: nowrap;
-    background-color: var(--bg);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
     text-overflow: ellipsis;
     position: relative;
     min-width: 360px;
@@ -350,27 +373,10 @@
 
       .body {
         padding: 0;
+        background-color: transparent;
+        border: none;
       }
     }
-  }
-
-  .handle {
-    aspect-ratio: 1/1;
-    z-index: 20;
-    border: 1px solid var(--border-color);
-    border-top-width: 0;
-    border-right-width: 0;
-    background-color: var(--bg-lighter);
-    padding: 0.5em;
-    height: 2em;
-    width: 2em;
-    text-align: center;
-    font-size: 0.8em;
-    line-height: 1;
-    position: absolute;
-    top: 0;
-    right: 0;
-    cursor: move;
   }
 
   .ampled-json-inspect.fixedBottom {
@@ -394,12 +400,22 @@
   }
 
   .body {
+    /** compact */
+    transition: all 200ms linear;
     position: relative;
     overflow-y: auto;
     overflow-x: hidden;
     width: 100%;
     height: 100%;
-    padding: 0.5em;
+    padding: 0.25em;
+    --indent: 0.25em;
+
+    @container (min-width: 400px) {
+      padding: 0.5em;
+      --indent: 0.5em;
+      /* background-color: hotpink; */
+      /* Sparse styles here */
+    }
   }
 
   .ampled-json-inspect :global(.indent) {
@@ -430,6 +446,8 @@
       background-color: var(--bg-lighter);
       color: var(--fg);
       padding-inline: 0.5em;
+      height: 1.3em;
+      line-height: 1.3em;
       border-radius: 2px;
     }
 
@@ -660,5 +678,14 @@
   .ampled-json-inspect :global(code) {
     font-family: inherit;
     font-size: inherit;
+  }
+
+  hr {
+    all: unset;
+    display: block;
+    border-top: 2px solid var(--red);
+    min-height: 1px;
+    margin-block: 3px;
+    width: 100%;
   }
 </style>

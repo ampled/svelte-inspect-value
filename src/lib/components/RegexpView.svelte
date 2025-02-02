@@ -10,6 +10,7 @@
   let { value, key = undefined, type, path, ...rest }: Props = $props()
 
   let keys = [
+    'lastIndex',
     'dotAll',
     'flags',
     'global',
@@ -25,7 +26,8 @@
 
 <Expandable length={1} showLength={false} {type} {key} {path} {value} {...rest} keepPreviewOnExpand>
   {#snippet valuePreview()}
-    <span data-testid="value" class="value regexp">{value.toString()}</span>
+    <span data-testid="value" class="value regexp" title={value.toString()}>{value.toString()}</span
+    >
   {/snippet}
   <PropertyList {keys} {value} {type}>
     {#snippet item({ key, descriptor })}
