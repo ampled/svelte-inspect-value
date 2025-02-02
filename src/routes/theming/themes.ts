@@ -3,7 +3,7 @@ const drak = {
   '--base01': '#3a3c4e',
   '--base02': '#44475a',
   '--base03': '#6272a4',
-  '--base04': '#8be9fd',
+  '--base04': '#1c1d26',
   '--base05': '#f8f8f2',
   '--base06': '#f1f2f8',
   '--base07': '#f7f7fb',
@@ -39,7 +39,7 @@ const drakNeo = {
 const plain = {
   '--base00': '#FFFFFF',
   '--base01': '#e6e6e6',
-  '--base02': '#000000',
+  '--base02': '#949494',
   '--base03': '#000000',
   '--base04': '#000000',
   '--base05': '#000000',
@@ -57,20 +57,20 @@ const plain = {
 
 const plainDark = {
   '--base00': '#000000',
-  '--base01': '#333333',
-  '--base02': '#FFFFFF',
-  '--base03': '#808080',
+  '--base01': '#1a1a1a',
+  '--base02': '#4d4d4d',
+  '--base03': '#545454',
   '--base04': '#FFFFFF',
-  '--base05': '#FFFFFF',
+  '--base05': '#a8a8a8',
   '--base06': '#FFFFFF',
   '--base07': '#FFFFFF',
-  '--base08': '#FFFFFF',
-  '--base09': '#FFFFFF',
-  '--base0A': '#FFFFFF',
-  '--base0B': '#FFFFFF',
-  '--base0C': '#FFFFFF',
-  '--base0D': '#FFFFFF',
-  '--base0E': '#FFFFFF',
+  '--base08': '#808080',
+  '--base09': '#666666',
+  '--base0A': '#e0e2ca',
+  '--base0B': '#cccccc',
+  '--base0C': '#abaece',
+  '--base0D': '#cccccc',
+  '--base0E': '#cccccc',
   '--base0F': '#FFFFFF',
 }
 
@@ -131,12 +131,54 @@ const javascript = {
   '--base0F': '#000000',
 }
 
+const pinkula = {
+  '--base00': '#362836',
+  '--base01': '#4e3a4d',
+  '--base02': '#5a445a',
+  '--base03': '#9c62a4',
+  '--base04': '#261c26',
+  '--base05': '#f2f8f3',
+  '--base06': '#f8f1f8',
+  '--base07': '#fbf7fa',
+  '--base08': '#e753ea',
+  '--base09': '#ea9d52',
+  '--base0A': '#f8ff8f',
+  '--base0B': '#8fffa5',
+  '--base0C': '#a1a1ef',
+  '--base0D': '#8662e8',
+  '--base0E': '#f993c1',
+  '--base0F': '#00449e',
+}
+
+const ron = {
+  '--base00': '#3f313f',
+  '--base01': '#383038',
+  '--base02': '#493e49',
+  '--base03': '#735e75',
+  '--base04': '#a285a5',
+  '--base05': '#ffdbf3',
+  '--base06': '#f4f1f5',
+  '--base07': '#f8f5f9',
+  '--base08': '#f926eb',
+  '--base09': '#a81ffd',
+  '--base0A': '#f8f9e6',
+  '--base0B': '#e22e97',
+  '--base0C': '#efa1e9',
+  '--base0D': '#ef66ba',
+  '--base0E': '#ec81ff',
+  '--base0F': '#7333cc',
+}
+
 export const themes = {
   drak,
   drakNeo,
+  pinkula,
   plain,
   plainDark,
   stereo,
   brown,
   javascript,
+  ron,
 } as const
+
+export type ThemeKeys = keyof (typeof themes)['drak' | 'stereo']
