@@ -152,18 +152,20 @@
           saveStep()
         }}>x</button
       >
-      <button
-        type="button"
-        title="set transparent"
-        class="unstyled sm"
-        onclick={() => {
-          if (locked) {
-            lockedColors = lockedColors.filter((k) => k !== key)
-          } else {
-            lockedColors.push(key)
-          }
-        }}><small>{locked ? 'unlock' : 'lock'}</small></button
-      >
+      <DevOnly>
+        <button
+          type="button"
+          title="set transparent"
+          class="unstyled sm"
+          onclick={() => {
+            if (locked) {
+              lockedColors = lockedColors.filter((k) => k !== key)
+            } else {
+              lockedColors.push(key)
+            }
+          }}><small>{locked ? 'unlock' : 'lock'}</small></button
+        >
+      </DevOnly>
     </label>
   {/each}
 </div>
