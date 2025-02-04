@@ -12,12 +12,13 @@ export default defineConfig({
       resolveBrowser: true,
     }),
   ],
-  // build: {
-  //   minify: 'terser',
-  //   terserOptions: {
-  //     keep_classnames: true,
-  //   },
-  // },
+  build: {
+    minify: 'terser',
+    terserOptions: {
+      keep_classnames: true,
+      keep_fnames: true,
+    },
+  },
   test: {
     environment: 'happy-dom',
     setupFiles: ['./vitest-setup.ts'],

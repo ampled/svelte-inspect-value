@@ -4,7 +4,9 @@
   import type { SvelteMap } from 'svelte/reactivity'
   import Code from '../Code.svelte'
   import Stack from '../Stack.svelte'
-  import code from './gettersandsetters.txt?raw'
+  import rawCode from './gettersandsetters.txt?raw'
+
+  let { code } = $props()
 
   let value = $state({
     name: {
@@ -71,7 +73,10 @@
   </p>
 
   <Stack>
-    <Code {code} />
+    <Code code={rawCode}>
+      <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+      {@html code}
+    </Code>
     <Inspect name="gettersAndSetters" style="flex-basis: 50%" {value} />
   </Stack>
 </div>

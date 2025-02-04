@@ -15,6 +15,10 @@
   import SymbolKeys from '../../doclib/examples/SymbolKeys.svelte'
   import Urls from '../../doclib/examples/Urls.svelte'
 
+  let { data } = $props()
+
+  let { codeSamples } = data
+
   const toc = new SvelteMap<string, string>()
 
   setContext('toc', toc)
@@ -25,14 +29,14 @@
 <BasicEditable />
 <MultiLineStrings />
 <MapAndSet />
-<Promises />
+<Promises code={codeSamples.promises} />
 <HtmlElements />
 <Classes />
 <Functions />
 <SymbolKeys />
 <Urls />
-<GettersAndSetters />
-<Iterators />
+<GettersAndSetters code={codeSamples.gettersAndSetters} />
+<Iterators code={codeSamples.iterators} />
 <EmbedMedia />
 <Other />
 

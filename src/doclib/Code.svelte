@@ -17,7 +17,7 @@
 
   const multi = getContext<boolean | undefined>('multi')
 
-  let highlighted = $derived(highlight(code, language))
+  let highlighted = $derived(children ? undefined : highlight(code, language))
 
   let copied = $state(false)
   let timeout: number | undefined

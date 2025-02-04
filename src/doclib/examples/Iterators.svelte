@@ -4,7 +4,9 @@
   import type { SvelteMap } from 'svelte/reactivity'
   import Code from '../Code.svelte'
   import Stack from '../Stack.svelte'
-  import code from './iterators.txt?raw'
+  import rawCode from './iterators.txt?raw'
+
+  let { code } = $props()
 
   function* fibonacci() {
     let current = 1
@@ -41,12 +43,13 @@
 
 <div class="flex col">
   <h3 id="iterators">Iterators & Generators</h3>
-  <!-- <p>
-    Iterators <br />
-  </p> -->
+  <p>Iterators have to be iterated manually since doing so directly affects the source iterator.</p>
 
   <Stack>
-    <Code {code} />
+    <Code code={rawCode}>
+      <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+      {@html code}
+    </Code>
     <Inspect
       name="iteratorsAndGenerators"
       style="flex-basis: 50%"
