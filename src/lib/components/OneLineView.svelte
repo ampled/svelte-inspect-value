@@ -77,10 +77,13 @@
     transition: background-color 0.2s ease-in-out;
     position: relative;
     display: flex;
-    gap: 0.5em;
+    gap: var(--line-gap, 0.5em);
+    min-height: 1.5em;
+    max-height: 1.5em;
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
+    padding-left: calc(var(--indent) * 0.5);
 
     &:hover,
     &:focus-within {
@@ -104,7 +107,6 @@
     display: inline-flex;
     align-items: center;
     gap: 0.25em;
-    padding-left: 0.25em;
     user-select: none;
 
     .dash {
@@ -116,6 +118,8 @@
       aspect-ratio: 1 / 1;
       width: 1em;
       height: 1em;
+      min-width: 1em;
+      max-width: 1em;
       line-height: 1em;
       color: var(--comments);
       user-select: none;

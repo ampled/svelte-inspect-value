@@ -102,6 +102,8 @@
     aspect-ratio: 1 / 1;
     width: 1em;
     height: 1em;
+    min-width: 1em;
+    max-width: 1em;
     user-select: none;
     transition: all 100ms linear;
 
