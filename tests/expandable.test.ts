@@ -3,7 +3,7 @@ import { afterAll, describe, expect, test } from 'vitest'
 import { renderInspect } from './util/index.js'
 
 describe('expandable values', () => {
-  const inspect = renderInspect({ value: undefined, showLength: true })
+  const inspect = renderInspect({ value: undefined, showLength: true, elementView: 'full' })
   const { rerender, unmount, user } = inspect
 
   afterAll(() => {
@@ -169,24 +169,19 @@ describe('expandable values', () => {
     expect(indent).toHaveClass('indent', 'function')
   })
 
-  // FIXME: see what's up with happydom here
-  test.skip('it can display properties of html elements', async () => {
+  test('it can display properties of html elements', async () => {
     document.body.classList.add('test')
     document.body.dataset['test'] = 'test'
 
-    const element = document.createElement('div')
-
     await rerender({
-      value: element,
+      value: document.body,
       noanimate: true,
       expandAll: true,
       showPreview: false,
       showTypes: true,
-      elementView: 'simple',
     })
 
     const type = screen.queryAllByTestId('type')[0]
-    // debug()
     expect(type).toHaveTextContent('htmlbodyelement')
     const value = screen.queryAllByTestId('value')[0]
 
