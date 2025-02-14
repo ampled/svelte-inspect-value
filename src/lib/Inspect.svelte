@@ -75,5 +75,5 @@
 </script>
 
 {#if shouldRender}
-  <Root {...props} {...options.value} />
+  <Root {...props} />
 {/if}

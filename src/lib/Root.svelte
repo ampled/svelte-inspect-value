@@ -13,10 +13,6 @@
     name = undefined,
     onCollapseChange,
     debug = false,
-    // options
-    noanimate,
-    theme,
-    borderless,
     // Html Attributes
     class: classValue = '',
     ...rest
@@ -77,9 +73,9 @@
     class={[
       'ampled-json-inspect',
       classValue,
-      theme,
-      noanimate && 'noanimate',
-      borderless && 'borderless',
+      options.value.theme,
+      options.value.noanimate && 'noanimate',
+      options.value.borderless && 'borderless',
     ]}
     {...rest}
   >
