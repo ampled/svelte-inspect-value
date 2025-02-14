@@ -4,7 +4,7 @@ import { renderInspect } from './util/index.js'
 
 describe('expandable values', () => {
   const inspect = renderInspect({ value: undefined, showLength: true })
-  const { rerender, unmount, user, debug } = inspect
+  const { rerender, unmount, user } = inspect
 
   afterAll(() => {
     unmount()
