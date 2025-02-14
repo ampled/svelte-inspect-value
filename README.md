@@ -5,7 +5,7 @@
 
 <!-- ![alt text](insert url here) -->
 
-- [Demo and documentation](https://svelte-inspect-value.vercel.app)
+- [Demo and documentation](https://inspect.eirik.space)
 - [Svelte Playground](https://svelte.dev/playground/956365d6905c44298234ff4d9c60741e?version=5.17.3)
 
 ## Description
@@ -13,6 +13,18 @@
 An ambitious value inspector component in the veins of `svelte-json-tree` and `react-json-view`.
 
 It aims to be a valuable devtool for monitoring state and debugging.
+
+## Installation and use
+
+Install `svelte-inspect-value` with your favourite package manager.
+
+```html
+<script>
+  import { Inspect } from 'svelte-inspect-value'
+</script>
+
+<Inspect value="hello world" />
+```
 
 ### Features
 
@@ -45,7 +57,7 @@ It aims to be a valuable devtool for monitoring state and debugging.
 | noanimate        | boolean              | disable animations / transitions                                                                                         | false       |
 | embedMedia       | boolean              | embed images and audio if a string value is a path or url that ends with an image or audio file extension                | false       |
 | theme            | string               | set color theme class available built-in themes: 'drak','stereo','dark','light','cotton-candy'                           | 'drak'      |
-| expandAll        | boolean              | expand all nodes by default. can be a performance hitch with a lot of entries                                            | false       |
+| expandAll        | boolean              | initially expand all nodes. can be a performance hitch with a lot of entries                                             | false       |
 | expandLevel      | number               | default level of initially expanded nested nodes                                                                         | 1           |
 | borderless       | boolean              | remove background color, border and padding                                                                              | false       |
 | quotes           | `'single'\|'double'` | quote type for string values. 'single' or 'double'                                                                       | 'single'    |

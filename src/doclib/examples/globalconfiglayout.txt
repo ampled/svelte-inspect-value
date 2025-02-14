@@ -1,10 +1,14 @@
 <script>
-  import { setGlobalInspectOptions } from 'svelte-inspect-value'
+  import {DEV} from 'esm-env'
+  import {setGlobalInspectOptions} from 'svelte-inspect-value'
 
-  setGlobalInspectOptions({ stringCollapse: 20 })
+  setGlobalInspectOptions({ 
+    stringCollapse: 20,
+    renderIf: DEV // conditionally render
+  })
 
   // or reactive global options
-  let globalConfig = $state({ stringCollapse: 20 });
+  let globalConfig = $state({ stringCollapse: 20, renderIf: true });
   setGlobalInspectOptions(globalConfig);
 
   let { children } = $props();

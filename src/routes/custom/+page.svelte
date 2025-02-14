@@ -23,7 +23,11 @@
 
   const customComponents: CustomComponents = $derived({
     number: [CustomNumber],
-    string: addComponent(HexString, (props) => ({ showString, value: props.value })),
+    string: addComponent(
+      HexString,
+      (props) => ({ showString, value: props.value }),
+      (props) => props.value.startsWith('#')
+    ),
   })
 </script>
 
@@ -73,7 +77,7 @@ Result
 
 <Inspect
   value={{
-    hoverToError: 'click me',
+    'clickToError👉': 'click me',
     hey: 'dont click me i will error',
   }}
   name="customString"

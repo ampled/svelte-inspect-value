@@ -11,11 +11,8 @@
   role="listitem"
   class="entry"
   style="--i: {i}"
-  in:slide={{
-    duration: options.value.noanimate ? 0 : 200,
-  }}
-  out:slide={{
-    duration: options.value.noanimate ? 0 : 200,
+  transition:slide={{
+    duration: options.transitionDuration,
   }}
 >
   {@render children?.()}

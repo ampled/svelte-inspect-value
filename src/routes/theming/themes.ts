@@ -1,3 +1,22 @@
+const inspect = {
+  '--base00': '#202e40',
+  '--base01': '#31455e',
+  '--base02': '#425670',
+  '--base03': '#6d819c',
+  '--base04': '#FFFFFF',
+  '--base05': '#ffffff',
+  '--base06': '#bfc8d4',
+  '--base07': '#FFFFFF',
+  '--base08': '#ff5c7c',
+  '--base09': '#d1ae00',
+  '--base0A': '#ffd285',
+  '--base0B': '#8fff96',
+  '--base0C': '#81eced',
+  '--base0D': '#81ecee',
+  '--base0E': '#e68aff',
+  '--base0F': '#FFFFFF',
+}
+
 const drak = {
   '--base00': '#282a36',
   '--base01': '#3a3c4e',
@@ -170,6 +189,7 @@ const ron = {
 }
 
 export const themes = {
+  inspect,
   drak,
   drakNeo,
   pinkula,

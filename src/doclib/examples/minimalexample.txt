@@ -1,4 +1,5 @@
 <script>
+  import {dev} from '$app/environment'
   import {Inspect} from 'svelte-inspect-value';
 
   let value = $state({
@@ -17,4 +18,10 @@
   });
 </script>
 
-<Inspect {value} name="demo" />
+
+{#if dev} <!-- only render during development -->
+  <Inspect {value} name="demo" />
+{/if}
+
+<!-- or use prop (some light weight initialization code will run) -->
+<Inspect {value} renderIf={dev} />

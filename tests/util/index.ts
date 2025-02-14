@@ -1,7 +1,7 @@
 import { render } from '@testing-library/svelte'
 import { userEvent } from '@testing-library/user-event'
 import type { ComponentProps } from 'svelte'
-import Inspect from '../../src/lib/Inspect.svelte'
+import Inspect from '../../src/lib/Root.svelte'
 
 export function renderInspect(
   props: ComponentProps<typeof Inspect>,

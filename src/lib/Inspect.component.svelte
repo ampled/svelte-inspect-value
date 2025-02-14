@@ -11,7 +11,7 @@
 />
 
 <script lang="ts">
-  import Inspect from './Inspect.svelte'
+  import Inspect from './Root.svelte'
 
   let props = $props()
 </script>

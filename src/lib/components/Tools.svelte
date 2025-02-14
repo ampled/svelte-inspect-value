@@ -1,15 +1,14 @@
 <script lang="ts">
-  import { DEV } from 'esm-env'
-  import { getContext } from 'svelte'
+  import { blur } from 'svelte/transition'
   import { copyToClipBoard, logToConsole } from '../hello.svelte.js'
   import CollapseChildren from '../icons/CollapseChildren.svelte'
   import Console from '../icons/Console.svelte'
   import Copy from '../icons/Copy.svelte'
   import ExpandChildren from '../icons/ExpandChildren.svelte'
   import { useOptions } from '../options.svelte.js'
-  import { STATE_CONTEXT_KEY, type StateContext } from '../state.svelte.js'
+  import { useState } from '../state.svelte.js'
   import type { KeyType, TypeViewProps } from '../types.js'
-  import { getType, stringifyPath } from '../util.js'
+  import { stringifyPath } from '../util.js'
 
   type Props = Partial<TypeViewProps<unknown, string>> & { collapsed?: boolean }
 
@@ -18,7 +17,8 @@
   let copied = $state(false)
 
   let options = useOptions()
-  let inspectState: StateContext | undefined = getContext(STATE_CONTEXT_KEY)
+  let inspectState = useState()
+  let stringifiedPath = $derived(stringifyPath(path))
 
   let level = $derived(path.length)
 
@@ -28,26 +28,13 @@
     )
   )
 
-  let collapseState = $derived(inspectState?.value?.[stringifyPath(path)])
-  let collapsed = $derived(collapseState ? collapseState.collapsed : true)
-
-  const children = $derived(
-    inspectState?.value
-      ? Object.entries(inspectState.value).filter(
-          ([k]) => k.startsWith(stringifyPath(path)) && k !== stringifyPath(path)
-        )
-      : []
-  )
+  let nodeState = $derived(inspectState.value[stringifyPath(path)])
 
   let hasExpandedChildren = $derived.by(() => {
-    if (inspectState?.value) {
-      const key = stringifyPath(path)
-      const children = Object.entries(inspectState.value).filter(
-        ([k]) => k.startsWith(key) && k.split('.').length === level + 1
-      )
-      return children.some(([, v]) => !v.collapsed)
-    }
-    return false
+    const children = Object.entries(inspectState.value).filter(
+      ([k]) => k.startsWith(stringifiedPath) && k.split('.').length === level + 1
+    )
+    return children.some(([, v]) => !v.collapsed)
   })
 
   let timeout = $state<number>()
@@ -68,26 +55,42 @@
 
   let collapseAction = {
     hint: 'collapse children',
-    action: (level: number, path: KeyType[]) => inspectState?.collapseChildren(level, path),
+    action: (level: number, path: KeyType[]) => inspectState.collapseChildren(level, path),
     icon: CollapseChildren,
   }
 
   let expandAction = {
     hint: 'expand children',
-    action: (level: number, path: KeyType[]) => inspectState?.expandChildren(level, path),
+    action: (level: number, path: KeyType[]) => inspectState.expandChildren(level, path),
     icon: ExpandChildren,
   }
 
-  let treeAction = $derived(hasExpandedChildren && !collapsed ? collapseAction : expandAction)
+  let treeAction = $derived(
+    hasExpandedChildren
+      ? collapseAction
+      : nodeState?.collapsed
+        ? expandAction
+        : nodeState?.hasChildren
+          ? expandAction
+          : undefined
+  )
 </script>
 
 {#if options.value.showTools}
   <div class="tools" class:borderless={options.value.borderless}>
-    {#if DEV}
-      <button onclick={() => console.log(getType(value))}>d</button>
-    {/if}
-    {#if children.length}
+    <!-- {#if DEV}
+      <NodeActionButton
+        onclick={() =>
+          console.log({
+            key: path[path.length - 1],
+            children: children.length,
+            immediateChildren,
+          })}>d</NodeActionButton
+      >
+    {/if} -->
+    {#if treeAction}
       <button
+        transition:blur
         title={treeAction.hint}
         aria-label={treeAction.hint}
         onclick={() => treeAction.action(level, path)}
@@ -128,19 +131,21 @@
     opacity: 1;
     display: flex;
     transition: all 250ms ease-in-out allow-discrete;
-    width: calc-size(max-content, size);
+    /* width: calc-size(max-content, size); */
+    /* transform: translateX(0); */
   }
 
   .tools {
-    transition: all 0s ease-in-out allow-discrete;
+    transition: all 250ms ease-in-out allow-discrete;
     background-color: var(--bg);
     border-left: 1px solid var(--border-color);
+    backdrop-filter: blur(1px);
     position: absolute;
     right: 0;
     top: 0;
     bottom: 0;
     padding-inline: 0.5em;
-    /* display: flex; */
+    display: flex;
     justify-content: center;
     align-items: center;
     gap: 0.25em;
@@ -148,7 +153,8 @@
     max-height: 1.5em;
     z-index: calc(var(--index) + 1);
     flex-wrap: nowrap;
-    width: 0;
+    /* transform: translateX(-100%);
+    transform-origin: center left; */
     overflow: clip;
 
     button {

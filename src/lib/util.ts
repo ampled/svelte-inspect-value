@@ -1,5 +1,10 @@
-import type { Component, ComponentProps } from 'svelte'
-import type { CustomComponentEntry, KeyType } from './types.js'
+import type { Component } from 'svelte'
+import type {
+  CustomComponentEntry,
+  CustomComponentPredicate,
+  CustomComponentPropsTransformFn,
+  KeyType,
+} from './types.js'
 
 export function getType(value: unknown) {
   if (typeof value === 'function') {
@@ -166,6 +171,10 @@ export function ensureStringPath(path: string | KeyType[]) {
  *
  * The function ensures proper typing for the props parameter of the transform function
  *
+ * @param component Custom component
+ * @param transformProps Function modifying props passed to component
+ * @param predicate Function returning boolean value. If false, use default component.
+ *
  * @example
  * <script lang="ts">
  *  import {Inspect, addComponent} from 'svelte-inspect-value';
@@ -178,8 +187,11 @@ export function ensureStringPath(path: string | KeyType[]) {
  *    CustomNumber,
  *    // props here is properly typed with props of CustomNumber
  *    (props) => ({ value: Math.floor(props.value) })
+ *    // third parameter is a predicate function that decides if custom component should be used
+ *    // if false is returned, the default component will be used instead for this type
+ *    (props) => props.value < 1000
  *   ),
- *   // custom component without props transform function
+ *   // custom component without props transform function or predicate
  *   string: [CustomString]
  *  }}
  * />
@@ -187,8 +199,10 @@ export function ensureStringPath(path: string | KeyType[]) {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function addComponent<TComponent extends Component<any> = Component<any>>(
   component: TComponent,
-  transformProps?: (props: ComponentProps<TComponent>) => Partial<ComponentProps<TComponent>>
+  transformProps?: CustomComponentPropsTransformFn<TComponent>,
+  predicate?: CustomComponentPredicate<TComponent>
 ): CustomComponentEntry<TComponent> {
+  if (predicate) return [component, transformProps, predicate]
   if (transformProps) return [component, transformProps]
   return [component]
 }

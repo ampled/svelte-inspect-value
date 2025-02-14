@@ -1,10 +1,10 @@
 <script lang="ts" generics="Type extends string = ValueType">
   import { getPreviewLevel } from '$lib/contexts.js'
+  import { slideXY } from '$lib/transition/slideXY.js'
   import { getContext, onMount, untrack, type Snippet } from 'svelte'
   import type { HTMLAttributes } from 'svelte/elements'
-  import { slide } from 'svelte/transition'
   import { useOptions } from '../options.svelte.js'
-  import { STATE_CONTEXT_KEY, type StateContext } from '../state.svelte.js'
+  import { useState } from '../state.svelte.js'
   import type { TypeViewProps } from '../types.js'
   import { stringifyPath, type ValueType } from '../util.js'
   import CollapseButton from './CollapseButton.svelte'
@@ -44,11 +44,11 @@
 
   let buttonComponent = $state<ReturnType<typeof CollapseButton>>()
   const options = useOptions()
-  const inspectState: StateContext | undefined = getContext(STATE_CONTEXT_KEY)
+  const inspectState = useState()
   const previewLevel = getPreviewLevel()
   const isKey = getContext<boolean>('key')
   let collapseState = $derived.by(() => {
-    const storedState = inspectState?.value?.[stringifyPath(path)]
+    const storedState = inspectState.value[stringifyPath(path)]
     if (storedState) {
       return storedState
     } else {
@@ -61,17 +61,23 @@
   let collapsed = $derived(collapseState.collapsed)
 
   function onCollapseChanged(newValue: boolean) {
-    inspectState?.setCollapse(path, newValue)
+    inspectState.setCollapse(path, { collapsed: newValue })
   }
 
   onMount(() => {
-    if (inspectState) {
+    if (inspectState && previewLevel === 0) {
       const storedState = inspectState.getCollapse(path)
       if (!storedState) {
         if (options.value.expandAll) {
-          inspectState.setCollapse(path, false)
+          inspectState.setCollapse(path, {
+            collapsed: false,
+            hasChildren: length != null && length > 0,
+          })
         } else {
-          inspectState.setCollapse(path, path.length > options.value.expandLevel)
+          inspectState.setCollapse(path, {
+            collapsed: path.length > options.value.expandLevel,
+            hasChildren: length != null && length > 0,
+          })
         }
       }
     }
@@ -80,7 +86,7 @@
 
 <div
   data-testid="expandable"
-  class={['title-bar', previewLevel && 'preview', !showKey && 'nokey']}
+  class={['line', 'title-bar', previewLevel && 'preview', !showKey && 'nokey']}
   aria-expanded={!collapsed}
   {...rest}
 >
@@ -99,6 +105,7 @@
     {#if showKey}
       <Key
         ondblclick={() => onCollapseChanged(!collapsed)}
+        onclick={() => onCollapseChanged(!collapsed)}
         delim={keyDelim}
         prefix={keyPrefix}
         style={keyStyle}
@@ -125,64 +132,25 @@
 
 {#if children && length != null && length > 0 && !collapsed && !previewLevel}
   <div
+    oninspectvaluechange={() => buttonComponent?.flash()}
     role="list"
     data-testid="indent"
     class="indent {type}"
-    oninspectvaluechange={() => buttonComponent?.flash()}
-    in:slide={{ duration: options.value.noanimate ? 0 : 200 }}
-    out:slide={{ duration: options.value.noanimate ? 0 : 200 }}
+    transition:slideXY={{ duration: options.transitionDuration * 2 }}
   >
     {@render children()}
   </div>
 {/if}
 
 <style>
-  .title-bar {
-    z-index: var(--index);
-    white-space: nowrap;
-    top: 0;
-    transition: background-color 0.2s ease-in-out;
-    position: sticky;
-    display: flex;
-    gap: 0.5em;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    min-height: 1.5em;
-    padding-left: calc(var(--indent) * 0.5);
-
-    &:hover {
-      background-color: var(--bg-lighter);
-    }
-
-    .indicator-and-key {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.25em;
-      /* padding-left: 0.25em; */
-      /* padding-left: 1px; */
-    }
-  }
-
-  .title-bar.preview {
-    background-color: transparent;
-    padding: 0;
-  }
-
-  .title-bar.preview.nokey {
-    gap: 0;
-
-    .indicator-and-key {
-      display: none;
-    }
-  }
+  @import './styles/line.css';
 
   .indent {
     margin-left: calc(var(--indent) * 1.5);
     border-left: 1px solid var(--border-color);
-    overflow-x: hidden;
+    overflow-x: clip;
     overflow-y: auto;
     position: relative;
-    max-height: calc(52 * 1.5em);
+    max-height: calc(102 * 1.5em);
   }
 </style>

@@ -2,6 +2,7 @@
   import { browser } from '$app/environment'
   import Inspect from '$lib/Inspect.svelte'
   import type { InspectProps } from '$lib/types.js'
+  import { onMount } from 'svelte'
   import sprite from './media/squirtle.png'
   import audio from './media/squirtle_cry.ogg'
 
@@ -43,13 +44,12 @@
         audio,
       },
     },
-    number: 1234,
-    numberOrString: browser ? 'string!' : /straaaang/,
+    number: 0,
     bigint: 9007199254740991n,
     bools: [true, false],
     symb: Symbol('abcd'),
     reg: /([\w.\-_]+)?\w+@[\w-_]+(\.\w+){1,}/gim,
-    nil: [undefined, null, NaN],
+    nil: [undefined, null, NaN, Infinity],
     array: [1, 2, 3],
     set: new Set([1, 2, 3]),
     map: new Map<unknown, unknown>([
@@ -187,7 +187,7 @@
       error: new Error('oh no!'),
       typeerror: new TypeError('snapple'),
     },
-    body: browser ? document.body : null,
+    body: null,
     iterators: {
       array: [1, 2, 3, 4].values(),
       set: new Set([12, 34, 45]).values(),
@@ -223,6 +223,75 @@
         },
       },
     },
+    weirdKeys: {
+      42: 'numbers are cool',
+      punctuation: {
+        '=': 'eq',
+        '@': 'at',
+        '-': '',
+        ':': '',
+        ';': '',
+        '.': '',
+        ',': '',
+        '!': 1,
+        '?': '',
+        '¡': '¿',
+        '¿': '!',
+        '#': '',
+        '~': 'tilde',
+      },
+      braces: {
+        '{': '',
+        '}': '',
+        '[': '',
+        ']': '',
+        '<': '',
+        '>': '',
+      },
+      quotes: {
+        '"': 'double quote',
+        "'": 'single quote',
+        '`': 'backtick',
+      },
+      slashesandEscaped: {
+        '\\': 'backslash',
+        '//': { hmm: 'test' },
+        '\n': 'newline',
+        '\t': 'tab',
+        '\r': 'carriage return',
+      },
+      accented: {
+        a: {
+          å: '',
+          à: '',
+          ä: '',
+          á: '',
+          â: '',
+          ã: '',
+          ā: '',
+          ạ: '',
+        },
+        e: {
+          é: 'é',
+          è: 'é',
+          ê: 'ê',
+          ë: '',
+          ė: '',
+        },
+      },
+      à: '',
+      æ: '',
+      whiteSpace: {
+        '': 'empty string key',
+        ' ': 'space string key',
+        '  ': 'double space string key',
+        '      starts   ': ' a    ',
+        'spaces in between': ' a    ',
+      },
+      _: 'underscores are legit',
+      'asdf\\': 'oo',
+      [Symbol('')]: 'agaga',
+    },
     arbitraryObjects: {
       notice:
         'objects without a defined specialized view component.\nproperties are enumerated and nested.',
@@ -239,6 +308,18 @@
       string: '',
     },
   })
+
+  onMount(() => {
+    allTypes.body = document.body as unknown as null
+  })
+
+  $effect(() => {
+    const interval = setInterval(() => {
+      allTypes.number++
+    }, 2000)
+
+    return () => clearInterval(interval)
+  })
 </script>
 
-<Inspect name="allTypes" value={allTypes} {...props} />
+<Inspect name="allTypes" value={allTypes} {...props} debug />

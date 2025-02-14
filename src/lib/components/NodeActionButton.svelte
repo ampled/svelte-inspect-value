@@ -17,6 +17,7 @@
 <style>
   button {
     all: unset;
+    font-family: var(--inspect-font);
     font-size: 0.8em;
     height: 1.5em;
     line-height: 1.5em;
@@ -26,6 +27,8 @@
     padding-inline: 0.5em;
     cursor: pointer;
     border-radius: 2px;
+    transition: all 150ms ease-in-out;
+    transform-origin: bottom center;
 
     &:disabled {
       cursor: default;
@@ -33,8 +36,15 @@
       outline-color: var(--border-color);
     }
 
-    &:hover:not(:disabled),
-    &:focus {
+    &:active:not(:disabled) {
+      color: var(--interactive);
+      background-color: var(--bg);
+      outline: 1px solid var(--interactive);
+      transform: scaleY(0.85);
+    }
+
+    &:hover:not(:disabled):not(:active),
+    &:focus-visible {
       background-color: var(--interactive);
       color: var(--bg);
     }

@@ -22,13 +22,12 @@ import UrlView from './URLView.svelte'
 
 type ViewComponent<T> = Component<TypeViewProps<T>>
 
-export type CustomComponentEntry<T = unknown> =
+export type ComponentEntry<T = unknown> =
   | [ViewComponent<T>, (props: TypeViewProps<T>) => Partial<TypeViewProps<T>>]
   | [ViewComponent<T>]
 
-// TODO proper typing
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ViewComponents = Record<string, CustomComponentEntry<any>>
+export type ViewComponents = Record<string, ComponentEntry<any>>
 
 const components = {
   symbol: [
@@ -98,4 +97,11 @@ export function getComponent(type: string, custom: CustomComponents) {
   if (type.includes('iterator')) return comps['arrayiterator']
 
   return comps[type]
+}
+
+export function getDefaultComponent(type: string) {
+  if (typedArrays.includes(type)) return components['typedarray']
+  if (type.includes('iterator')) return components['arrayiterator']
+
+  return components[type]
 }
