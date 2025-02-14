@@ -1,36 +1,96 @@
-<script>
-  import hljs from 'highlight.js/lib/core'
-  import javascript from 'highlight.js/lib/languages/javascript'
-  import xml from 'highlight.js/lib/languages/xml'
-  // import svelte from 'highlight.js/lib/languages/svelte'
-  import 'highlight.js/styles/base16/dracula.min.css'
+<script lang="ts">
+  import Copy from '$lib/icons/Copy.svelte'
+  import Inspect from '$lib/Inspect.svelte'
+  import { getContext, type Snippet } from 'svelte'
+  import type { HTMLAttributes } from 'svelte/elements'
+  import { fade } from 'svelte/transition'
+  import { highlight } from './shiki.js'
 
-  const instance = hljs.newInstance()
-  // hljs.configure({ classPrefix: '' })
-  instance.registerLanguage('xml', xml)
-  instance.registerLanguage('javascript', javascript)
+  type CodeProps = {
+    children?: Snippet
+    code: string
+    label?: string
+    language?: 'svelte' | 'css' | 'javascript'
+  } & HTMLAttributes<HTMLDivElement>
 
-  let { code, label = 'example', ...rest } = $props()
+  let { code, label = 'example', language = 'svelte', children, ...rest }: CodeProps = $props()
 
-  let highlighted = $derived(instance.highlight(code, { language: 'xml' }))
+  const multi = getContext<boolean | undefined>('multi')
+
+  let highlighted = $derived(children ? undefined : highlight(code, language))
+
+  let copied = $state(false)
+  let timeout: number | undefined
+  async function copyCode() {
+    try {
+      await navigator.clipboard.writeText(code)
+      copied = true
+      if (timeout) window.clearTimeout(timeout)
+      timeout = window.setTimeout(() => {
+        copied = false
+      }, 5000)
+    } catch (e) {
+      console.error(e)
+      copied = false
+    }
+  }
 </script>
 
-<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-<pre class="hljs" {...rest}>{@html highlighted.value}{#if label}<div
-      class="label">{label}</div>{/if}
-</pre>
+<svelte:boundary>
+  {#snippet failed(error, reset)}
+    <Inspect value={error} />
+    <button onclick={reset}>retry</button>
+  {/snippet}
+  <div class="code" class:multi {...rest}>
+    <div class="util">
+      {#if label}
+        <div class="label">{label}</div>
+      {/if}
+      <button class:copied onclick={copyCode} title="copy code"><Copy /></button>
+    </div>
+
+    {#if children}
+      {@render children()}
+    {:else}
+      {#await highlighted}
+        ...
+      {:then result}
+        <div in:fade>
+          <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+          {@html result}
+        </div>
+      {/await}
+    {/if}
+  </div>
+</svelte:boundary>
 
 <style>
-  pre {
+  .code {
     position: relative;
     border-radius: 8px;
     border: 1px solid var(--border-color);
     background-color: var(--bg-code);
-    padding: 1.25em;
     font-size: 12px;
+    overflow: hidden;
+    padding: 1em;
   }
 
-  .label {
+  .code.multi {
+    border-top-left-radius: 0;
+
+    .label {
+      display: none;
+      opacity: 0;
+    }
+  }
+
+  .util {
+    /* color: var(--fg); */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 14px;
+    font-family: monospace;
     position: absolute;
     top: 0;
     right: 0;
@@ -38,6 +98,26 @@
     background-color: var(--bg-lighter);
     border-left: 1px solid var(--border-color);
     border-bottom: 1px solid var(--border-color);
-    padding: 0.5em;
+    padding-block: 0.25em;
+    font-size: 12px;
+    padding-inline: 0.5em;
+    gap: 0.5em;
+    z-index: 10;
+
+    button {
+      transition: all 250ms linear;
+      border: none;
+      width: 1em;
+      height: 1em;
+      padding: 0;
+
+      &.copied {
+        color: var(--green);
+      }
+
+      &:hover {
+        background-color: transparent;
+      }
+    }
   }
 </style>

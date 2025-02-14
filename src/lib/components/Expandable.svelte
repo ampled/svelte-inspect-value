@@ -1,22 +1,24 @@
-<script lang="ts">
-  import { STATE_CONTEXT_KEY, type StateContext } from '../state.svelte.js'
-
-  import { getContext, onMount, type Snippet } from 'svelte'
-  import CollapseButton from './CollapseButton.svelte'
-  import Entries from './Entries.svelte'
-
+<script lang="ts" generics="Type extends string = ValueType">
+  import { getPreviewLevel } from '$lib/contexts.js'
+  import { slideXY } from '$lib/transition/slideXY.js'
+  import { getContext, onMount, untrack, type Snippet } from 'svelte'
   import type { HTMLAttributes } from 'svelte/elements'
-  import { slide } from 'svelte/transition'
   import { useOptions } from '../options.svelte.js'
+  import { useState } from '../state.svelte.js'
   import type { TypeViewProps } from '../types.js'
-  import { stringifyPath } from '../util.js'
+  import { stringifyPath, type ValueType } from '../util.js'
+  import CollapseButton from './CollapseButton.svelte'
+  import Count from './Count.svelte'
   import Key from './Key.svelte'
   import Tools from './Tools.svelte'
   import Type from './Type.svelte'
 
-  type Props = TypeViewProps<unknown> & {
+  type Props = TypeViewProps<unknown, Type> & {
     length?: number
-    valuePreview?: Snippet
+    valuePreview: Snippet<[{ showPreview: boolean }]>
+    forceType?: boolean
+    keyDelim?: string
+    showKey?: boolean
     children?: Snippet
     keepPreviewOnExpand?: boolean
     showLength?: boolean
@@ -24,10 +26,15 @@
 
   let {
     key,
+    keyPrefix,
+    keyDelim = ':',
+    keyStyle,
+    showKey = true,
     type,
     length,
     value,
     valuePreview,
+    forceType = false,
     keepPreviewOnExpand = false,
     path = [],
     showLength = true,
@@ -35,135 +42,115 @@
     ...rest
   }: Props = $props()
 
-  let options = useOptions()
-  let inspectState: StateContext | undefined = getContext(STATE_CONTEXT_KEY)
+  let buttonComponent = $state<ReturnType<typeof CollapseButton>>()
+  const options = useOptions()
+  const inspectState = useState()
+  const previewLevel = getPreviewLevel()
+  const isKey = getContext<boolean>('key')
+  let collapseState = $derived.by(() => {
+    const storedState = inspectState.value[stringifyPath(path)]
+    if (storedState) {
+      return storedState
+    } else {
+      return untrack(() => ({
+        collapsed: path.length > options.value.expandLevel && !options.value.expandAll,
+      }))
+    }
+  })
 
-  let collapseState = $derived(inspectState?.value?.[stringifyPath(path)])
-  let collapsed = $derived(collapseState ? collapseState.collapsed : true)
+  let collapsed = $derived(collapseState.collapsed)
+
+  function onCollapseChanged(newValue: boolean) {
+    inspectState.setCollapse(path, { collapsed: newValue })
+  }
 
   onMount(() => {
-    if (inspectState) {
+    if (inspectState && previewLevel === 0) {
       const storedState = inspectState.getCollapse(path)
       if (!storedState) {
         if (options.value.expandAll) {
-          inspectState.setCollapse(path, false)
+          inspectState.setCollapse(path, {
+            collapsed: false,
+            hasChildren: length != null && length > 0,
+          })
         } else {
-          inspectState.setCollapse(path, path.length > options.value.expandLevel)
+          inspectState.setCollapse(path, {
+            collapsed: path.length > options.value.expandLevel,
+            hasChildren: length != null && length > 0,
+          })
         }
       }
     }
   })
-
-  // let parentCollapsed = getContext<(() => boolean) | undefined>('parent-collapsed')
-  // setContext('parent-collapsed', () => parentCollapsed?.() || collapsed)
-
-  function onCollapseChanged(newValue: boolean) {
-    inspectState?.setCollapse(path, newValue)
-  }
-
-  let buttonComponent = $state<ReturnType<typeof CollapseButton>>()
-
-  const isPreview = getContext<boolean>('preview')
 </script>
 
-<div class="title-bar" {...rest} class:isPreview>
-  {#if !isPreview}
-    <div class="button-key">
+<div
+  data-testid="expandable"
+  class={['line', 'title-bar', previewLevel && 'preview', !showKey && 'nokey']}
+  aria-expanded={!collapsed}
+  {...rest}
+>
+  <div class="indicator-and-key">
+    {#if !previewLevel && !isKey}
       <CollapseButton
         bind:this={buttonComponent}
         {collapsed}
         {value}
+        {key}
+        {type}
         onchange={onCollapseChanged}
         disabled={length === 0}
-        aria-label="expand {key?.toString()}"
-        title="expand {key?.toString()}"
       />
+    {/if}
+    {#if showKey}
+      <Key
+        ondblclick={() => onCollapseChanged(!collapsed)}
+        onclick={() => onCollapseChanged(!collapsed)}
+        delim={keyDelim}
+        prefix={keyPrefix}
+        style={keyStyle}
+        {key}
+        {path}
+      />
+    {/if}
+  </div>
 
-      <Key {key} {path} ondblclick={() => onCollapseChanged(!collapsed)} />
-    </div>
+  {#if !isKey}
+    <Type {type} force={forceType} />
   {/if}
-  <Type {type} />
 
-  {#if valuePreview && (collapsed || isPreview || keepPreviewOnExpand)}
-    {@render valuePreview()}
-    <!-- <div transition:slide={{ axis: 'x' }}>
-      <div transition:slide>
-      </div>
-    </div> -->
-  {/if}
+  {@render valuePreview({ showPreview: collapsed || previewLevel > 0 || keepPreviewOnExpand })}
 
-  {#if showLength && !isPreview}
-    <Entries {length} {type} />
-  {/if}
+  {#if !previewLevel}
+    {#if showLength}
+      <Count {length} {type} />
+    {/if}
 
-  {#if !isPreview}
     <Tools {value} {path} {collapsed} {type} />
   {/if}
 </div>
 
-{#if children && length != null && length > 0 && !collapsed && !isPreview}
+{#if children && length != null && length > 0 && !collapsed && !previewLevel}
   <div
-    transition:slide={{ axis: 'x', duration: options.value.noanimate ? 0 : 400 }}
     oninspectvaluechange={() => buttonComponent?.flash()}
+    role="list"
+    data-testid="indent"
+    class="indent {type}"
+    transition:slideXY={{ duration: options.transitionDuration * 2 }}
   >
-    <div
-      class="indent {type}"
-      in:slide={{ duration: options.value.noanimate ? 0 : 400 }}
-      out:slide={{ duration: options.value.noanimate ? 0 : 400 }}
-    >
-      {@render children()}
-    </div>
+    {@render children()}
   </div>
 {/if}
 
 <style>
-  .title-bar {
-    /* background-color: var(--bg); */
-    z-index: var(--index);
-    /* width: 100%; */
-    position: sticky;
-    top: 0;
-    border-color: var(--border-color);
-    border-bottom-width: 0;
-    border-right-width: 0;
-    border-top-width: 0;
-    border-left-width: 0;
-    border-style: solid;
-    /* z-index: 10000; */
-    white-space: nowrap;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 0.5em;
-    min-height: 1.5em;
-    padding-left: calc(var(--indent) * 0.5);
-    /* margin-left: -0.5em; */
-    /* padding-left: calc(0.25em); */
-    /* width: calc(100% + 0.5em); */
-    /* transition: all 0.2s ease-in-out; */
-
-    &:hover {
-      background-color: var(--bg-lighter);
-    }
-
-    .button-key {
-      display: inline-flex;
-      align-items: center;
-      gap: calc(var(--indent) * 0.5);
-      padding-left: 1px;
-      /* gap: 0.25em; */
-    }
-  }
-
-  .title-bar.preview {
-    background-color: transparent;
-  }
+  @import './styles/line.css';
 
   .indent {
     margin-left: calc(var(--indent) * 1.5);
-    padding-block: calc(var(--indent) * 0.5);
     border-left: 1px solid var(--border-color);
-    overflow: hidden;
+    overflow-x: clip;
+    overflow-y: auto;
+    position: relative;
+    max-height: calc(102 * 1.5em);
   }
 </style>

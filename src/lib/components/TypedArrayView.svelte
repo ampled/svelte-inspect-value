@@ -2,7 +2,7 @@
   import type { TypeViewProps } from '$lib/types.js'
   import Entry from './Entry.svelte'
   import Expandable from './Expandable.svelte'
-  import JsonViewer from './Node.svelte'
+  import Node from './Node.svelte'
   import Preview from './Preview.svelte'
 
   type TypedArray =
@@ -23,30 +23,29 @@
   let { value, key = undefined, type, path }: Props = $props()
 
   const internalKeys = ['buffer', 'byteLength', 'byteOffset', 'length']
-  let keys = [...Object.getOwnPropertyNames(value), ...internalKeys]
 
   function getValue(key: keyof typeof value) {
     return value[key]
   }
 
   let entries = $derived<[string, unknown][]>(
-    keys.map((k) => [k, getValue(k as keyof typeof value)])
+    internalKeys.map((k) => [k, getValue(k as keyof typeof value)])
   )
-  let preview = $derived(entries.slice(0, 3))
+  let preview = $derived(value.slice(0, 3))
 </script>
 
-<Expandable {...{ value, key, type, path }} length={value?.length}>
-  {#snippet valuePreview()}
-    <Preview prefix="[" postfix="]" list={preview} hasMore={preview.length < 3} />
+<Expandable {...{ value, key, type, path }} length={value.length}>
+  {#snippet valuePreview({ showPreview })}
+    <Preview prefix="[" postfix="]" list={preview} showKey={false} {showPreview} />
   {/snippet}
-  {#each entries as [key, value], i (key)}
+  {#each value as num, i}
     <Entry {i}>
-      <JsonViewer {key} {value} {path} />
+      <Node key={i} value={num} {path} />
     </Entry>
   {/each}
-  <!-- {#each value as value, i (i)}
-    <Entry {i}>
-      <JsonViewer key={i} {value} {path} />
+  {#each entries as [key, val], i (key)}
+    <Entry i={value.length + i}>
+      <Node {key} value={val} {path} />
     </Entry>
-  {/each} -->
+  {/each}
 </Expandable>

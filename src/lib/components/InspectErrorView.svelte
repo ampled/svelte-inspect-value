@@ -1,14 +1,22 @@
 <script lang="ts">
-  import { setContext } from 'svelte'
+  import { getContext, setContext } from 'svelte'
   import { InspectError, type TypeViewProps } from '../types.js'
   import Entry from './Entry.svelte'
   import Expandable from './Expandable.svelte'
-  import JsonViewer from './Node.svelte'
+  import Node from './Node.svelte'
+  import NodeActionButton from './NodeActionButton.svelte'
   import StringValue from './StringValue.svelte'
 
-  type Props = TypeViewProps<InspectError> & { reset: () => void }
+  type Props = TypeViewProps<InspectError, 'InspectError'> & { reset: () => void }
 
-  let { value = new InspectError(''), key, type = 'InspectError', path, reset }: Props = $props()
+  let {
+    value = new InspectError(''),
+    key,
+    type = 'InspectError',
+    path,
+    keyPrefix,
+    reset,
+  }: Props = $props()
 
   let entries: [string, unknown][] = $derived(
     Object.entries({
@@ -20,25 +28,22 @@
   )
 
   setContext('error-use-defaults', true)
+  const depth = getContext<number | undefined>('inspect-error-depth') ?? 0
+  setContext('inspect-error-depth', depth + 1)
 </script>
 
-<Expandable {value} {key} {type} {path} length={entries.length} keepPreviewOnExpand>
-  {#snippet valuePreview()}
-    <span>⚠️</span>
-    <button class="reset" onclick={reset}>[RESET]</button>
-    <StringValue {type} value={value.message}>
-      {value.message}
-    </StringValue>
-  {/snippet}
-  {#each entries as [key, value], i (key)}
-    <Entry {i}>
-      <JsonViewer {value} {key} {path} usedefaults />
-    </Entry>
-  {/each}
-</Expandable>
-
-<style>
-  button.reset {
-    all: unset;
-  }
-</style>
+{#if depth <= 3}
+  <Expandable {value} {key} {keyPrefix} {path} {type} length={entries.length} keepPreviewOnExpand>
+    {#snippet valuePreview()}
+      <NodeActionButton onclick={reset}>RESET</NodeActionButton>
+      <StringValue type="error" value={value.message} />
+    {/snippet}
+    {#each entries as [key, value], i (key)}
+      <Entry {i}>
+        <Node {value} {key} {path} usedefaults />
+      </Entry>
+    {/each}
+  </Expandable>
+{:else}
+  max error depth exceeded
+{/if}

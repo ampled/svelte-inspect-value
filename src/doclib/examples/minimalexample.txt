@@ -1,7 +1,8 @@
-<script lang="ts">
-  import {Inspect} from 'insert-final-package-name-here'
+<script>
+  import {dev} from '$app/environment'
+  import {Inspect} from 'svelte-inspect-value';
 
-  let demoObject = $state({
+  let value = $state({
     id: undefined,
     firstName: 'Bob',
     lastName: 'Alice',
@@ -14,7 +15,13 @@
     age: -42,
     emailVerified: true,
     interests: ['radio', 'tv', 'internet', 'kayaks'],
-  })
+  });
 </script>
 
-<Inspect value={demoObject} name="demo" />
+
+{#if dev} <!-- only render during development -->
+  <Inspect {value} name="demo" />
+{/if}
+
+<!-- or use prop (some light weight initialization code will run) -->
+<Inspect {value} renderIf={dev} />

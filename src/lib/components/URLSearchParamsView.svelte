@@ -2,12 +2,12 @@
   import type { TypeViewProps } from '../types.js'
   import Entry from './Entry.svelte'
   import Expandable from './Expandable.svelte'
-  import JsonViewer from './Node.svelte'
+  import Node from './Node.svelte'
   import Preview from './Preview.svelte'
 
   type Props = TypeViewProps<URLSearchParams>
 
-  let { value = new URLSearchParams(), key = undefined, type, path }: Props = $props()
+  let { value = new URLSearchParams(), key = undefined, path, ...rest }: Props = $props()
 
   let entries = $derived.by(() => {
     let entries: Record<string, string | string[]> = {}
@@ -29,21 +29,13 @@
   let preview = $derived(entries.slice(0, 3))
 </script>
 
-<Expandable {...{ value, key, type, path }} length={entries.length}>
-  {#snippet valuePreview()}
-    <!-- <StringValue value={value.toString()} /> -->
-    <!-- <ArrayPreview value={entries} /> -->
-    <Preview
-      keyValue={preview}
-      prefix={'{'}
-      postfix={'}'}
-      hasMore={entries.length > preview.length}
-      map
-    />
+<Expandable {...{ value, key, path }} length={value.size} {...rest}>
+  {#snippet valuePreview({ showPreview })}
+    <Preview keyValue={preview} prefix={'{'} postfix={'}'} {showPreview} />
   {/snippet}
   {#each entries as [key, value], i (key)}
     <Entry {i}>
-      <JsonViewer {value} {key} {path} />
+      <Node {value} {key} {path} />
     </Entry>
   {/each}
 </Expandable>

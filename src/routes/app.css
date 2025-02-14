@@ -51,22 +51,24 @@
   --object: var(--blue);
   --interactive: var(--base0E);
   --deprecated: var(--base0F);
-
-  /* --indent-multiplier: 1; */
-  --indent: calc(0.5em * var(--indent-multiplier, 1));
+  --indent: 0.5em;
 }
 
-body,
-html {
-  /* width: 100%; */
-  /* height: 100%; */
+/* html,
+body {
+  width: 100%;
+  height: 100%;
+} */
+
+body {
   box-sizing: border-box;
-  /* margin: 1em; */
-  /* padding: 0; */
   background-color: var(--bg);
   color: var(--fg);
-  font-family: monospace;
-  max-width: 100vw;
+  font-family: 'EB Garamond', serif;
+  font-optical-sizing: auto;
+  width: 100%;
+  font-size: 18px;
+  font-optical-sizing: auto;
 }
 
 /* 1. Use a more-intuitive box-sizing model */
@@ -107,7 +109,6 @@ select {
 }
 
 /* 7. Avoid text overflows */
-p,
 h1,
 h2,
 h3,
@@ -115,6 +116,15 @@ h4,
 h5,
 h6 {
   overflow-wrap: break-word;
+  font-weight: bold;
+}
+
+h3 {
+  margin-top: 1em;
+}
+
+h2 {
+  font-size: 2em;
 }
 
 /* 8. Improve line wrapping */
@@ -133,14 +143,32 @@ h6 {
   /* margin-left: 1rem; */
 }
 
+input[type='number'],
+input[type='text'],
+select {
+  height: 1.5em;
+  font-size: 12px;
+  background-color: var(--bg);
+  color: var(--fg);
+  border: 1px solid var(--border-color);
+}
+
 .flex {
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  gap: 1em;
+  gap: 0.5em;
   max-width: 100%;
   /* background-color: antiquewhite; */
   /* width: 100%; */
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.flex-nowrap {
+  flex-wrap: nowrap;
 }
 
 .row {
@@ -158,31 +186,96 @@ h6 {
 button {
   all: unset;
   border: 1px solid var(--border-color);
+  font-size: 12px;
   padding: 0.5em;
   border-radius: 4px;
   cursor: pointer;
+  transition: all 100ms linear;
 
-  &:hover {
+  &:hover:not(:disabled) {
     background-color: var(--border-color);
+  }
+
+  &:disabled {
+    cursor: auto;
+    color: var(--border-color);
   }
 }
 
 label {
+  font-family: monospace;
   /* height: 3.5rem; */
   display: flex;
   /* border: 1px solid; */
   flex-direction: column;
   align-items: center;
   justify-items: flex-start;
+  font-size: 12px;
   /* gap: 0.5rem; */
   /* padding: 1em; */
 }
 
-code {
+button {
+  font-family: monospace;
+}
+
+p code,
+ul code,
+table code {
   font-family: monospace;
   background-color: var(--bg-lighter);
+  border-radius: 2px;
+  padding-inline: 0.3em;
+  font-size: 0.8em;
 }
 
 a {
   color: var(--fg);
+}
+
+button.unstyled {
+  all: unset;
+  font-family: monospace;
+  cursor: pointer;
+
+  &:disabled {
+    color: var(--border-color);
+  }
+}
+
+.gap {
+  gap: 1em !important;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.align-start {
+  align-items: flex-start;
+}
+
+.align-end {
+  align-items: flex-end !important;
+}
+
+.justify-center {
+  justify-content: center;
+}
+.justify-start {
+  justify-content: flex-start;
+}
+.justify-end {
+  justify-content: flex-end;
+}
+
+.w-max {
+  width: 100%;
+}
+
+.eb-garamond {
+  font-family: 'EB Garamond', serif;
+  font-optical-sizing: auto;
+  /* font-weight: <weight>;
+  font-style: normal; */
 }

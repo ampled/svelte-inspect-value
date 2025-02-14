@@ -1,12 +1,47 @@
-<script>
+<script lang="ts">
+  import { Inspect, CustomComponents, addComponent } from 'svelte-inspect-value'
   import GoofyNumber from './GoofyNumber.svelte'
+  import HexString from './HexString.svelte'
+
+  let showString = $state(false)
+
+  const components: CustomComponents = $derived({
+    // Second item of tuple is an optional function that enables
+    // transforming props before they are passed to the custom component 
+    number: [GoofyNumber, (props) => ({ value: props.value })],
+    // if no transform is needed:
+    number: [GoofyNumber],
+    // Using the exported helper function enables proper typing for props
+    // NOTE: the returned props can be considered overrides for props passed by Inspect
+    // and does not need to be complete
+    string: addComponent(
+      HexString, 
+      // optional props transform
+      (props) => ({ showString, value: props.value })
+      // optional predicate determines if custom component should be used (if true)
+      // uses default component if false
+      (props) => props.value.startsWith('#')
+    )
+  })
+
+  const value = {
+    oneBillion: 1000000000,
+    oneTwoThreeFourEtc: 1234567890,
+    maxSafe: Number.MAX_SAFE_INTEGER,
+    red: '#FF0000',
+    pink: '#FF00FF',
+    yella: '#FFFF00',
+    notAColor: 'hello',
+  }
 </script>
 
-// Second argument of tuple is an optional function to transform props before they are passed to custom component 
 <Inspect
-  value={{
-    oneBillion: 1_000_000_000,
-  }}
-  customComponents={{ number: [GoofyNumber, (props) => ({ value: props.value })] }}
-  name="customNumber"
+  name="numbersAndColors"
+  {value}
+  customComponents={components}
 />
+
+<label>
+  show string for custom string component
+  <input type="checkbox" bind:checked={showString} />
+</label>

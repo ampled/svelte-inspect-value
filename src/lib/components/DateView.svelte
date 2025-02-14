@@ -2,7 +2,8 @@
   import type { TypeViewProps } from '$lib/types.js'
   import Entry from './Entry.svelte'
   import Expandable from './Expandable.svelte'
-  import JsonViewer from './Node.svelte'
+  import Node from './Node.svelte'
+  import StringValue from './StringValue.svelte'
 
   type Props = TypeViewProps<Date>
 
@@ -32,12 +33,14 @@
   keepPreviewOnExpand
   showLength={false}
 >
-  {#snippet valuePreview()}
-    <span class="value date">{value.toUTCString()}</span>
+  {#snippet valuePreview({ showPreview })}
+    {#if showPreview}
+      <StringValue {type} value={value.toUTCString()} />
+    {/if}
   {/snippet}
   {#each entries as [key, value], i (key)}
     <Entry {i}>
-      <JsonViewer {value} {key} {path} />
+      <Node {value} {key} {path} />
     </Entry>
   {/each}
 </Expandable>

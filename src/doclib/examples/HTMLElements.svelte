@@ -1,19 +1,49 @@
 <script lang="ts">
   import { Inspect } from '$lib/index.js'
+  import { getContext } from 'svelte'
+  import type { SvelteMap } from 'svelte/reactivity'
+  // import * as w from 'svelte/reactivity/window'
 
   let div = $state()
-  let activeElement: Element | null = $state(null)
+  // let activeElement: Element | null = $state(null)
 
   let width = $state(500)
   let classes = $state('radius')
   let testid = $state('demo-div')
+
+  // const _window = $derived(
+  //   Object.fromEntries(
+  //     Object.entries(w).map(([key, p]) => {
+  //       if (typeof p === 'string') {
+  //         return [key, p]
+  //       } else {
+  //         return [key, p.current]
+  //       }
+  //     })
+  //   )
+  // )
+
+  getContext<SvelteMap<string, string>>('toc')?.set('HTML Elements', 'html')
+
+  let group = $state<'simple' | 'full'>('simple')
 </script>
 
-<svelte:document bind:activeElement />
+<!-- <svelte:document bind:activeElement /> -->
 
 <div class="flex col">
-  <h2>HTML Elements</h2>
-  <p>inspect attributes of html elements</p>
+  <h3 id="html">HTML Elements</h3>
+
+  <fieldset>
+    <legend>element view</legend>
+    <label>
+      <input type="radio" bind:group value="simple" />
+      <span>simple</span>
+    </label>
+    <label>
+      <input type="radio" bind:group value="full" />
+      <span>full</span>
+    </label>
+  </fieldset>
 
   <div bind:this={div} class="demo-div {classes}" style="width: {width}px;" data-testid={testid}>
     <div>
@@ -41,19 +71,40 @@
       {/each}
     </ul>
   </div>
-  <Inspect value={div} name="htmlElement" theme="drak" style="flex-basis: 100%" expandAll />
 
-  <p>This instance inspects <code>document.activeElement</code>:</p>
+  <Inspect
+    value={div}
+    name="htmlElement"
+    theme="drak"
+    style="flex-basis: 100%"
+    expandLevel={0}
+    elementView={group}
+  />
+
+  <!-- <Inspect value={_window} /> -->
+
+  <!-- <p>This instance inspects <code>document.activeElement</code>:</p>
   <Inspect
     value={activeElement}
     name="activeElement"
     theme="drak"
     style="flex-basis: 100%; max-height: 100px"
     expandAll
-  />
+  /> -->
 </div>
 
 <style>
+  fieldset {
+    display: flex;
+    gap: 1em;
+
+    label {
+      gap: 1em;
+      display: inline-flex;
+      flex-direction: row;
+    }
+  }
+
   .demo-div {
     background-color: cadetblue;
     transition: all 0.2s ease-in-out;
@@ -75,7 +126,7 @@
 
     &.blue {
       background-color: lightblue;
-      color: white;
+      color: black;
     }
 
     &.radius {

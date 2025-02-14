@@ -1,53 +1,79 @@
 <script lang="ts">
+  import { getPreviewLevel } from '$lib/contexts.js'
   import { useOptions } from '../options.svelte.js'
   import type { TypeViewProps } from '../types.js'
-  import { collapseString, stringify } from '../util.js'
+  import { stringify } from '../util.js'
   import Expandable from './Expandable.svelte'
   import OneLineView from './OneLineView.svelte'
   import StringValue from './StringValue.svelte'
 
-  let { value = '', key, type, path }: TypeViewProps<string> = $props()
+  let { value = '', key, type, path, showKey, ...rest }: TypeViewProps<string> = $props()
 
+  const previewLevel = getPreviewLevel()
   const options = useOptions()
 
   let isMultiLine = $derived(value.includes('\n'))
 
-  const IMAGE_EXTENSIONS = ['.png', '.svg', '.jpg', '.jpeg', '.webp']
+  const IMAGE_EXTENSIONS = ['.gif', '.png', '.svg', '.jpg', '.jpeg', '.webp']
   const AUDIO_EXTENSIONS = ['.mp3', '.ogg', '.wav']
 
-  let isImageUrl = $derived(IMAGE_EXTENSIONS.some((extension) => value.endsWith(extension)))
-  let isAudioUrl = $derived(AUDIO_EXTENSIONS.some((extension) => value.endsWith(extension)))
-
-  let display = $derived(collapseString(value, options.value.stringCollapse))
+  let isUrl = $derived(URL.canParse(value) || value.startsWith('/'))
+  let isImageUrl = $derived(
+    (IMAGE_EXTENSIONS.some((extension) => value.endsWith(extension)) && isUrl) ||
+      value.startsWith('data:image')
+  )
+  let isAudioUrl = $derived(
+    AUDIO_EXTENSIONS.some((extension) => value.endsWith(extension)) && isUrl
+  )
 </script>
 
-{#if isMultiLine || isImageUrl || isAudioUrl}
-  <Expandable {...{ value, key, type, path }} length={value.length} keepPreviewOnExpand>
-    {#snippet valuePreview()}
-      <StringValue {value} />
+{#if (isMultiLine || ((isImageUrl || isAudioUrl) && options.value.embedMedia)) && !previewLevel}
+  <Expandable
+    {...{ value, key, type, path }}
+    length={value.length}
+    {showKey}
+    keepPreviewOnExpand
+    {...rest}
+  >
+    {#snippet valuePreview({ showPreview })}
+      {#if showPreview}
+        <StringValue {value} length={false} />
+      {/if}
     {/snippet}
     {#if isImageUrl && options.value.embedMedia}
       <div class="embed">
-        <img alt={key!.toString()} src={value} style="max-height: 100px" />
+        <div class="image">
+          <img alt={key!.toString()} src={value} style="height: 100%" />
+        </div>
       </div>
     {:else if isAudioUrl && options.value.embedMedia}
       <div class="embed">
         <audio controls src={value}></audio>
       </div>
-    {:else}
+    {:else if isMultiLine}
       <pre class="value string multi" title={value}>{value}</pre>
     {/if}
   </Expandable>
 {:else}
-  <OneLineView {key} {type} {path} value={stringify(display)} title={stringify(value)}>
-    {#snippet val()}
-      <StringValue {value} length />
-    {/snippet}
+  <!-- OneLineView should be more performant in nested preview mode as it has less initial logic -->
+  <OneLineView {showKey} {key} {type} {path} {value} title={stringify(value)} {...rest}>
+    <StringValue {value} length />
   </OneLineView>
 {/if}
 
 <style>
   .embed {
-    margin-left: 1em;
+    padding: 1em;
+  }
+
+  .image {
+    height: 100px;
+    width: 100px;
+    resize: both;
+    overflow: scroll;
+  }
+
+  img {
+    object-fit: contain;
   }
 </style>

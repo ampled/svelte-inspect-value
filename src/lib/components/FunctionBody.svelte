@@ -26,8 +26,10 @@
   )
 </script>
 
-<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-<code class:inline class="value function hl">{@html highlighted}</code>
+<!-- eslint-disable svelte/no-at-html-tags -->
+<code data-testid="value" title={value} class:inline class="value function hl"
+  >{@html highlighted}</code
+>
 
 <style>
   code.value.function.hl.inline {
@@ -40,7 +42,7 @@
 
   :global code.value.function.hl {
     background-color: unset;
-    color: var(--fg);
+    color: var(--fg) !important;
     white-space: pre;
     padding: var(--indent);
     padding-left: calc(var(--indent) * 2);

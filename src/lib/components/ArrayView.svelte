@@ -1,25 +1,45 @@
 <script lang="ts">
+  import { getPreviewLevel } from '$lib/contexts.js'
+  import { getAllProperties } from '$lib/util.js'
   import type { TypeViewProps } from '../types.js'
-  import Entry from './Entry.svelte'
   import Expandable from './Expandable.svelte'
-  import JsonViewer from './Node.svelte'
+  import Node from './Node.svelte'
   import Preview from './Preview.svelte'
+  import PropertyList from './PropertyList.svelte'
 
   type Props = TypeViewProps<unknown[]>
 
-  let { value: arrayVal = [], key = undefined, type, path }: Props = $props()
+  let { value: array = [], path, type, showKey, ...rest }: Props = $props()
 
-  let preview = $derived(arrayVal.slice(0, 3))
+  const previewLevel = getPreviewLevel()
+
+  let otherprops = $derived(
+    getAllProperties(array).filter((prop) => {
+      if (typeof prop === 'string') {
+        return /\d+/.test(prop) === false && prop !== 'length'
+      }
+      return true
+    })
+  )
+
+  let keys = $derived([...array.keys(), ...otherprops])
 </script>
 
-<Expandable {...{ value: arrayVal, key, type, path }} length={arrayVal.length}>
-  {#snippet valuePreview()}
-    <!-- <ArrayPreview value={arrayVal} /> -->
-    <Preview list={preview} hasMore={preview.length < arrayVal.length} prefix={'['} postfix={']'} />
+<Expandable
+  value={array}
+  length={array.length}
+  {type}
+  {path}
+  showKey={showKey && previewLevel === 0}
+  {...rest}
+>
+  {#snippet valuePreview({ showPreview })}
+    <Preview {path} list={array} prefix={'['} postfix={']'} {showPreview} showKey={false} />
   {/snippet}
-  {#each arrayVal as value, i (i)}
-    <Entry {i}>
-      <JsonViewer key={i} {value} {path} />
-    </Entry>
-  {/each}
+
+  <PropertyList value={array} {type} {keys}>
+    {#snippet item({ key })}
+      <Node value={array[key as number]} {key} {path} />
+    {/snippet}
+  </PropertyList>
 </Expandable>

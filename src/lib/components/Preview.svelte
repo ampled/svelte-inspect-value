@@ -1,39 +1,164 @@
-<script lang="ts">
+<script
+  lang="ts"
+  generics="V extends Record<KeyType, unknown> | List = Record<KeyType, unknown> | List, K extends keyof V = keyof V"
+>
   import { useOptions } from '$lib/options.svelte.js'
-  import type { KeyType } from '$lib/types.js'
-  import { getType } from '$lib/util.js'
+  import type { KeyType, TypeViewProps } from '$lib/types.js'
+  import { getPropertyDescriptor, getType } from '$lib/util.js'
   import { getContext, setContext } from 'svelte'
+  import type { HTMLButtonAttributes } from 'svelte/elements'
+  import { fly, slide } from 'svelte/transition'
+  import type { List } from '../types.js'
+  import GetterSetter from './GetterSetter.svelte'
   import Key from './Key.svelte'
   import Node from './Node.svelte'
+  import NodeActionButton from './NodeActionButton.svelte'
   import Type from './Type.svelte'
 
   type PreviewProps = {
     prefix?: string
     postfix?: string
-    hasMore: boolean
-    list?: unknown[]
+    list?: List
     keyValue?: [KeyType, unknown][]
-    map?: boolean
+    keys?: K[]
+    value?: V
+    singleValue?: unknown
+    type?: TypeViewProps['type']
+    startLevel?: number
+    showPreview?: boolean
+    path?: TypeViewProps['path']
+    keyDelim?: string
+    keyStyle?: HTMLButtonAttributes['style']
+    showKey?: boolean
   }
 
-  let { list, prefix, postfix, hasMore, keyValue, map = false }: PreviewProps = $props()
+  const EMPTY = Symbol('EMPTY')
 
-  const nestedPreview = getContext<boolean>('preview')
-  let options = useOptions()
+  let {
+    list: previewList,
+    keyValue: previewKeyValue,
+    keys: previewKeys,
+    path,
+    value,
+    prefix,
+    postfix,
+    singleValue = EMPTY,
+    showKey = true,
+    keyDelim = ':',
+    keyStyle = '',
+    startLevel = 1,
+    showPreview = false,
+  }: PreviewProps = $props()
 
-  setContext('preview', true)
+  const previewLevel = getContext<number | undefined>('preview') ?? startLevel
+  const options = useOptions()
+  setContext('preview', (previewLevel ?? 0) + 1)
+
+  let list = $derived(previewList?.slice(0, options.value.previewEntries))
+  let keyValue = $derived(previewKeyValue?.slice(0, options.value.previewEntries))
+  let keys = $derived(previewKeys?.slice(0, options.value.previewEntries))
+
+  let hasMore = $derived.by(() => {
+    if (list && previewList) {
+      return list.length < previewList.length
+    } else if (keyValue && previewKeyValue) {
+      return keyValue.length < previewKeyValue.length
+    } else if (keys && previewKeys) {
+      return keys.length < previewKeys.length
+    }
+    return false
+  })
+
+  // let notEmpty = $derived.by(() => {
+  //   if (list) {
+  //     return list.length > 0
+  //   } else if (keyValue) {
+  //     return keyValue.length > 0
+  //   } else if (keys) {
+  //     return keys.length > 0
+  //   }
+  //   return singleValue !== EMPTY
+  // })
 
   function alwaysRender(type: string) {
-    return ['boolean', 'string', 'number', 'bigint', 'symbol'].includes(type)
+    return ['boolean', 'string', 'number', 'bigint', 'symbol', 'regexp', 'class'].includes(type)
   }
 </script>
 
-{#snippet valuePreview(value: unknown)}
+{#if options.value.showPreview && options.value.previewEntries > 0 && showPreview}
+  <svelte:boundary onerror={(e) => console.log('preview failed:', e)}>
+    {#snippet failed(_, reset)}
+      preview error. check console <NodeActionButton onclick={reset}>reset</NodeActionButton>
+    {/snippet}
+    <div
+      data-testid="preview"
+      class="preview"
+      transition:slide={{
+        axis: 'x',
+        duration: options.transitionDuration * 2,
+      }}
+    >
+      {#if prefix}
+        <span class="pre level-{previewLevel}">{prefix}</span>
+      {/if}
+      <div
+        class="inner"
+        transition:fly={{
+          y: 20,
+          opacity: 0,
+          duration: options.transitionDuration * 2,
+        }}
+      >
+        {#if keys && value}
+          {#each keys as key, i (i)}
+            {@const descriptor = getPropertyDescriptor(value, key)}
+            {@render previewValue(
+              key,
+              false,
+              descriptor
+            )}{#if i < keys.length - 1}{@render comma()}{/if}
+          {/each}
+        {/if}
+        {#if keyValue}
+          {#each keyValue as [key, value], i}
+            {@render valuePreview(value, key)}{#if i < keyValue.length - 1}{@render comma()}{/if}
+          {/each}
+        {:else if list}
+          {#each list as value, i}
+            {@render valuePreview(value, i)}{#if i < list.length - 1}{@render comma()}{/if}
+          {/each}
+        {:else if singleValue !== EMPTY}
+          {@render valuePreview(singleValue, undefined)}
+        {/if}
+      </div>
+      {#if hasMore}{@render comma()}<span class="ellipsis">&hellip;</span>{/if}
+      {#if postfix}
+        <span class="post level-{previewLevel}">{postfix}</span>
+      {/if}
+    </div>
+  </svelte:boundary>
+{/if}
+
+<!-- At configured previewDepth, stop rendering nested item previews and just render their types -->
+{#snippet valuePreview(value: unknown, key?: KeyType)}
   {@const valType = getType(value)}
-  {#if nestedPreview && !alwaysRender(valType)}
-    <Type type={valType} force />
+  {#if alwaysRender(valType) || previewLevel < options.value.previewDepth}
+    <Node {path} {key} {value} {showKey} {keyDelim} {keyStyle} />
   {:else}
-    <Node {value} />
+    <div class="key-type-preview">
+      {#if showKey}
+        <Key {path} {key} delim={keyDelim} style={keyStyle} />
+      {/if}
+      <Type type={valType} force />
+    </div>
+  {/if}
+{/snippet}
+
+{#snippet previewValue(key: K, _force = false, descriptor?: PropertyDescriptor)}
+  {#if descriptor?.set || descriptor?.get}
+    <GetterSetter {key} {descriptor} {value} {path} />
+  {:else}
+    {@render valuePreview(value?.[key], key)}
   {/if}
 {/snippet}
 
@@ -41,77 +166,121 @@
   <span class="comma">,</span>
 {/snippet}
 
-{#if options.value.showPreview}
-  <div class="preview">
-    {#if prefix}
-      <span class="pre">{prefix}</span>
-    {/if}
-    <div class="inner">
-      {#if keyValue}
-        {#each keyValue as [key, value], i}
-          <div class="key-value">
-            <Key {key} delim={map ? '=>' : ':'} />
-            {@render valuePreview(value)}{#if i < keyValue.length - 1}{@render comma()}{/if}
-          </div>
-        {/each}
-      {:else if list}
-        {#each list as value, i}
-          {@render valuePreview(value)}{#if i < list.length - 1}{@render comma()}{/if}
-        {/each}
-      {/if}{#if hasMore}{@render comma()}&hellip;{/if}
-    </div>
-    {#if postfix}
-      <span class="post">{postfix}</span>
-    {/if}
-  </div>
-{/if}
-
 <style>
   .comma {
     margin-left: 0;
     margin-right: 0.5em;
+    color: var(--fg);
+  }
+
+  .ellipsis {
+    color: var(--comments);
   }
 
   .preview {
-    display: inline-flex;
+    font-size: var(--inspect-font-size);
+    display: flex;
     flex-direction: row;
+    flex-wrap: nowrap;
     align-items: center;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     min-width: 0;
-    /* gap: 0.25em; */
-    /* outline: 1px solid greenyellow; */
+    color: var(--fg);
+    transform-origin: bottom right;
   }
 
   .inner {
     min-width: 0;
-    display: inline-flex;
+    display: flex;
     flex-direction: row;
+    flex-wrap: nowrap;
     align-items: center;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    gap: 0.25em;
-    /* outline: 1px solid hotpink; */
   }
 
-  .key-value {
+  .key-type-preview {
     display: inline-flex;
     align-items: center;
     justify-content: flex-start;
-    /* white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis; */
+    gap: 0.25em;
   }
 
   .pre {
     margin-right: 0.25em;
-    color: var(--cyan);
   }
 
   .post {
     margin-left: 0.25em;
-    color: var(--cyan);
+  }
+
+  .pre,
+  .post {
+    /* margin-inline: 0.125em; */
+    color: var(--fg);
+
+    &.level-0 {
+      color: var(--comments);
+    }
+    &.level-1 {
+      color: var(--fg);
+    }
+    &.level-2 {
+      color: var(--cyan);
+    }
+    &.level-3 {
+      color: var(--green);
+    }
+    &.level-4 {
+      color: var(--orange);
+    }
+    &.level-5 {
+      color: var(--blue);
+    }
+    &.level-6 {
+      color: var(--yellow);
+    }
+    &.level-7 {
+      color: var(--red);
+    }
+    &.level-8 {
+      color: var(--cyan);
+    }
+    &.level-9 {
+      color: var(--green);
+    }
+    &.level-10 {
+      color: var(--orange);
+    }
+    &.level-11 {
+      color: var(--blue);
+    }
+    &.level-12 {
+      color: var(--yellow);
+    }
+    &.level-13 {
+      color: var(--red);
+    }
+    &.level-14 {
+      color: var(--cyan);
+    }
+    &.level-15 {
+      color: var(--green);
+    }
+    &.level-16 {
+      color: var(--orange);
+    }
+    &.level-17 {
+      color: var(--blue);
+    }
+    &.level-18 {
+      color: var(--yellow);
+    }
+    &.level-19 {
+      color: var(--red);
+    }
   }
 </style>

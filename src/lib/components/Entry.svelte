@@ -8,18 +8,12 @@
 </script>
 
 <div
+  role="listitem"
   class="entry"
-  style="--index: {i}"
+  style="--i: {i}"
   transition:slide={{
-    duration: options.value.noanimate ? 0 : 200,
+    duration: options.transitionDuration,
   }}
 >
   {@render children?.()}
 </div>
-
-<style>
-  .entry {
-    margin-left: 0;
-    opacity: 1;
-  }
-</style>

@@ -1,41 +1,63 @@
+<!-- 
+ @component StringValue 
+ 
+ Handles "smart" behavior of string value representation like collapsing
+ according to stringCollapse-option or using an anchor tag if it's a link
+
+ Single-line only
+ 
+ -->
 <script lang="ts">
   import { collapseString, stringify } from '../util.js'
 
-  import { getContext, type Snippet } from 'svelte'
+  import { getPreviewLevel } from '$lib/contexts.js'
+  import LinkIcon from '$lib/icons/LinkIcon.svelte'
   import { useOptions } from '../options.svelte.js'
   import type { TypeViewProps } from '../types.js'
-  import { isUrl as isurl } from '../util/is-url.js'
-  import Entries from './Entries.svelte'
+  import Count from './Count.svelte'
 
-  type Props = TypeViewProps<string> & { length?: boolean; children?: Snippet }
+  type Props = TypeViewProps<string> & { length?: boolean; inline?: boolean }
 
-  let { value = '', length = false, type = 'string', children }: Props = $props()
+  let { value, display, length = false, type = 'string' }: Props = $props()
+  const previewLevel = getPreviewLevel()
+  const options = useOptions()
 
-  let isUrlOrPath = $derived(isurl(value) || value.startsWith('/'))
-
+  let displayOrValue = $derived(display != null ? display : value)
+  let isUrlOrPath = $derived(
+    (type === 'string' || type === 'url') &&
+      (URL.canParse(displayOrValue) || displayOrValue.startsWith('/') || value.startsWith('data:'))
+  )
   let ele: 'a' | 'span' = $derived(isUrlOrPath ? 'a' : 'span')
 
-  let options = useOptions()
-
-  let display = $derived(collapseString(value, options.value.stringCollapse))
-
-  const preview = getContext<boolean>('preview')
+  let collapsed = $derived(collapseString(displayOrValue, options.value.stringCollapse))
 </script>
 
 <svelte:element
   this={ele}
-  class="value {type}"
+  data-testid="value"
+  class="stringvalue value {type}"
   title={stringify(value)}
   href={isUrlOrPath ? value : null}
   target={isUrlOrPath ? '_blank' : null}
   rel={isUrlOrPath ? 'noreferrer' : null}
 >
-  {#if children}
-    {@render children()}
-  {:else}
-    {stringify(display, 0, options.value.quotes)}
+  {stringify(collapsed, 0, options.value.quotes)}{#if isUrlOrPath}
+    <span class="value url">
+      <LinkIcon />
+    </span>
   {/if}
-</svelte:element>
-{#if length && !preview}
-  <Entries type="string" length={value.length} />
+</svelte:element>{#if length && !previewLevel}
+  <Count type="string" length={value.length} />
 {/if}
+
+<style>
+  .stringvalue {
+    display: inline-flex;
+    align-items: center;
+    text-wrap: nowrap;
+    white-space: pre !important;
+    white-space-collapse: preserve-spaces;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+</style>

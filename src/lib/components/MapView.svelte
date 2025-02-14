@@ -4,51 +4,62 @@
   import Expandable from './Expandable.svelte'
   import Node from './Node.svelte'
   import Preview from './Preview.svelte'
+  import PropertyList from './PropertyList.svelte'
 
   type Props = TypeViewProps<Map<unknown, unknown>>
 
   let { value, key = undefined, type, path = [] }: Props = $props()
 
+  let keys = $derived([...value.keys()])
   let entries = $derived<[KeyType, unknown][]>([...value.entries()] as [KeyType, unknown][])
 
-  let preview = $derived<[KeyType, unknown][]>(entries.slice(0, 3))
+  // let preview = $derived<[KeyType, unknown][]>(entries.slice(0, 3))
 </script>
 
 <Expandable {...{ value, key, type, path }} length={entries.length}>
-  {#snippet valuePreview()}
+  {#snippet valuePreview({ showPreview })}
     <Preview
-      keyValue={preview}
+      keyValue={entries}
       prefix={'{'}
       postfix={'}'}
-      hasMore={entries.length > preview.length}
-      map
+      type="map"
+      keyDelim="=>"
+      keyStyle="gap: 0.5em;"
+      {showPreview}
     />
   {/snippet}
-
-  {#each entries as [mapKey, mapValue], i (mapKey)}
-    <Entry {i}>
-      {#if ['string', 'number', 'symbol'].includes(typeof mapKey)}
-        <Node key={mapKey as string} value={mapValue} {path} />
+  <PropertyList {value} {keys}>
+    {#snippet item({ key, index })}
+      {#if ['string', 'number', 'symbol'].includes(typeof key)}
+        <Node key={key as string} value={value.get(key)} {path} />
       {:else}
         <Expandable
           key=""
-          type="MapEntry"
-          value={[mapKey, mapValue]}
-          path={[...path, i]}
+          type="Entry"
+          value={[key, value.get(key)]}
+          path={[...path, index]}
           length={2}
           showLength={false}
         >
-          {#snippet valuePreview()}
-            <Preview keyValue={[[mapKey, mapValue]]} hasMore={false} map />
+          {#snippet valuePreview({ showPreview })}
+            <Preview
+              keyValue={[[key as string, value.get(key)]]}
+              prefix={'{'}
+              postfix={'}'}
+              keyDelim="=>"
+              keyStyle="gap: 0.5em;"
+              type="map"
+              {showPreview}
+            />
           {/snippet}
           <Entry i={0}>
-            <Node key="key" value={mapKey} path={[...path, i]} />
+            <Node key="key" value={key} path={[...path, index]} />
           </Entry>
           <Entry i={1}>
-            <Node key="value" value={mapValue} path={[...path, i]} />
+            <Node key="value" value={value.get(key)} path={[...path, index]} />
           </Entry>
         </Expandable>
       {/if}
-    </Entry>
-  {/each}
+    {/snippet}
+  </PropertyList>
 </Expandable>

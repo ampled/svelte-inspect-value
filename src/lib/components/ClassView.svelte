@@ -1,29 +1,45 @@
 <script lang="ts">
+  import { getPreviewLevel } from '$lib/contexts.js'
   import type { TypeViewProps } from '$lib/types.js'
-  import Entry from './Entry.svelte'
+  import { getAllProperties } from '$lib/util.js'
   import Expandable from './Expandable.svelte'
-  import JsonViewer from './Node.svelte'
+  import GetterSetter from './GetterSetter.svelte'
+  import Node from './Node.svelte'
+  import Preview from './Preview.svelte'
+  import PropertyList from './PropertyList.svelte'
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   type Props = TypeViewProps<Function>
 
-  let { value, key, type, path }: Props = $props()
+  let { value, key, type, path, ...rest }: Props = $props()
 
-  let entries = $derived(Object.entries(value))
+  const previewLevel = getPreviewLevel()
+
+  let keys = $derived(getAllProperties(value))
 </script>
 
-<Expandable {...{ value, key, type, path }} length={entries.length} keepPreviewOnExpand>
-  {#snippet valuePreview()}
+<Expandable {...{ value, key, type, path }} length={keys.length} {...rest}>
+  {#snippet valuePreview({ showPreview })}
     <span class="value {type}">
       {value.name}
-      <span class="funcbody">
-        {'{ ... }'}
-      </span>
     </span>
+    {#if !previewLevel}
+      <Preview
+        prefix={'{'}
+        postfix={'}'}
+        {keys}
+        value={value as unknown as Record<string | symbol, unknown>}
+        {showPreview}
+      />
+    {/if}
   {/snippet}
-  {#each entries as [key, value], i (key)}
-    <Entry {i}>
-      <JsonViewer {value} {key} {path} />
-    </Entry>
-  {/each}
+  <PropertyList {keys} {value}>
+    {#snippet item({ key, descriptor })}
+      {#if descriptor?.get || descriptor?.set}
+        <GetterSetter keyPrefix="static" {value} {descriptor} {key} {path} />
+      {:else}
+        <Node value={value[key as keyof typeof value]} {key} keyPrefix="static" {path} />
+      {/if}
+    {/snippet}
+  </PropertyList>
 </Expandable>

@@ -14,7 +14,8 @@ const config = {
     adapter: adapter(),
   },
   compilerOptions: {
-    // runes: true,
+    sourcemap: true,
+    runes: true,
     // customElement: true,
   },
 }

@@ -11,7 +11,22 @@
 </script>
 
 <HtmlView {value} {...rest}>
-  {#if value && options.value.embedMedia}
-    <img alt={value.alt} src={value.src} />
+  {#if value.src && options.value.embedMedia}
+    <div class="image">
+      <img alt={value.alt} src={value.src} />
+    </div>
   {/if}
 </HtmlView>
+
+<style>
+  .image {
+    height: 100px;
+    width: 100px;
+    resize: both;
+    overflow: scroll;
+  }
+
+  img {
+    object-fit: contain;
+  }
+</style>

@@ -1,70 +1,69 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { getContext } from 'svelte'
 import type { KeyType } from './types.js'
-import { stringifyPath } from './util.js'
-
-export type NodeState = {
-  collapsed: boolean
-}
-
-export type InspectState = {
-  [key: string]: {
-    collapsed: boolean
-  }
-}
+import { ensureStringPath, stringifyPath } from './util.js'
 
 export const STATE_CONTEXT_KEY = Symbol('inspect-state')
 
-function ensureStringPath(path: string | KeyType[]) {
-  let key: string
-  if (Array.isArray(path)) {
-    key = stringifyPath(path)
-  } else {
-    key = path
-  }
-  return key
+export type NodeState = {
+  collapsed: boolean
+  hasChildren?: boolean
 }
 
-export function createState(
-  init: InspectState,
-  title = 'svelte-value-inspect',
-  onChange?: (value: InspectState) => void
-) {
-  let state: InspectState | undefined = $state(init)
+export type InspectState = {
+  [key: string]: NodeState
+}
+
+export function createState(init: InspectState, onChange?: (value: InspectState) => void) {
+  // let state: InspectState = $state(init)
+
+  function emitChanged() {
+    onChange?.($state.snapshot(init))
+  }
 
   return {
-    get value(): InspectState | undefined {
-      return state
+    get value(): InspectState {
+      return init
     },
     set value(val: InspectState) {
-      state = val
+      init = val
     },
-    setCollapse: (keyOrPath: string | KeyType[], collapsed: boolean) => {
-      const key = ensureStringPath(keyOrPath)
-      let changed = false
-      if (state) {
-        state[key] = { collapsed }
-        changed = true
-      }
-      if (changed && state) {
-        onChange?.(state)
+    setCollapse: (keyOrPath: string | KeyType[], newValues: NodeState) => {
+      try {
+        const key = ensureStringPath(keyOrPath)
+        let changed = false
+        if (init) {
+          const existing = init[key] ?? {}
+          init[key] = { ...existing, ...newValues }
+          changed = true
+        }
+        if (changed && init) {
+          emitChanged()
+        }
+      } catch (e) {
+        console.error(e)
       }
     },
-    getCollapse: (keyOrPath: string | KeyType[]) => {
+    getCollapse(keyOrPath: string | KeyType[]) {
       const key = ensureStringPath(keyOrPath)
-      return state?.[key]
+      return init?.[key]
+    },
+    getNode(keyOrPath: () => string | KeyType[]) {
+      const key = ensureStringPath(keyOrPath())
+      return this.value?.[key]
     },
     hasExpandedChildren: (path: KeyType[]) => {
-      if (state) {
+      if (init) {
         const key = stringifyPath(path)
-        const children = Object.entries(state).filter(([k]) => k.startsWith(key) && k !== key)
+        const children = Object.entries(init).filter(([k]) => k.startsWith(key) && k !== key)
         return children.some(([k, v]) => !v.collapsed)
       }
       return false
     },
     collapseChildren: (level: number, path: KeyType[]) => {
-      if (state) {
+      if (init) {
         let changed = false
-        Object.entries(state).forEach((entry) => {
+        Object.entries(init).forEach((entry) => {
           const [key] = entry
           if (key.split('.').length > level) {
             entry[1].collapsed = true
@@ -72,19 +71,20 @@ export function createState(
           }
         })
         if (changed) {
-          onChange?.(state)
+          emitChanged()
         }
       }
     },
     expandChildren: (currentLevel: number, currentPath: string | KeyType[]) => {
-      if (state) {
+      if (init) {
         let changed = false
 
         const key = ensureStringPath(currentPath)
-        Object.entries(state).forEach((entry) => {
+        init[key].collapsed = false
+        Object.entries(init).forEach((entry) => {
           const [k] = entry
           const stringPath = k.split('.')
-          if (k.startsWith(key)) {
+          if (k.startsWith(key) && stringPath.length === currentLevel + 1) {
             // debugger
             entry[1].collapsed = false
             changed = true
@@ -92,7 +92,7 @@ export function createState(
         })
 
         if (changed) {
-          onChange?.(state)
+          emitChanged()
         }
       }
     },
@@ -100,3 +100,13 @@ export function createState(
 }
 
 export type StateContext = ReturnType<typeof createState>
+
+export function useState(): StateContext {
+  return getContext<StateContext>(STATE_CONTEXT_KEY)
+}
+
+export function useNodeState(keyOrPath: () => string | KeyType[]) {
+  const ctx = useState()
+  const key = ensureStringPath(keyOrPath())
+  return () => ctx.value?.[key]
+}

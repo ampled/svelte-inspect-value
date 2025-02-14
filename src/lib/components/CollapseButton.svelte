@@ -1,15 +1,21 @@
 <script lang="ts">
+  import Caret from '$lib/icons/Caret.svelte'
+  import { useOptions } from '$lib/options.svelte.js'
   import type { HTMLButtonAttributes } from 'svelte/elements'
-  import { flashOnUpdate } from '../action/update-flash.svelte.js'
-  import Caret from '../icons/Caret.svelte'
+  import { scale } from 'svelte/transition'
+  import Bullet from './Bullet.svelte'
 
   type Props = {
     collapsed?: boolean
     onchange?: (collapsed: boolean) => void
     value: unknown
-  } & Omit<HTMLButtonAttributes, 'onchange' | 'value'>
+    key?: string | symbol | number
+    type?: string
+  } & Omit<HTMLButtonAttributes, 'onchange' | 'value' | 'type'>
 
-  let { collapsed = $bindable(), onchange, disabled, value, ...rest }: Props = $props()
+  let { collapsed = $bindable(), onchange, disabled, value, key, type, ...rest }: Props = $props()
+
+  let options = useOptions()
 
   function onclick() {
     const newValue = !collapsed
@@ -46,30 +52,49 @@
     }
   }
 
-  let flashFn = $state<() => void>()
+  let caret = $state<ReturnType<typeof Caret>>()
 
   export function flash() {
-    flashFn?.()
+    caret?.flash()
   }
+
+  let keyOrType = $derived((key ?? type)?.toString())
 </script>
 
-<button type="button" class="collapse" {onclick} {disabled} {...rest} {onkeydown}>
-  <div use:flashOnUpdate={{ value: () => value, cb: (trigger) => (flashFn = trigger) }}>
+<button
+  data-testid="collapse-button"
+  type="button"
+  class="collapse"
+  aria-label={`${collapsed ? 'expand' : 'collapse'} ${keyOrType}`}
+  title={`${collapsed ? 'expand' : 'collapse'} ${keyOrType}`}
+  {onclick}
+  {disabled}
+  {...rest}
+  {onkeydown}
+>
+  <div>
     {#if disabled}
-      &hyphen;
+      <Bullet />
     {:else}
-      <Caret style="rotate:{rotation}deg; transition: rotate 125ms ease-in-out;" />
+      <div in:scale={{ duration: options.transitionDuration }}>
+        <Caret
+          bind:this={caret}
+          {value}
+          style="rotate:{rotation}deg; transition: rotate 125ms ease-in-out;"
+        />
+      </div>
     {/if}
   </div>
 </button>
 
 <style>
   .collapse {
+    all: unset;
     margin: 0;
     padding: 0;
     border: none;
     all: unset;
-    overflow: hidden;
+    overflow: visible;
     cursor: pointer;
     display: inline-flex;
     justify-content: center;
@@ -78,6 +103,19 @@
     aspect-ratio: 1 / 1;
     width: 1em;
     height: 1em;
+    min-width: 1em;
+    max-width: 1em;
+    user-select: none;
+    transition: all 100ms linear;
+
+    &:hover {
+      background-color: transparent;
+      color: var(--fg);
+    }
+
+    &:focus {
+      color: var(--fg);
+    }
 
     &:focus-visible {
       color: var(--fg);

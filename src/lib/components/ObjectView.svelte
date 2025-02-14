@@ -1,39 +1,57 @@
 <script lang="ts">
-  import type { KeyType, TypeViewProps } from '../types.js'
-  import { type ValueType } from '../util.js'
-  import Entry from './Entry.svelte'
+  import type { TypeViewProps } from '../types.js'
+  import { getAllProperties, type ValueType } from '../util.js'
   import Expandable from './Expandable.svelte'
+  import GetterSetter from './GetterSetter.svelte'
   import Node from './Node.svelte'
   import Preview from './Preview.svelte'
+  import PropertyList from './PropertyList.svelte'
 
   type Props = TypeViewProps<object>
 
-  let { value = {}, key = undefined, type = 'object', path = [] }: Props = $props()
+  let { value, key = undefined, type, path, ...rest }: Props = $props()
 
   let classInstance = $derived(
-    value.constructor.toString().startsWith('class') ? value.constructor.name : false
+    value.constructor?.toString().startsWith('class') ? value.constructor?.name : false
   )
 
   let objectType = $derived(classInstance ? (classInstance as ValueType) : type)
-  let entries: [string | symbol, unknown][] = $derived(
-    // @ts-expect-error nope
-    Reflect.ownKeys(value).map((key) => [key, value[key]])
+  let keys = $derived(
+    [
+      ...getAllProperties(value).filter(
+        (p) => !['constructor', 'prototype'].includes(p.toString())
+      ),
+      classInstance ? 'constructor' : undefined,
+    ].filter((v) => v != null)
   )
-  let preview = $derived<[KeyType, unknown][]>(entries.slice(0, 3))
 </script>
 
-<Expandable type={objectType} length={entries.length} {key} {path} {value}>
-  {#snippet valuePreview()}
+<Expandable
+  type={objectType}
+  length={keys.length}
+  {key}
+  {path}
+  {value}
+  forceType={!!classInstance}
+  {...rest}
+>
+  {#snippet valuePreview({ showPreview })}
     <Preview
-      keyValue={preview}
       prefix={'{'}
       postfix={'}'}
-      hasMore={entries.length > preview.length}
+      value={value as Record<string | symbol, unknown>}
+      {path}
+      {keys}
+      {showPreview}
     />
   {/snippet}
-  {#each entries as [key, value], i (key)}
-    <Entry {i}>
-      <Node {value} {key} {path} />
-    </Entry>
-  {/each}
+  <PropertyList {keys} {value} {type}>
+    {#snippet item({ key, descriptor })}
+      {#if descriptor?.get || descriptor?.set}
+        <GetterSetter {value} {descriptor} {key} {path} />
+      {:else}
+        <Node value={value[key as keyof typeof value]} {key} {path} />
+      {/if}
+    {/snippet}
+  </PropertyList>
 </Expandable>

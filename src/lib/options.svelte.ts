@@ -4,7 +4,7 @@ import type { CustomComponents } from './types.js'
 export const OPTIONS_CONTEXT = Symbol('inspect-options')
 export const GLOBAL_OPTIONS_CONTEXT = Symbol('inspect-options')
 
-export type JSONInspectOptions = {
+export type InspectOptions = {
   /**
    * Display length of arrays or strings and number of nested entries in objects / maps etc
    *
@@ -23,6 +23,24 @@ export type JSONInspectOptions = {
    */
   showPreview: boolean
   /**
+   * How many entries / items of arrays, objects, maps, sets etc. to preview
+   *
+   * Default 3
+   */
+  previewEntries: number
+  /**
+   * How many levels of nested values to preview before showing only type
+   *
+   * Default: 1
+   */
+  previewDepth: number
+  /**
+   * Indicate when a value or child value is updated
+   *
+   * Default `true`
+   */
+  flashOnUpdate: boolean
+  /**
    *
    * Default `true`
    */
@@ -33,12 +51,12 @@ export type JSONInspectOptions = {
    * Default `0`
    */
   stringCollapse: number
-  /**
-   * Options open or closed
-   *
-   * Default `false`
-   */
-  open: boolean
+  // /**
+  //  * Options open or closed
+  //  *
+  //  * Default `false`
+  //  */
+  // open: boolean
   /**
    * Custom components for types. Object with type as keyname and tuple of component and optional
    * prop modification function
@@ -104,39 +122,81 @@ export type JSONInspectOptions = {
    * Default `1`
    */
   expandLevel: number
-
+  /**
+   * Embed images or sounds if a string is a url or path ending with a valid image or sound file extension
+   *
+   * Default `false`
+   */
   embedMedia: boolean
+  /**
+   * Determines what properties are shown when inspecting HTML elements
+   *
+   *
+   * `'simple'` - minimal list of properties including classList, styles, dataset and current scrollPositions
+   *
+   * `'full'` - lists all enumerable properties of an element
+   *
+   * Default `'simple'`
+   */
+  elementView: 'simple' | 'full'
+  /**
+   * Render condition for `Inspect`
+   *
+   * Function or value. `Inspect` will render if value or return-value is truthy.
+   */
+  renderIf: unknown | (() => unknown)
 }
 
-export function createOptions(options: Partial<JSONInspectOptions>) {
-  let value: JSONInspectOptions = $state({
-    open: false,
-    draggable: false,
-    noanimate: false,
-    quotes: 'single',
-    showTypes: true,
-    showPreview: true,
-    showLength: true,
-    showTools: true,
-    stringCollapse: 0,
-    theme: 'drak',
-    expandAll: false,
-    borderless: false,
-    customComponents: {},
-    expandLevel: 1,
-    embedMedia: false,
-    ...options,
-  })
+const DEFAULT_OPTIONS: InspectOptions = {
+  draggable: false,
+  noanimate: false,
+  quotes: 'single',
+  showTypes: true,
+  showPreview: true,
+  previewDepth: 1,
+  previewEntries: 3,
+  flashOnUpdate: true,
+  showLength: true,
+  showTools: true,
+  stringCollapse: 0,
+  theme: 'drak',
+  expandAll: false,
+  borderless: false,
+  customComponents: {},
+  expandLevel: 1,
+  embedMedia: false,
+  elementView: 'simple',
+  renderIf: true,
+} as const
+
+export function mergeOptions(
+  fromProps: Partial<InspectOptions>,
+  fromContext: Partial<InspectOptions> = {}
+) {
+  const definedPropOptions = Object.entries(fromProps).filter(([, v]) => v != null)
+
+  return {
+    ...DEFAULT_OPTIONS,
+    ...fromContext,
+    ...Object.fromEntries(definedPropOptions),
+  }
+}
+
+export function createOptions(options: () => InspectOptions) {
+  let value: InspectOptions = $state(options())
+  const transitionDuration = $derived(value.noanimate ? 0 : 200)
 
   return {
     get value() {
-      // createSub
       return value
     },
-    set value(val: JSONInspectOptions) {
+    set value(val: InspectOptions) {
       value = val
     },
-    setOptions(options: Partial<JSONInspectOptions>) {
+    get transitionDuration() {
+      return transitionDuration
+    },
+    setOptions(options: Partial<InspectOptions>) {
       untrack(() => {
         value = {
           ...value,
@@ -149,7 +209,7 @@ export function createOptions(options: Partial<JSONInspectOptions>) {
 
 export type OptionsContext = ReturnType<typeof createOptions>
 
-export function setGlobalInspectOptions(options: Partial<JSONInspectOptions>) {
+export function setGlobalInspectOptions(options: Partial<InspectOptions>) {
   return setContext(GLOBAL_OPTIONS_CONTEXT, options)
 }
 

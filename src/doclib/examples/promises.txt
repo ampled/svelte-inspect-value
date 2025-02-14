@@ -1,19 +1,19 @@
 <script>
-  import { Inspect } from '@eirikk/inspect'
+  import { Inspect } from 'svelte-inspect-value'
 
-  let promises = {
+  const value = {
     neverResolve: new Promise(() => {}),
     resolveInAFew: new Promise((resolve) => {
       setTimeout(() => {
-        resolve('yeah')
+        resolve('yep')
       }, 2000)
     }),
     rejectsInAFew: new Promise((_, reject) => {
       setTimeout(() => {
         reject('nope')
       }, 3500)
-    }),
+    })
   }
 </script>
 
-<Inspect value={promises} name="promises" />
+<Inspect {value} name="promises" />

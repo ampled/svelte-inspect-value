@@ -1,19 +1,20 @@
 <script lang="ts">
+  import { useOptions } from '$lib/options.svelte.js'
   import type { TypeViewProps } from '$lib/types.js'
   import { untrack } from 'svelte'
   import { fade } from 'svelte/transition'
   import Entry from './Entry.svelte'
   import Expandable from './Expandable.svelte'
-  import JsonViewer from './Node.svelte'
+  import Node from './Node.svelte'
   import Preview from './Preview.svelte'
 
   type Props = TypeViewProps<Promise<unknown>>
 
   let { value = Promise.resolve(), key, type, path }: Props = $props()
 
+  const options = useOptions()
   let status = $state<'pending' | 'fulfilled' | 'rejected'>('pending')
   let result = $state<unknown>(undefined)
-
   let currentPromise = $state<Promise<unknown>>()
 
   let entries = $derived(
@@ -64,36 +65,30 @@
   })
 </script>
 
-<Expandable
-  {...{ value, key, type, path }}
-  length={entries.length}
-  showLength={false}
-  keepPreviewOnExpand
->
-  {#snippet valuePreview()}
+<Expandable {...{ value, key, type, path }} length={entries.length} showLength={false}>
+  {#snippet valuePreview({ showPreview })}
     {#key status}
-      <span class="value promise {status}" in:fade
+      <span class="value promise {status}" in:fade={{ duration: options.transitionDuration }}
         ><span class="bracket">{'<'}</span
         >{`${status}`}{#if status === 'fulfilled' || status === 'rejected'}
-          <Preview prefix={':'} list={[result]} hasMore={false} />
-        {/if}<span class="bracket">{'>'}</span>
-      </span>
+          <Preview prefix={':'} singleValue={result} startLevel={0} {showPreview} showKey={false} />
+        {/if}<span class="bracket">{'>'}</span></span
+      >
     {/key}
-    <!-- {#if result}
-      <Preview list={[result]} hasMore={false} />
-    {/if} -->
   {/snippet}
   {#each entries as [key, value], i (key)}
     <Entry {i}>
-      <JsonViewer {value} {key} {path} />
+      <Node {value} {key} {path} />
     </Entry>
   {/each}
 </Expandable>
 
 <style>
   span.value {
-    /* width: auto; */
     font-size: 0.857em;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
   }
 
   .bracket {

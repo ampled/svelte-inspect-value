@@ -1,50 +1,43 @@
 <script lang="ts">
-  import { getContext } from 'svelte'
-  import { copyToClipBoard, logToConsole } from '../hello.js'
+  import { blur } from 'svelte/transition'
+  import { copyToClipBoard, logToConsole } from '../hello.svelte.js'
   import CollapseChildren from '../icons/CollapseChildren.svelte'
   import Console from '../icons/Console.svelte'
   import Copy from '../icons/Copy.svelte'
   import ExpandChildren from '../icons/ExpandChildren.svelte'
   import { useOptions } from '../options.svelte.js'
-  import { STATE_CONTEXT_KEY, type StateContext } from '../state.svelte.js'
+  import { useState } from '../state.svelte.js'
   import type { KeyType, TypeViewProps } from '../types.js'
   import { stringifyPath } from '../util.js'
 
-  type Props = Partial<TypeViewProps<unknown>> & { collapsed?: boolean }
+  type Props = Partial<TypeViewProps<unknown, string>> & { collapsed?: boolean }
 
-  let { value, type = '', path = [] }: Props = $props()
+  let { value, type, path = [] }: Props = $props()
 
   let copied = $state(false)
 
   let options = useOptions()
-  let inspectState: StateContext | undefined = getContext(STATE_CONTEXT_KEY)
+  let inspectState = useState()
+  let stringifiedPath = $derived(stringifyPath(path))
 
   let level = $derived(path.length)
 
   let canCopy = $derived(
-    ['array', 'object', 'number', 'string', 'undefined', 'null', 'date', 'boolean'].includes(type)
+    ['array', 'object', 'number', 'string', 'undefined', 'null', 'date', 'boolean'].includes(
+      type ?? ''
+    )
   )
 
-  const children = $derived(
-    inspectState?.value
-      ? Object.entries(inspectState.value).filter(
-          ([k]) => k.startsWith(stringifyPath(path)) && k !== stringifyPath(path)
-        )
-      : []
-  )
+  let nodeState = $derived(inspectState.value[stringifyPath(path)])
 
   let hasExpandedChildren = $derived.by(() => {
-    if (inspectState?.value) {
-      const key = stringifyPath(path)
-      const children = Object.entries(inspectState.value).filter(
-        ([k]) => k.startsWith(key) && k.split('.').length === level + 1
-      )
-      return children.some(([, v]) => !v.collapsed)
-    }
-    return false
+    const children = Object.entries(inspectState.value).filter(
+      ([k]) => k.startsWith(stringifiedPath) && k.split('.').length === level + 1
+    )
+    return children.some(([, v]) => !v.collapsed)
   })
 
-  let timeout: number = $state(-1)
+  let timeout = $state<number>()
 
   async function copy(val: unknown) {
     try {
@@ -54,30 +47,50 @@
       timeout = window.setTimeout(() => {
         copied = false
       }, 5000)
-    } catch {
+    } catch (e) {
+      console.error(e)
       copied = false
     }
   }
 
   let collapseAction = {
     hint: 'collapse children',
-    action: (level: number, path: KeyType[]) => inspectState?.collapseChildren(level, path),
+    action: (level: number, path: KeyType[]) => inspectState.collapseChildren(level, path),
     icon: CollapseChildren,
   }
 
   let expandAction = {
     hint: 'expand children',
-    action: (level: number, path: KeyType[]) => inspectState?.expandChildren(level, path),
+    action: (level: number, path: KeyType[]) => inspectState.expandChildren(level, path),
     icon: ExpandChildren,
   }
 
-  let treeAction = $derived(hasExpandedChildren ? collapseAction : expandAction)
+  let treeAction = $derived(
+    hasExpandedChildren
+      ? collapseAction
+      : nodeState?.collapsed
+        ? expandAction
+        : nodeState?.hasChildren
+          ? expandAction
+          : undefined
+  )
 </script>
 
 {#if options.value.showTools}
-  <div class="tools">
-    {#if children.length}
+  <div class="tools" class:borderless={options.value.borderless}>
+    <!-- {#if DEV}
+      <NodeActionButton
+        onclick={() =>
+          console.log({
+            key: path[path.length - 1],
+            children: children.length,
+            immediateChildren,
+          })}>d</NodeActionButton
+      >
+    {/if} -->
+    {#if treeAction}
       <button
+        transition:blur
         title={treeAction.hint}
         aria-label={treeAction.hint}
         onclick={() => treeAction.action(level, path)}
@@ -88,7 +101,7 @@
     <button
       title="log value to console"
       aria-label="log value to console"
-      onclick={() => logToConsole(path, value)}
+      onclick={() => logToConsole(path, value, type)}
     >
       <Console />
     </button>
@@ -115,27 +128,34 @@
   :global(.line:focus-within) .tools,
   :global(.title-bar:hover) .tools,
   :global(.title-bar:focus-within) .tools {
-    /* opacity: 1; */
+    opacity: 1;
     display: flex;
+    transition: all 250ms ease-in-out allow-discrete;
+    /* width: calc-size(max-content, size); */
+    /* transform: translateX(0); */
   }
 
   .tools {
-    transition: 0.3s ease-in-out;
+    transition: all 250ms ease-in-out allow-discrete;
     background-color: var(--bg);
     border-left: 1px solid var(--border-color);
-    /* border: 1px solid var(--border-color); */
+    backdrop-filter: blur(1px);
     position: absolute;
     right: 0;
     top: 0;
     bottom: 0;
     padding-inline: 0.5em;
-    display: none;
+    display: flex;
     justify-content: center;
     align-items: center;
     gap: 0.25em;
-    /* opacity: 0; */
+    opacity: 0;
     max-height: 1.5em;
-    overflow: visible;
+    z-index: calc(var(--index) + 1);
+    flex-wrap: nowrap;
+    /* transform: translateX(-100%);
+    transform-origin: center left; */
+    overflow: clip;
 
     button {
       all: unset;
@@ -144,8 +164,15 @@
       border: none;
       /* transition: all 300ms ease-in-out; */
       height: 1.5em;
+      min-height: 1.5em;
       width: 1.5em;
+      min-width: 1.5em;
       color: var(--interactive);
+      cursor: pointer;
+
+      :global(svg) {
+        transition: color 250ms ease-in-out;
+      }
 
       &.copied {
         color: var(--green) !important;
@@ -153,8 +180,18 @@
 
       &:hover,
       &:focus-visible {
+        background-color: transparent;
         color: var(--fg);
       }
     }
+  }
+
+  .tools.borderless {
+    position: relative;
+    transition-property: opacity !important;
+    /* background-color: var(--bg-lighter); */
+    background-color: transparent;
+    border-left: 0;
+    /* padding: 0; */
   }
 </style>

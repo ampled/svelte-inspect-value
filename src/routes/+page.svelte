@@ -1,24 +1,58 @@
 <script lang="ts">
+  // import { page } from '$app/stores'
   import Inspect from '$lib/Inspect.svelte'
   import Code from '../doclib/Code.svelte'
   import globalConfigCode from '../doclib/examples/globalconfig.txt?raw'
+  import globalConfigCodeLayout from '../doclib/examples/globalconfiglayout.txt?raw'
   import MinimalExample from '../doclib/examples/MinimalExample.svelte'
 
-  let packageName = 'svelte-value-inspect'
+  let { data } = $props()
+
+  let packageName = 'svelte-inspect-value'
 
   import minimalcode from '../doclib/examples/minimalexample.txt?raw'
+  import MultiCode from '../doclib/examples/MultiCode.svelte'
+  // import inspectProps from '../doclib/props.js'
+
+  // const propsDocObj = $derived(
+  //   Object.fromEntries(
+  //     inspectProps($page.url.origin).map(({ name, ...rest }) => [name, { ...rest }])
+  //   )
+  // )
+
+  let stringCollapse = $state(20)
 </script>
 
-<h2>What it is</h2>
-
 <div class="center">
-  <Inspect style="max-width: 400px;" name="helloWorld" value={{ key: 'value' }} />
+  <Inspect
+    showTools
+    style="max-width: 640px"
+    name="packageInfo"
+    value={{
+      name: 'svelte-inspect-value',
+      installCommands: [
+        'copy to clipboard 👉',
+        'npm install svelte-inspect-value',
+        'pnpm add svelte-inspect-value',
+        'bun add svelte-inspect-value',
+        'yarn add svelte-inspect-value',
+      ],
+      npm: {
+        package: 'https://www.npmjs.com/package/svelte-inspect-value',
+        'dist-tags': data.packageMetaData['dist-tags'],
+        versions: data.packageMetaData.versions,
+      },
+      github: 'https://github.com/ampled/svelte-inspect-value',
+      docs: 'https://svelte-inspect-value.vercel.app/',
+      playground: 'https://svelte.dev/playground/956365d6905c44298234ff4d9c60741e?version=5.17.3',
+    }}
+  />
 </div>
 
+<h2>What it is</h2>
 <p>
-  Svelte Value Inspect is a "json tree"-like inspector inspired by the likes of <code
-    >react-json-view</code
-  >, and <code>svelte-json-tree</code>. <br />
+  Svelte Inspect Value is a "json tree"-like inspector inspired by the likes of
+  <code>react-json-view</code> and <code>svelte-json-tree</code>. <br />
 
   The main purpose of the component is to be a developer utility. When developing apps it can be
   useful to have a "live" preview of state like API data, form values, the state of a promise and so
@@ -52,10 +86,20 @@
   <li>edit-mode (maybe)</li>
 </ul>
 
-<h2>Usage</h2>
+<h2>Usage & Conditional Rendering</h2>
 
 <p>
-  Install <code>{packageName}</code> with your favorite package manager.
+  Install <code>{packageName}</code> with your favorite package manager.<br />
+</p>
+
+<p>
+  A common use case for a component like this is to only render it during development. If you are
+  using SvelteKit, you can conditionally render Inspect using the <code>dev</code> variable exported
+  from
+  <code>'$app/environment'</code>.<br />
+  If you are not using SvelteKit or Vite,
+  <a href="https://github.com/benmccann/esm-env/tree/main"><code>esm-env</code></a> is a good alternative
+  for checking conditional environment variables with different bundlers and runtimes.
 </p>
 
 <Code code={minimalcode} />
@@ -65,36 +109,50 @@ Result:
   <MinimalExample />
 </div>
 
+<h2>Global Options</h2>
+
+<p>
+  <code>{packageName} </code> exports a utility function to set a "global" config for every instance
+  of the Inspect-component in or under the component where the function is called (it sets context).
+</p>
+
+<p>
+  Passing a reactive object to the function will update the components if any property of the object
+  is changed beceause its reactive (yup!)<br />
+
+  You can try this now if you change any options in the configurator at the bottom of your screen!
+  (hover it)
+</p>
+
+<MultiCode
+  examples={[
+    { code: globalConfigCodeLayout, label: '+layout.svelte', language: 'svelte' },
+    { code: globalConfigCode, label: '+page.svelte', language: 'svelte' },
+  ]}
+/>
+
+<!-- <Code code={globalConfigCode} label="GlobalConfigExample.svelte" language="svelte" /> -->
+
+Result:
+
+<label>
+  string collapse
+  <input type="number" bind:value={stringCollapse} />
+</label>
+<Inspect value={'no long strings in this neighbourhood thanks'} {stringCollapse} />
+
+<p>Options set with props will override any global options</p>
+
 <h2>Props</h2>
 
-<!-- <div class="center">
-  <Inspect
-    style="max-width: 1000px"
-    name="props"
-    expandAll
-    value={{
-      value: {
-        description: 'required. value to inspect. can be any javascript value',
-        default: null,
-      },
-      name: {
-        description: `name of outer value. \n displayed as key, e.g. 'props' in this instance`,
-        default: undefined,
-      },
-      stringCollapse: {
-        description: `set a max display length for string values.\n0 means full string will be displayed`,
-        default: 0,
-      },
-    }}
-  />
-</div> -->
+<!-- <Inspect name="props" value={propsDocObj} expandAll /> -->
 
 <table>
   <thead>
     <tr>
-      <th>Name</th>
-      <th>Description</th>
-      <th>Default</th>
+      <th>name</th>
+      <th>description</th>
+      <th>defaultValue</th>
     </tr>
   </thead>
   <tbody>
@@ -134,6 +192,16 @@ Result:
       <td><code>true</code></td>
     </tr>
     <tr>
+      <td> previewDepth </td>
+      <td> how deeply nested items should be previewed before simply showing types </td>
+      <td><code>1</code></td>
+    </tr>
+    <tr>
+      <td> previewEntries </td>
+      <td> how many nested items should be previewed </td>
+      <td><code>3</code></td>
+    </tr>
+    <tr>
       <td> showTools </td>
       <td> display row of utility-"tools" when hovering an entry </td>
       <td><code>true</code></td>
@@ -161,7 +229,7 @@ Result:
     </tr>
     <tr>
       <td> expandAll </td>
-      <td> expand all nodes by default. can be a performance hitch with a lot of entries </td>
+      <td> initially expand all nodes. can be a performance hitch with a lot of entries </td>
       <td><code>false</code></td>
     </tr>
     <tr>
@@ -180,6 +248,14 @@ Result:
       <td><code>'single'</code></td>
     </tr>
     <tr>
+      <td> renderIf </td>
+      <td>
+        function or value. render condition for <code>Inspect</code>. if value or return value of
+        function is truthy, <code>Inspect</code> will render.
+      </td>
+      <td><code>true</code></td>
+    </tr>
+    <tr>
       <td> customComponents </td>
       <td>
         custom components for values.<br />
@@ -191,27 +267,6 @@ Result:
   </tbody>
 </table>
 
-<h2>Global config</h2>
-
-<p>
-  <code>{packageName} </code> exports a utility function to set a "global" config for every instance
-  of the Inspect-component in or under the component where the function is called (it sets context).
-</p>
-
-<p>
-  Passing a reactive object to the function will update the components if any property of the object
-  is changed beceause its reactive (yup!)<br />
-
-  You can try this now if you change any options in the configurator at the bottom of your screen!
-  (hover it)
-</p>
-
-<Code code={globalConfigCode} label="GlobalConfigExample.svelte" />
-
-<Inspect value={'no long strings in this neighbourhood thanks'} />
-
-<p>Options set with the function will have priority over options passed as props.</p>
-
 <!-- <BasicEditable /> -->
 <style>
   .center {
@@ -221,13 +276,15 @@ Result:
 
   table {
     border-collapse: collapse;
-    border: 2px solid rgb(140 140 140);
-    background-color: var(--bg-lighter);
+    border: 1px solid var(--border-color);
+    background-color: var(--bg);
+    font-family: monospace;
+    font-size: 0.7em;
   }
 
   th,
   td {
-    border: 1px solid rgb(160 160 160);
+    border: 1px solid var(--border-color);
     padding: 8px 10px;
     text-align: left;
   }

@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { getContext } from 'svelte'
-
+  import { getPreviewLevel } from '$lib/contexts.js'
   import type { HTMLAttributes } from 'svelte/elements'
   import { useOptions } from '../options.svelte.js'
   import type { ValueType } from '../util.js'
@@ -18,8 +17,18 @@
     switch (type) {
       case 'number':
         return 'num'
+      case 'string':
+        return 'str'
+      case 'regexp':
+        return 'regex'
       case 'function':
         return 'fn'
+      case 'asyncfunction':
+        return 'async fn'
+      case 'generatorfunction':
+        return 'fn*'
+      case 'asyncgeneratorfunction':
+        return 'async fn*'
       case 'boolean':
         return 'bool'
       case 'url':
@@ -33,13 +42,11 @@
       case 'date':
         return 'Date'
       case 'object':
-        return '{obj}'
+        return 'obj'
       case 'array':
-        return '[arr]'
+        return 'arr'
       case 'promise':
         return 'Promise'
-      case 'null':
-        return 'NULL'
       default:
         return type
     }
@@ -50,8 +57,11 @@
     'null',
     'class',
     'function',
+    'asyncfunction',
+    'generatorfunction',
+    'asyncgeneratorfunction',
     'promise',
-    'MapEntry',
+    'Entry',
     'map',
     'set',
     'date',
@@ -60,11 +70,18 @@
 
   let required = $derived(ALWAYS_VISIBLE_TYPES.includes(type))
 
-  const preview = getContext<boolean>('preview')
+  const previewLevel = getPreviewLevel()
 </script>
 
-{#if (type && options.value.showTypes && !preview) || required || force}
-  <span class={`type ${type}`} {...rest} title={type}>
+{#if (type && options.value.showTypes && previewLevel === 0) || required || force}
+  <span data-testid="type" class={`type ${type}`} title={type} {...rest}>
     {display}
   </span>
 {/if}
+
+<style>
+  .type {
+    font-weight: 900;
+    flex-shrink: 0;
+  }
+</style>

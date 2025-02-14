@@ -1,24 +1,53 @@
 <script lang="ts">
   import './app.css'
 
+  import { DEV } from 'esm-env'
+
+  import { onNavigate } from '$app/navigation'
+  import { page } from '$app/stores'
   import Inspect from '$lib/Inspect.svelte'
-  import { setGlobalInspectOptions, type JSONInspectOptions } from '$lib/options.svelte.js'
+  import { setGlobalInspectOptions, type InspectOptions } from '$lib/options.svelte.js'
+  import GlobalOptions from './GlobalOptions.svelte'
+
+  onNavigate((navigation) => {
+    if (!document.startViewTransition) return
+
+    return new Promise((resolve) => {
+      document.startViewTransition(async () => {
+        resolve()
+        await navigation.complete
+      })
+    })
+  })
 
   const { children } = $props()
 
-  let options = $state<Partial<JSONInspectOptions>>({
+  let routes = [
+    { href: '/', title: 'Getting started' },
+    { href: '/examples', title: 'Examples' },
+    { href: '/custom', title: 'Custom components', devonly: true },
+    { href: '/theming', title: 'Theming', devonly: true },
+    { href: '/alltypes', title: 'alltypes', devonly: true },
+  ]
+
+  let options = $state<Partial<InspectOptions>>({
     theme: 'drak',
     stringCollapse: 0,
     showTools: true,
     showTypes: true,
     showLength: true,
     showPreview: true,
+    previewDepth: 1,
+    previewEntries: 3,
+    flashOnUpdate: true,
     noanimate: false,
     quotes: 'single',
     borderless: false,
     embedMedia: true,
+    elementView: 'simple',
   })
 
+  // svelte-ignore state_referenced_locally
   setGlobalInspectOptions(options)
 </script>
 
@@ -28,187 +57,211 @@
 
     <button onclick={reset}>reset</button>
   {/snippet}
-  <main>
-    <a href="/">
-      <h1>Svelte Value Inspect</h1>
+  <header>
+    <a href="/" class="title">
+      <h1>
+        Svelte
+        <code
+          >{'<'}<span class="inspect">Inspect</span>
+          {'{'}<span class="value">{'value'}</span>{'}'}
+          {'/>'}
+        </code>
+      </h1>
     </a>
-    <nav>
-      <ul>
-        <li>
-          <a href="/examples">examples</a>
-        </li>
-        <!-- <li>
-            <a href="/theming">theming</a>
-          </li> -->
-        <li>
-          <a href="/custom">custom components</a>
-        </li>
-      </ul>
-    </nav>
+    <ul>
+      <li>
+        <a
+          href="https://www.npmjs.com/package/svelte-inspect-value"
+          aria-label="npm"
+          target="_blank"
+        >
+          <img alt="npm" src="https://img.shields.io/npm/v/svelte-inspect-value" />
+        </a>
+      </li>
+      <li>
+        <a href="https://github.com/ampled/svelte-inspect-value">
+          <img
+            alt="github"
+            src="https://img.shields.io/github/stars/ampled/svelte-inspect-value?style=social"
+          />
+        </a>
+      </li>
+    </ul>
+  </header>
+  <nav>
+    <ul>
+      {#each routes as { href, title, devonly } (href)}
+        {#if !devonly || (devonly && DEV)}
+          <li>
+            <a class:active={href === $page.url.pathname} {href}>{title}</a>
+          </li>
+        {/if}
+      {/each}
+    </ul>
+  </nav>
+  <main>
     {@render children()}
-
-    <div class="options" data-testid="options">
-      <span class="options-title"> global options </span>
-      <label>
-        lengths
-        <input type="checkbox" bind:checked={options.showLength} />
-      </label>
-
-      <label>
-        types
-        <input type="checkbox" bind:checked={options.showTypes} />
-      </label>
-
-      <label>
-        tools
-        <input type="checkbox" bind:checked={options.showTools} />
-      </label>
-
-      <label>
-        previews
-        <input type="checkbox" bind:checked={options.showPreview} />
-      </label>
-
-      <label>
-        noanimate
-        <input type="checkbox" bind:checked={options.noanimate} />
-      </label>
-
-      <label>
-        borderless
-        <input type="checkbox" bind:checked={options.borderless} />
-      </label>
-
-      <label>
-        embed media
-        <input type="checkbox" bind:checked={options.embedMedia} />
-      </label>
-
-      <label>
-        theme
-        <select bind:value={options.theme}>
-          <option>drak</option>
-          <option>stereo</option>
-          <option>dark</option>
-          <option>light</option>
-          <option></option>
-        </select>
-      </label>
-
-      <label>
-        quotes
-        <select bind:value={options.quotes}>
-          <option>single</option>
-          <option>double</option>
-        </select>
-      </label>
-
-      <label>
-        collapse strings
-        <input type="number" bind:value={options.stringCollapse} style="width: 5em" />
-      </label>
-    </div>
+    <GlobalOptions bind:options />
   </main>
 </svelte:boundary>
 
 <style>
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1em;
+    padding-inline: 1em;
+    padding-top: 1em;
+    flex-wrap: wrap;
+    view-transition-name: header;
+  }
+
+  nav {
+    padding-inline: 1em;
+    padding-top: 0.5em;
+    view-transition-name: nav;
+  }
+
+  .title {
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.8rem;
+    width: max-content;
+  }
+
+  h1 {
+    max-width: max-content;
+    text-decoration: none;
+    text-wrap: nowrap;
+    white-space: nowrap;
+  }
+
   main {
     display: flex;
     position: relative;
     flex-direction: column;
     gap: 1em;
     padding: 1em;
-    padding-inline: 3em;
     width: 100%;
-    padding-bottom: 25em;
-    border: 1px solid green;
+    margin-bottom: 400px;
   }
 
-  nav {
+  ul {
+    padding: 0;
     display: flex;
-    flex-direction: row;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 1em;
 
-    ul {
-      padding: 0;
+    li {
+      display: inline;
+      list-style-type: none;
+    }
+  }
 
-      li {
-        display: inline;
+  a {
+    color: #fafafa;
+    transition: color 300ms linear;
+    text-decoration: none;
+    font-size: 1.1rem;
+    line-height: 1;
+    white-space: nowrap;
 
-        list-style-type: none;
+    h1 {
+      text-decoration: none;
+
+      code {
+        font-size: 0.8em;
+        padding-inline: 0.2em;
+        font-weight: normal;
+        background: transparent;
+
+        .inspect {
+          color: var(--red);
+          font-weight: bold;
+        }
+
+        .value {
+          font-weight: normal;
+          color: var(--blue);
+        }
       }
     }
   }
 
-  .options {
-    /* opacity: 0.5; */
-    position: fixed;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-end;
-    justify-content: center;
-    margin-left: auto;
-    margin-right: auto;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    /* width: 80%; */
-    background-color: var(--bg);
-    gap: 2em;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    padding: 1em;
-    z-index: 10;
-    border: 1px solid var(--border-color);
-    border-bottom: 0;
-    scale: 0.75;
-    transform-origin: center bottom;
-    transition: all 100ms linear;
-    transform: translateY(40px);
+  a.active {
+    color: var(--red);
+    text-decoration: underline;
+    position: relative;
+  }
 
-    &:hover {
-      opacity: 1;
-      transform: translateY(0);
+  @media (min-width: 768px) {
+    main {
+      width: 90%;
+      padding: 1em;
+      padding-right: 3em;
+    }
+
+    .title {
+      font-size: 1.5rem;
+    }
+
+    a {
+      font-size: 1.25rem;
     }
   }
 
-  .options-title {
-    position: absolute;
-    top: 2px;
-    left: 5px;
-  }
+  @media (min-width: 1024px) {
+    main {
+      width: 90%;
+      padding: 1em;
+      padding-right: 3em;
+    }
 
-  label:has(input:checked) {
-    background-color: #b4d455;
-    color: black;
-  }
+    .title {
+      font-size: 1.5rem;
+    }
 
-  label:has(input[type='checkbox']) {
-    outline: 1px solid #b4d455;
-    transition: all 200ms ease-in-out;
-    user-select: none;
-    /* outline: 1px solid red; */
-    border-radius: 8px;
-    padding: 0.25em;
-    max-height: 1.6em;
-    display: flex;
-    flex-direction: row;
-    gap: 1em;
-
-    input {
-      display: none;
+    a {
+      font-size: 1.5rem;
     }
   }
 
-  input[type='number'],
-  select {
-    max-height: 1.5em;
+  /* VIEW TRANSITIONS */
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
   }
 
-  label:has(input[type='number']),
-  label:has(select) {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
+  @keyframes fade-out {
+    to {
+      opacity: 0;
+    }
+  }
+
+  @keyframes slide-from-right {
+    from {
+      transform: translateX(30px);
+    }
+  }
+
+  @keyframes slide-to-left {
+    to {
+      transform: translateX(-30px);
+    }
+  }
+
+  :root::view-transition-old(root) {
+    animation:
+      90ms cubic-bezier(0.4, 0, 1, 1) both fade-out,
+      300ms cubic-bezier(0.4, 0, 0.2, 1) both slide-to-left;
+  }
+
+  :root::view-transition-new(root) {
+    animation:
+      210ms cubic-bezier(0, 0, 0.2, 1) 90ms both fade-in,
+      300ms cubic-bezier(0.4, 0, 0.2, 1) both slide-from-right;
   }
 </style>

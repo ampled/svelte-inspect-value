@@ -1,22 +1,27 @@
 <script lang="ts">
   import { Inspect } from '$lib/index.js'
+  import { getContext } from 'svelte'
+  import type { SvelteMap } from 'svelte/reactivity'
 
   import Code from '../Code.svelte'
+  import Stack from '../Stack.svelte'
   import code from './symbolkeys.txt?raw'
+
+  getContext<SvelteMap<string, string>>('toc')?.set('Symbol keys', 'symbols')
 </script>
 
 <div class="flex col">
-  <h2>symbol keys</h2>
+  <h3 id="symbols">Symbol keys</h3>
   <p>
-    object properties where keys are symbols are displayed. these are skipped by
+    Object properties where keys are symbols are displayed. these are skipped by
     <code>JSON.stringify()</code>
     or <code>Object.keys()</code><br />
 
-    this is achieved using <code>Reflect.ownKeys</code>
+    This is achieved using <code>Reflect.ownKeys</code>
   </p>
 
-  <div class="flex row" style="width: 100%">
-    <Code {code} />
+  <Stack>
+    <Code {code} language="javascript" />
 
     <Inspect
       value={{
@@ -28,5 +33,5 @@
       style="max-width: 400px;"
       expandAll
     />
-  </div>
+  </Stack>
 </div>

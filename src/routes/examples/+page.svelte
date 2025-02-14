@@ -1,156 +1,114 @@
 <script lang="ts">
-  import { browser } from '$app/environment'
-  import Inspect from '$lib/Inspect.svelte'
-  import { onMount } from 'svelte'
+  import { setContext } from 'svelte'
+  import { SvelteMap } from 'svelte/reactivity'
   import BasicEditable from '../../doclib/examples/BasicEditable.svelte'
+  import Classes from '../../doclib/examples/Classes.svelte'
   import EmbedMedia from '../../doclib/examples/EmbedMedia.svelte'
+  import Functions from '../../doclib/examples/Functions.svelte'
+  import GettersAndSetters from '../../doclib/examples/GettersAndSetters.svelte'
   import HtmlElements from '../../doclib/examples/HTMLElements.svelte'
+  import Iterators from '../../doclib/examples/Iterators.svelte'
   import MapAndSet from '../../doclib/examples/MapAndSet.svelte'
+  import MultiLineStrings from '../../doclib/examples/MultiLineStrings.svelte'
+  import Other from '../../doclib/examples/Other.svelte'
   import Promises from '../../doclib/examples/Promises.svelte'
   import SymbolKeys from '../../doclib/examples/SymbolKeys.svelte'
+  import Urls from '../../doclib/examples/Urls.svelte'
 
-  let image: HTMLImageElement | undefined = $state()
+  let { data } = $props()
 
-  let error: Error | undefined = $state()
+  let { codeSamples } = data
 
-  onMount(() => {
-    if (browser) {
-      image = new Image()
-      image.src = 'favicon.png'
-    }
+  const toc = new SvelteMap<string, string>()
 
-    try {
-      let lol: unknown
-        // eslint-disable-next-line @typescript-eslint/no-unused-expressions, @typescript-eslint/no-explicit-any
-      ;(lol as any).doesNotHaveProperty
-    } catch (e) {
-      error = e as Error
-    }
-  })
-
-  class Greeter {
-    static staticProperty = 'HI'
-    iHaveAProperty = 'hello'
-    private name: string
-
-    constructor(name: string) {
-      this.name = name
-    }
-
-    public greet = () => console.log(`${Greeter.staticProperty} ${this.name}`)
-
-    public method() {
-      return 'hei'
-    }
-
-    toString() {
-      return 'nonononono'
-    }
-  }
+  setContext('toc', toc)
 </script>
 
+<h2>Examples</h2>
+
 <BasicEditable />
-
+<MultiLineStrings />
 <MapAndSet />
-
-<Promises />
-
+<Promises code={codeSamples.promises} />
 <HtmlElements />
-
-<div class="flex col">
-  <h2>class</h2>
-  <p>display static properties of classes (but not on instances.)</p>
-
-  <div class="flex">
-    <Inspect
-      value={{
-        class: Greeter,
-        classInstance: new Greeter('world'),
-      }}
-    />
-  </div>
-</div>
-
-<div class="flex col">
-  <h2>functions</h2>
-  <p>display bodies of functions with <code>hljs</code> syntax highlighting</p>
-
-  <div class="flex">
-    <Inspect
-      name="functions"
-      value={{
-        arrowFunction: (num: number) => num * 2,
-        someFunction: function (some: string, thing: string) {
-          if (!some) return thing
-          const obj = {
-            some: thing,
-            thing: some,
-            [Symbol('oh')]: 'doodle',
-          }
-
-          try {
-            Math.random()
-          } catch {
-            const { log } = console
-            log('oh no')
-            log(obj)
-          }
-          return some + ' ' + thing
-        },
-      }}
-    />
-  </div>
-</div>
-
+<Classes />
+<Functions />
 <SymbolKeys />
-
-<div class="flex col">
-  <h2>urls</h2>
-  <p>special handling of URLs and URLSearchParams</p>
-
-  <div class="flex">
-    <Inspect
-      value={{
-        url: new URL('https://subdomain.example.org/about'),
-        fullyFeaturedUrl: new URL(
-          'https://anon:hunter2@example.org:8080/pathname/index.html?q=query&p=123&buh#result'
-        ),
-        search: new URLSearchParams([
-          ['a', '1'],
-          ['a', '2'],
-          ['b', '3'],
-          ['b', '4'],
-          ['c', '5'],
-          ['query', 'elephants'],
-        ]),
-      }}
-      name="urlFeatures"
-    />
-  </div>
-</div>
-
-<div class="flex col">
-  <h2>multi-line strings</h2>
-  <p>expandable view for multi-line strings</p>
-
-  <div class="flex">
-    <Inspect value={['normal boring string', 'cool \n multi-line \n  render 😎']} name="strings" />
-  </div>
-</div>
-
+<Urls />
+<GettersAndSetters code={codeSamples.gettersAndSetters} />
+<Iterators code={codeSamples.iterators} />
 <EmbedMedia />
+<Other />
 
-<div class="flex col">
-  <h2>other</h2>
-  <p>other types handled includes Error, Date, regexp</p>
-
-  <div class="flex">
-    <Inspect
-      value={{
-        dateValue: new Date(),
-        reg: /^[re(g)ex]$/,
-        error,
-      }}
-    />
-  </div>
+<div class="toc">
+  {#each toc as [title, id]}
+    <a href={`#${id}`}>{title} </a>
+    <hr />
+  {/each}
 </div>
+
+<style>
+  .toc {
+    display: none;
+    transition: all 250ms ease-in;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    padding: 1em;
+    position: fixed;
+    /* display: flex; */
+    right: 0;
+    top: 50%;
+    bottom: 50%;
+    margin-top: auto;
+    margin-bottom: auto;
+
+    max-height: max-content;
+    flex-direction: column;
+    opacity: 0.5;
+    transform: translateX(50%);
+    z-index: 50;
+
+    hr {
+      transition: all 250ms ease-in;
+    }
+
+    &:hover {
+      background-color: var(--bg);
+      /* border-color: var(--border-color);
+      border-width: 1px 0 1px 1px;
+      border-style: solid; */
+      opacity: 1;
+      transform: translateX(0);
+
+      a {
+        opacity: 1;
+        color: var(--fg);
+        background-color: transparent;
+      }
+
+      hr {
+        opacity: 0;
+        border-color: var(--border-color);
+      }
+    }
+
+    a {
+      opacity: 0;
+      transition: all 250ms ease-in;
+      font-size: 0.857em;
+      margin-top: 2px;
+      line-height: 1;
+      padding: 0.25em;
+      text-decoration: none;
+      color: var(--comments);
+      /* background-color: var(--comments); */
+      border-radius: 8px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .toc {
+      display: flex;
+    }
+  }
+</style>

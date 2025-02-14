@@ -1,5 +1,6 @@
 <script lang="ts">
   import Inspect from '$lib/Inspect.svelte'
+  import { BROWSER } from 'esm-env'
 
   let demoObject = $state({
     id: undefined,
@@ -17,4 +18,4 @@
   })
 </script>
 
-<Inspect value={demoObject} name="demo" style="max-width: 400px;" />
+<Inspect value={demoObject} name="demo" style="max-width: 400px;" renderIf={BROWSER} />

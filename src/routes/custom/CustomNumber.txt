@@ -1,28 +1,15 @@
 <script lang="ts">
-  import { CustomLine, type CustomComponentProps } from 'insert-final-package-name-here'
+  import { CustomLine, type CustomComponentProps } from 'svelte-inspect-value'
 
   let { value, ...rest }: CustomComponentProps<number> = $props()
 </script>
 
 <CustomLine {value} {...rest}>
-  {#snippet val()}
-    <span>{value}</span>
-  {/snippet}
+  <span class="value number">{value}</span>
 </CustomLine>
 
 <style>
   span {
-    font-family: sans-serif;
-    font-weight: 900;
-    font-size: 2em;
-    background: linear-gradient(
-      to right,
-      #ef5350,
-      #f48fb1,
-      #f9a825,
-      #ff5722
-    );
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    rotate: 180deg;
   }
 </style>

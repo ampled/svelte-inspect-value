@@ -1,5 +1,5 @@
 export function intervalEffect(handler: TimerHandler, timeout: number) {
-  let interval = $state<number>()
+  let interval: number | undefined
   $effect(() => {
     interval = window.setInterval(handler, timeout)
 
