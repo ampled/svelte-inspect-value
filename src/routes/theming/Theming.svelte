@@ -57,7 +57,7 @@
 
   const theming = $derived({
     base00: [props.colors['--base00'], 'background-color'],
-    base01: [props.colors['--base01'], 'row-hover-color', 'nilTypeBg', null, undefined],
+    base01: [props.colors['--base01'], 'row-hover-color', 'nil-type-bg', null, undefined],
     base02: [props.colors['--base02'], 'text-selection-background'],
     base03: [props.colors['--base03'], 'border-color', ['expand-button'], 'length color'],
     // base04: [props.colors['--base04']],

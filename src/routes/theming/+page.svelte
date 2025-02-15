@@ -4,6 +4,7 @@
   import Inspect from '$lib/Inspect.svelte'
   import { colord } from 'colord'
   import HueRotate from './HueRotate.svelte'
+  import './theme.css'
   import { themes } from './themes.js'
   import Theming from './Theming.svelte'
 
@@ -21,17 +22,6 @@
   let currentColors = $derived(rotated == null ? colors : rotated)
 
   let style = $derived(keys.map((k) => `${k}: ${currentColors[k]};`).join(''))
-  // let classPreview = $state('.inspect-theme { }')
-
-  //   function _createClassPreview(style: string) {
-  //     return `.inspect-theme {
-  // ${style
-  //   .split(';')
-  //   .filter(Boolean)
-  //   .map((s) => `  ${s};\n`)
-  //   .join('')}}
-  // `
-  //   }
 
   let presets = Object.keys(themes) as (keyof typeof themes)[]
   let selectedPreset = $state<keyof typeof themes>('drak')
@@ -136,7 +126,7 @@
             bind:value={currentColors[key]}
             onchange={() => saveStep()}
             defaultValue="#ffffff"
-            disabled={rotated != null}
+            disabled={rotated != null || locked}
           />
         </div>
         <!-- <button
@@ -242,11 +232,27 @@ base0E  Keywords, Storage, Selector, Markup Italic, Diff Changed
 base0F  Deprecated, Opening/Closing Embedded Language Tags, e.g. {'<?php ?>'}
 </pre> -->
 
+<h2>Defining a theme</h2>
+
+<p>
+  Add your custom theme class to a global css file and import it, then set the theme-class using the
+  class or theme-prop on the inspect component or via global options.
+</p>
+
 <pre>
-<span class="selector">.inspect-theme</span> {'{'}
+<span class="selector">.my-inspect-theme</span> {'{'}
 {#each keys as key, i (key)}<span class="key">{key}</span>: <span class="value">{colors[key]}</span
     >;{#if i !== 15}<br />{/if}{/each}
 {'}'}</pre>
+<p>Alternatively, set css variables directly on the component.</p>
+<pre>
+{'<'}<span style="color:var(--blue);">Inspect</span>
+  <span style="color: var(--green)">theme</span>=""
+{#each keys as key, i (key)}<span class="value" style="padding-left: 1em;">{key}</span>=<span
+      style="color: var(--yellow);">"{colors[key]}"</span
+    >{#if i !== 15}<br />{/if}{/each}
+{'/>'}
+</pre>
 
 <style>
   .row {
@@ -308,6 +314,8 @@ base0F  Deprecated, Opening/Closing Embedded Language Tags, e.g. {'<?php ?>'}
     height: 2em;
     overflow: hidden;
     position: relative;
+    outline: 1px solid white;
+    border-radius: 4px;
   }
 
   input[type='color'] {

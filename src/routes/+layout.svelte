@@ -6,7 +6,8 @@
   import { onNavigate } from '$app/navigation'
   import { page } from '$app/stores'
   import Inspect from '$lib/Inspect.svelte'
-  import { setGlobalInspectOptions, type InspectOptions } from '$lib/options.svelte.js'
+  import InspectOptionsProvider from '$lib/InspectOptionsProvider.svelte'
+  import { type InspectOptions } from '$lib/options.svelte.js'
   import GlobalOptions from './GlobalOptions.svelte'
 
   onNavigate((navigation) => {
@@ -26,7 +27,7 @@
     { href: '/', title: 'Getting started' },
     { href: '/examples', title: 'Examples' },
     { href: '/custom', title: 'Custom components', devonly: true },
-    { href: '/theming', title: 'Theming', devonly: true },
+    { href: '/theming', title: 'Theming' },
     { href: '/alltypes', title: 'alltypes', devonly: true },
   ]
 
@@ -46,64 +47,63 @@
     embedMedia: true,
     elementView: 'simple',
   })
-
-  // svelte-ignore state_referenced_locally
-  setGlobalInspectOptions(options)
 </script>
 
-<svelte:boundary>
-  {#snippet failed(error, reset)}
-    <Inspect value={error} />
+<InspectOptionsProvider {options}>
+  <svelte:boundary>
+    {#snippet failed(error, reset)}
+      <Inspect value={error} />
 
-    <button onclick={reset}>reset</button>
-  {/snippet}
-  <header>
-    <a href="/" class="title">
-      <h1>
-        Svelte
-        <code
-          >{'<'}<span class="inspect">Inspect</span>
-          {'{'}<span class="value">{'value'}</span>{'}'}
-          {'/>'}
-        </code>
-      </h1>
-    </a>
-    <ul>
-      <li>
-        <a
-          href="https://www.npmjs.com/package/svelte-inspect-value"
-          aria-label="npm"
-          target="_blank"
-        >
-          <img alt="npm" src="https://img.shields.io/npm/v/svelte-inspect-value" />
-        </a>
-      </li>
-      <li>
-        <a href="https://github.com/ampled/svelte-inspect-value">
-          <img
-            alt="github"
-            src="https://img.shields.io/github/stars/ampled/svelte-inspect-value?style=social"
-          />
-        </a>
-      </li>
-    </ul>
-  </header>
-  <nav>
-    <ul>
-      {#each routes as { href, title, devonly } (href)}
-        {#if !devonly || (devonly && DEV)}
-          <li>
-            <a class:active={href === $page.url.pathname} {href}>{title}</a>
-          </li>
-        {/if}
-      {/each}
-    </ul>
-  </nav>
-  <main>
-    {@render children()}
-    <GlobalOptions bind:options />
-  </main>
-</svelte:boundary>
+      <button onclick={reset}>reset</button>
+    {/snippet}
+    <header>
+      <a href="/" class="title">
+        <h1>
+          Svelte
+          <code
+            >{'<'}<span class="inspect">Inspect</span>
+            {'{'}<span class="value">{'value'}</span>{'}'}
+            {'/>'}
+          </code>
+        </h1>
+      </a>
+      <ul>
+        <li>
+          <a
+            href="https://www.npmjs.com/package/svelte-inspect-value"
+            aria-label="npm"
+            target="_blank"
+          >
+            <img alt="npm" src="https://img.shields.io/npm/v/svelte-inspect-value" />
+          </a>
+        </li>
+        <li>
+          <a href="https://github.com/ampled/svelte-inspect-value">
+            <img
+              alt="github"
+              src="https://img.shields.io/github/stars/ampled/svelte-inspect-value?style=social"
+            />
+          </a>
+        </li>
+      </ul>
+    </header>
+    <nav>
+      <ul>
+        {#each routes as { href, title, devonly } (href)}
+          {#if !devonly || (devonly && DEV)}
+            <li>
+              <a class:active={href === $page.url.pathname} {href}>{title}</a>
+            </li>
+          {/if}
+        {/each}
+      </ul>
+    </nav>
+    <main>
+      {@render children()}
+      <GlobalOptions bind:options />
+    </main>
+  </svelte:boundary>
+</InspectOptionsProvider>
 
 <style>
   header {
