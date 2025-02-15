@@ -98,137 +98,7 @@
 </svelte:boundary>
 
 <style>
-  /*
-        base00  #181818  Default Background
-        base01  #282828  Lighter Background (Used for status bars, line number and folding marks)
-        base02  #383838  Selection Background
-        base03  #585858  Comments, Invisibles, Line Highlighting
-        base04  #b8b8b8  Dark Foreground (Used for status bars)
-        base05  #d8d8d8  Default Foreground, Caret, Delimiters, Operators
-        base06  #e8e8e8  Light Foreground (Not often used)
-        base07  #f8f8f8  Light Background (Not often used)
-        base08  #ab4642  Variables, XML Tags, Markup Link Text, Markup Lists, Diff Deleted
-        base09  #dc9656  Integers, Boolean, Constants, XML Attributes, Markup Link Url
-        base0A  #f7ca88  Classes, Markup Bold, Search Text Background
-        base0B  #a1b56c  Strings, Inherited Class, Markup Code, Diff Inserted
-        base0C  #86c1b9  Support, Regular Expressions, Escape Characters, Markup Quotes
-        base0D  #7cafc2  Functions, Methods, Attribute IDs, Headings
-        base0E  #ba8baf  Keywords, Storage, Selector, Markup Italic, Diff Changed
-        base0F  #a16946  Deprecated, Opening/Closing Embedded Language Tags, e.g. <?php ?>
-    */
-  .plain {
-    --base00: #ffffff;
-    --base01: #ffffff;
-    --base02: #ffffff;
-    --base03: #ffffff;
-    --base04: #ffffff;
-    --base05: #000000;
-    --base06: #ffffff;
-    --base07: #ffffff;
-    --base08: #ffffff;
-    --base09: #ffffff;
-    --base0A: #ffffff;
-    --base0B: #ffffff;
-    --base0C: #ffffff;
-    --base0D: #ffffff;
-    --base0E: #ffffff;
-    --base0F: #ffffff;
-  }
-
-  .stereo {
-    --base00: #272822;
-    --base01: #383830;
-    --base02: #49483e;
-    --base03: #75715e;
-    --base04: #a59f85;
-    --base05: #f8f8f2;
-    --base06: #f5f4f1;
-    --base07: #f9f8f5;
-    --base08: #f92672;
-    --base09: #fd971f;
-    --base0A: #f4bf75;
-    --base0B: #a6e22e;
-    --base0C: #a1efe4;
-    --base0D: #66d9ef;
-    --base0E: #ae81ff;
-    --base0F: #cc6633;
-  }
-
-  .dark {
-    --base00: #181818;
-    --base01: #282828;
-    --base02: #383838;
-    --base03: #585858;
-    --base04: #b8b8b8;
-    --base05: #d8d8d8;
-    --base06: #e8e8e8;
-    --base07: #f8f8f8;
-    --base08: #ab4642;
-    --base09: #dc9656;
-    --base0A: #f7ca88;
-    --base0B: #a1b56c;
-    --base0C: #86c1b9;
-    --base0D: #7cafc2;
-    --base0E: #ba8baf;
-    --base0F: #a16946;
-  }
-
-  .drak {
-    --base00: #282a36;
-    --base01: #3a3c4e;
-    --base02: #44475a;
-    --base03: #6272a4;
-    --base04: #1c1d26;
-    --base05: #f8f8f2;
-    --base06: #f1f2f8;
-    --base07: #f7f7fb;
-    --base08: #ea51b2;
-    --base09: #ffb86c;
-    --base0A: #f1fa8c;
-    --base0B: #50fa7b;
-    --base0C: #a1efe4;
-    --base0D: #62d6e8;
-    --base0E: #bd93f9;
-    --base0F: #009e45;
-  }
-
-  .light {
-    --base00: #e8e8e8;
-    --base01: #d8d8d8;
-    --base02: #f8f8f8;
-    --base03: #b8b8b8;
-    --base04: #585858;
-    --base05: #383838;
-    --base06: #282828;
-    --base07: #181818;
-    --base08: #ab4642;
-    --base09: #dc9656;
-    --base0A: #9d5e00;
-    --base0B: #75834e;
-    --base0C: #5f8681;
-    --base0D: #3e9cbe;
-    --base0E: #ba8baf;
-    --base0F: #a16946;
-  }
-
-  .cotton-candy {
-    --base00: #ca71c6;
-    --base01: #fa71ed;
-    --base02: #f8f8f8;
-    --base03: #e7a6ff;
-    --base04: #fca8ff;
-    --base05: #8732a5;
-    --base06: #282828;
-    --base07: #181818;
-    --base08: #ab4642;
-    --base09: #dc9656;
-    --base0A: #d1c58b;
-    --base0B: #a1b56c;
-    --base0C: #86c1b9;
-    --base0D: #7cafc2;
-    --base0E: #ba8baf;
-    --base0F: #a16946;
-  }
+  @import './themes.css';
 
   .ampled-json-inspect {
     --cyan: var(--base0C, #00c1be);
@@ -318,6 +188,8 @@
     margin: 0;
     overflow-y: auto;
     overflow-x: hidden;
+    -webkit-font-smoothing: subpixel-antialiased;
+    -moz-osx-font-smoothing: grayscale;
 
     &.borderless {
       background-color: transparent;

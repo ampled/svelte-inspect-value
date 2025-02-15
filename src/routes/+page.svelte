@@ -114,6 +114,7 @@ Result:
 <p>
   <code>{packageName} </code> exports a utility function to set a "global" config for every instance
   of the Inspect-component in or under the component where the function is called (it sets context).
+  Alternatively, you can use <code>InspectOptionsProvider</code>.
 </p>
 
 <p>
@@ -130,8 +131,6 @@ Result:
     { code: globalConfigCode, label: '+page.svelte', language: 'svelte' },
   ]}
 />
-
-<!-- <Code code={globalConfigCode} label="GlobalConfigExample.svelte" language="svelte" /> -->
 
 Result:
 
