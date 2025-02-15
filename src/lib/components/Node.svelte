@@ -6,7 +6,7 @@
   import { getType, type ValueType } from '../util.js'
   import Default from './Default.svelte'
   import HtmlView from './HTMLView.svelte'
-  import { getComponent } from './index.js'
+  import { getComponent, getDefaultComponent } from './index.js'
   import InspectErrorView from './InspectErrorView.svelte'
 
   type Props = TypeViewProps<unknown> & { usedefaults?: boolean }
@@ -20,7 +20,7 @@
     ...rest
   }: Props = $props()
 
-  let options = useOptions()
+  const options = useOptions()
 
   let type: ValueType = $derived(getType(value))
 
@@ -33,8 +33,17 @@
     let entry = getComponent(type, useDefaults ? {} : custom)
 
     if (entry) {
-      let [component, propfn] = entry
+      let [component, propfn, predicate] = entry
       let props = propfn ? propfn({ value }) : {}
+      if (predicate) {
+        const use = predicate({ value, key, type, ...rest })
+        if (!use) {
+          const [component, propfn] = getDefaultComponent(type)
+          const props = propfn ? propfn({ value }) : {}
+          return [component, props]
+        }
+      }
+
       return [component, props] as const
     } else if (type.startsWith('html')) {
       return [HtmlView, {}] as const
@@ -47,23 +56,21 @@
     getTypeComponent(type, options.value.customComponents, usedefaults)
   )
   let path = $derived(key != null && prevPath ? [...prevPath, key] : ['root'])
+
+  // function babababababababababba(error: unknown, reset: () => void): void {
+  //   debugger
+  // }
 </script>
 
-<svelte:boundary
-  onerror={(e) => {
-    console.error(e)
-  }}
->
-  <TypeComponent {value} {key} {keyDelim} {type} {path} {...rest} {...componentProps} />
+<svelte:boundary onerror={(e) => console.error(e)}>
+  {#if typeof TypeComponent === 'function'}
+    <TypeComponent {value} {key} {keyDelim} {type} {path} {...rest} {...componentProps} />
+  {/if}
 
   {#snippet failed(error, reset)}
-    {@const inspectError = new InspectError(
-      `InspectError: Component for value of type ${type} failed`,
-      value,
-      {
-        cause: error,
-      }
-    )}
+    {@const inspectError = new InspectError(`Component for value of type ${type} failed`, value, {
+      cause: error,
+    })}
 
     <InspectErrorView value={inspectError} {key} {path} {reset} />
   {/snippet}

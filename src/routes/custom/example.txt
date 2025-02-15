@@ -14,7 +14,14 @@
     // Using the exported helper function enables proper typing for props
     // NOTE: the returned props can be considered overrides for props passed by Inspect
     // and does not need to be complete
-    string: addComponent(HexString, (props) => ({ showString, value: props.value }))
+    string: addComponent(
+      HexString, 
+      // optional props transform
+      (props) => ({ showString, value: props.value })
+      // optional predicate determines if custom component should be used (if true)
+      // uses default component if false
+      (props) => props.value.startsWith('#')
+    )
   })
 
   const value = {

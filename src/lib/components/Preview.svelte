@@ -95,7 +95,7 @@
       class="preview"
       transition:slide={{
         axis: 'x',
-        duration: options.value.noanimate ? 0 : 400,
+        duration: options.transitionDuration * 2,
       }}
     >
       {#if prefix}
@@ -105,8 +105,8 @@
         class="inner"
         transition:fly={{
           y: 20,
-          opacity: 1,
-          duration: options.value.noanimate ? 0 : 400,
+          opacity: 0,
+          duration: options.transitionDuration * 2,
         }}
       >
         {#if keys && value}

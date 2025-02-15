@@ -4,7 +4,9 @@
   import type { SvelteMap } from 'svelte/reactivity'
   import Code from '../Code.svelte'
   import Stack from '../Stack.svelte'
-  import code from './promises.txt?raw'
+  import promiseCode from './promises.txt?raw'
+
+  let { code } = $props()
 
   let promises = $state.raw<Record<string, Promise<unknown>>>()
 
@@ -34,7 +36,10 @@
   <button onclick={run}>rerun</button>
 
   <Stack>
-    <Code style="flex-basis: 50%" {code} />
+    <Code style="flex-basis: 50%" code={promiseCode}>
+      <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+      {@html code}
+    </Code>
     {#if promises}
       <Inspect style="flex-basis: 50%" value={promises} name="promises" theme="drak" expandAll />
     {/if}

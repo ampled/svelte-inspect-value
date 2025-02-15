@@ -1,3 +1,41 @@
+const inspect = {
+  '--base00': '#202e40',
+  '--base01': '#31455e',
+  '--base02': '#425670',
+  '--base03': '#6d819c',
+  '--base04': '#FFFFFF',
+  '--base05': '#ffffff',
+  '--base06': '#bfc8d4',
+  '--base07': '#FFFFFF',
+  '--base08': '#ff5c7c',
+  '--base09': '#d1ae00',
+  '--base0A': '#ffd285',
+  '--base0B': '#8fff96',
+  '--base0C': '#81eced',
+  '--base0D': '#81ecee',
+  '--base0E': '#e68aff',
+  '--base0F': '#FFFFFF',
+}
+
+const light = {
+  '--base00': '#e8e8e8',
+  '--base01': '#d8d8d8',
+  '--base02': '#f8f8f8',
+  '--base03': '#b8b8b8',
+  '--base04': '#585858',
+  '--base05': '#383838',
+  '--base06': '#282828',
+  '--base07': '#181818',
+  '--base08': '#ab4642',
+  '--base09': '#dc9656',
+  '--base0A': '#9d5e00',
+  '--base0B': '#75834e',
+  '--base0C': '#5f8681',
+  '--base0D': '#3e9cbe',
+  '--base0E': '#ba8baf',
+  '--base0F': '#a16946',
+}
+
 const drak = {
   '--base00': '#282a36',
   '--base01': '#3a3c4e',
@@ -170,9 +208,11 @@ const ron = {
 }
 
 export const themes = {
+  inspect,
   drak,
   drakNeo,
   pinkula,
+  light,
   plain,
   plainDark,
   stereo,

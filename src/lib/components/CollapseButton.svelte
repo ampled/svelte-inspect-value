@@ -1,8 +1,9 @@
 <script lang="ts">
+  import Caret from '$lib/icons/Caret.svelte'
   import { useOptions } from '$lib/options.svelte.js'
   import type { HTMLButtonAttributes } from 'svelte/elements'
-  import { flashOnUpdate } from '../action/update-flash.svelte.js'
-  import Caret from '../icons/Caret.svelte'
+  import { scale } from 'svelte/transition'
+  import Bullet from './Bullet.svelte'
 
   type Props = {
     collapsed?: boolean
@@ -51,10 +52,10 @@
     }
   }
 
-  let flashFn = $state<() => void>()
+  let caret = $state<ReturnType<typeof Caret>>()
 
   export function flash() {
-    flashFn?.()
+    caret?.flash()
   }
 
   let keyOrType = $derived((key ?? type)?.toString())
@@ -71,17 +72,17 @@
   {...rest}
   {onkeydown}
 >
-  <div
-    use:flashOnUpdate={{
-      value: () => value,
-      enabled: () => options.value.flashOnUpdate,
-      cb: (trigger) => (flashFn = trigger),
-    }}
-  >
+  <div>
     {#if disabled}
-      &hyphen;
+      <Bullet />
     {:else}
-      <Caret style="rotate:{rotation}deg; transition: rotate 125ms ease-in-out;" />
+      <div in:scale={{ duration: options.transitionDuration }}>
+        <Caret
+          bind:this={caret}
+          {value}
+          style="rotate:{rotation}deg; transition: rotate 125ms ease-in-out;"
+        />
+      </div>
     {/if}
   </div>
 </button>
@@ -93,7 +94,7 @@
     padding: 0;
     border: none;
     all: unset;
-    overflow: hidden;
+    overflow: visible;
     cursor: pointer;
     display: inline-flex;
     justify-content: center;
@@ -102,6 +103,8 @@
     aspect-ratio: 1 / 1;
     width: 1em;
     height: 1em;
+    min-width: 1em;
+    max-width: 1em;
     user-select: none;
     transition: all 100ms linear;
 

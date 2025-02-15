@@ -135,7 +135,7 @@
       {#if isSetting}
         <input
           bind:this={inputElement}
-          transition:slide={{ axis: 'x', duration: options.value.noanimate ? 0 : 100 }}
+          transition:slide={{ axis: 'x', duration: options.transitionDuration * 2 }}
           type="text"
           bind:value={inputText}
           class={inputState}

@@ -4,6 +4,7 @@
   import Inspect from '$lib/Inspect.svelte'
   import { colord } from 'colord'
   import HueRotate from './HueRotate.svelte'
+  import './theme.css'
   import { themes } from './themes.js'
   import Theming from './Theming.svelte'
 
@@ -21,17 +22,6 @@
   let currentColors = $derived(rotated == null ? colors : rotated)
 
   let style = $derived(keys.map((k) => `${k}: ${currentColors[k]};`).join(''))
-  // let classPreview = $state('.inspect-theme { }')
-
-  //   function _createClassPreview(style: string) {
-  //     return `.inspect-theme {
-  // ${style
-  //   .split(';')
-  //   .filter(Boolean)
-  //   .map((s) => `  ${s};\n`)
-  //   .join('')}}
-  // `
-  //   }
 
   let presets = Object.keys(themes) as (keyof typeof themes)[]
   let selectedPreset = $state<keyof typeof themes>('drak')
@@ -102,9 +92,9 @@
   <code>Inspect</code> has 16 css variables that can be set directly on the component or via a
   (global) class.<br />
   If you have favorite <a href="https://github.com/chriskempson/base16">base16</a> color-scheme it
-  should probably be supported very well. The variables <code>base04, base06, base07</code> and
+  should probably be supported very well. The variables <code>base04, base06</code> and
   <code>base0F</code>
-  is currently no used by any default components, but is still defined and can be used in
+  is currently not used by any default components, but is still defined and can be used in
   <a href="/custom">custom components.</a><br />
 
   More fine-grained control might be implemented in the future.
@@ -124,48 +114,51 @@
 
 <!-- <AllTypes {style} --inspect-font={font} --inspect-font-size={fontSizePx} /> -->
 
-<div {style}>
-  <Theming --inspect-font={font} --inspect-font-size={fontSizePx} {style} {colors} />
-</div>
-
-<div class="flex row flex-wrap">
-  {#each keys as key}
-    {@const locked = lockedColors.includes(key)}
-    <label>
-      {key.replaceAll('--base', '')}
-      <div class="colorpicker">
-        <input
-          type="color"
-          bind:value={currentColors[key]}
-          onchange={() => saveStep()}
-          defaultValue="#ffffff"
-          disabled={rotated != null}
-        />
-      </div>
-      <button
-        type="button"
-        disabled={rotated != null || currentColors[key] === 'transparent'}
-        title="set transparent"
-        class="unstyled"
-        onclick={() => {
-          colors[key] = 'transparent'
-          saveStep()
-        }}>x</button
-      >
-      <button
-        type="button"
-        title="set transparent"
-        class="unstyled sm"
-        onclick={() => {
-          if (locked) {
-            lockedColors = lockedColors.filter((k) => k !== key)
-          } else {
-            lockedColors.push(key)
-          }
-        }}><small>{locked ? 'unlock' : 'lock'}</small></button
-      >
-    </label>
-  {/each}
+<div class="colors-and-preview">
+  <div class="colors">
+    {#each keys as key}
+      {@const locked = lockedColors.includes(key)}
+      <label class="color">
+        {key.replaceAll('--base', '')}
+        <div class="colorpicker">
+          <input
+            type="color"
+            bind:value={currentColors[key]}
+            onchange={() => saveStep()}
+            defaultValue="#ffffff"
+            disabled={rotated != null || locked}
+          />
+        </div>
+        <!-- <button
+          type="button"
+          disabled={rotated != null || currentColors[key] === 'transparent'}
+          title="set transparent"
+          class="unstyled"
+          onclick={() => {
+            colors[key] = 'transparent'
+            saveStep()
+          }}>x</button
+        > -->
+        <DevOnly>
+          <button
+            type="button"
+            title="lock"
+            class="unstyled sm lock"
+            onclick={() => {
+              if (locked) {
+                lockedColors = lockedColors.filter((k) => k !== key)
+              } else {
+                lockedColors.push(key)
+              }
+            }}><small>{locked ? 'unlock' : 'lock'}</small></button
+          >
+        </DevOnly>
+      </label>
+    {/each}
+  </div>
+  <div style="flex-basis: 100%">
+    <Theming --inspect-font={font} --inspect-font-size={fontSizePx} {style} {colors} />
+  </div>
 </div>
 
 <div class="flex row flex-wrap gap">
@@ -239,11 +232,27 @@ base0E  Keywords, Storage, Selector, Markup Italic, Diff Changed
 base0F  Deprecated, Opening/Closing Embedded Language Tags, e.g. {'<?php ?>'}
 </pre> -->
 
+<h2>Defining a theme</h2>
+
+<p>
+  Add your custom theme class to a global css file and import it, then set the theme-class using the
+  class or theme-prop on the inspect component or via global options.
+</p>
+
 <pre>
-<span class="selector">.inspect-theme</span> {'{'}
+<span class="selector">.my-inspect-theme</span> {'{'}
 {#each keys as key, i (key)}<span class="key">{key}</span>: <span class="value">{colors[key]}</span
     >;{#if i !== 15}<br />{/if}{/each}
 {'}'}</pre>
+<p>Alternatively, set css variables directly on the component.</p>
+<pre>
+{'<'}<span style="color:var(--blue);">Inspect</span>
+  <span style="color: var(--green)">theme</span>=""
+{#each keys as key, i (key)}<span class="value" style="padding-left: 1em;">{key}</span>=<span
+      style="color: var(--yellow);">"{colors[key]}"</span
+    >{#if i !== 15}<br />{/if}{/each}
+{'/>'}
+</pre>
 
 <style>
   .row {
@@ -259,11 +268,54 @@ base0F  Deprecated, Opening/Closing Embedded Language Tags, e.g. {'<?php ?>'}
     /* padding: 0.5em; */
   }
 
+  .colors-and-preview {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  .colors {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  label.color {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .lock {
+    min-width: 37px;
+    text-align: center;
+  }
+
+  @media (min-width: 1024px) {
+    .colors-and-preview {
+      flex-direction: row;
+      gap: 1em;
+      justify-content: center;
+      margin-left: 1em;
+    }
+
+    .colors {
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    label.color {
+      flex-direction: row;
+      gap: 1em;
+    }
+  }
+
   .colorpicker {
     width: 3.5em;
-    height: 3.5em;
+    height: 2em;
     overflow: hidden;
     position: relative;
+    outline: 1px solid white;
+    border-radius: 4px;
   }
 
   input[type='color'] {

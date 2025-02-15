@@ -68,7 +68,7 @@
 <Expandable {...{ value, key, type, path }} length={entries.length} showLength={false}>
   {#snippet valuePreview({ showPreview })}
     {#key status}
-      <span class="value promise {status}" in:fade={{ duration: options.value.noanimate ? 0 : 200 }}
+      <span class="value promise {status}" in:fade={{ duration: options.transitionDuration }}
         ><span class="bracket">{'<'}</span
         >{`${status}`}{#if status === 'fulfilled' || status === 'rejected'}
           <Preview prefix={':'} singleValue={result} startLevel={0} {showPreview} showKey={false} />

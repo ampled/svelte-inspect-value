@@ -2,7 +2,9 @@
  @component StringValue 
  
  Handles "smart" behavior of string value representation like collapsing
- according to stringCollapse-prop or using an anchor tag if it's a link
+ according to stringCollapse-option or using an anchor tag if it's a link
+
+ Single-line only
  
  -->
 <script lang="ts">
@@ -14,7 +16,7 @@
   import type { TypeViewProps } from '../types.js'
   import Count from './Count.svelte'
 
-  type Props = TypeViewProps<string> & { length?: boolean }
+  type Props = TypeViewProps<string> & { length?: boolean; inline?: boolean }
 
   let { value, display, length = false, type = 'string' }: Props = $props()
   const previewLevel = getPreviewLevel()
@@ -25,7 +27,7 @@
     (type === 'string' || type === 'url') &&
       (URL.canParse(displayOrValue) || displayOrValue.startsWith('/') || value.startsWith('data:'))
   )
-  let ele: 'a' | 'pre' = $derived(isUrlOrPath ? 'a' : 'pre')
+  let ele: 'a' | 'span' = $derived(isUrlOrPath ? 'a' : 'span')
 
   let collapsed = $derived(collapseString(displayOrValue, options.value.stringCollapse))
 </script>
@@ -39,8 +41,7 @@
   target={isUrlOrPath ? '_blank' : null}
   rel={isUrlOrPath ? 'noreferrer' : null}
 >
-  <!-- only use stringify (add quotes) if the original value is not a string (e.g. date or url)  -->
-  {type === 'string' ? stringify(collapsed, 0, options.value.quotes) : collapsed}{#if isUrlOrPath}
+  {stringify(collapsed, 0, options.value.quotes)}{#if isUrlOrPath}
     <span class="value url">
       <LinkIcon />
     </span>
@@ -51,10 +52,12 @@
 
 <style>
   .stringvalue {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     text-wrap: nowrap;
     white-space: pre !important;
     white-space-collapse: preserve-spaces;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 </style>

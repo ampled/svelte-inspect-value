@@ -57,11 +57,11 @@
   <span data-testid="count" class="count">
     {#if length > 0}
       {#if prefix}
-        {prefix}
+        <span class="unit">{prefix}</span>
       {/if}
       {length}
       {#if unit}
-        {unit}
+        <span class="unit">{unit}</span>
       {/if}
     {:else}
       empty
@@ -75,5 +75,9 @@
     font-style: italic;
     font-weight: bold;
     font-size: 0.857em;
+  }
+
+  .unit {
+    display: var(--unit-display);
   }
 </style>

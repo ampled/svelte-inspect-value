@@ -19,6 +19,8 @@
   //     inspectProps($page.url.origin).map(({ name, ...rest }) => [name, { ...rest }])
   //   )
   // )
+
+  let stringCollapse = $state(20)
 </script>
 
 <div class="center">
@@ -84,10 +86,20 @@
   <li>edit-mode (maybe)</li>
 </ul>
 
-<h2>Usage</h2>
+<h2>Usage & Conditional Rendering</h2>
 
 <p>
-  Install <code>{packageName}</code> with your favorite package manager.
+  Install <code>{packageName}</code> with your favorite package manager.<br />
+</p>
+
+<p>
+  A common use case for a component like this is to only render it during development. If you are
+  using SvelteKit, you can conditionally render Inspect using the <code>dev</code> variable exported
+  from
+  <code>'$app/environment'</code>.<br />
+  If you are not using SvelteKit or Vite,
+  <a href="https://github.com/benmccann/esm-env/tree/main"><code>esm-env</code></a> is a good alternative
+  for checking conditional environment variables with different bundlers and runtimes.
 </p>
 
 <Code code={minimalcode} />
@@ -96,6 +108,39 @@ Result:
 <div class="center">
   <MinimalExample />
 </div>
+
+<h2>Global Options</h2>
+
+<p>
+  <code>{packageName} </code> exports a utility function to set a "global" config for every instance
+  of the Inspect-component in or under the component where the function is called (it sets context).
+  Alternatively, you can use <code>InspectOptionsProvider</code>.
+</p>
+
+<p>
+  Passing a reactive object to the function will update the components if any property of the object
+  is changed beceause its reactive (yup!)<br />
+
+  You can try this now if you change any options in the configurator at the bottom of your screen!
+  (hover it)
+</p>
+
+<MultiCode
+  examples={[
+    { code: globalConfigCodeLayout, label: '+layout.svelte', language: 'svelte' },
+    { code: globalConfigCode, label: '+page.svelte', language: 'svelte' },
+  ]}
+/>
+
+Result:
+
+<label>
+  string collapse
+  <input type="number" bind:value={stringCollapse} />
+</label>
+<Inspect value={'no long strings in this neighbourhood thanks'} {stringCollapse} />
+
+<p>Options set with props will override any global options</p>
 
 <h2>Props</h2>
 
@@ -146,6 +191,16 @@ Result:
       <td><code>true</code></td>
     </tr>
     <tr>
+      <td> previewDepth </td>
+      <td> how deeply nested items should be previewed before simply showing types </td>
+      <td><code>1</code></td>
+    </tr>
+    <tr>
+      <td> previewEntries </td>
+      <td> how many nested items should be previewed </td>
+      <td><code>3</code></td>
+    </tr>
+    <tr>
       <td> showTools </td>
       <td> display row of utility-"tools" when hovering an entry </td>
       <td><code>true</code></td>
@@ -173,7 +228,7 @@ Result:
     </tr>
     <tr>
       <td> expandAll </td>
-      <td> expand all nodes by default. can be a performance hitch with a lot of entries </td>
+      <td> initially expand all nodes. can be a performance hitch with a lot of entries </td>
       <td><code>false</code></td>
     </tr>
     <tr>
@@ -192,6 +247,14 @@ Result:
       <td><code>'single'</code></td>
     </tr>
     <tr>
+      <td> renderIf </td>
+      <td>
+        function or value. render condition for <code>Inspect</code>. if value or return value of
+        function is truthy, <code>Inspect</code> will render.
+      </td>
+      <td><code>true</code></td>
+    </tr>
+    <tr>
       <td> customComponents </td>
       <td>
         custom components for values.<br />
@@ -202,34 +265,6 @@ Result:
     </tr>
   </tbody>
 </table>
-
-<h2>Global config</h2>
-
-<p>
-  <code>{packageName} </code> exports a utility function to set a "global" config for every instance
-  of the Inspect-component in or under the component where the function is called (it sets context).
-</p>
-
-<p>
-  Passing a reactive object to the function will update the components if any property of the object
-  is changed beceause its reactive (yup!)<br />
-
-  You can try this now if you change any options in the configurator at the bottom of your screen!
-  (hover it)
-</p>
-
-<MultiCode
-  examples={[
-    { code: globalConfigCodeLayout, label: '+layout.svelte', language: 'svelte' },
-    { code: globalConfigCode, label: '+page.svelte', language: 'svelte' },
-  ]}
-/>
-
-<!-- <Code code={globalConfigCode} label="GlobalConfigExample.svelte" language="svelte" /> -->
-
-<Inspect value={'no long strings in this neighbourhood thanks'} stringCollapse={20} />
-
-<p>Options set with props will override any global options</p>
 
 <!-- <BasicEditable /> -->
 <style>

@@ -1,0 +1,39 @@
+.line {
+  transition: all 0.25s ease-in-out;
+  background: linear-gradient(35deg, var(--bg-lighter) 60%, transparent 80%);
+  background-size: 0% 100%;
+  background-origin: border-box;
+  background-repeat: no-repeat;
+  position: relative;
+  display: flex;
+  gap: var(--line-gap, 0.5em);
+  min-height: 1.5em;
+  max-height: 1.5em;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: calc(var(--indent) * 0.5);
+
+  &:hover {
+    background-position-x: left;
+    background-size: 100% 100%;
+  }
+}
+
+.line.preview {
+  padding-left: 0;
+}
+
+.line.preview.nokey {
+  gap: 0;
+
+  .indicator-and-key {
+    display: none;
+  }
+}
+
+.indicator-and-key {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+}

@@ -1,10 +1,9 @@
 <script lang="ts" generics="T = unknown">
   import { getPreviewLevel } from '$lib/contexts.js'
-  import { useOptions } from '$lib/options.svelte.js'
   import { getContext } from 'svelte'
   import type { HTMLAttributes } from 'svelte/elements'
-  import { flashOnUpdate } from '../action/update-flash.svelte.js'
   import type { TypeViewProps } from '../types.js'
+  import Bullet from './Bullet.svelte'
   import Key from './Key.svelte'
   import Tools from './Tools.svelte'
   import Type from './Type.svelte'
@@ -31,7 +30,6 @@
     typeof value === 'string' ? value : display != null ? display : value?.toString()
   )
 
-  let options = useOptions()
   let previewLevel = getPreviewLevel()
   let isKey = getContext<boolean | undefined>('key')
 </script>
@@ -45,15 +43,10 @@
 >
   <div class="indicator-and-key">
     {#if !previewLevel && !isKey}
-      <div
-        class="dash"
-        use:flashOnUpdate={{ value: () => value, enabled: () => options.value.flashOnUpdate }}
-      >
-        &hyphen;
-      </div>
+      <Bullet {value} />
     {/if}
     {#if showKey}
-      <Key prefix={keyPrefix} delim={keyDelim} style={keyStyle} {key} {path} />
+      <Key disabled prefix={keyPrefix} delim={keyDelim} style={keyStyle} {key} {path} />
     {/if}
   </div>
   {#if !isKey}
@@ -73,52 +66,5 @@
 </div>
 
 <style>
-  .line {
-    transition: background-color 0.2s ease-in-out;
-    position: relative;
-    display: flex;
-    gap: 0.5em;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-
-    &:hover,
-    &:focus-within {
-      background-color: var(--bg-lighter);
-    }
-  }
-
-  .line.preview {
-    padding-left: 0;
-  }
-
-  .line.preview.nokey {
-    gap: 0;
-
-    .indicator-and-key {
-      display: none;
-    }
-  }
-
-  .indicator-and-key {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25em;
-    padding-left: 0.25em;
-    user-select: none;
-
-    .dash {
-      display: inline-flex;
-      justify-content: center;
-      text-align: center;
-      vertical-align: middle;
-      align-items: center;
-      aspect-ratio: 1 / 1;
-      width: 1em;
-      height: 1em;
-      line-height: 1em;
-      color: var(--comments);
-      user-select: none;
-    }
-  }
+  @import './styles/line.css';
 </style>
