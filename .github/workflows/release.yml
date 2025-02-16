@@ -28,7 +28,7 @@ jobs:
         run: npm ci
       - name: 'Test'
         run: npx vitest --run
-      - name: build
+      - name: Build
         run: npm run build
       - name: Release
         env:
