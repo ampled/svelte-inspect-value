@@ -30,36 +30,33 @@
   {/snippet}
   <PropertyList {value} {keys}>
     {#snippet item({ key, index })}
-      {#if ['string', 'number', 'symbol'].includes(typeof key)}
-        <Node key={key as string} value={value.get(key)} {path} />
-      {:else}
-        <Expandable
-          key=""
-          type="Entry"
-          value={[key, value.get(key)]}
-          path={[...path, index]}
-          length={2}
-          showLength={false}
-        >
-          {#snippet valuePreview({ showPreview })}
-            <Preview
-              keyValue={[[key as string, value.get(key)]]}
-              prefix={'{'}
-              postfix={'}'}
-              keyDelim="=>"
-              keyStyle="gap: 0.5em;"
-              type="map"
-              {showPreview}
-            />
-          {/snippet}
-          <Entry i={0}>
-            <Node key="key" value={key} path={[...path, index]} />
-          </Entry>
-          <Entry i={1}>
-            <Node key="value" value={value.get(key)} path={[...path, index]} />
-          </Entry>
-        </Expandable>
-      {/if}
+      <Expandable
+        key={index}
+        type=""
+        value={[key, value.get(key)]}
+        path={[...path, index]}
+        length={2}
+        showLength={false}
+        keepPreviewOnExpand
+      >
+        {#snippet valuePreview({ showPreview })}
+          <Preview
+            keyValue={[[key as string, value.get(key)]]}
+            prefix={'{'}
+            postfix={'}'}
+            keyDelim="=>"
+            keyStyle="gap: 0.5em;"
+            type="map"
+            {showPreview}
+          />
+        {/snippet}
+        <Entry i={0}>
+          <Node key="key" value={key} path={[...path, index]} />
+        </Entry>
+        <Entry i={1}>
+          <Node key="value" value={value.get(key)} path={[...path, index]} />
+        </Entry>
+      </Expandable>
     {/snippet}
   </PropertyList>
 </Expandable>

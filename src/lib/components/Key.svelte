@@ -10,19 +10,15 @@
   type Props = {
     prefix?: string
     key: TypeViewProps<unknown>['key'] | unknown
-    force?: boolean
     path?: TypeViewProps<unknown>['path']
     delim?: string
   } & HTMLButtonAttributes
 
-  let { key, path = [], ondblclick, delim = ':', prefix, force = false, ...rest }: Props = $props()
+  let { key, path = [], ondblclick, delim = ':', prefix, ...rest }: Props = $props()
   const options = useOptions()
   const keyTypes = ['string', 'number', 'symbol', 'quotedstring']
   const simpleKeys = ['bigint', 'regexp']
 
-  // let keyType = $derived(getType(key))
-
-  // const shouldBeQuotedRegex = /[ \-\\@//\n\r\t{}[\]()<>.,;:\p{Extended_Pictographic}]/gu
   const shouldBeQuoted = /[^A-zÀ-ú0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F_]|[\\[\]`]/
 
   let keyType = $derived.by(() => {
@@ -46,58 +42,48 @@
     return key
   })
 
-  let showKey = $derived(key != null)
-
   setContext('key', true)
 
   function onerror(error: unknown): void {
     throw new Error('Error in Key.svelte', { cause: error })
   }
-
-  function onselectfdskfdsjlfkjdsflkds(
-    event: Event & { currentTarget: EventTarget & HTMLSpanElement }
-  ) {
-    console.log(event)
-  }
 </script>
 
 <svelte:boundary {onerror}>
-  {#if showKey || force}
-    <button
-      data-testid="key"
-      class="key-button"
-      {ondblclick}
-      aria-label={key?.toString()}
-      title={stringifyPath(path)}
-      {...rest}
-    >
-      {#if prefix}
-        <span class="prefix">{prefix}</span>
-      {/if}
-      {#if keyTypes.includes(keyType)}
-        <span class="key {keyType}" onselectstart={onselectfdskfdsjlfkjdsflkds}>
-          {#if keyType === 'quotedstring' && key !== ''}
-            {#each display as string as char}
-              {#if char === ' '}
-                <span class="whitespace">&sdot;</span>
-              {:else}
-                {char}
-              {/if}
-            {/each}
-          {:else}
-            {display?.toString()}
-          {/if}
-        </span>
-      {:else if simpleKeys.includes(keyType)}
-        <Node value={key} />
-      {:else}
-        <Type type={keyType} force />
-      {/if}
-      {#if delim}
-        <span class="delim">{delim}</span>
-      {/if}
-    </button>
-  {/if}
+  <button
+    data-testid="key"
+    class="key-button"
+    {ondblclick}
+    aria-label={key?.toString()}
+    title={stringifyPath(path)}
+    {...rest}
+  >
+    {#if prefix}
+      <span class="prefix">{prefix}</span>
+    {/if}
+    {#if keyTypes.includes(keyType)}
+      <span class="key {keyType}">
+        {#if keyType === 'quotedstring' && key !== ''}
+          {#each display as string as char}
+            {#if char === ' '}
+              <span class="whitespace">&sdot;</span>
+            {:else}
+              {char}
+            {/if}
+          {/each}
+        {:else}
+          {display?.toString()}
+        {/if}
+      </span>
+    {:else if simpleKeys.includes(keyType)}
+      <Node value={key} />
+    {:else}
+      <Type type={keyType} force />
+    {/if}
+    {#if delim}
+      <span class="delim">{delim}</span>
+    {/if}
+  </button>
 </svelte:boundary>
 
 <style>

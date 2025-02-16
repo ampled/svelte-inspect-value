@@ -69,19 +69,18 @@
     return false
   })
 
-  // let notEmpty = $derived.by(() => {
-  //   if (list) {
-  //     return list.length > 0
-  //   } else if (keyValue) {
-  //     return keyValue.length > 0
-  //   } else if (keys) {
-  //     return keys.length > 0
-  //   }
-  //   return singleValue !== EMPTY
-  // })
-
   function alwaysRender(type: string) {
-    return ['boolean', 'string', 'number', 'bigint', 'symbol', 'regexp', 'class'].includes(type)
+    return [
+      'boolean',
+      'string',
+      'number',
+      'bigint',
+      'symbol',
+      'regexp',
+      'class',
+      'undefined',
+      'null',
+    ].includes(type)
   }
 </script>
 
