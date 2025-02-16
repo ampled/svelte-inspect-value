@@ -3,8 +3,14 @@ import { afterAll, describe, expect, test } from 'vitest'
 import { renderInspect } from './util/index.js'
 
 describe('expandable values', () => {
-  const inspect = renderInspect({ value: undefined, showLength: true, elementView: 'full' })
-  const { rerender, unmount, user } = inspect
+  const inspect = renderInspect({
+    value: undefined,
+    showLength: true,
+    showTypes: true,
+    elementView: 'full',
+    // expandAll: true,
+  })
+  const { rerender, unmount, user, debug } = inspect
 
   afterAll(() => {
     unmount()
@@ -46,6 +52,8 @@ describe('expandable values', () => {
 
   test('it can display the keys and values of a map', async () => {
     await rerender({
+      showPreview: true,
+      expandAll: true,
       value: new Map<unknown, unknown>([
         ['foo', 1],
         ['bar', 2],
@@ -63,6 +71,8 @@ describe('expandable values', () => {
       screen.queryByRole('button', { name: 'bar' }),
       screen.queryByRole('button', { name: 'baz' }),
     ]
+
+    // console.log(screen.getAllByTestId('key'))
     expect(foo).toBeInTheDocument()
     expect(bar).toBeInTheDocument()
     expect(baz).toBeInTheDocument()
@@ -70,6 +80,8 @@ describe('expandable values', () => {
     // check type
     const type = screen.getAllByTestId('type')[0]
     expect(type).toHaveTextContent('Map')
+
+    // debug()
 
     // check values
     screen.getAllByTestId('value').forEach((value) => {
@@ -79,6 +91,8 @@ describe('expandable values', () => {
 
   test('it can display the values of an array', async () => {
     await rerender({ value: [1, 2, 3] })
+
+    debug()
 
     // check count
     const count = screen.queryByTestId('count')

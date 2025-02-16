@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { getPreviewLevel } from '$lib/contexts.js'
   import { useOptions } from '$lib/options.svelte.js'
   import { setContext } from 'svelte'
   import type { HTMLButtonAttributes } from 'svelte/elements'
@@ -12,6 +13,7 @@
     key: TypeViewProps<unknown>['key'] | unknown
     path?: TypeViewProps<unknown>['path']
     delim?: string
+    allowUndefined?: boolean
   } & HTMLButtonAttributes
 
   let { key, path = [], ondblclick, delim = ':', prefix, ...rest }: Props = $props()
@@ -20,6 +22,7 @@
   const simpleKeys = ['bigint', 'regexp']
 
   const shouldBeQuoted = /[^A-zÀ-ú0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F_]|[\\[\]`]/
+  const previewLevel = getPreviewLevel()
 
   let keyType = $derived.by(() => {
     const t = getType(key)
@@ -42,6 +45,8 @@
     return key
   })
 
+  let shouldShow = $derived(key === undefined ? previewLevel > 0 : true)
+
   setContext('key', true)
 
   function onerror(error: unknown): void {
@@ -49,42 +54,44 @@
   }
 </script>
 
-<svelte:boundary {onerror}>
-  <button
-    data-testid="key"
-    class="key-button"
-    {ondblclick}
-    aria-label={key?.toString()}
-    title={stringifyPath(path)}
-    {...rest}
-  >
-    {#if prefix}
-      <span class="prefix">{prefix}</span>
-    {/if}
-    {#if keyTypes.includes(keyType)}
-      <span class="key {keyType}">
-        {#if keyType === 'quotedstring' && key !== ''}
-          {#each display as string as char}
-            {#if char === ' '}
-              <span class="whitespace">&sdot;</span>
-            {:else}
-              {char}
-            {/if}
-          {/each}
-        {:else}
-          {display?.toString()}
-        {/if}
-      </span>
-    {:else if simpleKeys.includes(keyType)}
-      <Node value={key} />
-    {:else}
-      <Type type={keyType} force />
-    {/if}
-    {#if delim}
-      <span class="delim">{delim}</span>
-    {/if}
-  </button>
-</svelte:boundary>
+{#if shouldShow}
+  <svelte:boundary {onerror}>
+    <button
+      data-testid="key"
+      class="key-button"
+      {ondblclick}
+      aria-label={key?.toString()}
+      title={stringifyPath(path)}
+      {...rest}
+    >
+      {#if prefix}
+        <span class="prefix">{prefix}</span>
+      {/if}
+      {#if keyTypes.includes(keyType)}
+        <span class="key {keyType}">
+          {#if keyType === 'quotedstring' && key !== ''}
+            {#each display as string as char}
+              {#if char === ' '}
+                <span class="whitespace">&sdot;</span>
+              {:else}
+                {char}
+              {/if}
+            {/each}
+          {:else}
+            {display?.toString()}
+          {/if}
+        </span>
+      {:else if simpleKeys.includes(keyType)}
+        <Node value={key} />
+      {:else}
+        <Type type={keyType} force />
+      {/if}
+      {#if delim}
+        <span class="delim">{delim}</span>
+      {/if}
+    </button>
+  </svelte:boundary>
+{/if}
 
 <style>
   .key-button {
