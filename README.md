@@ -3,9 +3,7 @@
 [![NPM Version](https://img.shields.io/npm/v/svelte-inspect-value)](https://www.npmjs.com/package/svelte-inspect-value)
 [![GitHub Repo stars](https://img.shields.io/github/stars/ampled/svelte-inspect-value)](https://github.com/ampled/svelte-inspect-value)
 
-![readme](https://raw.githubusercontent.com/ampled/svelte-inspect-value/refs/heads/readme-0.1.0/readme.png)
-
-<!-- ![alt text](insert url here) -->
+![screenshot](https://raw.githubusercontent.com/ampled/svelte-inspect-value/refs/heads/main/readme.png)
 
 - [Demo and documentation](https://inspect.eirik.space)
 - [Svelte Playground](https://svelte.dev/playground/956365d6905c44298234ff4d9c60741e?version=5.17.3)
