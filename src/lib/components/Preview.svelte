@@ -69,19 +69,18 @@
     return false
   })
 
-  // let notEmpty = $derived.by(() => {
-  //   if (list) {
-  //     return list.length > 0
-  //   } else if (keyValue) {
-  //     return keyValue.length > 0
-  //   } else if (keys) {
-  //     return keys.length > 0
-  //   }
-  //   return singleValue !== EMPTY
-  // })
-
   function alwaysRender(type: string) {
-    return ['boolean', 'string', 'number', 'bigint', 'symbol', 'regexp', 'class'].includes(type)
+    return [
+      'boolean',
+      'string',
+      'number',
+      'bigint',
+      'symbol',
+      'regexp',
+      'class',
+      'undefined',
+      'null',
+    ].includes(type)
   }
 </script>
 
@@ -147,7 +146,7 @@
   {:else}
     <div class="key-type-preview">
       {#if showKey}
-        <Key {path} {key} delim={keyDelim} style={keyStyle} />
+        <Key {path} {key} delim={keyDelim} style={keyStyle} allowUndefined />
       {/if}
       <Type type={valType} force />
     </div>

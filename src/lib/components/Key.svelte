@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { getPreviewLevel } from '$lib/contexts.js'
   import { useOptions } from '$lib/options.svelte.js'
   import { setContext } from 'svelte'
   import type { HTMLButtonAttributes } from 'svelte/elements'
@@ -10,20 +11,18 @@
   type Props = {
     prefix?: string
     key: TypeViewProps<unknown>['key'] | unknown
-    force?: boolean
     path?: TypeViewProps<unknown>['path']
     delim?: string
+    allowUndefined?: boolean
   } & HTMLButtonAttributes
 
-  let { key, path = [], ondblclick, delim = ':', prefix, force = false, ...rest }: Props = $props()
+  let { key, path = [], ondblclick, delim = ':', prefix, ...rest }: Props = $props()
   const options = useOptions()
   const keyTypes = ['string', 'number', 'symbol', 'quotedstring']
   const simpleKeys = ['bigint', 'regexp']
 
-  // let keyType = $derived(getType(key))
-
-  // const shouldBeQuotedRegex = /[ \-\\@//\n\r\t{}[\]()<>.,;:\p{Extended_Pictographic}]/gu
   const shouldBeQuoted = /[^A-zÀ-ú0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F_]|[\\[\]`]/
+  const previewLevel = getPreviewLevel()
 
   let keyType = $derived.by(() => {
     const t = getType(key)
@@ -46,23 +45,17 @@
     return key
   })
 
-  let showKey = $derived(key != null)
+  let shouldShow = $derived(key === undefined ? previewLevel > 0 : true)
 
   setContext('key', true)
 
   function onerror(error: unknown): void {
     throw new Error('Error in Key.svelte', { cause: error })
   }
-
-  function onselectfdskfdsjlfkjdsflkds(
-    event: Event & { currentTarget: EventTarget & HTMLSpanElement }
-  ) {
-    console.log(event)
-  }
 </script>
 
-<svelte:boundary {onerror}>
-  {#if showKey || force}
+{#if shouldShow}
+  <svelte:boundary {onerror}>
     <button
       data-testid="key"
       class="key-button"
@@ -75,7 +68,7 @@
         <span class="prefix">{prefix}</span>
       {/if}
       {#if keyTypes.includes(keyType)}
-        <span class="key {keyType}" onselectstart={onselectfdskfdsjlfkjdsflkds}>
+        <span class="key {keyType}">
           {#if keyType === 'quotedstring' && key !== ''}
             {#each display as string as char}
               {#if char === ' '}
@@ -97,8 +90,8 @@
         <span class="delim">{delim}</span>
       {/if}
     </button>
-  {/if}
-</svelte:boundary>
+  </svelte:boundary>
+{/if}
 
 <style>
   .key-button {

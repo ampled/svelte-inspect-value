@@ -65,6 +65,8 @@
           },
         },
       ],
+      [null, 'null'],
+      [undefined, 'undef'],
     ]),
     date: new Date('1970-01-02 03:45:57'),
     url: new URL('https://alicebob.website/?ref=abcdefg#about'),

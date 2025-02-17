@@ -3,7 +3,13 @@ import { afterAll, describe, expect, test } from 'vitest'
 import { renderInspect } from './util/index.js'
 
 describe('expandable values', () => {
-  const inspect = renderInspect({ value: undefined, showLength: true, elementView: 'full' })
+  const inspect = renderInspect({
+    value: undefined,
+    showLength: true,
+    showTypes: true,
+    elementView: 'full',
+    // expandAll: true,
+  })
   const { rerender, unmount, user } = inspect
 
   afterAll(() => {
@@ -46,6 +52,8 @@ describe('expandable values', () => {
 
   test('it can display the keys and values of a map', async () => {
     await rerender({
+      showPreview: true,
+      expandAll: true,
       value: new Map<unknown, unknown>([
         ['foo', 1],
         ['bar', 2],
@@ -63,6 +71,8 @@ describe('expandable values', () => {
       screen.queryByRole('button', { name: 'bar' }),
       screen.queryByRole('button', { name: 'baz' }),
     ]
+
+    // console.log(screen.getAllByTestId('key'))
     expect(foo).toBeInTheDocument()
     expect(bar).toBeInTheDocument()
     expect(baz).toBeInTheDocument()

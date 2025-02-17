@@ -1,7 +1,7 @@
 {
   "name": "svelte-inspect-value",
   "description": "Svelte value inspector component",
-  "version": "0.1.0-next.2",
+  "version": "0.1.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/ampled/svelte-inspect-value.git"
@@ -73,6 +73,7 @@
     "prettier-plugin-organize-imports": "^4.1.0",
     "prettier-plugin-svelte": "^3.3.2",
     "publint": "^0.2.0",
+    "semantic-release": "^24.2.2",
     "shiki": "^2.1.0",
     "svelte": "^5.19.0",
     "svelte-check": "^4.1.1",
