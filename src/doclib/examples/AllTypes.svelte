@@ -324,4 +324,4 @@
   })
 </script>
 
-<Inspect name="allTypes" value={allTypes} {...props} debug />
+<Inspect name="allTypes" value={allTypes} {...props} />
