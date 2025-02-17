@@ -92,7 +92,6 @@
     <div
       data-testid="preview"
       class="preview"
-      onintroend={() => console.log('intro end')}
       transition:slide={{
         axis: 'x',
         duration: options.transitionDuration,
