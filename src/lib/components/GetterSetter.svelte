@@ -135,7 +135,7 @@
       {#if isSetting}
         <input
           bind:this={inputElement}
-          transition:slide={{ axis: 'x', duration: options.transitionDuration * 2 }}
+          transition:slide={{ axis: 'x', duration: options.transitionDuration }}
           type="text"
           bind:value={inputText}
           class={inputState}
@@ -170,7 +170,7 @@
         {/if}
         {#if descriptor.get}
           {#if previewLevel === 0}
-            <NodeActionButton title={`get ${key?.toString()} value`} onclick={callGetter}>
+            <NodeActionButton title={`get ${key?.toString()}`} onclick={callGetter}>
               get
             </NodeActionButton>
           {/if}
