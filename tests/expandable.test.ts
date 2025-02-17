@@ -10,7 +10,7 @@ describe('expandable values', () => {
     elementView: 'full',
     // expandAll: true,
   })
-  const { rerender, unmount, user, debug } = inspect
+  const { rerender, unmount, user } = inspect
 
   afterAll(() => {
     unmount()
@@ -81,8 +81,6 @@ describe('expandable values', () => {
     const type = screen.getAllByTestId('type')[0]
     expect(type).toHaveTextContent('Map')
 
-    // debug()
-
     // check values
     screen.getAllByTestId('value').forEach((value) => {
       expect(value.innerText).toBeOneOf(['1', '2', `'33'`])
@@ -91,8 +89,6 @@ describe('expandable values', () => {
 
   test('it can display the values of an array', async () => {
     await rerender({ value: [1, 2, 3] })
-
-    debug()
 
     // check count
     const count = screen.queryByTestId('count')
