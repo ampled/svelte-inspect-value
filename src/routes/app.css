@@ -279,3 +279,69 @@ button.unstyled {
   /* font-weight: <weight>;
   font-style: normal; */
 }
+
+/** TOC **/
+
+.toc {
+  display: none;
+  transition: all 250ms ease-in;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  padding: 1em;
+  position: fixed;
+  /* display: flex; */
+  right: 0;
+  top: 50%;
+  bottom: 50%;
+  margin-top: auto;
+  margin-bottom: auto;
+
+  max-height: max-content;
+  flex-direction: column;
+  opacity: 0.5;
+  transform: translateX(50%);
+  z-index: 50;
+
+  hr {
+    transition: all 250ms ease-in;
+  }
+
+  &:hover {
+    background-color: var(--bg);
+    /* border-color: var(--border-color);
+    border-width: 1px 0 1px 1px;
+    border-style: solid; */
+    opacity: 1;
+    transform: translateX(0);
+
+    a {
+      opacity: 1;
+      color: var(--fg);
+      background-color: transparent;
+    }
+
+    hr {
+      opacity: 0;
+      border-color: var(--border-color);
+    }
+  }
+
+  a {
+    opacity: 0;
+    transition: all 250ms ease-in;
+    font-size: 0.857em;
+    margin-top: 2px;
+    line-height: 1;
+    padding: 0.25em;
+    text-decoration: none;
+    color: var(--comments);
+    /* background-color: var(--comments); */
+    border-radius: 8px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .toc {
+    display: flex;
+  }
+}

@@ -24,7 +24,7 @@
   const { children } = $props()
 
   let routes = [
-    { href: '/', title: 'Getting started' },
+    { href: '/getting-started', title: 'Getting started' },
     { href: '/examples', title: 'Examples' },
     { href: '/custom', title: 'Custom components', devonly: true },
     { href: '/theming', title: 'Theming' },

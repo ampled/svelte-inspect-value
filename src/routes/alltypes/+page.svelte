@@ -2,6 +2,7 @@
   import AllTypes from '../../doclib/examples/AllTypes.svelte'
   import { intervalEffect } from '../../doclib/interval-effect.svelte.js'
 
+  let debug = $state(false)
   let value = $state.raw({ a: 'a', b: 'b', number: 1, c: 'c', d: 'd' })
   let arr = $state<unknown[]>([])
   let dir = $state(1)
@@ -24,7 +25,11 @@
 </script>
 
 <div style="padding: 2em">
-  <AllTypes />
+  <label>
+    debug
+    <input type="checkbox" bind:checked={debug} />
+  </label>
+  <AllTypes {debug} />
 </div>
 
 <!-- <div style="padding: 2em">

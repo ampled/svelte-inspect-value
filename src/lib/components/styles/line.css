@@ -26,10 +26,6 @@
 
 .line.preview.nokey {
   gap: 0;
-
-  .indicator-and-key {
-    display: none;
-  }
 }
 
 .indicator-and-key {

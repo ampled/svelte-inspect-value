@@ -19,16 +19,6 @@
     editor?.editor()?.setValue(original)
   }
 
-  // $effect(() => {
-  //   try {
-  //     const obj = eval(sourceValue)
-  //     value = obj
-  //     demoInputValid = true
-  //   } catch {
-  //     demoInputValid = false
-  //   }
-  // })
-
   let error = $state<string>()
   function onchange(val: string) {
     try {

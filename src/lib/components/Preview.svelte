@@ -94,7 +94,7 @@
       class="preview"
       transition:slide={{
         axis: 'x',
-        duration: options.transitionDuration * 2,
+        duration: options.transitionDuration,
       }}
     >
       {#if prefix}
