@@ -1,7 +1,7 @@
 <script lang="ts" generics="Type extends string = ValueType">
   import { getPreviewLevel } from '$lib/contexts.js'
   import { slideXY } from '$lib/transition/slideXY.js'
-  import { getContext, onMount, untrack, type Snippet } from 'svelte'
+  import { getContext, onMount, type Snippet } from 'svelte'
   import type { HTMLAttributes } from 'svelte/elements'
   import { useOptions } from '../options.svelte.js'
   import { useState } from '../state.svelte.js'
@@ -47,22 +47,8 @@
   const inspectState = useState()
   const previewLevel = getPreviewLevel()
   const isKey = getContext<boolean>('key')
-  let collapseState = $derived.by(() => {
-    const storedState = inspectState.value[stringifyPath(path)]
-    if (storedState) {
-      return storedState
-    } else {
-      return untrack(() => ({
-        collapsed: path.length > options.value.expandLevel && !options.value.expandAll,
-      }))
-    }
-  })
-
-  let collapsed = $derived(collapseState.collapsed)
-
-  function onCollapseChanged(newValue: boolean) {
-    inspectState.setCollapse(path, { collapsed: newValue })
-  }
+  let collapseState = $derived(inspectState.value[stringifyPath(path)])
+  let collapsed = $derived(collapseState ? collapseState.collapsed : true)
 
   onMount(() => {
     if (inspectState && previewLevel === 0) {
@@ -82,6 +68,10 @@
       }
     }
   })
+
+  function onCollapseChanged(newValue: boolean) {
+    inspectState.setCollapse(path, { collapsed: newValue })
+  }
 </script>
 
 <div

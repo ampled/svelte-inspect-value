@@ -1,13 +1,30 @@
 <script lang="ts">
   import Inspect from '$lib/Inspect.svelte'
 
+  let data = JSON.parse(`{}`)
+  let show = $state(false)
   let expandAll = $state(false)
-  let expandLevel = $state(0)
 </script>
 
-<input type="checkbox" bind:checked={expandAll} />
-<input type="number" bind:value={expandLevel} />
+<label>
+  show
+  <input type="checkbox" bind:checked={show} />
+</label>
+<label>
+  expand all
+  <input type="checkbox" bind:checked={expandAll} />
+</label>
 
-<!-- {#key expandAll} -->
-<Inspect value={[1, 2, [[[[[], [], [[[[]]]]]]]]]} {expandAll} {expandLevel} debug />
-<!-- {/key} -->
+{#if show}
+  <Inspect
+    borderless
+    value={data}
+    {expandAll}
+    showTools={false}
+    showPreview={false}
+    showLength={false}
+    showTypes={false}
+    flashOnUpdate={false}
+    noanimate={false}
+  />
+{/if}

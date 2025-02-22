@@ -56,16 +56,10 @@
     getTypeComponent(type, options.value.customComponents, usedefaults)
   )
   let path = $derived(key != null && prevPath ? [...prevPath, key] : ['root'])
-
-  // function babababababababababba(error: unknown, reset: () => void): void {
-  //   debugger
-  // }
 </script>
 
 <svelte:boundary onerror={(e) => console.error(e)}>
-  {#if typeof TypeComponent === 'function'}
-    <TypeComponent {value} {key} {keyDelim} {type} {path} {...rest} {...componentProps} />
-  {/if}
+  <TypeComponent {value} {key} {keyDelim} {type} {path} {...rest} {...componentProps} />
 
   {#snippet failed(error, reset)}
     {@const inspectError = new InspectError(`Component for value of type ${type} failed`, value, {
