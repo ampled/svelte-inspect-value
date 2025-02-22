@@ -23,7 +23,7 @@
     background-color: var(--bg);
     outline: 1px solid var(--red);
     padding-inline: 0.5em;
-    cursor: pointer;
+    cursor: help;
     border-radius: 2px;
     transition: all 150ms ease-in-out;
     transform-origin: bottom center;

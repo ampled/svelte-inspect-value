@@ -148,6 +148,11 @@ export type InspectOptions = {
    * Default `true`
    */
   renderIf: unknown
+  /**
+   * Try parsing strings that start with `'['` or `'{'` and display the parsed value
+   *
+   * Default `false`
+   */
   parseJson: boolean
 }
 
