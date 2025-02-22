@@ -3,7 +3,7 @@
   import { useOptions } from '$lib/options.svelte.js'
   import type { SVGAttributes } from 'svelte/elements'
 
-  type Props = { value: unknown } & SVGAttributes<SVGElement>
+  type Props = { value?: unknown } & SVGAttributes<SVGElement>
 
   const { value, ...svgAttributes }: Props = $props()
 

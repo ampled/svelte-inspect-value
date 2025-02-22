@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { globalValues } from '$lib/global.svelte.js'
+  import { getContext } from 'svelte'
   import { blur } from 'svelte/transition'
   import { copyToClipBoard, logToConsole } from '../hello.svelte.js'
   import CollapseChildren from '../icons/CollapseChildren.svelte'
@@ -9,6 +11,7 @@
   import { useState, type NodeState } from '../state.svelte.js'
   import type { KeyType, TypeViewProps } from '../types.js'
   import { stringifyPath } from '../util.js'
+  import NodeActionButton from './NodeActionButton.svelte'
 
   type Props = Partial<TypeViewProps<unknown, string>> & { collapsed?: boolean }
 
@@ -16,6 +19,7 @@
 
   let copied = $state(false)
 
+  const global = getContext('global')
   let options = useOptions()
   let inspectState = useState()
   let stringifiedPath = $derived(stringifyPath(path))
@@ -83,6 +87,14 @@
 
 {#if options.value.showTools}
   <div class="tools" class:borderless={options.value.borderless}>
+    {#if !global && !globalValues.has(stringifiedPath)}
+      <NodeActionButton onclick={() => globalValues.set(stringifiedPath, () => value)}>
+        +
+      </NodeActionButton>
+    {/if}
+    {#if globalValues.has(stringifiedPath)}
+      <NodeActionButton onclick={() => globalValues.delete(stringifiedPath)}>-</NodeActionButton>
+    {/if}
     {#if treeAction}
       <button
         transition:blur={{ duration: options.transitionDuration }}

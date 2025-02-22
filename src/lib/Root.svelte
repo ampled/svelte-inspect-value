@@ -1,6 +1,7 @@
 <script lang="ts">
   import { setContext } from 'svelte'
   import { SvelteMap } from 'svelte/reactivity'
+  import { slide } from 'svelte/transition'
   import Node from './components/Node.svelte'
   import NodeActionButton from './components/NodeActionButton.svelte'
   import { useOptions } from './options.svelte.js'
@@ -66,6 +67,7 @@
   {/snippet}
 
   <div
+    transition:slide={{ duration: options.transitionDuration }}
     data-testid="inspect"
     class={[
       'svelte-inspect-value',
