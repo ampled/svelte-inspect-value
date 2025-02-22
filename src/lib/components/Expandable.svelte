@@ -10,6 +10,7 @@
   import CollapseButton from './CollapseButton.svelte'
   import Count from './Count.svelte'
   import Key from './Key.svelte'
+  import NodeNote from './NodeNote.svelte'
   import Tools from './Tools.svelte'
   import Type from './Type.svelte'
 
@@ -39,6 +40,7 @@
     path = [],
     showLength = true,
     children,
+    note,
     ...rest
   }: Props = $props()
 
@@ -104,7 +106,9 @@
       />
     {/if}
   </div>
-
+  {#if note && !previewLevel}
+    <NodeNote title={note.description}>{note.title}</NodeNote>
+  {/if}
   {#if !isKey}
     <Type {type} force={forceType} />
   {/if}

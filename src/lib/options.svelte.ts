@@ -148,6 +148,7 @@ export type InspectOptions = {
    * Default `true`
    */
   renderIf: unknown
+  parseJson: boolean
 }
 
 const DEFAULT_OPTIONS: InspectOptions = {
@@ -170,6 +171,7 @@ const DEFAULT_OPTIONS: InspectOptions = {
   embedMedia: false,
   elementView: 'simple',
   renderIf: true,
+  parseJson: false,
 } as const
 
 export function mergeOptions(
