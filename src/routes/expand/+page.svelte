@@ -1,30 +1,21 @@
 <script lang="ts">
   import Inspect from '$lib/Inspect.svelte'
 
-  let data = JSON.parse(`{}`)
-  let show = $state(false)
-  let expandAll = $state(false)
+  let data = { a: `{}`, b: `[`, c: '[ "a", "b", "c", 1, 2, 3, true,false,null ]' }
+  let nestedData = {
+    a: `{}`,
+    b: `[`,
+    b2: `{`,
+    c: '[ "a", "b", "c", 1, 2, 3, true,false,null ]',
+    d: JSON.stringify(data),
+  }
+  let parseJson = $state(false)
 </script>
 
 <label>
-  show
-  <input type="checkbox" bind:checked={show} />
-</label>
-<label>
-  expand all
-  <input type="checkbox" bind:checked={expandAll} />
+  parse
+  <input type="checkbox" bind:checked={parseJson} />
 </label>
 
-{#if show}
-  <Inspect
-    borderless
-    value={data}
-    {expandAll}
-    showTools={false}
-    showPreview={false}
-    showLength={false}
-    showTypes={false}
-    flashOnUpdate={false}
-    noanimate={false}
-  />
-{/if}
+<Inspect value={data} {parseJson} />
+<Inspect value={JSON.stringify(nestedData, undefined, 2)} {parseJson} />

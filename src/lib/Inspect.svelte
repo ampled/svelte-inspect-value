@@ -29,6 +29,7 @@
     embedMedia,
     elementView,
     renderIf,
+    parseJson,
     ...props
   }: InspectProps = $props()
 
@@ -55,6 +56,7 @@
         embedMedia,
         elementView,
         renderIf,
+        parseJson,
       },
       globalOptions
     )
