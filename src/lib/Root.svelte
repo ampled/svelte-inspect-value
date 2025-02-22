@@ -44,8 +44,6 @@
     options.value.expandAll = true
     setAllNodes(false)
   }
-
-  let clientWidth = $state()
 </script>
 
 <svelte:boundary onerror={(error) => console.error(error)}>
@@ -68,7 +66,6 @@
   {/snippet}
 
   <div
-    bind:clientWidth
     data-testid="inspect"
     class={[
       'ampled-json-inspect',
@@ -89,7 +86,6 @@
             state: inspectState.value,
             options: options,
             valueCache,
-            clientWidth,
           }}
         />
       {/if}
