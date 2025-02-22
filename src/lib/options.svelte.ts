@@ -20,6 +20,8 @@ export type InspectOptions = {
   showTypes: boolean
   /**
    * Display preview of nested values
+   *
+   * Default `true`
    */
   showPreview: boolean
   /**
@@ -51,12 +53,6 @@ export type InspectOptions = {
    * Default `0`
    */
   stringCollapse: number
-  // /**
-  //  * Options open or closed
-  //  *
-  //  * Default `false`
-  //  */
-  // open: boolean
   /**
    * Custom components for types. Object with type as keyname and tuple of component and optional
    * prop modification function
@@ -88,6 +84,8 @@ export type InspectOptions = {
   draggable: boolean
   /**
    * Disable animations
+   *
+   * Default `false`
    */
   noanimate: boolean
   /**
@@ -143,8 +141,13 @@ export type InspectOptions = {
    * Render condition for `Inspect`
    *
    * Function or value. `Inspect` will render if value or return-value is truthy.
+   *
+   * Most valuable if set with global options and there are multiple `Inspect` instances,
+   * otherwise using Svelte `{#if}{/if}` blocks is recommended.
+   *
+   * Default `true`
    */
-  renderIf: unknown | (() => unknown)
+  renderIf: unknown
 }
 
 const DEFAULT_OPTIONS: InspectOptions = {
