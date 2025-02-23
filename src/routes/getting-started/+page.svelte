@@ -164,9 +164,9 @@ Result:
       <td> theme </td>
       <td>
         set color theme class<br />
-        available built-in themes: 'drak','stereo','dark','light','cotton-candy'
+        available built-in themes: 'inspect','drak','stereo','dark','light','cotton-candy'
       </td>
-      <td><code>'drak'</code></td>
+      <td><code>'inspect'</code></td>
     </tr>
     <tr>
       <td> expandAll </td>
