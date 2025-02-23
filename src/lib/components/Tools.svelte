@@ -91,6 +91,7 @@
     {#if treeAction}
       <button
         transition:blur
+        type="button"
         title={treeAction.hint}
         aria-label={treeAction.hint}
         onclick={() => treeAction.action(level, path)}
@@ -99,6 +100,7 @@
       </button>
     {/if}
     <button
+      type="button"
       title="log value to console"
       aria-label="log value to console"
       onclick={() => logToConsole(path, value, type)}
@@ -107,6 +109,7 @@
     </button>
     {#if canCopy}
       <button
+        type="button"
         title="copy value to clipboard"
         aria-label="copy value to clipboard"
         onclick={() => copy(value)}

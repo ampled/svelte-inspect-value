@@ -57,6 +57,7 @@
 {#if shouldShow}
   <svelte:boundary {onerror}>
     <button
+    type="button"
       data-testid="key"
       class="key-button"
       {ondblclick}
