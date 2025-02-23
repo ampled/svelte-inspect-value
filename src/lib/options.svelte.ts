@@ -168,7 +168,7 @@ const DEFAULT_OPTIONS: InspectOptions = {
   showLength: true,
   showTools: true,
   stringCollapse: 0,
-  theme: 'drak',
+  theme: 'inspect',
   expandAll: false,
   borderless: false,
   customComponents: {},
