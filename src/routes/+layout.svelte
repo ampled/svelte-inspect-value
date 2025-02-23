@@ -46,6 +46,7 @@
     borderless: false,
     embedMedia: true,
     elementView: 'simple',
+    parseJson: false,
   })
 </script>
 

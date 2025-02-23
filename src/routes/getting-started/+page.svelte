@@ -205,6 +205,14 @@ Result:
       </td>
       <td><code>{'{}'}</code></td>
     </tr>
+    <tr>
+      <td> parseJson </td>
+      <td>
+        if enabled, attempt to parse strings that start with <code>{'{'}</code> or
+        <code>{'['}</code> and display the parsed value if it was valid JSON
+      </td>
+      <td><code>{'{}'}</code></td>
+    </tr>
   </tbody>
 </table>
 

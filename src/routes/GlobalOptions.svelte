@@ -45,6 +45,10 @@
     embed media
     <input type="checkbox" bind:checked={options.embedMedia} />
   </label>
+  <label>
+    parse json
+    <input type="checkbox" bind:checked={options.parseJson} />
+  </label>
 
   <label>
     theme
