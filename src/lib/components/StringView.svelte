@@ -48,7 +48,7 @@
     {path}
     {key}
     {...rest}
-    note={{ title: 'parsed', description: 'This value was parsed from a JSON string' }}
+    note={{ title: 'json', description: 'This value was parsed from a JSON string' }}
   />
 {:else if (isMultiLine || ((isImageUrl || isAudioUrl) && options.value.embedMedia)) && !previewLevel}
   <Expandable
