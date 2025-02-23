@@ -3,23 +3,22 @@
 
   import { DEV } from 'esm-env'
 
-  import { onNavigate } from '$app/navigation'
   import { page } from '$app/stores'
   import Inspect from '$lib/Inspect.svelte'
   import InspectOptionsProvider from '$lib/InspectOptionsProvider.svelte'
   import { type InspectOptions } from '$lib/options.svelte.js'
   import GlobalOptions from './GlobalOptions.svelte'
 
-  onNavigate((navigation) => {
-    if (!document.startViewTransition) return
+  // onNavigate((navigation) => {
+  //   if (!document.startViewTransition) return
 
-    return new Promise((resolve) => {
-      document.startViewTransition(async () => {
-        resolve()
-        await navigation.complete
-      })
-    })
-  })
+  //   return new Promise((resolve) => {
+  //     document.startViewTransition(async () => {
+  //       resolve()
+  //       await navigation.complete
+  //     })
+  //   })
+  // })
 
   const { children } = $props()
 
@@ -32,7 +31,7 @@
   ]
 
   let options = $state<Partial<InspectOptions>>({
-    theme: 'drak',
+    theme: 'inspect',
     stringCollapse: 0,
     showTools: true,
     showTypes: true,
@@ -145,7 +144,7 @@
     gap: 1em;
     padding: 1em;
     width: 100%;
-    margin-bottom: 400px;
+    margin-bottom: 150px;
   }
 
   ul {

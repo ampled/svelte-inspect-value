@@ -13,6 +13,7 @@
     numberType: 123,
     booleanType: true,
     error: new Error('i am an error'),
+    nodeNote: '["i was parsed!"]',
     tagNames: null as unknown,
     get keyPrefixes() {
       return class RandomClass {
@@ -38,12 +39,12 @@
     objType: {},
     arrType: [],
     date: new Date(),
-    urls: new URL('https://example.com'),
     [Symbol('key')]: Symbol('symbol value color'),
   }
   const base0DPreview = {
     classes: class Test {},
     classInstances: [new Map([['#000', '#000']]), new Set(['#000'])],
+    urls: new URL('https://example.com'),
   }
   const base0EPreview = {
     stringType: '<--',
@@ -98,4 +99,5 @@
   previewDepth={Infinity}
   previewEntries={10}
   {...props}
+  parseJson
 />

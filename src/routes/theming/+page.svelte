@@ -11,12 +11,12 @@
   let font = $state('monospace')
   let fontSize = $state(12)
   let fontSizePx = $derived(fontSize + 'px')
-  let colors = $state({ ...themes.drak })
+  let colors = $state({ ...themes.inspect })
   let lockedColors = $state<string[]>([])
   let keys = $derived(Object.keys(colors) as (keyof typeof colors)[])
   let rotated = $state<typeof colors>()
   let rotation = $state(0)
-  let steps = $state<(typeof colors)[]>([{ ...themes.drak }])
+  let steps = $state<(typeof colors)[]>([{ ...themes.inspect }])
   let currentStep = $state(0)
 
   let currentColors = $derived(rotated == null ? colors : rotated)
@@ -24,7 +24,7 @@
   let style = $derived(keys.map((k) => `${k}: ${currentColors[k]};`).join(''))
 
   let presets = Object.keys(themes) as (keyof typeof themes)[]
-  let selectedPreset = $state<keyof typeof themes>('drak')
+  let selectedPreset = $state<keyof typeof themes>('inspect')
 
   $effect(() => {
     if (rotation !== 0) rotateColors(rotation)
@@ -334,7 +334,7 @@ base0F  Deprecated, Opening/Closing Embedded Language Tags, e.g. {'<?php ?>'}
 
   pre {
     font-size: 12px;
-    background-color: var(--bg-lighter);
+    background-color: var(--bg);
     border-radius: 8px;
     border: 1px solid var(--border-color);
     padding: 1em;

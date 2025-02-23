@@ -53,11 +53,11 @@
   <label>
     theme
     <select bind:value={options.theme}>
+      <option>inspect</option>
       <option>drak</option>
       <option>stereo</option>
       <option>dark</option>
       <option>light</option>
-      <option></option>
     </select>
   </label>
 
@@ -109,8 +109,8 @@
     left: 1em;
     right: 1em;
     /* width: 80%; */
-    background-color: var(--bg-lighter);
-    gap: 2em;
+    background-color: var(--bg);
+    gap: 1.245em;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
     padding: 1em;
