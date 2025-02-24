@@ -8,7 +8,6 @@ describe('expandable values', () => {
     showLength: true,
     showTypes: true,
     elementView: 'full',
-    // expandAll: true,
   })
   const { rerender, unmount, user } = inspect
 
@@ -177,6 +176,51 @@ describe('expandable values', () => {
     expect(value).toHaveTextContent(`function greet(name) { return "hello " + name; }`)
     const indent = screen.queryByTestId('indent')
     expect(indent).toHaveClass('indent', 'function')
+  })
+
+  test('it can parse JSON strings and display the parsed value', async () => {
+    await rerender({
+      value: JSON.stringify(
+        {
+          foo: 1,
+          bar: 2,
+          baz: 33,
+        },
+        undefined,
+        1
+      ),
+      noanimate: true,
+      expandAll: true,
+      parseJson: true,
+      showPreview: false,
+    })
+
+    // check count
+    const count = screen.getAllByTestId('count')[0]
+    expect(count).toHaveTextContent('3 entries')
+
+    // check keys
+    const [foo, bar, baz] = [
+      screen.queryByRole('button', { name: 'foo' }),
+      screen.queryByRole('button', { name: 'bar' }),
+      screen.queryByRole('button', { name: 'baz' }),
+    ]
+    expect(foo).toBeInTheDocument()
+    expect(bar).toBeInTheDocument()
+    expect(baz).toBeInTheDocument()
+
+    const note = screen.getByText('json')
+    expect(note).toBeInTheDocument()
+    expect(note).toHaveAttribute('title', 'This value was parsed from a JSON string')
+
+    // check type
+    const type = screen.getAllByTestId('type')[0]
+    expect(type).toHaveTextContent('obj')
+
+    // check values
+    screen.getAllByTestId('value').forEach((value) => {
+      expect(value.innerText).toBeOneOf(['1', '2', '33'])
+    })
   })
 
   test('it can display properties of html elements', async () => {
