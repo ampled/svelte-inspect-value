@@ -79,28 +79,6 @@
   }
 
   let treeAction = $derived(getTreeAction(nodeState))
-
-  // let treeAction = $derived(
-  //   hasExpandedChildren
-  //     ? collapseAction
-  //     : nodeState?.collapsed
-  //       ? expandAction
-  //       : nodeState?.hasChildren
-  //         ? expandAction
-  //         : undefined
-  // )
-
-  // let treeAction = $derived.by(() => {
-  //   if (nodeState) {
-  //     if (nodeState.collapsed) {
-  //       return expandAction
-  //     } else if (hasExpandedChildren) {
-  //       return collapseAction
-  //     } else {
-  //       return expandAction
-  //     }
-  //   }
-  // })
 </script>
 
 {#if options.value.showTools}
