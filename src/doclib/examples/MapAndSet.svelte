@@ -9,10 +9,6 @@
 <div class="flex col">
   <h3 id="map-and-set">Map & Set</h3>
   <p><code>Inspect</code> handles map and set instances.</p>
-  <p>
-    For maps, if keys are not of type <code>number|string|symbol</code>, the entry is shown as an
-    expandable <code>Entry</code>
-  </p>
 
   <Inspect
     style="width: 400px"

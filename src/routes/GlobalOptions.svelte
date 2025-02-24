@@ -1,54 +1,28 @@
 <script lang="ts">
   import type { InspectOptions } from '$lib/options.svelte.js'
+  import ToggleButton from './ToggleButton.svelte'
 
   let { options = $bindable() }: { options: Partial<InspectOptions> } = $props()
 </script>
 
 <div class="options">
   <span class="options-title"> global options </span>
-  <label>
-    lengths
-    <input type="checkbox" bind:checked={options.showLength} />
-  </label>
+  <ToggleButton bind:checked={options.showLength}>lengths</ToggleButton>
 
-  <label>
-    types
-    <input type="checkbox" bind:checked={options.showTypes} />
-  </label>
+  <ToggleButton bind:checked={options.showTypes}>types</ToggleButton>
 
-  <label>
-    tools
-    <input type="checkbox" bind:checked={options.showTools} />
-  </label>
+  <ToggleButton bind:checked={options.showTools}>tools</ToggleButton>
 
-  <label>
-    previews
-    <input type="checkbox" bind:checked={options.showPreview} />
-  </label>
+  <ToggleButton bind:checked={options.showPreview}>previews</ToggleButton>
 
-  <label>
-    noanimate
-    <input type="checkbox" bind:checked={options.noanimate} />
-  </label>
+  <ToggleButton bind:checked={options.noanimate}>noanimate</ToggleButton>
 
-  <label>
-    borderless
-    <input type="checkbox" bind:checked={options.borderless} />
-  </label>
+  <ToggleButton bind:checked={options.borderless}>borderless</ToggleButton>
 
-  <label>
-    flash on update
-    <input type="checkbox" bind:checked={options.flashOnUpdate} />
-  </label>
+  <ToggleButton bind:checked={options.flashOnUpdate}>flash on update</ToggleButton>
 
-  <label>
-    embed media
-    <input type="checkbox" bind:checked={options.embedMedia} />
-  </label>
-  <label>
-    parse json
-    <input type="checkbox" bind:checked={options.parseJson} />
-  </label>
+  <ToggleButton bind:checked={options.embedMedia}>embed media</ToggleButton>
+  <ToggleButton bind:checked={options.parseJson}>parse json</ToggleButton>
 
   <label>
     theme
@@ -143,22 +117,6 @@
   label:has(input:checked) {
     background-color: #b4d455;
     color: black;
-  }
-
-  label:has(input[type='checkbox']) {
-    outline: 1px solid #b4d455;
-    transition: all 200ms ease-in-out;
-    user-select: none;
-    border-radius: 8px;
-    padding: 0.25em;
-    max-height: 1.6em;
-    display: flex;
-    flex-direction: row;
-    gap: 1em;
-
-    input {
-      display: none;
-    }
   }
 
   input[type='number'],

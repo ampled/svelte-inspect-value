@@ -45,7 +45,7 @@
 {#if parsedValue}
   <Node
     value={parsedValue}
-    {path}
+    path={path?.toSpliced(path.length - 1)}
     {key}
     {...rest}
     note={{ title: 'json', description: 'This value was parsed from a JSON string' }}

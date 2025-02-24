@@ -75,6 +75,10 @@
       color: var(--purple);
     }
 
+    .comment {
+      color: var(--comments);
+    }
+
     .string {
       color: var(--yellow);
     }
