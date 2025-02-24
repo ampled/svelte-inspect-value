@@ -121,6 +121,21 @@ export type InspectOptions = {
    */
   expandLevel: number
   /**
+   * Initially expanded paths
+   *
+   * Default `[ ]`
+   * @example
+   * const value = {
+   *  a: { b: [{ c: '' }], d: 0 }
+   * }
+   *
+   * // default name of root expandable is "root"
+   * <Inspect {value} expandPaths={['root.a.b.0']} />
+   * // if name is set:
+   * <Inspect {value} name="obj" expandPaths={['obj.a.b.0']}
+   */
+  expandPaths: string[]
+  /**
    * Embed images or sounds if a string is a url or path ending with a valid image or sound file extension
    *
    * Default `false`
@@ -148,6 +163,12 @@ export type InspectOptions = {
    * Default `true`
    */
   renderIf: unknown
+  /**
+   * Try parsing strings that start with `'['` or `'{'` and display the parsed value
+   *
+   * Default `false`
+   */
+  parseJson: boolean
 }
 
 const DEFAULT_OPTIONS: InspectOptions = {
@@ -162,14 +183,16 @@ const DEFAULT_OPTIONS: InspectOptions = {
   showLength: true,
   showTools: true,
   stringCollapse: 0,
-  theme: 'drak',
-  expandAll: false,
+  theme: 'inspect',
   borderless: false,
   customComponents: {},
+  expandAll: false,
   expandLevel: 1,
+  expandPaths: [],
   embedMedia: false,
   elementView: 'simple',
   renderIf: true,
+  parseJson: false,
 } as const
 
 export function mergeOptions(

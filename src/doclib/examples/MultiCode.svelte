@@ -33,13 +33,13 @@
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     border-bottom: none;
-    background-color: #282c34;
+    background-color: var(--base00);
     z-index: 9999;
   }
 
   button.active {
     border-bottom: none;
-    background-color: var(--border-color);
+    background-color: var(--bg-lighter);
   }
 
   .tabs {

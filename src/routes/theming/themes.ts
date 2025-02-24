@@ -1,11 +1,11 @@
 const inspect = {
-  '--base00': '#202e40',
+  '--base00': '#1e2c3e',
   '--base01': '#31455e',
-  '--base02': '#425670',
+  '--base02': '#151d29',
   '--base03': '#6d819c',
   '--base04': '#FFFFFF',
-  '--base05': '#ffffff',
-  '--base06': '#bfc8d4',
+  '--base05': '#dbdbdc',
+  '--base06': '#fff2c2',
   '--base07': '#FFFFFF',
   '--base08': '#ff5c7c',
   '--base09': '#d1ae00',
@@ -13,7 +13,7 @@ const inspect = {
   '--base0B': '#8fff96',
   '--base0C': '#81eced',
   '--base0D': '#81ecee',
-  '--base0E': '#e68aff',
+  '--base0E': '#ff8af5',
   '--base0F': '#FFFFFF',
 }
 

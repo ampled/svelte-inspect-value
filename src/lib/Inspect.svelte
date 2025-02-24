@@ -20,6 +20,7 @@
     quotes,
     expandAll,
     expandLevel,
+    expandPaths,
     flashOnUpdate,
     stringCollapse,
     noanimate,
@@ -29,6 +30,7 @@
     embedMedia,
     elementView,
     renderIf,
+    parseJson,
     ...props
   }: InspectProps = $props()
 
@@ -46,6 +48,7 @@
         quotes,
         expandAll,
         expandLevel,
+        expandPaths,
         flashOnUpdate,
         stringCollapse,
         noanimate,
@@ -55,6 +58,7 @@
         embedMedia,
         elementView,
         renderIf,
+        parseJson,
       },
       globalOptions
     )

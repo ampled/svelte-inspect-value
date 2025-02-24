@@ -1,20 +1,27 @@
 :root {
-  --base00: #282a36;
-  --base01: #3a3c4e;
-  --base02: #44475a;
-  --base03: #6272a4;
-  --base04: #8be9fd;
-  --base05: #f8f8f2;
-  --base06: #f1f2f8;
-  --base07: #f7f7fb;
-  --base08: #ea51b2; /* red */
-  --base09: #ffb86c; /* orange */
-  --base0A: #f1fa8c; /* yellow */
-  --base0B: #50fa7b; /* green */
-  --base0C: #a1efe4; /* cyan */
-  --base0D: #62d6e8; /* blue */
-  --base0E: #bd93f9; /* purp */
-  --base0F: #009e45;
+  --base00: #1e2c3e;
+  --base01: #31455e;
+  --base02: #151d29;
+  --base03: #6d819c;
+  --base04: #ffffff;
+  --base05: #dbdbdc;
+  --base06: #fff2c2;
+  --base07: #ffffff;
+  --base08: #ff5c7c;
+  --base09: #d1ae00;
+  --base0A: #ffd285;
+  --base0B: #8fff96;
+  --base0C: #81eced;
+  --base0D: #81ecee;
+  --base0E: #ff8af5;
+  --base0F: #ffffff;
+
+  --hdr-gradient: linear-gradient(
+    146deg in oklab,
+    rgb(30, 31, 53) 52% 52%,
+    oklch(35% 0.12 261) 102% 102%
+  );
+  --sdr-gradient: linear-gradient(146deg, #1e1f35 52% 52%, #1e2c3e 102% 102%);
 
   --cyan: var(--base0C, #00c1be);
   --yellow: var(--base0A, #e1ff7f);
@@ -24,7 +31,7 @@
   --blue: var(--base0D, #6a6ace);
   --orange: var(--base09, #c6903a);
 
-  --bg: #21232d;
+  --bg: rgb(30, 31, 53);
   --bg-code: var(--base00);
   --bg-lighter: var(--base01, #250060);
   --bg-light: var(--base07);
@@ -52,17 +59,22 @@
   --interactive: var(--base0E);
   --deprecated: var(--base0F);
   --indent: 0.5em;
+
+  background-color: var(--bg);
+  background: var(--sdr-gradient);
 }
 
-/* html,
-body {
-  width: 100%;
-  height: 100%;
-} */
+html {
+  background: var(--sdr-gradient);
+  background-attachment: fixed;
+  background-color: var(--bg);
+  overscroll-behavior: none;
+}
 
 body {
   box-sizing: border-box;
-  background-color: var(--bg);
+  overscroll-behavior: none;
+
   color: var(--fg);
   font-family: 'EB Garamond', serif;
   font-optical-sizing: auto;

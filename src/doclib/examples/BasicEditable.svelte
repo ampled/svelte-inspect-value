@@ -1,7 +1,9 @@
 <script lang="ts">
   import Inspect from '$lib/Inspect.svelte'
+  import { GLOBAL_OPTIONS_CONTEXT, type InspectOptions } from '$lib/options.svelte.js'
   import { getContext } from 'svelte'
   import type { SvelteMap } from 'svelte/reactivity'
+  import ToggleButton from '../../routes/ToggleButton.svelte'
   import Editor from '../Editor.svelte'
   import Stack from '../Stack.svelte'
 
@@ -16,6 +18,7 @@
   age: -42,
   emailVerified: true,
   interests: ['radio', 'tv', 'internet', 'kayaks', null],
+  jsonString: '[{ "message": "i can be parsed if desired" }]'
 });`
 
   let demoInputValid = $state(true)
@@ -46,12 +49,18 @@
   }
 
   getContext<SvelteMap<string, string>>('toc')?.set('JSON', 'json')
+  const globalInspectOptions = getContext<InspectOptions>(GLOBAL_OPTIONS_CONTEXT)
   let editor = $state<ReturnType<typeof Editor>>()
 </script>
 
 <div class="flex col">
   <h3 id="json">JSON</h3>
-  <p><code>Inspect</code> works well for basic object and array-values aka "json"</p>
+  <p>
+    <code>Inspect</code> works well for basic object and array-values aka "json".<br />
+    If needed, strings that start with <code>'['</code> or <code>{`'{'`}</code> can be parsed. Try
+    it:
+    <ToggleButton bind:checked={globalInspectOptions.parseJson}>parse json</ToggleButton>
+  </p>
   <button onclick={() => reset()}>reset</button>
   <Stack>
     <Inspect {value} name="demo" />
@@ -63,29 +72,10 @@
       valid={demoInputValid}
       message={error}
     />
-
-    <!-- <textarea rows={13} class:demoInputValid bind:value={sourceValue}></textarea> -->
   </Stack>
 </div>
 
 <style>
-  /* textarea {
-    width: 100%;
-    flex-basis: 100%;
-    background-color: var(--bg);
-    color: var(--fg);
-    font-size: 12px;
-    font-family: monospace;
-
-    &:focus.demoInputValid {
-      outline: 1px solid lightgreen;
-    }
-
-    &:focus {
-      outline: 1px solid red;
-    }
-  } */
-
   .flex {
     width: 100%;
   }
