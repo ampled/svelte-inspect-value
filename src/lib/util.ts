@@ -95,8 +95,6 @@ export function stringifyOrToString(val: unknown): string {
 export function typeOf(obj: unknown): ValueType {
   const t = {}.toString.call(obj).slice(8, -1)
 
-  // console.log(t)
-
   return (t.replace(' ', '').toLowerCase() ?? 'undefined') as unknown as ValueType
 }
 
@@ -164,6 +162,41 @@ export function ensureStringPath(path: string | KeyType[]) {
     key = path
   }
   return key
+}
+
+// Source: https://github.com/tanhauhau/svelte-json-tree/blob/1f8a2d8b52810c416020235dd9a2dc9b1a964742/src/lib/svelte-json-tree/SvelteJsonTree/utils/expand.ts#L11
+function matchPath(keyPath: string[], expandPaths: string[]) {
+  const expandPathParts = expandPaths.map((path) => path.split('.'))
+  outer: for (const parts of expandPathParts) {
+    if (keyPath.length > parts.length) continue
+    const length = Math.min(keyPath.length, parts.length)
+    for (let i = 0; i < length; i++) {
+      if (parts[i] !== '*' && parts[i] !== String(keyPath[i])) continue outer
+    }
+    return true
+  }
+  return false
+}
+
+const neverExpandInitial = ['constructor', 'prototype'] as KeyType[]
+
+export function shouldInitiallyExpandNode(
+  currentPath: KeyType[],
+  expandLevel: number,
+  expandAll: boolean,
+  expandPaths: string[]
+) {
+  if (neverExpandInitial.includes(currentPath[currentPath.length - 1])) return false // avoid infinite loops
+  if (expandAll) return true
+  if (currentPath.length <= expandLevel) {
+    return true
+  }
+  if (expandPaths.length) {
+    const pathParts = stringifyPath(currentPath).split('.')
+    return matchPath(pathParts, expandPaths)
+  }
+
+  return false
 }
 
 /**

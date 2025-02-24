@@ -61,7 +61,7 @@
       class="key-button"
       {ondblclick}
       aria-label={key?.toString()}
-      title={stringifyPath(path)}
+      title={previewLevel === 0 ? stringifyPath(path) : undefined}
       {...rest}
     >
       {#if prefix}

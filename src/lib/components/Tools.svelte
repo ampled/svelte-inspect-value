@@ -6,7 +6,7 @@
   import Copy from '../icons/Copy.svelte'
   import ExpandChildren from '../icons/ExpandChildren.svelte'
   import { useOptions } from '../options.svelte.js'
-  import { useState } from '../state.svelte.js'
+  import { useState, type NodeState } from '../state.svelte.js'
   import type { KeyType, TypeViewProps } from '../types.js'
   import { stringifyPath } from '../util.js'
 
@@ -65,29 +65,46 @@
     icon: ExpandChildren,
   }
 
-  let treeAction = $derived(
-    hasExpandedChildren
-      ? collapseAction
-      : nodeState?.collapsed
-        ? expandAction
-        : nodeState?.hasChildren
-          ? expandAction
-          : undefined
-  )
+  function getTreeAction(nodeState: NodeState) {
+    if (nodeState) {
+      if (nodeState.collapsed) {
+        return expandAction
+      } else if (hasExpandedChildren) {
+        return collapseAction
+      } else {
+        return expandAction
+      }
+    }
+    return undefined
+  }
+
+  let treeAction = $derived(getTreeAction(nodeState))
+
+  // let treeAction = $derived(
+  //   hasExpandedChildren
+  //     ? collapseAction
+  //     : nodeState?.collapsed
+  //       ? expandAction
+  //       : nodeState?.hasChildren
+  //         ? expandAction
+  //         : undefined
+  // )
+
+  // let treeAction = $derived.by(() => {
+  //   if (nodeState) {
+  //     if (nodeState.collapsed) {
+  //       return expandAction
+  //     } else if (hasExpandedChildren) {
+  //       return collapseAction
+  //     } else {
+  //       return expandAction
+  //     }
+  //   }
+  // })
 </script>
 
 {#if options.value.showTools}
   <div class="tools" class:borderless={options.value.borderless}>
-    <!-- {#if DEV}
-      <NodeActionButton
-        onclick={() =>
-          console.log({
-            key: path[path.length - 1],
-            children: children.length,
-            immediateChildren,
-          })}>d</NodeActionButton
-      >
-    {/if} -->
     {#if treeAction}
       <button
         transition:blur

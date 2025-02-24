@@ -121,6 +121,21 @@ export type InspectOptions = {
    */
   expandLevel: number
   /**
+   * Initially expanded paths
+   *
+   * Default `[ ]`
+   * @example
+   * const value = {
+   *  a: { b: [{ c: '' }], d: 0 }
+   * }
+   *
+   * // default name of root expandable is "root"
+   * <Inspect {value} expandPaths={['root.a.b.0']} />
+   * // if name is set:
+   * <Inspect {value} name="obj" expandPaths={['obj.a.b.0']}
+   */
+  expandPaths: string[]
+  /**
    * Embed images or sounds if a string is a url or path ending with a valid image or sound file extension
    *
    * Default `false`
@@ -169,10 +184,11 @@ const DEFAULT_OPTIONS: InspectOptions = {
   showTools: true,
   stringCollapse: 0,
   theme: 'inspect',
-  expandAll: false,
   borderless: false,
   customComponents: {},
+  expandAll: false,
   expandLevel: 1,
+  expandPaths: [],
   embedMedia: false,
   elementView: 'simple',
   renderIf: true,
