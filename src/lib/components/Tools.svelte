@@ -85,7 +85,7 @@
   <div class="tools" class:borderless={options.value.borderless}>
     {#if treeAction}
       <button
-        transition:blur
+        transition:blur={{ duration: options.transitionDuration }}
         type="button"
         title={treeAction.hint}
         aria-label={treeAction.hint}
