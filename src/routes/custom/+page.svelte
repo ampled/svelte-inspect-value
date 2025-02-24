@@ -65,6 +65,8 @@ Result
 
 <h3>Custom expandable</h3>
 
+*Custom expandables API is still unfinished
+
 <Inspect value={2} customComponents={{ number: [ExpandableNumber] }} />
 
 <h2>Error handling</h2>

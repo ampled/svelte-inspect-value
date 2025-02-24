@@ -16,6 +16,25 @@
         base0E  #ba8baf  Keywords, Storage, Selector, Markup Italic, Diff Changed
         base0F  #a16946  Deprecated, Opening/Closing Embedded Language Tags, e.g. <?php ?>
     */
+.inspect {
+  --base00: #1e2c3e;
+  --base01: #31455e;
+  --base02: #151d29;
+  --base03: #6d819c;
+  --base04: #ffffff;
+  --base05: #dbdbdc;
+  --base06: #fff2c2;
+  --base07: #ffffff;
+  --base08: #ff5c7c;
+  --base09: #d1ae00;
+  --base0A: #ffd285;
+  --base0B: #8fff96;
+  --base0C: #81eced;
+  --base0D: #81ecee;
+  --base0E: #ff8af5;
+  --base0F: #ffffff;
+}
+
 .plain {
   --base00: #ffffff;
   --base01: #ffffff;

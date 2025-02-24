@@ -91,9 +91,9 @@ Result:
 <table>
   <thead>
     <tr>
-      <th>name</th>
-      <th>description</th>
-      <th>defaultValue</th>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Default</th>
     </tr>
   </thead>
   <tbody>
@@ -106,6 +106,13 @@ Result:
       <td> name </td>
       <td> name of outer value. displayed as key </td>
       <td><code>undefined</code></td>
+    </tr>
+    <tr>
+      <th>Options</th>
+      <th colspan="2"
+        >The following props can be set using <code>setGlobalInspectOptions</code> or
+        <code>InspectOptionsProvider</code></th
+      >
     </tr>
     <tr>
       <td> stringCollapse </td>
@@ -164,9 +171,9 @@ Result:
       <td> theme </td>
       <td>
         set color theme class<br />
-        available built-in themes: 'drak','stereo','dark','light','cotton-candy'
+        available built-in themes: 'inspect','drak','stereo','dark','light','cotton-candy'
       </td>
-      <td><code>'drak'</code></td>
+      <td><code>'inspect'</code></td>
     </tr>
     <tr>
       <td> expandAll </td>
@@ -177,6 +184,11 @@ Result:
       <td> expandLevel </td>
       <td> default level of initially expanded nested nodes </td>
       <td><code>1</code></td>
+    </tr>
+    <tr>
+      <td> expandPaths </td>
+      <td> array of paths (string) to initially expanded nodes </td>
+      <td><code>[]</code></td>
     </tr>
     <tr>
       <td> borderless </td>
@@ -204,6 +216,14 @@ Result:
         /> <a href="/custom">extended documentation here</a>
       </td>
       <td><code>{'{}'}</code></td>
+    </tr>
+    <tr>
+      <td> parseJson </td>
+      <td>
+        if enabled, attempt to parse strings that start with <code>{'{'}</code> or
+        <code>{'['}</code> and display the parsed value if it was valid JSON
+      </td>
+      <td><code>false</code></td>
     </tr>
   </tbody>
 </table>

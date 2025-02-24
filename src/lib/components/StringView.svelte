@@ -4,6 +4,7 @@
   import type { TypeViewProps } from '../types.js'
   import { stringify } from '../util.js'
   import Expandable from './Expandable.svelte'
+  import Node from './Node.svelte'
   import OneLineView from './OneLineView.svelte'
   import StringValue from './StringValue.svelte'
 
@@ -13,6 +14,20 @@
   const options = useOptions()
 
   let isMultiLine = $derived(value.includes('\n'))
+
+  let parsedValue = $derived.by(() => {
+    const canBeValidJSON = value.startsWith('{') || value.startsWith('[')
+
+    if (options.value.parseJson && canBeValidJSON) {
+      try {
+        const p = JSON.parse(value)
+        return p as Record<string, unknown> | unknown[]
+      } catch {
+        return
+      }
+    }
+    return
+  })
 
   const IMAGE_EXTENSIONS = ['.gif', '.png', '.svg', '.jpg', '.jpeg', '.webp']
   const AUDIO_EXTENSIONS = ['.mp3', '.ogg', '.wav']
@@ -27,11 +42,18 @@
   )
 </script>
 
-{#if (isMultiLine || ((isImageUrl || isAudioUrl) && options.value.embedMedia)) && !previewLevel}
+{#if parsedValue}
+  <Node
+    value={parsedValue}
+    path={path?.toSpliced(path.length - 1)}
+    {key}
+    {...rest}
+    note={{ title: 'json', description: 'This value was parsed from a JSON string' }}
+  />
+{:else if (isMultiLine || ((isImageUrl || isAudioUrl) && options.value.embedMedia)) && !previewLevel}
   <Expandable
-    {...{ value, key, type, path }}
+    {...{ value, key, type, path, showKey }}
     length={value.length}
-    {showKey}
     keepPreviewOnExpand
     {...rest}
   >

@@ -13,6 +13,7 @@
     numberType: 123,
     booleanType: true,
     error: new Error('i am an error'),
+    nodeNote: '["i was parsed!"]',
     tagNames: null as unknown,
     get keyPrefixes() {
       return class RandomClass {
@@ -38,12 +39,12 @@
     objType: {},
     arrType: [],
     date: new Date(),
-    urls: new URL('https://example.com'),
     [Symbol('key')]: Symbol('symbol value color'),
   }
   const base0DPreview = {
     classes: class Test {},
     classInstances: [new Map([['#000', '#000']]), new Set(['#000'])],
+    urls: new URL('https://example.com'),
   }
   const base0EPreview = {
     stringType: '<--',
@@ -74,6 +75,22 @@
     base0E: [props.colors['--base0E'], base0EPreview],
     // base0F: [props.colors['--base0F']],
     previewBrackets,
+    functionBodyPreview: eval(`
+(function base0B(base05, ...params) {
+    // comments: base03
+    class Base0D {
+      static base08;
+    }
+    console.log(base05, ...params)
+    const demo = {
+      [Symbol('demo')]: Symbol.for('demo'),
+      base0B: new Base0D(),
+      number: 123456780,
+      func: () => {}
+    }
+  
+    return 'base0A' + demo.func + demo.func()
+ })`),
   })
 
   $effect.pre(() => {
@@ -94,8 +111,17 @@
   value={theming}
   name="legend"
   showLength={true}
-  expandLevel={2}
+  showTypes
+  expandLevel={1}
+  expandPaths={[
+    'legend.base08.1',
+    'legend.base09',
+    'legend.base0C.1',
+    'legend.base0D.1',
+    'legend.base0E.1',
+  ]}
   previewDepth={Infinity}
   previewEntries={10}
   {...props}
+  parseJson
 />

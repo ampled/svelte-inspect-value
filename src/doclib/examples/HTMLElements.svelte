@@ -75,7 +75,6 @@
   <Inspect
     value={div}
     name="htmlElement"
-    theme="drak"
     style="flex-basis: 100%"
     expandLevel={0}
     elementView={group}

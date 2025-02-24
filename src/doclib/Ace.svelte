@@ -23,11 +23,11 @@
     ;(window as any)['ace'] = ace
     //@ts-expect-error nonono
     await import('brace/mode/javascript')
-    //@ts-expect-error nonono
-    await import('brace/theme/dracula')
+    await import('./brace-theme.js')
+
     if (editor) {
       editor.$blockScrolling = Infinity
-      editor.setTheme('ace/theme/dracula')
+      editor.setTheme('ace/theme/inspect')
       editor.getSession().setMode('ace/mode/javascript')
       editor.setOptions({
         maxLines: 100,
@@ -80,7 +80,7 @@
     position: relative;
     padding: 0.5em;
     width: 100%;
-    background-color: #282a36;
+    background-color: #1e2c3e;
     border-radius: 8px;
     overflow: hidden;
     border: 1px solid var(--border-color);

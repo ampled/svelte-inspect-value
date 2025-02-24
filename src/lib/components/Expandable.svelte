@@ -6,10 +6,11 @@
   import { useOptions } from '../options.svelte.js'
   import { useState } from '../state.svelte.js'
   import type { TypeViewProps } from '../types.js'
-  import { stringifyPath, type ValueType } from '../util.js'
+  import { shouldInitiallyExpandNode, stringifyPath, type ValueType } from '../util.js'
   import CollapseButton from './CollapseButton.svelte'
   import Count from './Count.svelte'
   import Key from './Key.svelte'
+  import NodeNote from './NodeNote.svelte'
   import Tools from './Tools.svelte'
   import Type from './Type.svelte'
 
@@ -39,6 +40,7 @@
     path = [],
     showLength = true,
     children,
+    note,
     ...rest
   }: Props = $props()
 
@@ -47,24 +49,22 @@
   const inspectState = useState()
   const previewLevel = getPreviewLevel()
   const isKey = getContext<boolean>('key')
-  let collapseState = $derived(inspectState.value[stringifyPath(path)])
+  let stringifiedPath = $derived(stringifyPath(path))
+  let collapseState = $derived(inspectState.value[stringifiedPath])
   let collapsed = $derived(collapseState ? collapseState.collapsed : true)
 
   onMount(() => {
     if (inspectState && previewLevel === 0) {
       const storedState = inspectState.getCollapse(path)
       if (!storedState) {
-        if (options.value.expandAll) {
-          inspectState.setCollapse(path, {
-            collapsed: false,
-            hasChildren: length != null && length > 0,
-          })
-        } else {
-          inspectState.setCollapse(path, {
-            collapsed: path.length > options.value.expandLevel,
-            hasChildren: length != null && length > 0,
-          })
-        }
+        inspectState.setCollapse(path, {
+          collapsed: !shouldInitiallyExpandNode(
+            path,
+            options.value.expandLevel,
+            options.value.expandAll,
+            options.value.expandPaths
+          ),
+        })
       }
     }
   })
@@ -94,6 +94,7 @@
     {/if}
     {#if showKey}
       <Key
+        disabled={previewLevel > 0}
         ondblclick={() => onCollapseChanged(!collapsed)}
         onclick={() => onCollapseChanged(!collapsed)}
         delim={keyDelim}
@@ -104,7 +105,9 @@
       />
     {/if}
   </div>
-
+  {#if note && !previewLevel}
+    <NodeNote title={note.description}>{note.title}</NodeNote>
+  {/if}
   {#if !isKey}
     <Type {type} force={forceType} />
   {/if}

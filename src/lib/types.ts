@@ -45,6 +45,7 @@ export type TypeViewProps<Value = unknown, Type = ValueType> = {
    * Force type indicator visibility for this node
    */
   forceType?: boolean
+  note?: { title: string; description: string }
 }
 
 export type CustomComponentPropsTransformFn<TComponent extends Component<any>> = (
