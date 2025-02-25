@@ -59,16 +59,16 @@
   --interactive: var(--base0E);
   --deprecated: var(--base0F);
   --indent: 0.5em;
-
-  background-color: var(--bg);
-  background: var(--sdr-gradient);
 }
 
 html {
   background: var(--sdr-gradient);
   background-attachment: fixed;
+  background-repeat: no-repeat;
   background-color: var(--bg);
+  background-size: 100% 100%;
   overscroll-behavior: none;
+  /* height: 100%; */
 }
 
 body {
@@ -79,6 +79,7 @@ body {
   font-family: 'EB Garamond', serif;
   font-optical-sizing: auto;
   width: 100%;
+  height: 100%;
   font-size: 18px;
   font-optical-sizing: auto;
 }

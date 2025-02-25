@@ -178,7 +178,7 @@ function matchPath(keyPath: string[], expandPaths: string[]) {
   return false
 }
 
-const neverExpandInitial = ['constructor', 'prototype'] as KeyType[]
+export const neverExpandInitial = ['constructor', 'prototype'] as (KeyType | undefined)[]
 
 export function shouldInitiallyExpandNode(
   currentPath: KeyType[],

@@ -6,7 +6,12 @@
   import { useOptions } from '../options.svelte.js'
   import { useState } from '../state.svelte.js'
   import type { TypeViewProps } from '../types.js'
-  import { shouldInitiallyExpandNode, stringifyPath, type ValueType } from '../util.js'
+  import {
+    neverExpandInitial,
+    shouldInitiallyExpandNode,
+    stringifyPath,
+    type ValueType,
+  } from '../util.js'
   import CollapseButton from './CollapseButton.svelte'
   import Count from './Count.svelte'
   import Key from './Key.svelte'
@@ -51,7 +56,14 @@
   const isKey = getContext<boolean>('key')
   let stringifiedPath = $derived(stringifyPath(path))
   let collapseState = $derived(inspectState.value[stringifiedPath])
-  let collapsed = $derived(collapseState ? collapseState.collapsed : true)
+  let collapsed = $derived.by(() => {
+    if (collapseState) {
+      return collapseState.collapsed
+    }
+    // while waiting for onMount to run, check expandLevel.
+    // this avoids playing the indent intro animation.
+    return path.length > options.expandLevel || neverExpandInitial.includes(key)
+  })
 
   onMount(() => {
     if (inspectState && previewLevel === 0) {
@@ -60,7 +72,7 @@
         inspectState.setCollapse(path, {
           collapsed: !shouldInitiallyExpandNode(
             path,
-            options.value.expandLevel,
+            options.expandLevel,
             options.value.expandAll,
             options.value.expandPaths
           ),
@@ -125,11 +137,11 @@
 
 {#if children && length != null && length > 0 && !collapsed && !previewLevel}
   <div
+    transition:slideXY={{ duration: options.transitionDuration * 2 }}
     oninspectvaluechange={() => buttonComponent?.flash()}
     role="list"
     data-testid="indent"
     class="indent {type}"
-    transition:slideXY={{ duration: options.transitionDuration * 2 }}
   >
     {@render children()}
   </div>

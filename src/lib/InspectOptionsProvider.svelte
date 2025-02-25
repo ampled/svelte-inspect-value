@@ -9,7 +9,7 @@
 
   let { children, options }: InspectOptionsProviderProps = $props()
 
-  setGlobalInspectOptions(options)
+  setGlobalInspectOptions(() => options)
 </script>
 
 {@render children()}
