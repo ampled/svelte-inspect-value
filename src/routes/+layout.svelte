@@ -7,6 +7,7 @@
   import Inspect from '$lib/Inspect.svelte'
   import InspectOptionsProvider from '$lib/InspectOptionsProvider.svelte'
   import { type InspectOptions } from '$lib/options.svelte.js'
+  import { setContext } from 'svelte'
   import GlobalOptions from './GlobalOptions.svelte'
 
   // onNavigate((navigation) => {
@@ -46,8 +47,24 @@
     embedMedia: true,
     elementView: 'simple',
     parseJson: false,
+    renderIf: true,
   })
+
+  function onkeydown(event: KeyboardEvent & { currentTarget: EventTarget & Window }) {
+    if (event.key === 'æ') {
+      options.renderIf = !options.renderIf
+    }
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const setOption = (name: keyof InspectOptions, value: any) => {
+    options[name] = value
+  }
+
+  setContext('set-global-option', setOption)
 </script>
+
+<svelte:window {onkeydown} />
 
 <InspectOptionsProvider {options}>
   <svelte:boundary>

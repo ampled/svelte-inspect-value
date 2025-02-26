@@ -13,6 +13,7 @@
     style="width: 400px"
     value={['normal boring string', 'cool \n multi-line \n  render 😎']}
     name="strings"
+    expandLevel={2}
     expandAll
   />
 </div>

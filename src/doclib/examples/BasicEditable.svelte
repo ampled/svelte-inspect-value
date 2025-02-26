@@ -49,8 +49,10 @@
   }
 
   getContext<SvelteMap<string, string>>('toc')?.set('JSON', 'json')
-  const globalInspectOptions = getContext<InspectOptions>(GLOBAL_OPTIONS_CONTEXT)
+  const globalInspectOptions = getContext<() => InspectOptions>(GLOBAL_OPTIONS_CONTEXT)()
   let editor = $state<ReturnType<typeof Editor>>()
+  const setOption =
+    getContext<(name: keyof InspectOptions, value: unknown) => void>('set-global-option')
 </script>
 
 <div class="flex col">
@@ -59,12 +61,16 @@
     <code>Inspect</code> works well for basic object and array-values aka "json".<br />
     If needed, strings that start with <code>'['</code> or <code>{`'{'`}</code> can be parsed. Try
     it:
-    <ToggleButton bind:checked={globalInspectOptions.parseJson}>parse json</ToggleButton>
+    <span style="margin-left: 0.5em;">
+      <ToggleButton
+        bind:checked={() => globalInspectOptions.parseJson, (val) => setOption('parseJson', val)}
+      >
+        parse json
+      </ToggleButton>
+    </span>
   </p>
   <button onclick={() => reset()}>reset</button>
   <Stack>
-    <Inspect {value} name="demo" />
-    <!-- <div> -->
     <Editor
       bind:this={editor}
       value={sourceValue}
@@ -72,6 +78,7 @@
       valid={demoInputValid}
       message={error}
     />
+    <Inspect {value} name="demo" />
   </Stack>
 </div>
 

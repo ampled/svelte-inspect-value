@@ -211,6 +211,8 @@ export function mergeOptions(
 export function createOptions(options: () => InspectOptions) {
   let value: InspectOptions = $state(options())
   const transitionDuration = $derived(value.noanimate ? 0 : 200)
+  // this could be Infinity but let's set a cap just to be sure
+  const expandLevel = $derived(value.expandAll ? 100 : value.expandLevel)
 
   return {
     get value() {
@@ -221,6 +223,9 @@ export function createOptions(options: () => InspectOptions) {
     },
     get transitionDuration() {
       return transitionDuration
+    },
+    get expandLevel() {
+      return expandLevel
     },
     setOptions(options: Partial<InspectOptions>) {
       untrack(() => {
@@ -235,7 +240,16 @@ export function createOptions(options: () => InspectOptions) {
 
 export type OptionsContext = ReturnType<typeof createOptions>
 
-export function setGlobalInspectOptions(options: Partial<InspectOptions>) {
+export function setGlobalInspectOptions(
+  options: Partial<InspectOptions> | (() => Partial<InspectOptions>)
+) {
+  if (typeof options !== 'function') {
+    console.warn(`[SVELTE-INSPECT-VALUE]:
+Passing global options as an object is deprecated and will be removed in a future version.
+Reactivity is not guaranteed.
+Set global options like this instead: setGlobalInspectOptions(() => {options value})`)
+  }
+
   return setContext(GLOBAL_OPTIONS_CONTEXT, options)
 }
 

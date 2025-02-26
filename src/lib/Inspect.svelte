@@ -34,7 +34,9 @@
     ...props
   }: InspectProps = $props()
 
-  let globalOptions = getContext<Partial<InspectOptions>>(GLOBAL_OPTIONS_CONTEXT)
+  let globalOptions = getContext<Partial<InspectOptions> | (() => Partial<InspectOptions>)>(
+    GLOBAL_OPTIONS_CONTEXT
+  )
 
   let mergedOptions = $derived(
     mergeOptions(
@@ -60,7 +62,7 @@
         renderIf,
         parseJson,
       },
-      globalOptions
+      typeof globalOptions === 'function' ? globalOptions() : globalOptions
     )
   )
 
