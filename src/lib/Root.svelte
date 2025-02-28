@@ -110,25 +110,22 @@
       overrideable roles (somewhat accurately mapped to base16 roles) 
       https://github.com/chriskempson/base16/blob/main/styling.md
     */
-    --_background-color: var(--background-color, var(--base00));
     --_background: var(--inspect-background, none);
+    --_background-color: var(--background-color, var(--base00));
+
     --_hover-color: var(--hover-color, var(--base01));
     --_text-selection-background: var(--text-selection-background, var(--base02));
     --_indent-color: var(--indent-color, var(--base03));
     --_length-color: var(--length-color, var(--base03));
-    --_border-color: var(--border-color, var(--base03));
     --_bullet-color: var(--bullet-color, var(--base03));
     --_comment-color: var(--comment-color, var(--base03));
     --_caret-color: var(--caret-color, var(--base03));
-    --_key-whitespace-color: var(--key-whitespace-color, var(--base03));
-    --_key-whitespace-opacity: var(--key-whitespace-opacity, 0.5);
     --_caret-focus-color: var(--caret-focus-color, var(--base05));
     --_caret-hover-color: var(--caret-hover-color, var(--base05));
     --_text-color: var(--text-color, var(--base05));
     --_child-update-flash-color: var(--child-update-flash-color, var(--base05));
     --_update-flash-color: var(--update-flash-color, var(--base06));
     --_delimiter-color: var(--delimiter-color, var(--base08));
-    --_key-prefix-color: var(--key-prefix-color, var(--base08));
     --_note-color: var(--note-color, var(--base08));
     --_button-color: var(--button-color, var(--base0E));
     --_button-disabled-color: var(--button-disabled-color, var(--base03));
@@ -140,6 +137,20 @@
     --_promise-fulfilled-color: var(--promise-fulfilled-color, var(--base0B));
     --_promise-rejected-color: var(--promise-rejected-color, var(--base0E));
     --_promise-bracket-color: var(--promise-bracket-color, var(--base03));
+
+    /* key */
+    --_key-whitespace-color: var(--key-whitespace-color, var(--base03));
+    --_key-whitespace-opacity: var(--key-whitespace-opacity, 0.5);
+    --_key-prefix-color: var(--key-prefix-color, var(--base08));
+
+    /* border */
+    --_border-radius: var(--border-radius, 8px);
+    --_border-color: var(--border-color, var(--base03));
+
+    /* tools */
+    --_tools-background-color: var(--tools-background-color, var(--base00));
+    --_tools-background-color-borderless: var(--tools-background-color-borderless, transparent);
+    --_tools-border-color: var(--tools-border-color, var(--base03));
 
     /* value colors */
     --_error-color: var(--error-color, var(--base08));
@@ -202,7 +213,7 @@
     background: var(--_background);
     background-color: var(--_background-color);
     border: 1px solid var(--_border-color);
-    border-radius: 8px;
+    border-radius: var(--_border-radius);
     font-size: var(--inspect-font-size, 12px);
     box-sizing: border-box;
     color: var(--_text-color);
@@ -211,8 +222,9 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     position: relative;
-    min-width: 360px;
-    width: 100%;
+    min-width: var(--inspect-min-width, 360px);
+    width: var(--inspect-width, 100%);
+    max-width: var(--inspect-max-width, 100%);
     box-sizing: border-box;
     margin: 0;
     overflow-y: auto;
@@ -230,26 +242,6 @@
         background-color: transparent;
         border: none;
       }
-    }
-  }
-
-  .svelte-inspect-value.fixedBottom {
-    position: fixed;
-    max-width: 40vw;
-    bottom: 0;
-    left: 0;
-    max-height: 100vh;
-    height: max-content;
-    opacity: 0.8;
-    z-index: 9999;
-
-    &:hover {
-      opacity: 1;
-    }
-
-    :global(.indent) {
-      max-height: calc(1.5rem * 20);
-      overflow-y: auto;
     }
   }
 
@@ -456,7 +448,6 @@
 
     &.html {
       padding-inline: 0.5em;
-      border-radius: 4px;
     }
 
     &.promise {

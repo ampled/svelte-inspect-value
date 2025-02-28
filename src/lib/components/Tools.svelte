@@ -113,11 +113,6 @@
         <Copy />
       </button>
     {/if}
-    <!-- {#if level === 1}
-      <button title="options" aria-label="options" onclick={() => (options.value.open = true)}>
-        <Settings />
-        </button>
-        {/if} -->
   </div>
 {/if}
 
@@ -129,14 +124,12 @@
     opacity: 1;
     display: flex;
     transition: all 250ms ease-in-out allow-discrete;
-    /* width: calc-size(max-content, size); */
-    /* transform: translateX(0); */
   }
 
   .tools {
     transition: all 250ms ease-in-out allow-discrete;
-    background-color: var(--_background-color);
-    border-left: 1px solid var(--_border-color);
+    background-color: var(--_tools-background-color);
+    border-left: 1px solid var(--_tools-border-color);
     backdrop-filter: blur(1px);
     position: absolute;
     right: 0;
@@ -184,7 +177,7 @@
   .tools.borderless {
     position: relative;
     transition-property: opacity !important;
-    background-color: transparent;
+    background-color: var(--_tools-background-color-borderless);
     border-left: 0;
   }
 </style>
