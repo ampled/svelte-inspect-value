@@ -12,7 +12,7 @@
   let flashFn = $state<FlashFn>()
 
   export function flash() {
-    flashFn?.({ color: 'var(--fg)', filter: 'none' })
+    flashFn?.({ color: 'var(--_child-update-flash-color)', filter: 'none' })
   }
 </script>
 
@@ -21,8 +21,8 @@
     value: () => value,
     enabled: () => options.value.flashOnUpdate,
     flashStyle: () => ({
-      color: 'var(--fg-light)',
-      filter: 'drop-shadow(0 0 4px var(--fg-light))',
+      color: 'var(--_update-flash-color)',
+      filter: 'drop-shadow(0 0 4px var(--_update-flash-color))',
       overflow: 'visible',
     }),
     onInit: (trigger) => (flashFn = trigger),

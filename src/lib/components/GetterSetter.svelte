@@ -208,17 +208,17 @@
 <style>
   input {
     height: 1.4em;
-    background-color: var(--bg);
-    color: var(--fg);
-    outline: 1px solid var(--border-color);
+    background-color: var(--_background-color);
+    color: var(--_text-color);
+    outline: 1px solid var(--_border-color);
     border-radius: 2px;
 
     &.valid {
-      outline-color: var(--green);
+      outline-color: var(--_button-success-color);
     }
 
     &.invalid {
-      outline-color: var(--red);
+      outline-color: var(--_error-color);
     }
   }
 </style>

@@ -64,19 +64,19 @@
     border-radius: 4px;
 
     .tag {
-      color: var(--fg);
+      color: var(--_text-color);
     }
 
     .name {
-      color: var(--red);
+      color: var(--_error-color);
     }
 
     .attr {
-      color: var(--green);
+      color: var(--_function-name-color);
     }
 
     .string {
-      color: var(--yellow);
+      color: var(--_string-value-color);
     }
   }
 </style>

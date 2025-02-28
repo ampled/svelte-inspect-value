@@ -1,6 +1,6 @@
 .line {
   transition: all 0.25s ease-in-out;
-  background: linear-gradient(35deg, var(--bg-lighter) 60%, transparent 80%);
+  background: linear-gradient(35deg, var(--_hover-color) 60%, transparent 80%);
   background-size: 0% 100%;
   background-origin: border-box;
   background-repeat: no-repeat;

@@ -71,7 +71,7 @@
 
 <style>
   .count {
-    color: var(--comments);
+    color: var(--_length-color);
     font-style: italic;
     font-weight: bold;
     font-size: 0.857em;

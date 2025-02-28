@@ -22,12 +22,10 @@ export const flashOnUpdate: Action<
       ({
         height: '4px',
         width: '4px',
-        backgroundColor: 'var(--fg-light)',
-        border: '1px solid var(--fg-light)',
+        backgroundColor: 'var(--_update-flash-color)',
+        border: '1px solid var(--_update-flash-color',
         transform: `translateX(0%) scale(1, 1)`,
-        // transform: `scale(1, 1.5)`,
-        // boxShadow: '0px 0px 4px 1px var(--fg-light)',
-        filter: 'drop-shadow(0px 0px 2px var(--fg-light))',
+        filter: 'drop-shadow(0px 0px 2px var(--_update-flash-color))',
         borderRadius: '9999px',
       }) as CSSStyleDeclaration,
   } = parameters
