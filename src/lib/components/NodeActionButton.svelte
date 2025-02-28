@@ -21,9 +21,9 @@
     font-size: 0.8em;
     height: 1.5em;
     line-height: 1.5em;
-    color: var(--interactive);
-    background-color: var(--bg);
-    outline: 1px solid var(--interactive);
+    color: var(--_button-color);
+    background-color: var(--_background-color);
+    outline: 1px solid var(--_button-color);
     padding-inline: 0.5em;
     cursor: pointer;
     border-radius: 2px;
@@ -32,21 +32,21 @@
 
     &:disabled {
       cursor: default;
-      color: var(--border-color);
-      outline-color: var(--border-color);
+      color: var(--border-disabled-color);
+      outline-color: var(--border-disabled-color);
     }
 
     &:active:not(:disabled) {
-      color: var(--interactive);
-      background-color: var(--bg);
-      outline: 1px solid var(--interactive);
+      background-color: var(--_background-color);
+      color: var(--_button-color);
+      outline: 1px solid var(--_button-color);
       transform: scaleY(0.85);
     }
 
     &:hover:not(:disabled):not(:active),
     &:focus-visible {
-      background-color: var(--interactive);
-      color: var(--bg);
+      background-color: var(--_button-color);
+      color: var(--_background-color);
     }
   }
 </style>

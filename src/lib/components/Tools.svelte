@@ -135,8 +135,8 @@
 
   .tools {
     transition: all 250ms ease-in-out allow-discrete;
-    background-color: var(--bg);
-    border-left: 1px solid var(--border-color);
+    background-color: var(--_background-color);
+    border-left: 1px solid var(--_border-color);
     backdrop-filter: blur(1px);
     position: absolute;
     right: 0;
@@ -151,8 +151,6 @@
     max-height: 1.5em;
     z-index: calc(var(--index) + 1);
     flex-wrap: nowrap;
-    /* transform: translateX(-100%);
-    transform-origin: center left; */
     overflow: clip;
 
     button {
@@ -160,12 +158,11 @@
       padding: 2px;
       margin: 0;
       border: none;
-      /* transition: all 300ms ease-in-out; */
       height: 1.5em;
       min-height: 1.5em;
       width: 1.5em;
       min-width: 1.5em;
-      color: var(--interactive);
+      color: var(--_button-color);
       cursor: pointer;
 
       :global(svg) {
@@ -173,13 +170,13 @@
       }
 
       &.copied {
-        color: var(--green) !important;
+        color: var(--_button-success-color) !important;
       }
 
       &:hover,
       &:focus-visible {
         background-color: transparent;
-        color: var(--fg);
+        color: var(--_text-color);
       }
     }
   }
@@ -187,9 +184,7 @@
   .tools.borderless {
     position: relative;
     transition-property: opacity !important;
-    /* background-color: var(--bg-lighter); */
     background-color: transparent;
     border-left: 0;
-    /* padding: 0; */
   }
 </style>

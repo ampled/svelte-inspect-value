@@ -68,7 +68,7 @@
   <div
     data-testid="inspect"
     class={[
-      'ampled-json-inspect',
+      'svelte-inspect-value',
       classValue,
       options.value.theme,
       options.value.noanimate && 'noanimate',
@@ -96,63 +96,95 @@
 <style>
   @import './themes.css';
 
-  .ampled-json-inspect {
-    --cyan: var(--base0C, #00c1be);
-    --yellow: var(--base0A, #e1ff7f);
-    --green: var(--base0B, #5faa70);
-    --red: var(--base08, #b03a3a);
-    --purple: var(--base0E, #8f42ae);
-    --blue: var(--base0D, #6a6ace);
-    --orange: var(--base09, #c6903a);
+  .svelte-inspect-value {
+    /* commonly placed colors in base16 themes */
+    --cyan: var(--base0C);
+    --yellow: var(--base0A);
+    --green: var(--base0B);
+    --red: var(--base08);
+    --purple: var(--base0E);
+    --blue: var(--base0D);
+    --orange: var(--base09);
 
-    --bg: var(--base00, #0e0026);
-    --bg-lighter: var(--base01, #250060);
-    --bg-light: var(--base07);
-    --selection: var(--base02);
-    --comments: var(--base03, #59456e);
-    --border-color: var(--base03, var(--comments));
-    --dark-fg: var(--base04);
-    --fg: var(--base05, #b9a9be);
-    --fg-light: var(--base06);
+    /* 
+      overrideable roles (somewhat accurately mapped to base16 roles) 
+      https://github.com/chriskempson/base16/blob/main/styling.md
+    */
+    --_background-color: var(--background-color, var(--base00));
+    --_background: var(--inspect-background, none);
+    --_hover-color: var(--hover-color, var(--base01));
+    --_text-selection-background: var(--text-selection-background, var(--base02));
+    --_indent-color: var(--indent-color, var(--base03));
+    --_length-color: var(--length-color, var(--base03));
+    --_border-color: var(--border-color, var(--base03));
+    --_bullet-color: var(--bullet-color, var(--base03));
+    --_comment-color: var(--comment-color, var(--base03));
+    --_caret-color: var(--caret-color, var(--base03));
+    --_key-whitespace-color: var(--key-whitespace-color, var(--base03));
+    --_key-whitespace-opacity: var(--key-whitespace-opacity, 0.5);
+    --_caret-focus-color: var(--caret-focus-color, var(--base05));
+    --_caret-hover-color: var(--caret-hover-color, var(--base05));
+    --_text-color: var(--text-color, var(--base05));
+    --_child-update-flash-color: var(--child-update-flash-color, var(--base05));
+    --_update-flash-color: var(--update-flash-color, var(--base06));
+    --_delimiter-color: var(--delimiter-color, var(--base08));
+    --_key-prefix-color: var(--key-prefix-color, var(--base08));
+    --_note-color: var(--note-color, var(--base08));
+    --_button-color: var(--button-color, var(--base0E));
+    --_button-disabled-color: var(--button-disabled-color, var(--base03));
+    --_button-success-color: var(
+      --button-success-color,
+      var(--base0B)
+    ); /* e.g. copy to clipboard */
+    --_promise-pending-color: var(--promise-pending-color, var(--base0A));
+    --_promise-fulfilled-color: var(--promise-fulfilled-color, var(--base0B));
+    --_promise-rejected-color: var(--promise-rejected-color, var(--base0E));
+    --_promise-bracket-color: var(--promise-bracket-color, var(--base03));
 
-    --error: var(--red);
-    --delimiter: var(--red);
-    --keyword: var(--red);
-    --number: var(--purple);
-    --number-type: var(--red);
-    --boolean: var(--purple);
-    --class: var(--blue);
-    --string: var(--yellow);
-    --string-type: var(--purple);
-    --regex: var(--cyan);
-    --symbol: var(--cyan);
-    --function: var(--green);
-    --object-type: var(--cyan);
-    --object: var(--cyan);
-    --interactive: var(--base0E);
-    --deprecated: var(--base0F);
+    /* value colors */
+    --_error-color: var(--error-color, var(--base08));
+    --_string-value-color: var(--string-value-color, var(--base0A));
+    --_function-name-color: var(--function-name-color, var(--base0B));
+    --_symbol-value-color: var(--symbol-value-color, var(--base0C));
+    --_regex-value-color: var(--regex-value-color, var(--base0C));
+    --_number-value-color: var(--number-value-color, var(--base0E));
+    --_bigint-value-color: var(--bigint-value-color, var(--base0E));
+    --_boolean-value-color: var(--boolean-value-color, var(--base0E));
+    --_class-name-color: var(--class-name-color, var(--base0D));
 
-    --indent: 0.5em;
+    /* type colors */
+    --_niltype-bg-color: var(--niltype-bg-color, var(--base01));
+    --_niltype-text-color: var(--niltype-text-color, var(--base05));
+    --_number-type-color: var(--number-type-color, var(--base08));
+    --_bigint-type-color: var(--bigint-type-color, var(--base08));
+    --_boolean-type-color: var(--boolean-type-color, var(--base08));
+    --_symbol-type-color: var(--symbol-type-color, var(--base09));
+    --_regex-type-color: var(--regex-type-color, var(--base0B));
+    --_array-type-color: var(--array-type-color, var(--base0C));
+    --_date-type-color: var(--date-type-color, var(--base0C));
+    --_map-type-color: var(--map-type-color, var(--base0C));
+    --_set-type-color: var(--set-type-color, var(--base0C));
+    --_url-type-color: var(--url-type-color, var(--base0C));
+    --_urlsearchparams-type-color: var(--urlsearchparams-type-color, var(--base0C));
+    --_object-type-color: var(--object-type-color, var(--base0C));
+    --_class-type-color: var(--class-type-color, var(--base08));
+    --_function-type-color: var(--function-type-color, var(--base08));
+    --_string-type-color: var(--string-type-color, var(--base0E));
   }
 
-  :global .ampled-json-inspect::selection {
+  :global .svelte-inspect-value::selection {
+    background-color: var(--_text-selection-background);
+  }
+
+  :global .svelte-inspect-value ::selection {
     background-color: var(--selection);
   }
 
-  :global .ampled-json-inspect ::selection {
-    background-color: var(--selection);
-  }
-
-  :global .ampled-json-inspect:not(.noanimate) {
+  :global .svelte-inspect-value:not(.noanimate) {
     transition: all 250ms linear;
-    /* *,
-    *::before,
-    *::after {
-      transition: all 250ms linear;
-    } */
   }
 
-  :global .ampled-json-inspect {
+  :global .svelte-inspect-value {
     *,
     *::before,
     *::after {
@@ -161,18 +193,19 @@
     }
   }
 
-  :global .ampled-json-inspect.noanimate * {
+  :global .svelte-inspect-value.noanimate * {
     transition: none !important;
   }
 
-  .ampled-json-inspect {
+  .svelte-inspect-value {
     container-type: inline-size;
-    background-color: var(--bg);
-    border: 1px solid var(--border-color);
+    background: var(--_background);
+    background-color: var(--_background-color);
+    border: 1px solid var(--_border-color);
     border-radius: 8px;
     font-size: var(--inspect-font-size, 12px);
     box-sizing: border-box;
-    color: var(--fg);
+    color: var(--_text-color);
     font-family: var(--inspect-font, monospace);
     line-height: 1.5em;
     white-space: nowrap;
@@ -200,7 +233,7 @@
     }
   }
 
-  .ampled-json-inspect.fixedBottom {
+  .svelte-inspect-value.fixedBottom {
     position: fixed;
     max-width: 40vw;
     bottom: 0;
@@ -244,9 +277,9 @@
     }
   }
 
-  .ampled-json-inspect :global(.indent) {
+  .svelte-inspect-value :global(.indent) {
     &.string {
-      --border-color: var(--string);
+      --border-color: var(--_string-value-color);
       overflow-x: auto;
     }
 
@@ -254,23 +287,23 @@
     &.asyncfunction,
     &.asyncgeneratorfunction,
     &.generatorfunction {
-      --border-color: var(--function);
+      --border-color: var(--_function-name-color);
       overflow-x: auto;
     }
 
     &.error {
-      --border-color: var(--error);
+      --border-color: var(--_error-color);
     }
   }
 
-  .ampled-json-inspect :global(.type) {
-    color: var(--class);
+  .svelte-inspect-value :global(.type) {
+    color: var(--_object-type-color);
     font-size: 0.857em;
 
     &.null,
     &.undefined {
-      background-color: var(--bg-lighter);
-      color: var(--fg);
+      background-color: var(--_niltype-bg-color);
+      color: var(--_niltype-text-color);
       padding-inline: 0.5em;
       height: 1.3em;
       line-height: 1.3em;
@@ -278,88 +311,81 @@
     }
 
     &.string {
-      color: var(--string-type);
+      color: var(--_string-type-color);
     }
 
     &.number {
-      color: var(--number-type);
+      color: var(--_number-type-color);
     }
 
     &.boolean {
-      color: var(--number-type);
+      color: var(--_boolean-type-color);
     }
 
     &.array {
-      color: var(--object-type);
+      color: var(--_array-type-color);
     }
 
     &.object {
-      color: var(--object-type);
+      color: var(--_object-type-color);
     }
 
     &.bigint {
-      color: var(--number-type);
+      color: var(--_bigint-type-color);
     }
 
     &.error,
     &.InspectError {
-      color: var(--error);
+      color: var(--_error-color);
     }
 
     &.regexp {
-      color: var(--function);
+      color: var(--_regex-type-color);
     }
 
     &.date {
-      color: var(--cyan);
+      color: var(--_date-type-color);
     }
 
     &.function,
     &.asyncfunction,
     &.asyncgeneratorfunction,
     &.generatorfunction {
-      color: var(--keyword);
+      color: var(--_function-type-color);
     }
 
     &.symbol {
-      color: var(--orange);
+      color: var(--_symbol-type-color);
     }
 
     &.map {
-      color: var(--class);
+      color: var(--_map-type-color);
     }
 
     &.url {
-      color: var(--class);
+      color: var(--_url-type-color);
     }
 
     &.urlsearchparams {
-      color: var(--class);
+      color: var(--_urlsearchparams-type-color);
     }
 
     &.set {
-      color: var(--class);
+      color: var(--_set-type-color);
     }
 
     &.class {
-      color: var(--keyword);
-    }
-
-    &.noop {
-      color: var(--deprecated);
-      padding-inline: 0.5em;
-      outline: 2px solid var(--border-color);
-      border-radius: 2px;
+      color: var(--_class-type-color);
     }
   }
 
-  .ampled-json-inspect :global(.value) {
+  .svelte-inspect-value :global(.value) {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 
     &.string {
-      color: var(--string);
+      color: var(--_string-value-color);
     }
 
     &.multi {
@@ -373,63 +399,59 @@
     }
 
     &.number {
-      color: var(--number);
+      color: var(--_number-value-color);
     }
 
     &.boolean {
-      color: var(--boolean);
+      color: var(--_boolean-value-color);
     }
 
     &.array {
-      color: var(--object);
+      color: var(--_array-type-color);
     }
 
     &.object {
-      color: var(--object);
+      color: var(--_object-type-color);
     }
 
     &.bigint {
-      color: var(--number);
+      color: var(--_bigint-value-color);
     }
 
     &.url {
-      color: var(--class);
+      color: var(--_url-type-color);
     }
 
     &.urlsearchparams {
-      color: var(--class);
+      color: var(--_urlsearchparams-type-color);
     }
 
     &.error {
-      color: var(--error);
+      color: var(--_error-color);
     }
 
     &.regexp {
-      color: var(--regex);
+      color: var(--_regex-value-color);
     }
 
     &.date {
-      color: var(--object);
+      color: var(--_date-type-color);
     }
 
     &.function {
-      color: var(--green);
-    }
-
-    &.arraybuffer {
-      color: var(--object);
+      color: var(--_function-name-color);
     }
 
     &.symbol {
-      color: var(--symbol);
+      color: var(--_symbol-value-color);
     }
 
     &.map {
-      color: var(--object);
+      color: var(--_map-type-color);
     }
 
     &.class {
-      color: var(--class);
+      color: var(--_class-name-color);
     }
 
     &.html {
@@ -439,18 +461,18 @@
 
     &.promise {
       &.rejected {
-        color: var(--red);
+        color: var(--_promise-rejected-color);
       }
       &.pending {
-        color: var(--yellow);
+        color: var(--_promise-pending-color);
       }
       &.fulfilled {
-        color: var(--green);
+        color: var(--_promise-fulfilled-color);
       }
     }
   }
 
-  .ampled-json-inspect :global(a) {
+  .svelte-inspect-value :global(a) {
     color: inherit;
     text-decoration: none;
 
@@ -459,7 +481,7 @@
     }
   }
 
-  .ampled-json-inspect :global(code) {
+  .svelte-inspect-value :global(code) {
     font-family: inherit;
     font-size: inherit;
   }

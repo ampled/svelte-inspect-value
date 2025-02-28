@@ -99,7 +99,7 @@
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    color: var(--comments);
+    color: var(--_caret-color);
     aspect-ratio: 1 / 1;
     width: 1em;
     height: 1em;
@@ -110,15 +110,15 @@
 
     &:hover {
       background-color: transparent;
-      color: var(--fg);
+      color: var(--_caret-hover-color);
     }
 
     &:focus {
-      color: var(--fg);
+      color: var(--_caret-focus-color);
     }
 
     &:focus-visible {
-      color: var(--fg);
+      color: var(--_caret-focus-color);
       transform: scale(1.2);
     }
 
