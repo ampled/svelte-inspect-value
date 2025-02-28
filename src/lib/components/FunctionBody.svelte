@@ -48,39 +48,39 @@
     padding-left: calc(var(--indent) * 2);
 
     .title.function_ {
-      color: var(--function);
+      color: var(--_function-name-color);
     }
 
     .title.class_ {
-      color: var(--class);
+      color: var(--_class-name-color);
     }
 
     .tag {
-      color: var(--fg);
+      color: var(--_text-color);
     }
 
     .keyword {
-      color: var(--red);
+      color: var(--_error-color);
     }
 
     .name {
-      color: var(--red);
+      color: var(--_error-color);
     }
 
     .attr {
-      color: var(--green);
+      color: var(--_function-name-color);
     }
 
     .number {
-      color: var(--purple);
+      color: var(--_number-value-color);
     }
 
     .comment {
-      color: var(--comments);
+      color: var(--_comment-color, var(--base03), #aaaaaa);
     }
 
     .string {
-      color: var(--yellow);
+      color: var(--_string-value-color);
     }
   }
 </style>

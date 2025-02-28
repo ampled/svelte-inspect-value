@@ -116,8 +116,8 @@
   }
 
   .whitespace {
-    color: var(--comments);
-    opacity: 0.5;
+    color: var(--_key-whitespace-color);
+    opacity: var(--_key-whitespace-opacity);
     user-select: none;
   }
 
@@ -127,19 +127,19 @@
     /* font-weight: bold; */
 
     &.number {
-      color: var(--number);
+      color: var(--_number-value-color);
     }
 
     &.string {
-      color: var(--fg);
+      color: var(--_text-color);
     }
 
     &.symbol {
-      color: var(--symbol);
+      color: var(--_symbol-value-color);
     }
 
     &.quotedstring {
-      color: var(--yellow);
+      color: var(--_string-value-color);
       text-wrap: nowrap;
       white-space: pre !important;
       white-space-collapse: preserve-spaces;
@@ -147,12 +147,12 @@
   }
 
   .delim {
-    color: var(--delimiter);
+    color: var(--_delimiter-color);
     user-select: text;
   }
 
   .prefix {
-    color: var(--delimiter);
+    color: var(--_key-prefix-color);
     margin-right: 0.5em;
     /* font-style: italic; */
     font-weight: 900;

@@ -19,9 +19,9 @@
     font-size: 0.8em;
     height: 1.5em;
     line-height: 1.5em;
-    color: var(--red);
-    background-color: var(--bg);
-    outline: 1px solid var(--red);
+    color: var(--_note-color);
+    background-color: var(--_background-color);
+    outline: 1px solid var(--_note-color);
     padding-inline: 0.5em;
     cursor: help;
     border-radius: 2px;

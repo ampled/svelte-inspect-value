@@ -92,6 +92,6 @@
   }
 
   .bracket {
-    color: var(--comments);
+    color: var(--_promise-bracket-color);
   }
 </style>

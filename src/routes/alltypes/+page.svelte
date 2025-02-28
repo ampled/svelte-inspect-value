@@ -29,7 +29,14 @@
     debug
     <input type="checkbox" bind:checked={debug} />
   </label>
-  <AllTypes {debug} />
+  <AllTypes
+    --caret-color="white"
+    --caret-focus-color="hotpink"
+    --caret-hover-color="hotpink"
+    --bullet-color="hotpink"
+    --string-value-color="hotpink"
+    {debug}
+  />
 </div>
 
 <!-- <div style="padding: 2em">

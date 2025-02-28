@@ -169,11 +169,11 @@
   .comma {
     margin-left: 0;
     margin-right: 0.5em;
-    color: var(--fg);
+    color: var(--_text-color);
   }
 
   .ellipsis {
-    color: var(--comments);
+    color: var(--_preview-ellipsis-color);
   }
 
   .preview {
@@ -186,7 +186,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     min-width: 0;
-    color: var(--fg);
+    color: var(--_text-color);
     transform-origin: bottom right;
   }
 
@@ -219,13 +219,13 @@
   .pre,
   .post {
     /* margin-inline: 0.125em; */
-    color: var(--fg);
+    color: var(--_text-color);
 
     &.level-0 {
-      color: var(--comments);
+      color: var(--_comment-color);
     }
     &.level-1 {
-      color: var(--fg);
+      color: var(--_text-color);
     }
     &.level-2 {
       color: var(--cyan);

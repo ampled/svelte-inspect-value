@@ -134,12 +134,6 @@
     view-transition-name: header;
   }
 
-  nav {
-    padding-inline: 1em;
-    padding-top: 0.5em;
-    view-transition-name: nav;
-  }
-
   .title {
     text-decoration: none;
     font-weight: bold;
@@ -162,6 +156,12 @@
     padding: 1em;
     width: 100%;
     margin-bottom: 150px;
+  }
+
+  nav {
+    padding-inline: 1em;
+    padding-top: 0.5em;
+    view-transition-name: nav;
   }
 
   ul {

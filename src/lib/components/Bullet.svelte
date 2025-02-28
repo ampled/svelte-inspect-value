@@ -28,7 +28,7 @@
     user-select: none;
 
     .dash {
-      background-color: var(--comments);
+      background-color: var(--_bullet-color);
       width: 4px;
       height: 1px;
       border-radius: 0px;

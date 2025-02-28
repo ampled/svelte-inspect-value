@@ -152,7 +152,7 @@
 
   .indent {
     margin-left: calc(var(--indent) * 1.5);
-    border-left: 1px solid var(--border-color);
+    border-left: 1px solid var(--_indent-color);
     overflow-x: clip;
     overflow-y: auto;
     position: relative;
