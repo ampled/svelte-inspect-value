@@ -12,17 +12,6 @@
   import { setContext } from 'svelte'
   import GlobalOptions from './GlobalOptions.svelte'
 
-  // onNavigate((navigation) => {
-  //   if (!document.startViewTransition) return
-
-  //   return new Promise((resolve) => {
-  //     document.startViewTransition(async () => {
-  //       resolve()
-  //       await navigation.complete
-  //     })
-  //   })
-  // })
-
   const { children } = $props()
 
   let routes = [

@@ -117,11 +117,20 @@
   }
 
   let inspectGlobalElement = $state<HTMLDivElement>()
+
+  let flash = $state(false)
+  function onsomevaluechanged(): void {
+    flash = true
+    setTimeout(() => {
+      flash = false
+    }, 1000)
+  }
 </script>
 
 {#if shouldRender}
   <div
     bind:this={inspectGlobalElement}
+    oninspectvaluechange={onsomevaluechanged}
     class={[
       'inspect-global',
       full ? 'full' : [xPosition, yPosition],
@@ -131,6 +140,7 @@
       opacity && 'opacity',
       moving && 'moving',
       globalValues.size === 0 && 'hidden',
+      flash && 'flash',
     ]}
     class:open={open && globalValues.size > 0}
   >
@@ -200,6 +210,21 @@
 <style>
   @import './themes.css';
 
+  @keyframes wiggle {
+    0% {
+      translate: 0;
+    }
+    40% {
+      translate: -2%;
+    }
+    60% {
+      translate: -2%;
+    }
+    100% {
+      translate: 0;
+    }
+  }
+
   .inspect-global {
     --cyan: var(--base0C, #00c1be);
     --yellow: var(--base0A, #e1ff7f);
@@ -244,7 +269,7 @@
   }
 
   :global .inspect-global:not(.noanimate) {
-    transition: all 250ms ease-in-out;
+    transition: all 400ms ease-in-out;
   }
 
   .inspect-global {
@@ -252,15 +277,17 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5em;
-    padding: 1em;
+    padding: 0.5em;
     background-color: rgb(255 255 255 / 0.1);
+    /* background: var(--bg-lighter); */
     backdrop-filter: blur(5px);
     z-index: 9999;
     max-height: 100vh;
     overflow-y: auto;
     overflow-x: visible;
-    width: 100%;
-    max-width: calc(540px + 2em);
+    /* width: 100%; */
+    /* max-width: calc(540px + 2em); */
+    /* max-width: calc(540px + 2em); */
     position: fixed;
     font-family: var(--inspect-font, monospace);
     font-size: var(--inspect-font-size, 12px);
@@ -282,10 +309,17 @@
       resize: unset;
     }
 
+    &.flash:not(.open) {
+      /* background-color: rgb(255 255 255 / 0.9); */
+      /* translate: -10% 0; */
+      animation: wiggle ease-in-out 0.5s;
+    }
+
     &.opacity {
       opacity: 0.5;
     }
 
+    &:focus-within,
     &:hover {
       opacity: 1;
     }
@@ -297,9 +331,10 @@
       --translate-y: -0.5em;
 
       &.center {
-        --translate-y: calc(-100% + 2.5em);
+        --translate-y: calc(-100% + 3em);
       }
 
+      &:focus-within,
       &:hover,
       &.open {
         --translate-y: -0.5em;
@@ -312,6 +347,7 @@
       margin-bottom: 0; */
       --translate-y: -50%;
 
+      &:focus-within,
       &:hover,
       &.open {
         --translate-y: -50%;
@@ -325,9 +361,10 @@
       --translate-y: 0.5em;
 
       &.center {
-        --translate-y: calc(100% - 2.5em);
+        --translate-y: calc(100% - 3em);
       }
 
+      &:focus-within,
       &:hover,
       &.open {
         --translate-y: 0.5em;
@@ -341,6 +378,7 @@
       /* left: 10%; */
       --translate-x: calc(100% - 2.5em);
 
+      &:focus-within,
       &:hover,
       &.open {
         --translate-x: 0.5em;
@@ -355,6 +393,7 @@
       /* right: 10%; */
       --translate-x: calc(-100% + 2.5em);
 
+      &:focus-within,
       &:hover,
       &.open {
         --translate-x: -0.5em;
