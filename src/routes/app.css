@@ -80,7 +80,7 @@ body {
   font-optical-sizing: auto;
   width: 100%;
   height: 100%;
-  font-size: 18px;
+  font-size: 20px;
   font-optical-sizing: auto;
 }
 
@@ -143,6 +143,7 @@ h2 {
 /* 8. Improve line wrapping */
 p {
   text-wrap: pretty;
+  max-width: 800px;
 }
 
 h1,

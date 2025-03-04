@@ -18,4 +18,4 @@
   })
 </script>
 
-<Inspect value={demoObject} name="demo" style="max-width: 400px;" renderIf={BROWSER} />
+<Inspect value={demoObject} name="demo" style="max-width: 500px;" renderIf={BROWSER} />

@@ -76,16 +76,21 @@
     // base0F: [props.colors['--base0F']],
     previewBrackets,
     functionBodyPreview: eval(`
-(function base0B(base05, ...params) {
+(function base0B(base09, ...params) {
     // comments: base03
     class Base0D {
       static base08;
     }
     console.log(base05, ...params)
+    while (true) {
+      break;
+    }
+    this.base0B = params;
     const demo = {
       [Symbol('demo')]: Symbol.for('demo'),
       base0B: new Base0D(),
       number: 123456780,
+      bigint: 1n,
       func: () => {}
     }
   

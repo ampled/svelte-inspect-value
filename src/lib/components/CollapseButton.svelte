@@ -13,18 +13,18 @@
     type?: string
   } & Omit<HTMLButtonAttributes, 'onchange' | 'value' | 'type'>
 
-  let { collapsed = $bindable(), onchange, disabled, value, key, type, ...rest }: Props = $props()
+  let {
+    collapsed = $bindable(),
+    onchange,
+    onclick,
+    disabled,
+    value,
+    key,
+    type,
+    ...rest
+  }: Props = $props()
 
   let options = useOptions()
-
-  function onclick() {
-    const newValue = !collapsed
-    if (onchange) {
-      onchange(newValue)
-    } else {
-      collapsed = newValue
-    }
-  }
 
   let rotation = $derived.by(() => {
     if (disabled) return 180

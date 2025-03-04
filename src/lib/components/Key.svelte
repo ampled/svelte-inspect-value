@@ -16,10 +16,11 @@
     allowUndefined?: boolean
   } & HTMLButtonAttributes
 
-  let { key, path = [], ondblclick, delim = ':', prefix, ...rest }: Props = $props()
+  let { key, path = [], delim = ':', prefix, disabled, ...rest }: Props = $props()
   const options = useOptions()
   const keyTypes = ['string', 'number', 'symbol', 'quotedstring']
   const simpleKeys = ['bigint', 'regexp']
+  const ele = $derived<'span' | 'button'>(disabled ? 'span' : 'button')
 
   const shouldBeQuoted = /[^A-zÀ-ú0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F_]|[\\[\]`]/
   const previewLevel = getPreviewLevel()
@@ -56,11 +57,12 @@
 
 {#if shouldShow}
   <svelte:boundary {onerror}>
-    <button
-      type="button"
+    <svelte:element
+      this={ele}
       data-testid="key"
-      class="key-button"
-      {ondblclick}
+      type="button"
+      class={['key-button', disabled && 'disabled']}
+      {disabled}
       aria-label={key?.toString()}
       title={previewLevel === 0 ? stringifyPath(path) : undefined}
       {...rest}
@@ -90,7 +92,7 @@
       {#if delim}
         <span class="delim">{delim}</span>
       {/if}
-    </button>
+    </svelte:element>
   </svelte:boundary>
 {/if}
 
@@ -103,15 +105,15 @@
     flex-direction: row;
     align-items: center;
 
-    &:focus:not(:disabled),
-    &:hover:not(:disabled) {
+    &:focus:not(.disabled),
+    &:hover:not(.disabled) {
       .key {
         text-decoration: underline;
       }
     }
   }
 
-  .key-button:not(:disabled) {
+  .key-button:not(.disabled) {
     cursor: pointer;
   }
 

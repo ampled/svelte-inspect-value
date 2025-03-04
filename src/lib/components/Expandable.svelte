@@ -57,6 +57,8 @@
   let stringifiedPath = $derived(stringifyPath(path))
   let collapseState = $derived(inspectState.value[stringifiedPath])
   let collapsed = $derived.by(() => {
+    if (previewLevel) return true
+
     if (collapseState) {
       return collapseState.collapsed
     }
@@ -66,6 +68,8 @@
   })
 
   onMount(() => {
+    if (previewLevel) return
+
     if (inspectState && previewLevel === 0) {
       const storedState = inspectState.getCollapse(path)
       if (!storedState) {
@@ -81,12 +85,14 @@
     }
   })
 
-  function onCollapseChanged(newValue: boolean) {
-    inspectState.setCollapse(path, { collapsed: newValue })
+  function toggleCollapse() {
+    inspectState.setCollapse(path, { collapsed: !collapsed })
   }
 </script>
 
+<!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
+  ondblclick={toggleCollapse}
   data-testid="expandable"
   class={['line', 'title-bar', previewLevel && 'preview', !showKey && 'nokey']}
   aria-expanded={!collapsed}
@@ -100,15 +106,14 @@
         {value}
         {key}
         {type}
-        onchange={onCollapseChanged}
+        onclick={toggleCollapse}
         disabled={length === 0}
       />
     {/if}
     {#if showKey}
       <Key
         disabled={previewLevel > 0}
-        ondblclick={() => onCollapseChanged(!collapsed)}
-        onclick={() => onCollapseChanged(!collapsed)}
+        onclick={toggleCollapse}
         delim={keyDelim}
         prefix={keyPrefix}
         style={keyStyle}

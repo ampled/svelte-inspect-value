@@ -12,7 +12,6 @@
   import MultiLineStrings from '../../doclib/examples/MultiLineStrings.svelte'
   import Other from '../../doclib/examples/Other.svelte'
   import Promises from '../../doclib/examples/Promises.svelte'
-  import SymbolKeys from '../../doclib/examples/SymbolKeys.svelte'
   import Urls from '../../doclib/examples/Urls.svelte'
 
   let { data } = $props()
@@ -40,7 +39,6 @@
 <HtmlElements />
 <Classes />
 <Functions />
-<SymbolKeys />
 <Urls />
 <GettersAndSetters code={codeSamples.gettersAndSetters} />
 <Iterators code={codeSamples.iterators} />

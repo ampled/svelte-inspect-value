@@ -146,7 +146,7 @@
   {:else}
     <div class="key-type-preview">
       {#if showKey}
-        <Key {path} {key} delim={keyDelim} style={keyStyle} allowUndefined />
+        <Key disabled {path} {key} delim={keyDelim} style={keyStyle} allowUndefined />
       {/if}
       <Type type={valType} force />
     </div>

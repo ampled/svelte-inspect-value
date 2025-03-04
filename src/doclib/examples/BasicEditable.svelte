@@ -58,7 +58,7 @@
 <div class="flex col">
   <h3 id="json">JSON</h3>
   <p>
-    <code>Inspect</code> works well for basic object and array-values aka "json".<br />
+    <code>Inspect</code> works well for basic object and array-values aka "JSON".<br />
     If needed, strings that start with <code>'['</code> or <code>{`'{'`}</code> can be parsed. Try
     it:
     <span style="margin-left: 0.5em;">

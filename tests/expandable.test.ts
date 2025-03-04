@@ -31,9 +31,9 @@ describe('expandable values', () => {
 
     // check keys
     const [foo, bar, baz] = [
-      screen.queryByRole('button', { name: 'foo' }),
-      screen.queryByRole('button', { name: 'bar' }),
-      screen.queryByRole('button', { name: 'Symbol(baz)' }),
+      screen.queryByText('foo'),
+      screen.queryByText('bar'),
+      screen.queryByText('Symbol(baz)'),
     ]
     expect(foo).toBeInTheDocument()
     expect(bar).toBeInTheDocument()
@@ -66,9 +66,9 @@ describe('expandable values', () => {
 
     // check keys
     const [foo, bar, baz] = [
-      screen.queryByRole('button', { name: 'foo' }),
-      screen.queryByRole('button', { name: 'bar' }),
-      screen.queryByRole('button', { name: 'baz' }),
+      screen.queryByText('foo'),
+      screen.queryByText('bar'),
+      screen.queryByText('baz'),
     ]
 
     // console.log(screen.getAllByTestId('key'))
@@ -87,7 +87,7 @@ describe('expandable values', () => {
   })
 
   test('it can display the values of an array', async () => {
-    await rerender({ value: [1, 2, 3] })
+    await rerender({ value: [1111, 2222, 3333] })
 
     // check count
     const count = screen.queryByTestId('count')
@@ -95,9 +95,9 @@ describe('expandable values', () => {
 
     // check keys
     const [foo, bar, baz] = [
-      screen.queryByRole('button', { name: '0' }),
-      screen.queryByRole('button', { name: '1' }),
-      screen.queryByRole('button', { name: '2' }),
+      screen.queryByText('1'),
+      screen.queryByText('2'),
+      screen.queryByText('3'),
     ]
 
     expect(foo).toBeInTheDocument()
@@ -110,12 +110,12 @@ describe('expandable values', () => {
 
     // check values
     screen.getAllByTestId('value').forEach((value) => {
-      expect(value.innerText).toBeOneOf(['1', '2', '3'])
+      expect(value.innerText).toBeOneOf(['1111', '2222', '3333'])
     })
   })
 
   test('it can display the values of a set', async () => {
-    await rerender({ value: new Set([1, 2, 3]) })
+    await rerender({ value: new Set([111, 222, 333]) })
 
     // check count
     const count = screen.queryByTestId('count')
@@ -123,9 +123,9 @@ describe('expandable values', () => {
 
     // check keys
     const [foo, bar, baz] = [
-      screen.queryByRole('button', { name: '0' }),
-      screen.queryByRole('button', { name: '1' }),
-      screen.queryByRole('button', { name: '2' }),
+      screen.queryByText('0'),
+      screen.queryByText('1'),
+      screen.queryByText('2'),
     ]
 
     expect(foo).toBeInTheDocument()
@@ -138,7 +138,7 @@ describe('expandable values', () => {
 
     // check values
     screen.getAllByTestId('value').forEach((value) => {
-      expect(value.innerText).toBeOneOf(['1', '2', '3'])
+      expect(value.innerText).toBeOneOf(['111', '222', '333'])
     })
   })
 
@@ -201,9 +201,9 @@ describe('expandable values', () => {
 
     // check keys
     const [foo, bar, baz] = [
-      screen.queryByRole('button', { name: 'foo' }),
-      screen.queryByRole('button', { name: 'bar' }),
-      screen.queryByRole('button', { name: 'baz' }),
+      screen.queryByText('foo'),
+      screen.queryByText('bar'),
+      screen.queryByText('baz'),
     ]
     expect(foo).toBeInTheDocument()
     expect(bar).toBeInTheDocument()

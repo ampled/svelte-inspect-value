@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Inspect, CustomComponents, addComponent } from 'svelte-inspect-value'
+  import Inspect, {CustomComponents, addComponent} from 'svelte-inspect-value'
   import GoofyNumber from './GoofyNumber.svelte'
   import HexString from './HexString.svelte'
 
