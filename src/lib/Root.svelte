@@ -271,7 +271,7 @@
 
   .svelte-inspect-value :global(.indent) {
     &.string {
-      --border-color: var(--_string-value-color);
+      border-color: var(--_string-value-color);
       overflow-x: auto;
     }
 
@@ -279,12 +279,12 @@
     &.asyncfunction,
     &.asyncgeneratorfunction,
     &.generatorfunction {
-      --border-color: var(--_function-name-color);
+      border-color: var(--_function-name-color);
       overflow-x: auto;
     }
 
     &.error {
-      --border-color: var(--_error-color);
+      border-color: var(--_error-color);
     }
   }
 
