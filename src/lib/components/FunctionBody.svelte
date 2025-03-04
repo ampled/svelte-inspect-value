@@ -28,8 +28,8 @@
 
 <!-- eslint-disable svelte/no-at-html-tags -->
 <code data-testid="value" title={value} class:inline class="value function hl"
-  >{@html highlighted}</code
->
+  >{@html highlighted}
+</code>
 
 <style>
   code.value.function.hl.inline {
@@ -42,7 +42,7 @@
 
   :global code.value.function.hl {
     background-color: unset;
-    color: var(--fg) !important;
+    color: var(--_text-color) !important;
     white-space: pre;
     padding: var(--indent);
     padding-left: calc(var(--indent) * 2);
@@ -53,6 +53,10 @@
 
     .title.class_ {
       color: var(--_class-name-color);
+    }
+
+    .variable.language_ {
+      color: var(--function-var-color, var(--base0E, purple));
     }
 
     .tag {
@@ -68,19 +72,32 @@
     }
 
     .attr {
-      color: var(--_function-name-color);
+      color: var(--function-attribute-color, var(--base0B, green));
     }
 
     .number {
       color: var(--_number-value-color);
     }
 
+    .literal {
+      color: var(--_boolean-value-color);
+    }
+
     .comment {
-      color: var(--_comment-color, var(--base03), #aaaaaa);
+      /** backwards compatibility to before prefixing with --function- */
+      color: var(--function-comment-color, var(--comment-color, var(--base03)));
     }
 
     .string {
       color: var(--_string-value-color);
+    }
+
+    .params {
+      color: var(--function-params-color, var(--base09, orange));
+    }
+
+    .property {
+      color: var(--function-property-color, var(--base0B, lightgreen));
     }
   }
 </style>

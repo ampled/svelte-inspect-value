@@ -8,7 +8,7 @@ const inspect = {
   '--base06': '#fff2c2',
   '--base07': '#FFFFFF',
   '--base08': '#ff5c7c',
-  '--base09': '#d1ae00',
+  '--base09': '#ff9f6b',
   '--base0A': '#ffd285',
   '--base0B': '#8fff96',
   '--base0C': '#81eced',
