@@ -1,6 +1,6 @@
 <script>
   import {dev} from '$app/environment'
-  import {Inspect} from 'svelte-inspect-value'
+  import Inspect from 'svelte-inspect-value'
 
   let value = $state({
     id: undefined,
