@@ -14,7 +14,7 @@
   justify-content: flex-start;
   padding-left: calc(var(--indent) * 0.5);
 
-  &:hover {
+  &:hover:not(.preview) {
     background-position-x: left;
     background-size: 100% 100%;
   }
