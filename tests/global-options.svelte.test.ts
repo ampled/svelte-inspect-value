@@ -10,7 +10,7 @@ afterAll(() => {
 describe('global options', () => {
   test('it can set options for all nested inspect instances', async () => {
     const { unmount } = renderInspect({ value: 'testing' }, [
-      [GLOBAL_OPTIONS_CONTEXT, { showTypes: false }],
+      [GLOBAL_OPTIONS_CONTEXT, () => ({ showTypes: false })],
     ])
 
     expect(screen.queryByTestId('type')).not.toBeInTheDocument()
