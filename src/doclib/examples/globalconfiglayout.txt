@@ -8,10 +8,10 @@
   })
 
   // or reactive global options
-  let globalConfig = $state({ stringCollapse: 20, renderIf: true });
-  setGlobalInspectOptions(globalConfig);
+  let globalConfig = $state({ stringCollapse: 20, renderIf: true })
+  setGlobalInspectOptions(globalConfig)
 
-  let { children } = $props();
+  let { children } = $props()
 </script>
 
 <input bind:value={globalConfig.stringCollapse} />
