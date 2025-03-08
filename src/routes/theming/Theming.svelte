@@ -30,7 +30,7 @@
   const base0BPreview = $state<unknown[]>([function funcNames() {}])
   onMount(() => {
     const image = new Image()
-    image.src = './favicon.png'
+    image.src = '/favicon.png'
     base08Preview.tagNames = image
     // base08Preview.
     base0BPreview.push(document.body)
