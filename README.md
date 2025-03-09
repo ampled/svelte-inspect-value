@@ -67,3 +67,5 @@ Install `svelte-inspect-value` with your favourite package manager.
 | elementView      | `'simple'\|'full'`   | determines what properties are shown when inspecting html elements. <br/> `simple` renders a minimal view with class, styles, dataset, dimensions and scroll positions.<br/>`full` renders all enumerable properties of an element | `'simple'`  |
 | renderIf         | `any \| () => any`   | render `Inspect` if value or return value is truthy                                                                                                                                                                                | `true`      |
 | parseJson        | boolean              | if enabled, attempt to parse strings that start with `'{'` or `'['` and display the parsed value if it was valid JSON                                                                                                              | `false`     |
+
+[Full list of props here](https://inspect.eirik.space/getting-started#props)

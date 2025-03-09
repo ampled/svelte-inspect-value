@@ -8,7 +8,7 @@
   import { useOptions } from '../options.svelte.js'
   import { useState, type NodeState } from '../state.svelte.js'
   import type { KeyType, TypeViewProps } from '../types.js'
-  import { stringifyPath } from '../util.js'
+  import { isPromise, stringifyPath } from '../util.js'
 
   type Props = Partial<TypeViewProps<unknown, string>> & { collapsed?: boolean }
 
@@ -17,16 +17,22 @@
   let copied = $state(false)
 
   let options = useOptions()
+  let { onCopy, canCopy, onLog, borderless, showTools } = $derived(options.value)
   let inspectState = useState()
   let stringifiedPath = $derived(stringifyPath(path))
 
   let level = $derived(path.length)
 
-  let canCopy = $derived(
-    ['array', 'object', 'number', 'string', 'undefined', 'null', 'date', 'boolean'].includes(
+  let showCopyButton = $derived.by(() => {
+    if (onCopy) {
+      if (canCopy) return canCopy(value, type!, path)
+      return true
+    }
+
+    return ['array', 'object', 'number', 'string', 'undefined', 'null', 'date', 'boolean'].includes(
       type ?? ''
     )
-  )
+  })
 
   let nodeState = $derived(inspectState.value[stringifyPath(path)])
 
@@ -37,19 +43,51 @@
     return children.some(([, v]) => !v.collapsed)
   })
 
-  let timeout = $state<number>()
+  let copyTimeout = $state<number>()
 
-  async function copy(val: unknown) {
-    try {
-      await copyToClipBoard(val)
-      copied = true
-      if (timeout) window.clearTimeout(timeout)
-      timeout = window.setTimeout(() => {
-        copied = false
-      }, 5000)
-    } catch (e) {
-      console.error(e)
+  function onCopySuccess() {
+    copied = true
+    if (copyTimeout) window.clearTimeout(copyTimeout)
+    copyTimeout = window.setTimeout(() => {
       copied = false
+    }, 5000)
+  }
+
+  async function runCustomCopy() {
+    let ret: ReturnType<NonNullable<typeof onCopy>>
+    try {
+      ret = onCopy!($state.snapshot(value), $state.snapshot(type!), $state.snapshot(path))
+      if (isPromise(ret)) {
+        const wasCopied = await ret
+        if (wasCopied) onCopySuccess()
+      } else if (typeof ret === 'boolean') {
+        if (ret) onCopySuccess()
+      }
+    } catch (e) {
+      console.error('[Inspect] error running custom onCopy callback:', e)
+      copied = false
+    }
+  }
+
+  async function copy() {
+    if (onCopy) {
+      runCustomCopy()
+    } else {
+      try {
+        await copyToClipBoard(value)
+        onCopySuccess()
+      } catch (e) {
+        console.error(e)
+        copied = false
+      }
+    }
+  }
+
+  function log() {
+    if (onLog) {
+      onLog(value, type!, path)
+    } else {
+      logToConsole(path, value, type)
     }
   }
 
@@ -81,8 +119,8 @@
   let treeAction = $derived(getTreeAction(nodeState))
 </script>
 
-{#if options.value.showTools}
-  <div class="tools" class:borderless={options.value.borderless}>
+{#if showTools}
+  <div class="tools" class:borderless>
     {#if treeAction}
       <button
         transition:blur={{ duration: options.transitionDuration }}
@@ -98,16 +136,16 @@
       type="button"
       title="log value to console"
       aria-label="log value to console"
-      onclick={() => logToConsole(path, value, type)}
+      onclick={() => log()}
     >
       <Console />
     </button>
-    {#if canCopy}
+    {#if showCopyButton}
       <button
         type="button"
         title="copy value to clipboard"
         aria-label="copy value to clipboard"
-        onclick={() => copy(value)}
+        onclick={() => copy()}
         class:copied
       >
         <Copy />

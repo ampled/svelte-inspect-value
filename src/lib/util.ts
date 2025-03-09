@@ -20,6 +20,10 @@ export function isArray(value: unknown): value is unknown[] {
   return Array.isArray(value)
 }
 
+export function isPromise(value: unknown): value is Promise<unknown> {
+  return getType(value) === 'promise'
+}
+
 export function isObject(value: unknown): value is object {
   return getType(value) === 'object'
 }

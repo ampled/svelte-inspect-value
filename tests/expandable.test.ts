@@ -52,7 +52,7 @@ describe('expandable values', () => {
   test('it can display the keys and values of a map', async () => {
     await rerender({
       showPreview: true,
-      expandAll: true,
+      expandAll: false,
       value: new Map<unknown, unknown>([
         ['foo', 1],
         ['bar', 2],

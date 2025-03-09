@@ -220,10 +220,33 @@ Result:
     <tr>
       <td> parseJson </td>
       <td>
-        if enabled, attempt to parse strings that start with <code>{'{'}</code> or
-        <code>{'['}</code> and display the parsed value if it was valid JSON
+        if enabled, attempt to parse strings that start with <code>{"'{'"}</code> or
+        <code>{"'['"}</code> and display the parsed value if it was valid JSON
       </td>
       <td><code>false</code></td>
+    </tr>
+    <tr>
+      <td> onCopy </td>
+      <td>
+        custom callback run when clicking copy tool-button.<br />
+        if this option is set without a <code>canCopy</code>-function, the copy button will be shown
+        for all values.<br />
+        this overrides the default copy-button behavior.
+      </td>
+      <td><code>undefined</code></td>
+    </tr>
+    <tr>
+      <td> canCopy </td>
+      <td> custom predicate that determines if copy-button should be displayed for a value </td>
+      <td><code>undefined</code></td>
+    </tr>
+    <tr>
+      <td> onLog </td>
+      <td>
+        custom callback run when clicking log tool-button.<br />
+        this overrides the default log-button behavior.
+      </td>
+      <td><code>undefined</code></td>
     </tr>
   </tbody>
 </table>

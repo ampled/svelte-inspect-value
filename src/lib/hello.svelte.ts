@@ -27,6 +27,5 @@ export function logToConsole(path: KeyType[] = [], value: unknown, type: string 
 }
 
 export function copyToClipBoard(item: unknown) {
-  const asdf = stringifyOrToString(item)
-  return navigator.clipboard.writeText(asdf)
+  return navigator.clipboard.writeText(stringifyOrToString(item))
 }

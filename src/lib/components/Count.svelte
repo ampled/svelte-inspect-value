@@ -11,8 +11,10 @@
 
   const options = useOptions()
 
+  let { showLength } = $derived(options.value)
+
   let prefix = $derived.by(() => {
-    if (!options.value.showLength) {
+    if (!showLength) {
       return ''
     }
     // if (!type) return ''
@@ -25,7 +27,7 @@
   })
 
   let unit = $derived.by(() => {
-    if (!options.value.showLength) {
+    if (!showLength) {
       return ''
     }
     // if (!type) return ''
@@ -53,7 +55,7 @@
   })
 </script>
 
-{#if options.value.showLength && typeof length === 'number'}
+{#if showLength && typeof length === 'number'}
   <span data-testid="count" class="count">
     {#if length > 0}
       {#if prefix}
