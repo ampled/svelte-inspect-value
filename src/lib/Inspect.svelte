@@ -31,6 +31,9 @@
     elementView,
     renderIf,
     parseJson,
+    onCopy,
+    canCopy,
+    onLog,
     ...props
   }: InspectProps = $props()
 
@@ -61,6 +64,9 @@
         elementView,
         renderIf,
         parseJson,
+        onCopy,
+        canCopy,
+        onLog,
       },
       typeof globalOptions === 'function' ? globalOptions() : globalOptions
     )
@@ -68,10 +74,6 @@
 
   let options = createOptions(() => mergedOptions)
   setContext(OPTIONS_CONTEXT, options)
-
-  $effect(() => {
-    options.setOptions(mergedOptions)
-  })
 
   let shouldRender = $derived(
     typeof options.value.renderIf === 'function'

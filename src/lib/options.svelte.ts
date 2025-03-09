@@ -209,31 +209,19 @@ export function mergeOptions(
 }
 
 export function createOptions(options: () => InspectOptions) {
-  let value: InspectOptions = $state(options())
-  const transitionDuration = $derived(value.noanimate ? 0 : 200)
+  const transitionDuration = $derived(options().noanimate ? 0 : 200)
   // this could be Infinity but let's set a cap just to be sure
-  const expandLevel = $derived(value.expandAll ? 100 : value.expandLevel)
+  const expandLevel = $derived(options().expandAll ? 100 : options().expandLevel)
 
   return {
     get value() {
-      return value
-    },
-    set value(val: InspectOptions) {
-      value = val
+      return options()
     },
     get transitionDuration() {
       return transitionDuration
     },
     get expandLevel() {
       return expandLevel
-    },
-    setOptions(options: Partial<InspectOptions>) {
-      untrack(() => {
-        value = {
-          ...value,
-          ...options,
-        }
-      })
     },
   }
 }
