@@ -36,6 +36,20 @@
     --bullet-color="hotpink"
     --string-value-color="hotpink"
     {debug}
+    onLog={(value) => console.log(value)}
+    canCopy={() => true}
+    onCopy={(value, type, path) => {
+      console.log(value, type, path)
+      if (Math.random() > 0.5) {
+        return true
+      } else {
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(true)
+          }, 1000)
+        })
+      }
+    }}
   />
 </div>
 

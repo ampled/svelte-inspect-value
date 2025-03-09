@@ -17,7 +17,7 @@ export type InspectProps = {
 } & Partial<InspectOptions> &
   HTMLAttributes<HTMLDivElement>
 
-export type KeyType = string | number | symbol
+export type KeyType = PropertyKey
 
 export type TypeViewProps<Value = unknown, Type = ValueType> = {
   value: Value

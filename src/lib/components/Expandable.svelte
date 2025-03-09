@@ -51,6 +51,7 @@
 
   let buttonComponent = $state<ReturnType<typeof CollapseButton>>()
   const options = useOptions()
+  let { expandAll, expandPaths, showLength: optsShowLength } = $derived(options.value)
   const inspectState = useState()
   const previewLevel = getPreviewLevel()
   const isKey = getContext<boolean>('key')
@@ -74,19 +75,14 @@
       const storedState = inspectState.getCollapse(path)
       if (!storedState) {
         inspectState.setCollapse(path, {
-          collapsed: !shouldInitiallyExpandNode(
-            path,
-            options.expandLevel,
-            options.value.expandAll,
-            options.value.expandPaths
-          ),
+          collapsed: !shouldInitiallyExpandNode(path, options.expandLevel, expandAll, expandPaths),
         })
       }
     }
   })
 
   function toggleCollapse() {
-    inspectState.setCollapse(path, { collapsed: !collapsed })
+    inspectState.setCollapse(stringifiedPath, { collapsed: !collapsed })
   }
 </script>
 
@@ -132,7 +128,7 @@
   {@render valuePreview({ showPreview: collapsed || previewLevel > 0 || keepPreviewOnExpand })}
 
   {#if !previewLevel}
-    {#if showLength}
+    {#if showLength && optsShowLength}
       <Count {length} {type} />
     {/if}
 

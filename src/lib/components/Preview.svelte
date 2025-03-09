@@ -52,11 +52,13 @@
 
   const previewLevel = getContext<number | undefined>('preview') ?? startLevel
   const options = useOptions()
+  let { previewEntries, previewDepth, showPreview: _show } = $derived(options.value)
+
   setContext('preview', (previewLevel ?? 0) + 1)
 
-  let list = $derived(previewList?.slice(0, options.value.previewEntries))
-  let keyValue = $derived(previewKeyValue?.slice(0, options.value.previewEntries))
-  let keys = $derived(previewKeys?.slice(0, options.value.previewEntries))
+  let list = $derived(previewList?.slice(0, previewEntries))
+  let keyValue = $derived(previewKeyValue?.slice(0, previewEntries))
+  let keys = $derived(previewKeys?.slice(0, previewEntries))
 
   let hasMore = $derived.by(() => {
     if (list && previewList) {
@@ -84,10 +86,11 @@
   }
 </script>
 
-{#if options.value.showPreview && options.value.previewEntries > 0 && showPreview}
+{#if _show && previewEntries > 0 && showPreview}
   <svelte:boundary onerror={(e) => console.log('preview failed:', e)}>
     {#snippet failed(_, reset)}
-      preview error. check console <NodeActionButton onclick={reset}>reset</NodeActionButton>
+      preview error. check console
+      <NodeActionButton onclick={reset}>reset</NodeActionButton>
     {/snippet}
     <div
       data-testid="preview"
@@ -141,7 +144,7 @@
 <!-- At configured previewDepth, stop rendering nested item previews and just render their types -->
 {#snippet valuePreview(value: unknown, key?: KeyType)}
   {@const valType = getType(value)}
-  {#if alwaysRender(valType) || previewLevel < options.value.previewDepth}
+  {#if alwaysRender(valType) || previewLevel < previewDepth}
     <Node {path} {key} {value} {showKey} {keyDelim} {keyStyle} />
   {:else}
     <div class="key-type-preview">

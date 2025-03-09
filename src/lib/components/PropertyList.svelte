@@ -32,7 +32,7 @@
     {@render item({
       key,
       index,
-      descriptor: getPropertyDescriptor(value, key as string | number | symbol),
+      descriptor: getPropertyDescriptor(value, key as PropertyKey),
     })}
   </Entry>
 {/each}

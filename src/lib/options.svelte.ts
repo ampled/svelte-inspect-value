@@ -1,4 +1,4 @@
-import { getContext, setContext, untrack } from 'svelte'
+import { getContext, setContext } from 'svelte'
 import type { CustomComponents } from './types.js'
 
 export const OPTIONS_CONTEXT = Symbol('inspect-options')
@@ -77,12 +77,6 @@ export type InspectOptions = {
    */
   customComponents: CustomComponents
   /**
-   * Make the Inspect element draggable (powered by \@neodrag/svelte)
-   *
-   * Default `false`
-   */
-  draggable: boolean
-  /**
    * Disable animations
    *
    * Default `false`
@@ -103,9 +97,9 @@ export type InspectOptions = {
   /**
    * Set color theme class
    *
-   * Available themes: `'drak'|'monokai'|'default-dark'|'default-light'|'solarized-dark'|'cotton-candy'`
+   * Available themes: `'inspect'|'drak'|'monokai'|'default-dark'|'default-light'|'solarized-dark'|'cotton-candy'`
    *
-   * Default `'drak'`
+   * Default `'inspect'`
    */
   theme: string
   /**
@@ -169,10 +163,41 @@ export type InspectOptions = {
    * Default `false`
    */
   parseJson: boolean
+  /**
+   * Custom callback run when clicking copy tool-button.
+   * If this option is set without passing a function to `canCopy`, the
+   * copy button will be shown for all values.
+   *
+   * This overrides the default copy-button behavior.
+   *
+   * Default `undefined`
+   *
+   * @see {@link InspectOptions.canCopy}
+   */
+  onCopy:
+    | ((
+        value: unknown,
+        type: string,
+        path: unknown[]
+      ) => Promise<boolean | void> | (boolean | void))
+    | undefined
+  /**
+   * Custom predicate that determines if copy-button should be displayed for a value
+   *
+   * Default `undefined`
+   */
+  canCopy: ((value: unknown, type: string, path: unknown[]) => boolean) | undefined
+  /**
+   * Custom callback run when clicking log tool-button.
+   *
+   * This overrides the default log-button behavior.
+   *
+   * Default `undefined`
+   */
+  onLog: ((value: unknown, type: string, path: unknown[]) => void) | undefined
 }
 
 const DEFAULT_OPTIONS: InspectOptions = {
-  draggable: false,
   noanimate: false,
   quotes: 'single',
   showTypes: true,
@@ -193,6 +218,9 @@ const DEFAULT_OPTIONS: InspectOptions = {
   elementView: 'simple',
   renderIf: true,
   parseJson: false,
+  onCopy: undefined,
+  canCopy: undefined,
+  onLog: undefined,
 } as const
 
 export function mergeOptions(
