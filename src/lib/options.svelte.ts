@@ -8,90 +8,95 @@ export type InspectOptions = {
   /**
    * Display length of arrays or strings and number of nested entries in objects / maps etc
    *
-   * Default `true`
+   * @default true
    */
   showLength: boolean
   /**
    * Display type labels before values e.g. "string" / "number"
    * Does not affect class / function / promise
    *
-   * Default `true`
+   * @default true
    */
   showTypes: boolean
   /**
    * Display preview of nested values
    *
-   * Default `true`
+   * @Default true
    */
   showPreview: boolean
   /**
    * How many entries / items of arrays, objects, maps, sets etc. to preview
    *
-   * Default 3
+   * @default 3
    */
   previewEntries: number
   /**
-   * How many levels of nested values to preview before showing only type
+   * How many levels of nested values to preview before "collapsing" nested values to their type only
    *
-   * Default: 1
+   * @default 1
    */
   previewDepth: number
   /**
    * Indicate when a value or child value is updated
    *
-   * Default `true`
+   * @default true
    */
   flashOnUpdate: boolean
   /**
+   * Enable or disable "tool-buttons" that appear on hovering a value.
    *
-   * Default `true`
+   * @default true
    */
   showTools: boolean
   /**
    * Set a max display length for string values. `0` means display full string
    *
-   * Default `0`
+   * @default 0
    */
   stringCollapse: number
   /**
-   * Custom components for types. Object with type as keyname and tuple of component and optional
-   * prop modification function
+   * Custom components for displaying types.
+   * An object with type as keyname and array of component and optional
+   * prop modification function and predicate determining if custom component should be used.
+   *
+   * Use the helper function `addComponent` to get properly typed props for the custom component.
    *
    * @example
-   *
+   * // script
+   * import Inspect, {addComponent} from 'svelte-inspect-value'
+   * import HexColorDisplay from './HexColorDisplay.svelte'
    * import CustomBigIntDisplay from './CustomBigIntDisplay.svelte'
    *
-   * // ...
+   * // template
+   * <Inspect customComponents={{
+   *    bigint: [CustomBigIntDisplay],
+   *    string: addComponent(
+   *      HexColorDisplay,
+   *      // transform props or pass extra props
+   *      (props) => props,
+   *      // revert to default string component if false
+   *      (props) => props.value.startsWith('#'))
+   * }} />
    *
-   * const customComponents = {
-   *  bigint: [
-   *     CustomBigIntDisplay,
-   *     // OPTIONAL
-   *     (props: TypeViewProps<bigint>) => ({ display: props.value.toString() + 'n' })
-   *   ]
-   * }
-   *
-   * // ...
-   *
-   * <Inspect {customComponents} />
+   * @default {}
    */
   customComponents: CustomComponents
   /**
    * Disable animations
    *
-   * Default `false`
+   * @default false
    */
   noanimate: boolean
   /**
    * Use no borders and transparent background
    *
-   * Default `false`
+   * @default false
    */
   borderless: boolean
   /**
    * Display string values with double or single quotes
    *
-   * Default `'single'`
+   * @default 'single'
    */
   quotes: 'single' | 'double'
   /**
@@ -99,25 +104,25 @@ export type InspectOptions = {
    *
    * Available themes: `'inspect'|'drak'|'monokai'|'default-dark'|'default-light'|'solarized-dark'|'cotton-candy'`
    *
-   * Default `'inspect'`
+   * @default 'inspect'
    */
   theme: string
   /**
    * Expand all expandable nodes by default
    *
-   * Default `false`
+   * @default false
    */
   expandAll: boolean
   /**
    * Default expanded level
    *
-   * Default `1`
+   * @default 1
    */
   expandLevel: number
   /**
    * Initially expanded paths
    *
-   * Default `[ ]`
+   * @default []
    * @example
    * const value = {
    *  a: { b: [{ c: '' }], d: 0 }
@@ -132,7 +137,7 @@ export type InspectOptions = {
   /**
    * Embed images or sounds if a string is a url or path ending with a valid image or sound file extension
    *
-   * Default `false`
+   * @default false
    */
   embedMedia: boolean
   /**
@@ -143,7 +148,7 @@ export type InspectOptions = {
    *
    * `'full'` - lists all enumerable properties of an element
    *
-   * Default `'simple'`
+   * @default 'simple'
    */
   elementView: 'simple' | 'full'
   /**
@@ -154,13 +159,13 @@ export type InspectOptions = {
    * Most valuable if set with global options and there are multiple `Inspect` instances,
    * otherwise using Svelte `{#if}{/if}` blocks is recommended.
    *
-   * Default `true`
+   * @default true
    */
   renderIf: unknown
   /**
    * Try parsing strings that start with `'['` or `'{'` and display the parsed value
    *
-   * Default `false`
+   * @default false
    */
   parseJson: boolean
   /**
@@ -170,9 +175,9 @@ export type InspectOptions = {
    *
    * This overrides the default copy-button behavior.
    *
-   * Default `undefined`
-   *
    * @see {@link InspectOptions.canCopy}
+   * @returns {boolean | Promise<boolean>} boolean or Promise resolving to boolean indicating copying value was successful if true. The copy button will change color on success.
+   * @default undefined
    */
   onCopy:
     | ((
@@ -197,7 +202,7 @@ export type InspectOptions = {
   onLog: ((value: unknown, type: string, path: unknown[]) => void) | undefined
 }
 
-const DEFAULT_OPTIONS: InspectOptions = {
+export const DEFAULT_OPTIONS: InspectOptions = {
   noanimate: false,
   quotes: 'single',
   showTypes: true,
@@ -222,6 +227,8 @@ const DEFAULT_OPTIONS: InspectOptions = {
   canCopy: undefined,
   onLog: undefined,
 } as const
+
+export const OPTIONS_KEYS = Object.keys(DEFAULT_OPTIONS) as (keyof InspectOptions)[]
 
 export function mergeOptions(
   fromProps: Partial<InspectOptions>,
