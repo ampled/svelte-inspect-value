@@ -30,11 +30,6 @@
     <input type="checkbox" bind:checked={debug} />
   </label>
   <AllTypes
-    --caret-color="white"
-    --caret-focus-color="hotpink"
-    --caret-hover-color="hotpink"
-    --bullet-color="hotpink"
-    --string-value-color="hotpink"
     {debug}
     onLog={(value) => console.log(value)}
     canCopy={() => true}

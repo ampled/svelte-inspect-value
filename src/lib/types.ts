@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Component, ComponentProps } from 'svelte'
-import type { HTMLAttributes } from 'svelte/elements'
+import type { HTMLAttributes, SvelteHTMLElements } from 'svelte/elements'
 import type { InspectOptions } from './options.svelte.js'
 import type { InspectState } from './state.svelte.js'
 import type { ValueType } from './util.js'
@@ -15,7 +15,7 @@ export type InspectProps = {
   onCollapseChange?: (state: InspectState) => void
   debug?: boolean
 } & Partial<InspectOptions> &
-  HTMLAttributes<HTMLDivElement>
+  SvelteHTMLElements['div']
 
 export type KeyType = PropertyKey
 

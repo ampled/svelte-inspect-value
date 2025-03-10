@@ -9,33 +9,11 @@
     type InspectOptions,
   } from './options.svelte.js'
   import type { InspectProps } from './types.js'
+  import { sortProps } from './util.js'
 
-  let {
-    showLength,
-    showTypes,
-    showPreview,
-    previewDepth,
-    previewEntries,
-    showTools,
-    quotes,
-    expandAll,
-    expandLevel,
-    expandPaths,
-    flashOnUpdate,
-    stringCollapse,
-    noanimate,
-    borderless,
-    theme,
-    customComponents,
-    embedMedia,
-    elementView,
-    renderIf,
-    parseJson,
-    onCopy,
-    canCopy,
-    onLog,
-    ...props
-  }: InspectProps = $props()
+  let { value, name, ...props }: InspectProps = $props()
+
+  let [optionsProps, restProps] = $derived(sortProps(props))
 
   let globalOptions = getContext<Partial<InspectOptions> | (() => Partial<InspectOptions>)>(
     GLOBAL_OPTIONS_CONTEXT
@@ -43,31 +21,7 @@
 
   let mergedOptions = $derived(
     mergeOptions(
-      {
-        showLength,
-        showTypes,
-        showPreview,
-        previewDepth,
-        previewEntries,
-        showTools,
-        quotes,
-        expandAll,
-        expandLevel,
-        expandPaths,
-        flashOnUpdate,
-        stringCollapse,
-        noanimate,
-        borderless,
-        theme,
-        customComponents,
-        embedMedia,
-        elementView,
-        renderIf,
-        parseJson,
-        onCopy,
-        canCopy,
-        onLog,
-      },
+      optionsProps,
       typeof globalOptions === 'function' ? globalOptions() : globalOptions
     )
   )
@@ -83,5 +37,5 @@
 </script>
 
 {#if shouldRender}
-  <Root {...props} />
+  <Root {value} {name} {...restProps} />
 {/if}

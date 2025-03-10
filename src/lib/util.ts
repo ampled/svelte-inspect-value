@@ -1,8 +1,10 @@
 import type { Component } from 'svelte'
+import { type InspectOptions, OPTIONS_KEYS } from './options.svelte.js'
 import type {
   CustomComponentEntry,
   CustomComponentPredicate,
   CustomComponentPropsTransformFn,
+  InspectProps,
   KeyType,
 } from './types.js'
 
@@ -242,4 +244,20 @@ export function addComponent<TComponent extends Component<any> = Component<any>>
   if (predicate) return [component, transformProps, predicate]
   if (transformProps) return [component, transformProps]
   return [component]
+}
+
+export function sortProps(props: InspectProps) {
+  const out = {} as Partial<InspectOptions>
+  const restProps = {} as Partial<InspectProps>
+
+  Object.entries(props).forEach(([key, value]) => {
+    if (OPTIONS_KEYS.includes(key as keyof InspectOptions)) {
+      out[key as keyof InspectOptions] = value
+    } else {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      restProps[key as any] = value
+    }
+  })
+
+  return [out, restProps]
 }

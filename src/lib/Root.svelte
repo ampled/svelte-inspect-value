@@ -1,10 +1,10 @@
 <script lang="ts">
   import { setContext } from 'svelte'
   import { SvelteMap } from 'svelte/reactivity'
+  import InspectErrorView from './components/InspectErrorView.svelte'
   import Node from './components/Node.svelte'
-  import NodeActionButton from './components/NodeActionButton.svelte'
-  import { useOptions } from './options.svelte.js'
-  import Inspect from './Root.svelte'
+  import InspectOptionsProvider from './InspectOptionsProvider.svelte'
+  import { DEFAULT_OPTIONS, useOptions } from './options.svelte.js'
   import { createState, STATE_CONTEXT_KEY } from './state.svelte.js'
   import { InspectError, type InspectProps } from './types.js'
 
@@ -19,6 +19,7 @@
   }: InspectProps = $props()
 
   const options = useOptions()
+  let { theme, noanimate, borderless } = $derived(options.value)
 
   let initState = $state({})
 
@@ -48,21 +49,31 @@
 
 <svelte:boundary onerror={(error) => console.error(error)}>
   {#snippet failed(error, reset)}
-    ERROR (root)
     {@const inspectError = new InspectError(
-      `Inspect instance failed. A likely cause is a hydration mismatch error.`,
-      undefined,
+      `Inspect instance failed. A possible cause is a hydration mismatch error.`,
+      value,
       {
         cause: error,
       }
     )}
-    {#if error instanceof Error}
-      {error.name}<br />
-      {error.message}<br />
-    {:else}
-      <Inspect value={inspectError} />
-    {/if}
-    <NodeActionButton onclick={reset}>retry</NodeActionButton>
+    <div class="svelte-inspect-value">
+      <div class="body">
+        <InspectOptionsProvider options={{ ...DEFAULT_OPTIONS, expandLevel: 0 }}>
+          <InspectErrorView value={inspectError} key="inspectRootError" path={[]} {reset} />
+          {#if debug}
+            <hr />
+            <Node
+              key="DEBUG"
+              value={{
+                state: inspectState.value,
+                options: options,
+                valueCache,
+              }}
+            />
+          {/if}
+        </InspectOptionsProvider>
+      </div>
+    </div>
   {/snippet}
 
   <div
@@ -70,9 +81,9 @@
     class={[
       'svelte-inspect-value',
       classValue,
-      options.value.theme,
-      options.value.noanimate && 'noanimate',
-      options.value.borderless && 'borderless',
+      theme,
+      noanimate && 'noanimate',
+      borderless && 'borderless',
     ]}
     {...rest}
   >
