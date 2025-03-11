@@ -126,7 +126,6 @@
 
     --_hover-color: var(--hover-color, var(--base01));
     --_text-selection-background: var(--text-selection-background, var(--base02));
-    --_indent-color: var(--indent-color, var(--base03));
     --_length-color: var(--length-color, var(--base03));
     --_bullet-color: var(--bullet-color, var(--base03));
     --_comment-color: var(--comment-color, var(--base03));
@@ -192,6 +191,15 @@
     --_class-type-color: var(--class-type-color, var(--base08));
     --_function-type-color: var(--function-type-color, var(--base08));
     --_string-type-color: var(--string-type-color, var(--base0E));
+
+    /* indent */
+    --_indent: var(--indent, 0.75em);
+    --_indent-compact: var(--indent-compact, 0.5em);
+    --_indent-color: var(--indent-color, var(--base03));
+
+    /* body */
+    --_padding: var(--padding, 0.25em);
+    --_padding-compact: var(--padding-compact, 0.25em);
   }
 
   :global .svelte-inspect-value::selection {
@@ -264,19 +272,16 @@
     overflow-x: hidden;
     width: 100%;
     height: 100%;
-    padding: 0.25em;
-    --indent: 0.25em;
-    --line-gap: 0.25em;
+    padding: var(--_padding-compact);
+    --__indent: var(--_indent-compact, 0.5em);
+    --line-gap: 0.375em;
     --unit-display: none;
-    --dash-display: inline-flex;
 
-    @container (min-width: 400px) {
-      /* Sparse styles here */
-      padding: 0.5em;
-      --indent: 0.5em;
+    @container (inline-size > 400px) {
+      padding: var(--_padding);
+      --__indent: var(--_indent, 0.75em);
       --line-gap: 0.5em;
-      --unit-display: inline;
-      --dash-display: inline-flex;
+      --unit-display: inline-flex;
     }
   }
 
@@ -392,8 +397,8 @@
     }
 
     &.multi {
-      padding: var(--indent);
-      padding-left: calc(var(--indent) * 2);
+      padding: var(--_indent);
+      padding-left: 0.75em;
       white-space: pre;
       line-height: 1;
       text-overflow: unset;

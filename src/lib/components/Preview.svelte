@@ -87,7 +87,7 @@
 </script>
 
 {#if _show && previewEntries > 0 && showPreview}
-  <svelte:boundary onerror={(e) => console.log('preview failed:', e)}>
+  <svelte:boundary onerror={(e) => console.error('preview failed:', e)}>
     {#snippet failed(_, reset)}
       preview error. check console
       <NodeActionButton onclick={reset}>reset</NodeActionButton>

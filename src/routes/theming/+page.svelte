@@ -1,8 +1,8 @@
 <h2>base16</h2>
 
 <p>
-  Svelte Inspect Value utilizes the <a href="base16">base16</a>-framework for theming, meaning a
-  theme can be defined with (less than) 16 colors.<br />
+  Svelte Inspect Value utilizes the base16-framework for theming, meaning a theme can be defined
+  with (less than) 16 colors.<br />
   If you have favorite <a target="_blank" href="https://github.com/chriskempson/base16">base16</a>
   color-scheme it should probably be work pretty well with <code>Inspect</code>.<br />
   The variables

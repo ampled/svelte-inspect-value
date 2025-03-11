@@ -18,6 +18,17 @@ export function getType(value: unknown) {
   return typeOf(value)
 }
 
+// source: http://stackoverflow.com/questions/7390426/better-way-to-get-type-of-a-javascript-variable/7390612#7390612
+export function typeOf(obj: unknown): ValueType {
+  const t = {}.toString.call(obj).slice(8, -1)
+
+  return (t.replace(' ', '').toLowerCase() ?? 'undefined') as unknown as ValueType
+}
+
+export function ofType(obj: unknown) {
+  return {}.toString.call(obj)
+}
+
 export function isArray(value: unknown): value is unknown[] {
   return Array.isArray(value)
 }
@@ -95,13 +106,6 @@ export function stringifyOrToString(val: unknown): string {
   } catch {
     return getType(val)
   }
-}
-
-// source: http://stackoverflow.com/questions/7390426/better-way-to-get-type-of-a-javascript-variable/7390612#7390612
-export function typeOf(obj: unknown): ValueType {
-  const t = {}.toString.call(obj).slice(8, -1)
-
-  return (t.replace(' ', '').toLowerCase() ?? 'undefined') as unknown as ValueType
 }
 
 export const stringifyPath = (path: KeyType[]) => {

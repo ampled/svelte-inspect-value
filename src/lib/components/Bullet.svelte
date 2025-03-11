@@ -16,7 +16,7 @@
 
 <style>
   .bullet {
-    display: var(--dash-display);
+    display: inline-flex;
     justify-content: center;
     align-items: center;
     align-items: center;

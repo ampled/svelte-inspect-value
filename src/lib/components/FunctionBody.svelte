@@ -44,8 +44,8 @@
     background-color: unset;
     color: var(--_text-color) !important;
     white-space: pre;
-    padding: var(--indent);
-    padding-left: calc(var(--indent) * 2);
+    padding: var(--_indent);
+    padding-left: 0.75em;
 
     .title.function_ {
       color: var(--_function-name-color);

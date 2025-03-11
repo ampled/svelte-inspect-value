@@ -58,7 +58,6 @@
   --object: var(--blue);
   --interactive: var(--base0E);
   --deprecated: var(--base0F);
-  --indent: 0.5em;
 }
 
 html {

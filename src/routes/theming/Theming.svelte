@@ -9,6 +9,8 @@
 
   const props: InspectProps & { colors: Record<ThemeKeys, string> } = $props()
 
+  class ClassName {}
+
   const base08Preview = $state({
     numberType: 123,
     booleanType: true,
@@ -39,12 +41,14 @@
     objType: {},
     arrType: [],
     date: new Date(),
-    [Symbol('key')]: Symbol('symbol value color'),
+    map: new Map([['#000', '#000']]),
+    set: new Set(['#000', '#888', '#fff']),
+    urls: new URL('https://example.com?q=test'),
+    symbol: Symbol('symbol value color'),
+    classInstances: new ClassName(),
   }
   const base0DPreview = {
-    classes: class Test {},
-    classInstances: [new Map([['#000', '#000']]), new Set(['#000'])],
-    urls: new URL('https://example.com'),
+    classNames: ClassName,
   }
   const base0EPreview = {
     stringType: '<--',
@@ -68,7 +72,7 @@
     // base07: [props.colors['--base07'], 'flash on update color', base07Preview.flashOnUpdateColor],
     base08: [props.colors['--base08'], base08Preview],
     base09: [props.colors['--base09'], base09Preview],
-    base0A: [props.colors['--base0A'], 'base0A is the string color'],
+    base0A: [props.colors['--base0A'], 'base0A is the string color', { ['string keys']: '' }],
     base0B: [props.colors['--base0B'], ...base0BPreview],
     base0C: [props.colors['--base0C'], base0CPreview],
     base0D: [props.colors['--base0D'], base0DPreview],

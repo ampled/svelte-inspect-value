@@ -152,7 +152,7 @@
   @import './styles/line.css';
 
   .indent {
-    margin-left: calc(var(--indent) * 1.5);
+    margin-left: var(--__indent);
     border-left: 1px solid var(--_indent-color);
     overflow-x: clip;
     overflow-y: auto;

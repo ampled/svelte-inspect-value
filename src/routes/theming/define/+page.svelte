@@ -10,6 +10,7 @@
   let font = $state('monospace')
   let fontSize = $state(12)
   let fontSizePx = $derived(fontSize + 'px')
+  let indent = $state(0.75)
   let colors = $state({ ...themes.inspect })
   let lockedColors = $state<string[]>([])
   let keys = $derived(Object.keys(colors) as (keyof typeof colors)[])
@@ -140,11 +141,21 @@
     {/each}
   </div>
   <div style="flex-basis: 100%">
-    <Theming --inspect-font={font} --inspect-font-size={fontSizePx} {style} {colors} />
+    <Theming
+      --indent="{indent}em"
+      --inspect-font={font}
+      --inspect-font-size={fontSizePx}
+      {style}
+      {colors}
+    />
   </div>
 </div>
 
 <div class="flex row flex-wrap gap">
+  <label>
+    indent (em)
+    <input type="number" style="max-width: 5em" step={0.125} bind:value={indent} />
+  </label>
   <label>
     font (local)
     <select bind:value={font}>
@@ -351,6 +362,7 @@ Result:
     border-radius: 8px;
     border: 1px solid var(--border-color);
     padding: 1em;
+    overflow-x: auto;
 
     .key {
       padding-left: 1em;

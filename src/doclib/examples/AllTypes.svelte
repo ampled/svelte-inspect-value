@@ -34,6 +34,18 @@
   })
   const segments = $state(segmenterFrGrapheme.segment(string1)[Symbol.iterator]())
 
+  class StringSubclass extends String {
+    static staticprop = {
+      test: 1,
+    }
+
+    anotherProp = { test: 1 }
+
+    constructor(value?: string) {
+      super(value)
+    }
+  }
+
   const allTypes = $state({
     strings: {
       basic: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
@@ -308,6 +320,14 @@
       set: new Set(),
       map: new Map(),
       string: '',
+    },
+    primitiveCtr: {
+      str: new String('yup'),
+      num: new Number(),
+      num2: new Number(1),
+      bool: new Boolean(),
+      strsubclass: new StringSubclass('test'),
+      subclass: StringSubclass,
     },
   })
 
