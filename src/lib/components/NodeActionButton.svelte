@@ -10,7 +10,13 @@
   }
 </script>
 
-<button bind:this={button} type="button" {onclick} {...rest}>
+<button
+  bind:this={button}
+  type="button"
+  {...rest}
+  {onclick}
+  ondblclick={(e) => e.stopPropagation()}
+>
   {@render children?.()}
 </button>
 
