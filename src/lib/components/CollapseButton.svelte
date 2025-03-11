@@ -72,19 +72,17 @@
   {...rest}
   {onkeydown}
 >
-  <div>
-    {#if disabled}
-      <Bullet />
-    {:else}
-      <div in:scale={{ duration: options.transitionDuration }}>
-        <Caret
-          bind:this={caret}
-          {value}
-          style="rotate:{rotation}deg; transition: rotate 125ms ease-in-out;"
-        />
-      </div>
-    {/if}
-  </div>
+  {#if disabled}
+    <Bullet />
+  {:else}
+    <div in:scale={{ duration: options.transitionDuration }}>
+      <Caret
+        bind:this={caret}
+        {value}
+        style="rotate:{rotation}deg; transition: rotate 125ms ease-in-out; width: 100%; height: 100%;"
+      />
+    </div>
+  {/if}
 </button>
 
 <style>
