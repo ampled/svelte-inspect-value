@@ -1,4 +1,5 @@
 import type { Component } from 'svelte'
+import type { Readable } from 'svelte/store'
 import { type InspectOptions, OPTIONS_KEYS } from './options.svelte.js'
 import type {
   CustomComponentEntry,
@@ -8,14 +9,25 @@ import type {
   KeyType,
 } from './types.js'
 
-export function getType(value: unknown) {
-  if (typeof value === 'function') {
-    if (value.toString().startsWith('class') || value.toLocaleString().startsWith('class')) {
+export function getType(value: unknown, stores: boolean = false) {
+  const t = typeOf(value)
+
+  if (t === 'function') {
+    if (
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+      (value as Function).toString().startsWith('class') ||
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+      (value as Function).toLocaleString().startsWith('class')
+    ) {
       return 'class'
     }
+  } else if (t === 'object') {
+    if (stores && isStore(value)) {
+      return 'store'
+    }
+    return 'object'
   }
-
-  return typeOf(value)
+  return t
 }
 
 // source: http://stackoverflow.com/questions/7390426/better-way-to-get-type-of-a-javascript-variable/7390612#7390612
@@ -31,6 +43,11 @@ export function ofType(obj: unknown) {
 
 export function isArray(value: unknown): value is unknown[] {
   return Array.isArray(value)
+}
+
+export function isStore(value: unknown): value is Readable<unknown> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return typeof (value as any).subscribe === 'function'
 }
 
 export function isPromise(value: unknown): value is Promise<unknown> {
@@ -64,6 +81,7 @@ export type ValueType =
   | 'promise'
   | 'iterator'
   | 'NaN'
+  | 'store'
 
 export function stringify(
   value: unknown,

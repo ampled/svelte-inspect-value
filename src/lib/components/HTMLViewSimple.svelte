@@ -56,7 +56,7 @@
 
   let attrs = $derived.by(() => {
     if (element.ele) {
-      return Object.entries(element.ele.attributes)
+      return Object.entries(element.ele.attributes ?? {})
         .map(([, attr]) => [attr.name, attr.value])
         .filter(([name]) => !['class', 'style', 'data'].includes(name) && !name.startsWith('data-'))
     }
@@ -82,9 +82,9 @@
   let entries = $derived(
     Object.entries({
       ...Object.fromEntries(attrs),
-      class: element.ele.className.split(' ').filter(Boolean),
+      class: element.ele.className?.split(' ').filter(Boolean) ?? [],
       styles: Object.fromEntries(styles),
-      data: Object.fromEntries(Object.entries(element.ele.dataset)),
+      data: Object.fromEntries(Object.entries(element.ele.dataset ?? {})),
       ...current,
       children: value.children,
     }).filter(([, v]) =>

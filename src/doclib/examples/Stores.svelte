@@ -1,0 +1,92 @@
+<script lang="ts">
+  import { browser } from '$app/environment'
+  import Inspect from '$lib/Inspect.svelte'
+  import { type InspectOptions, GLOBAL_OPTIONS_CONTEXT } from '$lib/options.svelte.js'
+  import { fromEvent, map, Observable, startWith } from 'rxjs'
+  import { getContext, onMount } from 'svelte'
+  import type { SvelteMap } from 'svelte/reactivity'
+  import { readable, writable } from 'svelte/store'
+  import ToggleButton from '../../routes/ToggleButton.svelte'
+
+  getContext<SvelteMap<string, string>>('toc')?.set('Stores', 'stores')
+  const globalInspectOptions = getContext<() => InspectOptions>(GLOBAL_OPTIONS_CONTEXT)()
+
+  const setOption =
+    getContext<(name: keyof InspectOptions, value: unknown) => void>('set-global-option')
+
+  function customStore(initialValue = 0) {
+    let interval: number | undefined
+    let val = writable(initialValue, () => {
+      if (browser) {
+        interval = setInterval(() => {
+          val.update((n) => n + 1)
+        }, 500)
+      }
+
+      return () => {
+        clearInterval(interval)
+      }
+    })
+
+    return {
+      ...val,
+      set value(v: number) {
+        val.set(v)
+      },
+    }
+  }
+
+  let eventObservable = $state<Observable<unknown>>()
+
+  onMount(() => {
+    eventObservable = fromEvent(document.body, 'click').pipe(
+      startWith(`0 clicks`),
+      map((_, i) => `${i} clicks`)
+    )
+    let subscription = eventObservable.subscribe()
+
+    const st = writable(0)
+
+    let s = st.subscribe(() => {})
+
+    return () => {
+      subscription.unsubscribe()
+      s()
+    }
+  })
+</script>
+
+<div class="flex col">
+  <h3 id="stores">Stores</h3>
+  <p>
+    Objects with a <code>subscribe</code> function are recognized as stores or observables. The
+    stores will be subscribed to and the latest emitted value will be displayed.<br />
+    If the store does not return a valid
+    <dfn title="function or object with unsubscribe-function">unsubscriber</dfn> or the subscribe-function
+    throws an error the store will be displayed as a regular object using the default object-view.
+  </p>
+
+  <Inspect
+    value={{
+      writableStore: writable('i am the store value'),
+      readableStore: readable({ a: { b: { c: { d: { e: 'end' } } } } }),
+      customStore: customStore(0),
+      clickObservable: eventObservable,
+      fakeStore: {
+        subscribe: () => 'hi',
+      },
+    }}
+    name="stores"
+  />
+
+  <p>
+    This can be enabled / disabled with the <code>stores</code>-prop:
+    <span style="margin-left: 0.5em;">
+      <ToggleButton
+        bind:checked={() => globalInspectOptions.stores, (val) => setOption('stores', val)}
+      >
+        stores
+      </ToggleButton>
+    </span>
+  </p>
+</div>

@@ -11,7 +11,7 @@
   <p><code>Inspect</code> handles map and set instances.</p>
 
   <Inspect
-    style="width: 400px"
+    style="width: 500px"
     value={{
       map: new Map<unknown, unknown>([
         ['yeah', 1],

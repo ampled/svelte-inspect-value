@@ -61,6 +61,8 @@
     'generatorfunction',
     'asyncgeneratorfunction',
     'promise',
+    'readable',
+    'writable',
     'Entry',
     'map',
     'set',

@@ -226,6 +226,14 @@ Result:
       <td><code>false</code></td>
     </tr>
     <tr>
+      <td> stores </td>
+      <td>
+        if enabled, treat any object with a <code>subscribe</code> function as a store or observable
+        and show the last value emitted when subscribed to
+      </td>
+      <td><code>true</code></td>
+    </tr>
+    <tr>
       <td> onCopy </td>
       <td>
         custom callback run when clicking copy tool-button.<br />

@@ -1,8 +1,8 @@
 <script lang="ts">
   // eslint-disable @typescript-eslint/no-explicit-any
   import type { Component } from 'svelte'
-  import { useOptions } from '../options.svelte.js'
-  import { InspectError, type CustomComponents, type TypeViewProps } from '../types.js'
+  import { useOptions, type InspectOptions } from '../options.svelte.js'
+  import { InspectError, type TypeViewProps } from '../types.js'
   import { getType, type ValueType } from '../util.js'
   import Default from './Default.svelte'
   import HtmlView from './HTMLView.svelte'
@@ -22,15 +22,17 @@
 
   const options = useOptions()
 
-  let type: ValueType = $derived(getType(value))
+  let type: ValueType = $derived(getType(value, options.value.stores))
 
+  // FIXME: this is so messy
   function getTypeComponent(
+    value: unknown,
     type: ValueType,
-    custom: CustomComponents,
-    useDefaults: boolean
+    useDefaults: boolean,
+    options: InspectOptions
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   ): [Component<TypeViewProps<any>>, Partial<TypeViewProps>] {
-    let entry = getComponent(type, useDefaults ? {} : custom)
+    let entry = getComponent(type, useDefaults ? {} : options.customComponents)
 
     if (entry) {
       let [component, propfn, predicate] = entry
@@ -53,7 +55,7 @@
   }
 
   let [TypeComponent, componentProps] = $derived(
-    getTypeComponent(type, options.value.customComponents, usedefaults)
+    getTypeComponent(value, type, usedefaults, options.value)
   )
   let path = $derived(key != null && prevPath ? [...prevPath, key] : ['root'])
 </script>

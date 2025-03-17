@@ -145,7 +145,7 @@
     ); /* e.g. copy to clipboard */
     --_promise-pending-color: var(--promise-pending-color, var(--base0A));
     --_promise-fulfilled-color: var(--promise-fulfilled-color, var(--base0B));
-    --_promise-rejected-color: var(--promise-rejected-color, var(--base0E));
+    --_promise-rejected-color: var(--promise-rejected-color, var(--base08));
     --_promise-bracket-color: var(--promise-bracket-color, var(--base03));
 
     /* key */
@@ -464,18 +464,6 @@
 
     &.html {
       padding-inline: 0.5em;
-    }
-
-    &.promise {
-      &.rejected {
-        color: var(--_promise-rejected-color);
-      }
-      &.pending {
-        color: var(--_promise-pending-color);
-      }
-      &.fulfilled {
-        color: var(--_promise-fulfilled-color);
-      }
     }
   }
 

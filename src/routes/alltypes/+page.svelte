@@ -25,27 +25,9 @@
 </script>
 
 <div style="padding: 2em">
-  <label>
-    debug
-    <input type="checkbox" bind:checked={debug} />
-  </label>
-  <AllTypes
-    {debug}
-    onLog={(value) => console.log(value)}
-    canCopy={() => true}
-    onCopy={(value, type, path) => {
-      console.log(value, type, path)
-      if (Math.random() > 0.5) {
-        return true
-      } else {
-        return new Promise((resolve) => {
-          setTimeout(() => {
-            resolve(true)
-          }, 1000)
-        })
-      }
-    }}
-  />
+  <input style="margin: 1em" type="checkbox" bind:checked={debug} />
+
+  <AllTypes {debug} />
 </div>
 
 <!-- <div style="padding: 2em">

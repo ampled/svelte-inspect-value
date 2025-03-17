@@ -48,6 +48,7 @@
     elementView: 'simple',
     parseJson: false,
     renderIf: true,
+    stores: true,
   })
 
   function onkeydown(event: KeyboardEvent & { currentTarget: EventTarget & Window }) {
@@ -62,6 +63,8 @@
   }
 
   setContext('set-global-option', setOption)
+
+  const _ba = [[[[[[[[[[[[[]]]]]]]]]]]]]
 </script>
 
 <svelte:window {onkeydown} />

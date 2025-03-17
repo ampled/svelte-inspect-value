@@ -189,7 +189,7 @@ export type InspectOptions = {
   /**
    * Custom predicate that determines if copy-button should be displayed for a value
    *
-   * Default `undefined`
+   * @default undefined
    */
   canCopy: ((value: unknown, type: string, path: unknown[]) => boolean) | undefined
   /**
@@ -197,9 +197,16 @@ export type InspectOptions = {
    *
    * This overrides the default log-button behavior.
    *
-   * Default `undefined`
+   * @default undefined
    */
   onLog: ((value: unknown, type: string, path: unknown[]) => void) | undefined
+  /**
+   * Enable or disable svelte-store inspection.
+   * Objects with a `subscribe` method will be inspected as stores and show their subscription value.
+   *
+   * @default true
+   */
+  stores: boolean
 }
 
 export const DEFAULT_OPTIONS: InspectOptions = {
@@ -226,6 +233,7 @@ export const DEFAULT_OPTIONS: InspectOptions = {
   onCopy: undefined,
   canCopy: undefined,
   onLog: undefined,
+  stores: true,
 } as const
 
 export const OPTIONS_KEYS = Object.keys(DEFAULT_OPTIONS) as (keyof InspectOptions)[]

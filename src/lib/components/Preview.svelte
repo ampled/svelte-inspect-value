@@ -83,6 +83,7 @@
       'class',
       'undefined',
       'null',
+      'store',
     ].includes(type)
   }
 </script>
@@ -144,7 +145,7 @@
 
 <!-- At configured previewDepth, stop rendering nested item previews and just render their types -->
 {#snippet valuePreview(value: unknown, key?: KeyType)}
-  {@const valType = getType(value)}
+  {@const valType = getType(value, options.value.stores)}
   {#if alwaysRender(valType) || previewLevel < previewDepth}
     <Node {path} {key} {value} {showKey} {keyDelim} {keyStyle} />
   {:else}
@@ -232,55 +233,55 @@
       color: var(--_text-color);
     }
     &.level-2 {
-      color: var(--cyan);
-    }
-    &.level-3 {
       color: var(--green);
     }
-    &.level-4 {
-      color: var(--orange);
-    }
-    &.level-5 {
+    &.level-3 {
       color: var(--blue);
     }
+    &.level-4 {
+      color: var(--red);
+    }
+    &.level-5 {
+      color: var(--green);
+    }
     &.level-6 {
-      color: var(--yellow);
+      color: var(--blue);
     }
     &.level-7 {
       color: var(--red);
     }
     &.level-8 {
-      color: var(--cyan);
-    }
-    &.level-9 {
       color: var(--green);
     }
-    &.level-10 {
-      color: var(--orange);
-    }
-    &.level-11 {
+    &.level-9 {
       color: var(--blue);
     }
+    &.level-10 {
+      color: var(--red);
+    }
+    &.level-11 {
+      color: var(--green);
+    }
     &.level-12 {
-      color: var(--yellow);
+      color: var(--blue);
     }
     &.level-13 {
       color: var(--red);
     }
     &.level-14 {
-      color: var(--cyan);
-    }
-    &.level-15 {
       color: var(--green);
     }
-    &.level-16 {
-      color: var(--orange);
-    }
-    &.level-17 {
+    &.level-15 {
       color: var(--blue);
     }
+    &.level-16 {
+      color: var(--red);
+    }
+    &.level-17 {
+      color: var(--green);
+    }
     &.level-18 {
-      color: var(--yellow);
+      color: var(--blue);
     }
     &.level-19 {
       color: var(--red);

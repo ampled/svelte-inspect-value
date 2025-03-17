@@ -22,6 +22,7 @@
   <ToggleButton bind:checked={options.flashOnUpdate}>flash on update</ToggleButton>
 
   <ToggleButton bind:checked={options.embedMedia}>embed media</ToggleButton>
+  <ToggleButton bind:checked={options.stores}>stores</ToggleButton>
   <ToggleButton bind:checked={options.parseJson}>parse json</ToggleButton>
 
   <label>

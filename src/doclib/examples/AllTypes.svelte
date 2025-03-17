@@ -2,7 +2,9 @@
   import { browser } from '$app/environment'
   import Inspect from '$lib/Inspect.svelte'
   import type { InspectProps } from '$lib/types.js'
+  import { Observable, interval } from 'rxjs'
   import { onMount } from 'svelte'
+  import { readable, writable } from 'svelte/store'
   import sprite from './media/squirtle.png'
   import audio from './media/squirtle_cry.ogg'
 
@@ -46,7 +48,52 @@
     }
   }
 
+  function customStore(initialValue = 0) {
+    let interval: number | undefined
+    let val = writable(initialValue, () => {
+      if (browser) {
+        interval = setInterval(() => {
+          val.update((n) => n + 1)
+        }, 500)
+      }
+
+      return () => {
+        clearInterval(interval)
+      }
+    })
+
+    return {
+      ...val,
+      set value(v: number) {
+        val.set(v)
+      },
+    }
+  }
+
+  const o = new Observable((subscriber) => {
+    subscriber.next(1)
+    subscriber.next(2)
+    subscriber.next(3)
+    setTimeout(() => {
+      subscriber.next(4)
+      subscriber.complete()
+    }, 1000)
+  })
+
+  const fakeStore = {
+    subscribe: () => {},
+  }
+
   const allTypes = $state({
+    stores: {
+      a: readable('test'),
+      b: writable({ testing: 'haha' }),
+      b2: writable({ testing: 'haha' }),
+      c: customStore(),
+      o,
+      interval: interval(1230),
+      fakeStore,
+    },
     strings: {
       basic: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
       multilineString: 'check\n\tthis\n\t\tout',
@@ -93,6 +140,12 @@
         b: { name: 'b', c: { name: 'c', d: { name: 'd' } } },
         g: [{ test: 1, a: 2, b: 2 }],
         name: 'a',
+      },
+      nestedPromises: {
+        promises: {
+          a: new Promise(() => {}),
+          b: Promise.resolve('foo'),
+        },
       },
       nestedArrays: [[[[[[[[[[[[[[[[['end']]]]]]]]]]]]]]]]],
     },
@@ -303,6 +356,7 @@
         'spaces in between': ' a    ',
       },
       _: 'underscores are legit',
+      $: 'dollar signs should be legit',
       'asdf\\': 'oo',
       [Symbol('')]: 'agaga',
     },

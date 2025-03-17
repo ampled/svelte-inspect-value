@@ -12,6 +12,7 @@
   import MultiLineStrings from '../../doclib/examples/MultiLineStrings.svelte'
   import Other from '../../doclib/examples/Other.svelte'
   import Promises from '../../doclib/examples/Promises.svelte'
+  import Stores from '../../doclib/examples/Stores.svelte'
   import Urls from '../../doclib/examples/Urls.svelte'
 
   let { data } = $props()
@@ -36,6 +37,7 @@
 <MultiLineStrings />
 <MapAndSet />
 <Promises code={codeSamples.promises} />
+<Stores />
 <HtmlElements />
 <Classes />
 <Functions />

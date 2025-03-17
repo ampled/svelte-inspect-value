@@ -16,6 +16,7 @@ import PromiseView from './PromiseView.svelte'
 import RegexpView from './RegexpView.svelte'
 import SetView from './SetView.svelte'
 import StringView from './StringView.svelte'
+import SvelteStoreView from './SvelteStoreView.svelte'
 import TypedArrayView from './TypedArrayView.svelte'
 import UrlSearchParamsView from './URLSearchParamsView.svelte'
 import UrlView from './URLView.svelte'
@@ -54,6 +55,7 @@ const components = {
   weakset: [OneLineView, () => ({ display: ``, forceType: true })],
   weakmap: [OneLineView, () => ({ display: ``, forceType: true })],
   object: [ObjectView],
+  store: [SvelteStoreView],
   array: [ArrayView],
   string: [StringView],
   function: [FunctionView],
