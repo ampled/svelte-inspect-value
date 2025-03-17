@@ -22,8 +22,7 @@
     keyValue?: [KeyType, unknown][]
     keys?: K[]
     value?: V
-    singleValue?: unknown
-    type?: TypeViewProps['type']
+    singleValue?: { value: unknown }
     startLevel?: number
     showPreview?: boolean
     path?: TypeViewProps['path']
@@ -42,7 +41,7 @@
     value,
     prefix,
     postfix,
-    singleValue = EMPTY,
+    singleValue,
     showKey = true,
     keyDelim = ':',
     keyStyle = '',
@@ -120,8 +119,7 @@
               descriptor
             )}{#if i < keys.length - 1}{@render comma()}{/if}
           {/each}
-        {/if}
-        {#if keyValue}
+        {:else if keyValue}
           {#each keyValue as [key, value], i}
             {@render valuePreview(value, key)}{#if i < keyValue.length - 1}{@render comma()}{/if}
           {/each}
@@ -129,8 +127,8 @@
           {#each list as value, i}
             {@render valuePreview(value, i)}{#if i < list.length - 1}{@render comma()}{/if}
           {/each}
-        {:else if singleValue !== EMPTY}
-          {@render valuePreview(singleValue, undefined)}
+        {:else if singleValue}
+          {@render valuePreview(singleValue.value, undefined)}
         {/if}
       </div>
       {#if hasMore}{@render comma()}<span class="ellipsis">&hellip;</span>{/if}
