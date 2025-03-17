@@ -15,6 +15,8 @@
 
   const previewLevel = getPreviewLevel()
 
+  const nonStatic = ['name', 'length', 'prototype'] as PropertyKey[]
+
   let keys = $derived(getAllProperties(value))
 </script>
 
@@ -36,9 +38,20 @@
   <PropertyList {keys} {value}>
     {#snippet item({ key, descriptor })}
       {#if descriptor?.get || descriptor?.set}
-        <GetterSetter keyPrefix="static" {value} {descriptor} {key} {path} />
+        <GetterSetter
+          keyPrefix={nonStatic.includes(key) ? '' : 'static'}
+          {key}
+          {value}
+          {descriptor}
+          {path}
+        />
       {:else}
-        <Node value={value[key as keyof typeof value]} {key} keyPrefix="static" {path} />
+        <Node
+          keyPrefix={nonStatic.includes(key) ? '' : 'static'}
+          {key}
+          value={value[key as keyof typeof value]}
+          {path}
+        />
       {/if}
     {/snippet}
   </PropertyList>
