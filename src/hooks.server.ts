@@ -1,9 +1,9 @@
-export const handleError = async ({ error, event, status, message }) => {
+export const handleError = async ({ error }) => {
   console.log('#############################')
   console.log('#     SERVER SIDE ERROR     #')
   console.log('#############################')
 
-  console.log({ error, event, status, message })
+  console.log({ error })
 
   return {
     message: 'Whoops!',
