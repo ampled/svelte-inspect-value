@@ -5,6 +5,7 @@
   import type { TypeViewProps } from '../types.js'
   import Bullet from './Bullet.svelte'
   import Key from './Key.svelte'
+  import NodeNote from './NodeNote.svelte'
   import Tools from './Tools.svelte'
   import Type from './Type.svelte'
 
@@ -22,6 +23,7 @@
     forceType,
     path,
     children,
+    note,
     ...rest
   }: Props = $props()
 
@@ -49,6 +51,9 @@
       <Key disabled prefix={keyPrefix} delim={keyDelim} style={keyStyle} {key} {path} />
     {/if}
   </div>
+  {#if note && !previewLevel}
+    <NodeNote title={note.description}>{note.title}</NodeNote>
+  {/if}
   {#if !isKey}
     <Type {type} force={forceType} />
   {/if}
