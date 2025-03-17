@@ -25,7 +25,7 @@ test('it has interactive elements for getters and setters', async () => {
   const key = screen.queryAllByTestId('key')[1]
 
   // getters / setters get key prefixes
-  expect(key).toHaveTextContent('set|get current :')
+  expect(key).toHaveTextContent('set|get current')
 
   const getButton = screen.queryAllByRole('button', { name: 'get' })[0]
 
