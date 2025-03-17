@@ -6,7 +6,7 @@
   import type { KeyType, TypeViewProps } from '$lib/types.js'
   import { getPropertyDescriptor, getType } from '$lib/util.js'
   import { getContext, setContext } from 'svelte'
-  import type { HTMLButtonAttributes } from 'svelte/elements'
+  import type { HTMLButtonAttributes, SvelteHTMLElements } from 'svelte/elements'
   import { fly, slide } from 'svelte/transition'
   import type { List } from '../types.js'
   import GetterSetter from './GetterSetter.svelte'
@@ -29,9 +29,8 @@
     keyDelim?: string
     keyStyle?: HTMLButtonAttributes['style']
     showKey?: boolean
-  }
-
-  const EMPTY = Symbol('EMPTY')
+    bracketStyle?: string
+  } & SvelteHTMLElements['div']
 
   let {
     list: previewList,
@@ -47,11 +46,14 @@
     keyStyle = '',
     startLevel = 1,
     showPreview = false,
+    class: classValue,
+    bracketStyle = '',
+    ...rest
   }: PreviewProps = $props()
 
   const previewLevel = getContext<number | undefined>('preview') ?? startLevel
   const options = useOptions()
-  let { previewEntries, previewDepth, showPreview: _show } = $derived(options.value)
+  let { previewEntries, previewDepth, showPreview: optsShowPreview } = $derived(options.value)
 
   setContext('preview', (previewLevel ?? 0) + 1)
 
@@ -85,7 +87,7 @@
   }
 </script>
 
-{#if _show && previewEntries > 0 && showPreview}
+{#if optsShowPreview && previewEntries > 0 && showPreview}
   <svelte:boundary onerror={(e) => console.error('preview failed:', e)}>
     {#snippet failed(_, reset)}
       preview error. check console
@@ -93,14 +95,15 @@
     {/snippet}
     <div
       data-testid="preview"
-      class="preview"
+      class={['preview', classValue]}
       transition:slide={{
         axis: 'x',
         duration: options.transitionDuration,
       }}
+      {...rest}
     >
       {#if prefix}
-        <span class="pre level-{previewLevel}">{prefix}</span>
+        <span class="pre level-{previewLevel}" style={bracketStyle}>{prefix}</span>
       {/if}
       <div
         class="inner"
@@ -133,7 +136,7 @@
       </div>
       {#if hasMore}{@render comma()}<span class="ellipsis">&hellip;</span>{/if}
       {#if postfix}
-        <span class="post level-{previewLevel}">{postfix}</span>
+        <span class="post level-{previewLevel}" style={bracketStyle}>{postfix}</span>
       {/if}
     </div>
   </svelte:boundary>
