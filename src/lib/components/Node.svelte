@@ -45,7 +45,7 @@
       }
 
       return [component, props] as const
-    } else if (type.startsWith('html')) {
+    } else if (value instanceof HTMLElement) {
       return [HtmlView, {}] as const
     }
 
