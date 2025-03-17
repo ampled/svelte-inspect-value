@@ -11,17 +11,17 @@
 
   let { value, key = undefined, type, path, ...rest }: Props = $props()
 
-  let classInstance = $derived(
-    value.constructor?.toString().startsWith('class') ? value.constructor?.name : false
+  let namedConstructor = $derived(
+    value.constructor.name !== 'Object' ? value.constructor.name : false
   )
 
-  let objectType = $derived(classInstance ? (classInstance as ValueType) : type)
+  let objectType = $derived(namedConstructor ? (namedConstructor as ValueType) : type)
   let keys = $derived(
     [
       ...getAllProperties(value).filter(
         (p) => !['constructor', 'prototype'].includes(p.toString())
       ),
-      classInstance ? 'constructor' : undefined,
+      namedConstructor ? 'constructor' : undefined,
     ].filter((v) => v != null)
   )
 </script>
@@ -32,7 +32,7 @@
   {key}
   {path}
   {value}
-  forceType={!!classInstance}
+  forceType={!!namedConstructor}
   {...rest}
 >
   {#snippet valuePreview({ showPreview })}
