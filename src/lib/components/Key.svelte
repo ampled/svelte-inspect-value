@@ -22,7 +22,7 @@
   const simpleKeys = ['bigint', 'regexp']
   const ele = $derived<'span' | 'button'>(disabled ? 'span' : 'button')
 
-  const shouldBeQuoted = /[^A-zÀ-ú0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F_]|[\\[\]`]/
+  const shouldBeQuoted = /[^A-zÀ-ú0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F_$]|[\\[\]`]/
   const previewLevel = getPreviewLevel()
 
   let keyType = $derived.by(() => {
@@ -57,46 +57,52 @@
 
 {#if shouldShow}
   <svelte:boundary {onerror}>
-    <svelte:element
-      this={ele}
-      data-testid="key"
-      type="button"
-      class={['key-button', disabled && 'disabled']}
-      {disabled}
-      aria-label={key?.toString()}
-      title={previewLevel === 0 ? stringifyPath(path) : undefined}
-      {...rest}
-    >
-      {#if prefix}
-        <span class="prefix">{prefix}</span>
-      {/if}
-      {#if keyTypes.includes(keyType)}
-        <span class="key {keyType}">
-          {#if keyType === 'quotedstring' && key !== ''}
-            {#each display as string as char}
-              {#if char === ' '}
-                <span class="whitespace">&sdot;</span>
-              {:else}
-                {char}
-              {/if}
-            {/each}
-          {:else}
-            {display?.toString()}
-          {/if}
-        </span>
-      {:else if simpleKeys.includes(keyType)}
-        <Node value={key} />
-      {:else}
-        <Type type={keyType} force />
-      {/if}
+    <div class="key-outer">
+      <svelte:element
+        this={ele}
+        data-testid="key"
+        type="button"
+        class={['key-button', disabled && 'disabled']}
+        {disabled}
+        aria-label={key?.toString()}
+        title={previewLevel === 0 ? stringifyPath(path) : undefined}
+        {...rest}
+      >
+        {#if prefix}
+          <span class="prefix">{prefix}</span>
+        {/if}
+        {#if keyTypes.includes(keyType)}
+          <span class="key {keyType}">
+            {#if keyType === 'quotedstring' && key !== ''}
+              {#each display as string as char}
+                {#if char === ' '}
+                  <span class="whitespace">&sdot;</span>
+                {:else}
+                  {char}
+                {/if}
+              {/each}
+            {:else}
+              {display?.toString()}
+            {/if}
+          </span>
+        {:else if simpleKeys.includes(keyType)}
+          <Node value={key} />
+        {:else}
+          <Type type={keyType} force />
+        {/if}
+      </svelte:element>
       {#if delim}
         <span class="delim">{delim}</span>
       {/if}
-    </svelte:element>
+    </div>
   </svelte:boundary>
 {/if}
 
 <style>
+  .key-outer {
+    display: flex;
+  }
+
   .key-button {
     all: unset;
     padding: 0;
@@ -104,6 +110,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    gap: 0.5em;
 
     &:focus:not(.disabled),
     &:hover:not(.disabled) {
@@ -155,8 +162,6 @@
 
   .prefix {
     color: var(--_key-prefix-color);
-    margin-right: 0.5em;
-    /* font-style: italic; */
     font-weight: 900;
   }
 
