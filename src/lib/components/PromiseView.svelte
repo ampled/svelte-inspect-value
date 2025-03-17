@@ -68,12 +68,22 @@
 <Expandable {...{ value, key, type, path }} length={entries.length} showLength={false}>
   {#snippet valuePreview({ showPreview })}
     {#key status}
-      <span class="value promise {status}" in:fade={{ duration: options.transitionDuration }}
-        ><span class="bracket">{'<'}</span
-        >{`${status}`}{#if status === 'fulfilled' || status === 'rejected'}
-          <Preview prefix={':'} singleValue={result} startLevel={0} {showPreview} showKey={false} />
-        {/if}<span class="bracket">{'>'}</span></span
-      >
+      <span class="value promise {status}" in:fade={{ duration: options.transitionDuration }}>
+        <span class="bracket">{'<'}</span>
+        {`${status}`}
+        {#if status === 'fulfilled' || status === 'rejected'}
+          <Preview
+            {showPreview}
+            prefix={':'}
+            singleValue={{ value: result }}
+            startLevel={0}
+            showKey={false}
+            style="gap:0"
+            bracketStyle="margin: 0; font-weight: bold"
+          />
+        {/if}
+        <span class="bracket">{'>'}</span>
+      </span>
     {/key}
   {/snippet}
   {#each entries as [key, value], i (key)}
@@ -89,9 +99,22 @@
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
+    gap: 0;
+    margin-left: -0.5em;
+
+    &.rejected {
+      color: var(--_promise-rejected-color);
+    }
+    &.pending {
+      color: var(--_promise-pending-color);
+    }
+    &.fulfilled {
+      color: var(--_promise-fulfilled-color);
+    }
   }
 
   .bracket {
+    font-weight: bold;
     color: var(--_promise-bracket-color);
   }
 </style>

@@ -176,7 +176,9 @@
           {/if}
           <Preview
             showPreview={(hasCachedValue || valueRetrieved) && showPreview}
-            singleValue={retrievedValue}
+            singleValue={{ value: retrievedValue }}
+            style={previewLevel > 0 ? 'margin-left: -0.5em' : ''}
+            bracketStyle="color: var(--_comment-color)"
             showKey={false}
             startLevel={0}
             prefix="("

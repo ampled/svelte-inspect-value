@@ -8,23 +8,20 @@
 
   type Props = TypeViewProps<Map<unknown, unknown>>
 
-  let { value, key = undefined, type, path = [] }: Props = $props()
+  let { value, key = undefined, type, path = [], ...rest }: Props = $props()
 
   let keys = $derived([...value.keys()])
   let entries = $derived<[KeyType, unknown][]>([...value.entries()] as [KeyType, unknown][])
-
-  // let preview = $derived<[KeyType, unknown][]>(entries.slice(0, 3))
 </script>
 
-<Expandable {...{ value, key, type, path }} length={entries.length}>
+<Expandable {...{ value, key, type, path }} length={entries.length} {...rest}>
   {#snippet valuePreview({ showPreview })}
     <Preview
       keyValue={entries}
       prefix={'{'}
       postfix={'}'}
-      type="map"
       keyDelim="=>"
-      keyStyle="gap: 0.5em;"
+      keyStyle="margin-right: 0.5em;"
       {showPreview}
     />
   {/snippet}
@@ -41,12 +38,11 @@
       >
         {#snippet valuePreview({ showPreview })}
           <Preview
-            keyValue={[[key as string, value.get(key)]]}
+            keyValue={[[key as PropertyKey, value.get(key)]]}
             prefix={'{'}
             postfix={'}'}
             keyDelim="=>"
-            keyStyle="gap: 0.5em;"
-            type="map"
+            keyStyle="margin-right: 0.5em;"
             {showPreview}
           />
         {/snippet}
