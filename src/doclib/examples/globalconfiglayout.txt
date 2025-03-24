@@ -2,24 +2,22 @@
   import {DEV} from 'esm-env'
   import {setGlobalInspectOptions, InspectOptionsProvider} from 'svelte-inspect-value'
 
-  setGlobalInspectOptions({ 
+  setGlobalInspectOptions(() => ({ 
     stringCollapse: 20,
     renderIf: DEV // conditionally render
-  })
+  }))
 
   // or reactive global options
   let globalConfig = $state({ stringCollapse: 20, renderIf: true })
-  setGlobalInspectOptions(globalConfig)
+  setGlobalInspectOptions(() => globalConfig)
 
   let { children } = $props()
 </script>
 
 <input bind:value={globalConfig.stringCollapse} />
 
-<!-- InspectOptionsProvider is an alternative to the exported function -->
-<InspectOptionsProvider options={globalConfig}>
+<InspectOptionsProvider options={globalConfig}> <!-- alternative to setGlobalInspectOptions -->
   <main>
     {@render children()}
   </main>
 </InspectOptionsProvider>
-

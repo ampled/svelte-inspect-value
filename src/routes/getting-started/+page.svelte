@@ -54,14 +54,14 @@ Result:
 <h2 id="global">Global Options</h2>
 
 <p>
-  <code>{packageName} </code> exports a utility function to set a "global" config for every instance
+  <code>{packageName}</code> exports a utility function to set a "global" config for every instance
   of the Inspect-component in or under the component where the function is called (it sets context).
-  Alternatively, you can use <code>InspectOptionsProvider</code>.
+  Alternatively, you can use the <code>InspectOptionsProvider</code>-component.
 </p>
 
 <p>
-  Passing a reactive object to the function will update the components if any property of the object
-  is changed beceause its reactive (yup!)<br />
+  Passing a function returning a reactive object to the function will update the components if any
+  property of the object is changed.<br />
 
   You can try this now if you change any options in the configurator at the bottom of your screen!
   (hover it)
