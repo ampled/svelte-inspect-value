@@ -1,8 +1,7 @@
 <script lang="ts">
-  import { getPreviewLevel } from '$lib/contexts.js'
+  import { getPreviewLevel, useValueCache } from '$lib/contexts.js'
   import { stringifyPath } from '$lib/util.js'
-  import { getContext, onMount } from 'svelte'
-  import type { SvelteMap } from 'svelte/reactivity'
+  import { onMount } from 'svelte'
   import type { TypeViewProps } from '../types.js'
   import Expandable from './Expandable.svelte'
   import Node from './Node.svelte'
@@ -10,17 +9,18 @@
   import Preview from './Preview.svelte'
   import PropertyList from './PropertyList.svelte'
 
-  type Props = TypeViewProps<Iterator<unknown> | Generator>
+  type Props = TypeViewProps<
+    Iterator<unknown> | AsyncIterator<unknown> | Generator | AsyncGenerator
+  >
 
   let { value: iterator, key = undefined, type, path = [], showKey }: Props = $props()
 
-  const valueCache =
-    getContext<SvelteMap<string, { done: boolean; unwrap: unknown[] } | undefined>>('value-cache')
+  const valueCache = useValueCache<{ done: boolean; unwrap: unknown[] } | undefined>()
   const previewLevel = getPreviewLevel()
   let stringifiedPath = $derived(stringifyPath(path))
   let hasCached = $derived(valueCache.has(stringifiedPath))
-
   let unwrap = $state<unknown[]>([])
+  let busy = $state(false)
   let isDone = $state<boolean | undefined>(false)
 
   onMount(() => {
@@ -33,8 +33,10 @@
     }
   })
 
-  function next() {
-    const { value, done } = iterator.next()
+  async function next() {
+    busy = true
+    const { value, done } = await iterator.next()
+    busy = false
     if (typeof done === 'boolean') isDone = done
     if (!done) {
       unwrap.push(value)
@@ -42,15 +44,17 @@
     valueCache.set(stringifiedPath, { unwrap: $state.snapshot(unwrap), done: isDone as boolean })
   }
 
-  function complete() {
-    let result = iterator.next()
+  async function complete() {
+    busy = true
+    let result = await iterator.next()
     let i = 0
     while (!result.done && i < 100) {
       i++
       unwrap.push(result.value)
-      result = iterator.next()
+      result = await iterator.next()
       if (typeof result.done === 'boolean') isDone = result.done
     }
+    busy = false
     valueCache.set(stringifiedPath, { unwrap: $state.snapshot(unwrap), done: isDone as boolean })
   }
 </script>
@@ -63,10 +67,10 @@
 >
   {#snippet valuePreview({ showPreview })}
     {#if !previewLevel}
-      <NodeActionButton disabled={isDone} onclick={next}>
+      <NodeActionButton {busy} disabled={isDone} onclick={next}>
         {isDone ? 'done' : 'next'}
       </NodeActionButton>
-      <NodeActionButton disabled={isDone} onclick={complete}>100</NodeActionButton>
+      <NodeActionButton {busy} disabled={isDone} onclick={complete}>100</NodeActionButton>
     {/if}
     <Preview {path} list={unwrap} prefix={'['} postfix={']'} {showPreview} showKey={false} />
   {/snippet}

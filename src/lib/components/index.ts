@@ -52,6 +52,7 @@ const components = {
   arrayiterator: [IteratorView],
   mapiterator: [IteratorView],
   generator: [IteratorView],
+  asyncgenerator: [IteratorView],
   weakset: [OneLineView, () => ({ display: ``, forceType: true })],
   weakmap: [OneLineView, () => ({ display: ``, forceType: true })],
   object: [ObjectView],
