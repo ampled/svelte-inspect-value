@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Inspect from '$lib/Inspect.svelte'
+  import Inspect from '$lib/index.js'
   import { getContext, onMount } from 'svelte'
   import { SvelteDate, SvelteMap } from 'svelte/reactivity'
   import { intervalEffect } from '../interval-effect.svelte.js'

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { browser } from '$app/environment'
-  import Inspect from '$lib/Inspect.svelte'
+  import Inspect from '$lib/index.js'
   import { type InspectOptions, GLOBAL_OPTIONS_CONTEXT } from '$lib/options.svelte.js'
   import { fromEvent, map, Observable, startWith } from 'rxjs'
   import { getContext, onMount } from 'svelte'

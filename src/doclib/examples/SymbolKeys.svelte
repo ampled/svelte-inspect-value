@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Inspect } from '$lib/index.js'
+  import Inspect from '$lib/index.js'
   import { getContext } from 'svelte'
   import type { SvelteMap } from 'svelte/reactivity'
 
@@ -16,8 +16,6 @@
     Object properties where keys are symbols are displayed. these are skipped by
     <code>JSON.stringify()</code>
     or <code>Object.keys()</code><br />
-
-    This is achieved using <code>Reflect.ownKeys</code>
   </p>
 
   <Stack>

@@ -55,7 +55,7 @@
   </li>
   <li>Embed media if string ends with image / audio extension (optional)</li>
   <li>Customizable colors</li>
-  <li>Configurable with global options utiltiy as alternative to passing props</li>
+  <li>Configurable with global options utility as alternative to passing props</li>
 </ul>
 
 <style>

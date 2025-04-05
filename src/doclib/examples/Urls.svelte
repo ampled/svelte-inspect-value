@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Inspect from '$lib/Inspect.svelte'
+  import Inspect from '$lib/index.js'
   import { getContext } from 'svelte'
   import type { SvelteMap } from 'svelte/reactivity'
 

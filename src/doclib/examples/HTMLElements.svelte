@@ -1,27 +1,13 @@
 <script lang="ts">
-  import { Inspect } from '$lib/index.js'
+  import Inspect from '$lib/index.js'
   import { getContext } from 'svelte'
   import type { SvelteMap } from 'svelte/reactivity'
-  // import * as w from 'svelte/reactivity/window'
 
   let div = $state()
-  // let activeElement: Element | null = $state(null)
 
   let width = $state(500)
   let classes = $state('radius')
   let testid = $state('demo-div')
-
-  // const _window = $derived(
-  //   Object.fromEntries(
-  //     Object.entries(w).map(([key, p]) => {
-  //       if (typeof p === 'string') {
-  //         return [key, p]
-  //       } else {
-  //         return [key, p.current]
-  //       }
-  //     })
-  //   )
-  // )
 
   getContext<SvelteMap<string, string>>('toc')?.set('HTML Elements', 'html')
 
@@ -79,17 +65,6 @@
     expandLevel={0}
     elementView={group}
   />
-
-  <!-- <Inspect value={_window} /> -->
-
-  <!-- <p>This instance inspects <code>document.activeElement</code>:</p>
-  <Inspect
-    value={activeElement}
-    name="activeElement"
-    theme="drak"
-    style="flex-basis: 100%; max-height: 100px"
-    expandAll
-  /> -->
 </div>
 
 <style>
