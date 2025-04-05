@@ -86,11 +86,13 @@ export type ValueType =
 export function stringify(
   value: unknown,
   indent: number | string = 2,
-  quotes: 'single' | 'double' = 'single'
+  quotes: 'single' | 'double' | 'none' = 'single'
 ) {
   if (typeof value === 'string' && quotes === 'single') {
     const str = `'${JSON.stringify(value, null, indent).slice(1, -1)}'`
     return str
+  } else if (typeof value === 'string' && quotes === 'none') {
+    return `${JSON.stringify(value, null, indent).slice(1, -1)}`
   }
   return JSON.stringify(
     value,

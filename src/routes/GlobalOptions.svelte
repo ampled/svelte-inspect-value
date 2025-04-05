@@ -49,6 +49,7 @@
     <select bind:value={options.quotes}>
       <option>single</option>
       <option>double</option>
+      <option>none</option>
     </select>
   </label>
 

@@ -98,7 +98,7 @@ export type InspectOptions = {
    *
    * @default 'single'
    */
-  quotes: 'single' | 'double'
+  quotes: 'single' | 'double' | 'none'
   /**
    * Set color theme class
    *

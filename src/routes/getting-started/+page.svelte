@@ -197,7 +197,10 @@ Result:
     </tr>
     <tr>
       <td> quotes </td>
-      <td> quote type for string values. <code>'single'</code> or <code>'double'</code></td>
+      <td>
+        quote type for string values. <code>'single'</code>, <code>'double'</code> or
+        <code>'none'</code></td
+      >
       <td><code>'single'</code></td>
     </tr>
     <tr>
