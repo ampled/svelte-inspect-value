@@ -1,6 +1,6 @@
 <script lang="ts" generics="T, Key = T extends Map<infer K, unknown> ? K : (keyof T | PropertyKey)">
-  import { getPropertyDescriptor, type ValueType } from '$lib/util.js'
   import type { Snippet } from 'svelte'
+  import { getPropertyDescriptor, type ValueType } from '../util.js'
   import Entry from './Entry.svelte'
   import GetterSetter from './GetterSetter.svelte'
   import Node from './Node.svelte'

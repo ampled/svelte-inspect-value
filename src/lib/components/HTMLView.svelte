@@ -1,8 +1,7 @@
 <script lang="ts">
   import { type Snippet } from 'svelte'
+  import { useOptions } from '../options.svelte.js'
   import type { TypeViewProps } from '../types.js'
-  // import { htmlState } from '../util/mutation-observer.svelte.js'
-  import { useOptions } from '$lib/options.svelte.js'
   import HtmlViewFull from './HTMLViewFull.svelte'
   import HtmlViewSimple from './HTMLViewSimple.svelte'
 

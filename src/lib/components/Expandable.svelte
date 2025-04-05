@@ -1,10 +1,10 @@
 <script lang="ts" generics="Type extends string = ValueType">
-  import { getPreviewLevel } from '$lib/contexts.js'
-  import { slideXY } from '$lib/transition/slideXY.js'
   import { getContext, onMount, type Snippet } from 'svelte'
   import type { HTMLAttributes } from 'svelte/elements'
+  import { getPreviewLevel } from '../contexts.js'
   import { useOptions } from '../options.svelte.js'
   import { useState } from '../state.svelte.js'
+  import { slideXY } from '../transition/slideXY.js'
   import type { TypeViewProps } from '../types.js'
   import {
     neverExpandInitial,

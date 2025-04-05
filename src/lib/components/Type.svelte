@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { getPreviewLevel } from '$lib/contexts.js'
   import type { HTMLAttributes } from 'svelte/elements'
+  import { getPreviewLevel } from '../contexts.js'
   import { useOptions } from '../options.svelte.js'
   import type { ValueType } from '../util.js'
 

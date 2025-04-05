@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { getPreviewLevel, useValueCache } from '$lib/contexts.js'
-  import { stringifyPath } from '$lib/util.js'
   import { onMount } from 'svelte'
+  import { getPreviewLevel, useValueCache } from '../contexts.js'
   import type { TypeViewProps } from '../types.js'
+  import { stringifyPath } from '../util.js'
   import Expandable from './Expandable.svelte'
   import Node from './Node.svelte'
   import NodeActionButton from './NodeActionButton.svelte'

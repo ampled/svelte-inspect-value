@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { flashOnUpdate } from '$lib/action/update-flash.svelte.js'
-  import { useOptions } from '$lib/options.svelte.js'
+  import { flashOnUpdate } from '../action/update-flash.svelte.js'
+  import { useOptions } from '../options.svelte.js'
 
   let { value = undefined } = $props()
 

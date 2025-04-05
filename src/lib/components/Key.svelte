@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { getPreviewLevel } from '$lib/contexts.js'
-  import { useOptions } from '$lib/options.svelte.js'
   import { setContext } from 'svelte'
   import type { HTMLButtonAttributes } from 'svelte/elements'
+  import { getPreviewLevel } from '../contexts.js'
+  import { useOptions } from '../options.svelte.js'
   import type { TypeViewProps } from '../types.js'
   import { getType, stringify, stringifyPath } from '../util.js'
   import Node from './Node.svelte'

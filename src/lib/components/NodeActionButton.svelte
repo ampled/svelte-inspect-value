@@ -1,7 +1,11 @@
 <script lang="ts">
   import type { HTMLButtonAttributes } from 'svelte/elements'
 
-  let { children, onclick, ...rest }: HTMLButtonAttributes = $props()
+  type Props = {
+    busy?: boolean
+  } & HTMLButtonAttributes
+
+  let { children, onclick, busy, disabled, ...rest }: Props = $props()
 
   let button = $state<HTMLButtonElement>()
 
@@ -13,6 +17,8 @@
 <button
   bind:this={button}
   type="button"
+  disabled={disabled || busy}
+  aria-busy={busy}
   {...rest}
   {onclick}
   ondblclick={(e) => e.stopPropagation()}

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getPreviewLevel } from '$lib/contexts.js'
+  import { getPreviewLevel } from '../contexts.js'
   import { useOptions } from '../options.svelte.js'
   import type { TypeViewProps } from '../types.js'
   import { stringify } from '../util.js'

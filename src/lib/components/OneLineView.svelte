@@ -1,7 +1,7 @@
 <script lang="ts" generics="T = unknown">
-  import { getPreviewLevel } from '$lib/contexts.js'
   import { getContext } from 'svelte'
   import type { HTMLAttributes } from 'svelte/elements'
+  import { getPreviewLevel } from '../contexts.js'
   import type { TypeViewProps } from '../types.js'
   import Bullet from './Bullet.svelte'
   import Key from './Key.svelte'

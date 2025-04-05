@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { getPreviewLevel } from '$lib/contexts.js'
-  import type { TypeViewProps } from '$lib/types.js'
   import { BROWSER } from 'esm-env'
+  import { getPreviewLevel } from '../contexts.js'
+  import type { TypeViewProps } from '../types.js'
   import Expandable from './Expandable.svelte'
   import FunctionBody from './FunctionBody.svelte'
   import OneLineView from './OneLineView.svelte'

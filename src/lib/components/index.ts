@@ -1,5 +1,5 @@
-import type { CustomComponents, TypeViewProps } from '$lib/types.js'
 import type { Component } from 'svelte'
+import type { CustomComponents, TypeViewProps } from '../types.js'
 import ArrayView from './ArrayView.svelte'
 import ClassView from './ClassView.svelte'
 import DateView from './DateView.svelte'

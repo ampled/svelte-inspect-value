@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { getPreviewLevel } from '$lib/contexts.js'
-  import { getAllProperties } from '$lib/util.js'
+  import { getPreviewLevel } from '../contexts.js'
   import type { TypeViewProps } from '../types.js'
+  import { getAllProperties } from '../util.js'
   import Expandable from './Expandable.svelte'
   import Node from './Node.svelte'
   import Preview from './Preview.svelte'

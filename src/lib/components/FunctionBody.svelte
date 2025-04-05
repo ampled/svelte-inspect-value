@@ -8,9 +8,9 @@
 </script>
 
 <script lang="ts">
-  import { useOptions } from '$lib/options.svelte.js'
-  import type { TypeViewProps } from '$lib/types.js'
-  import { collapseString } from '$lib/util.js'
+  import { useOptions } from '../options.svelte.js'
+  import type { TypeViewProps } from '../types.js'
+  import { collapseString } from '../util.js'
 
   type Props = TypeViewProps<string> & { inline?: boolean }
 

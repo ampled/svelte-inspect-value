@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { TypeViewProps } from '$lib/types.js'
   import { getContext } from 'svelte'
+  import type { TypeViewProps } from '../types.js'
   import Entry from './Entry.svelte'
   import Expandable from './Expandable.svelte'
   import Node from './Node.svelte'

@@ -2,13 +2,12 @@
   lang="ts"
   generics="V extends Record<KeyType, unknown> | List = Record<KeyType, unknown> | List, K extends keyof V = keyof V"
 >
-  import { useOptions } from '$lib/options.svelte.js'
-  import type { KeyType, TypeViewProps } from '$lib/types.js'
-  import { getPropertyDescriptor, getType } from '$lib/util.js'
   import { getContext, setContext } from 'svelte'
   import type { HTMLButtonAttributes, SvelteHTMLElements } from 'svelte/elements'
   import { fly, slide } from 'svelte/transition'
-  import type { List } from '../types.js'
+  import { useOptions } from '../options.svelte.js'
+  import type { KeyType, List, TypeViewProps } from '../types.js'
+  import { getPropertyDescriptor, getType } from '../util.js'
   import GetterSetter from './GetterSetter.svelte'
   import Key from './Key.svelte'
   import Node from './Node.svelte'

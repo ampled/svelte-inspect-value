@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { useOptions } from '$lib/options.svelte.js'
-  import type { TypeViewProps } from '$lib/types.js'
   import { untrack } from 'svelte'
   import { fade } from 'svelte/transition'
+  import { useOptions } from '../options.svelte.js'
+  import type { TypeViewProps } from '../types.js'
   import Entry from './Entry.svelte'
   import Expandable from './Expandable.svelte'
   import Node from './Node.svelte'

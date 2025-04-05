@@ -1,8 +1,8 @@
 <script lang="ts">
-  import Caret from '$lib/icons/Caret.svelte'
-  import { useOptions } from '$lib/options.svelte.js'
   import type { HTMLButtonAttributes } from 'svelte/elements'
   import { scale } from 'svelte/transition'
+  import Caret from '../icons/Caret.svelte'
+  import { useOptions } from '../options.svelte.js'
   import Bullet from './Bullet.svelte'
 
   type Props = {

@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { useOptions } from '$lib/options.svelte.js'
-  import type { TypeViewProps } from '$lib/types.js'
+  import { useOptions } from '../options.svelte.js'
+  import type { TypeViewProps } from '../types.js'
   import HtmlView from './HTMLView.svelte'
 
   type Props = TypeViewProps<HTMLImageElement>
