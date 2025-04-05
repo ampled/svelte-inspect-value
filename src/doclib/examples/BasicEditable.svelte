@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Inspect from '$lib/Inspect.svelte'
+  import Inspect from '$lib/index.js'
   import { GLOBAL_OPTIONS_CONTEXT, type InspectOptions } from '$lib/options.svelte.js'
   import { getContext } from 'svelte'
   import type { SvelteMap } from 'svelte/reactivity'
@@ -41,7 +41,6 @@
       error = undefined
     } catch (e) {
       if (e instanceof Error) {
-        // console.log(e);
         error = e.message
       }
       demoInputValid = false
