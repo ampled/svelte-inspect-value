@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { getContext } from 'svelte'
 import type { KeyType } from './types.js'
-import { ensureStringPath, stringifyPath } from './util.js'
+import { ensureStringPath } from './util.js'
 
 export const STATE_CONTEXT_KEY = Symbol('inspect-state')
 
 export type NodeState = {
   collapsed: boolean
-  hasChildren?: boolean
 }
 
 export type InspectState = {
@@ -15,8 +14,6 @@ export type InspectState = {
 }
 
 export function createState(init: InspectState, onChange?: (value: InspectState) => void) {
-  // let state: InspectState = $state(init)
-
   function emitChanged() {
     onChange?.($state.snapshot(init))
   }
@@ -48,18 +45,6 @@ export function createState(init: InspectState, onChange?: (value: InspectState)
       const key = ensureStringPath(keyOrPath)
       return init?.[key]
     },
-    getNode(keyOrPath: () => string | KeyType[]) {
-      const key = ensureStringPath(keyOrPath())
-      return this.value?.[key]
-    },
-    hasExpandedChildren: (path: KeyType[]) => {
-      if (init) {
-        const key = stringifyPath(path)
-        const children = Object.entries(init).filter(([k]) => k.startsWith(key) && k !== key)
-        return children.some(([k, v]) => !v.collapsed)
-      }
-      return false
-    },
     collapseChildren: (level: number, path: KeyType[]) => {
       if (init) {
         let changed = false
@@ -85,7 +70,6 @@ export function createState(init: InspectState, onChange?: (value: InspectState)
           const [k] = entry
           const stringPath = k.split('.')
           if (k.startsWith(key) && stringPath.length === currentLevel + 1) {
-            // debugger
             entry[1].collapsed = false
             changed = true
           }
