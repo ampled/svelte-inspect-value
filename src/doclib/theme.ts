@@ -421,7 +421,7 @@ export default {
       ],
       settings: {
         fontStyle: 'italic',
-        foreground: inspect['--base09'],
+        foreground: inspect['--base0E'],
       },
     },
     {
