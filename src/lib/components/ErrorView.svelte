@@ -9,7 +9,7 @@
   type Props = TypeViewProps<Error>
 
   let { value, key, type = 'error', path }: Props = $props()
-  let useDefaults = getContext<boolean>('error-use-defaults')
+  let useDefaults = getContext<boolean | undefined>(Symbol.for('siv.use-defaults'))
 
   let entries: [string, unknown][] = $state(
     Object.entries({

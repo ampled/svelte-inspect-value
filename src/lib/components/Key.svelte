@@ -48,7 +48,7 @@
 
   let shouldShow = $derived(key === undefined ? previewLevel > 0 : true)
 
-  setContext('key', true)
+  setContext(Symbol.for('siv.key'), true)
 
   function onerror(error: unknown): void {
     throw new Error('Error in Key.svelte', { cause: error })

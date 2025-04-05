@@ -30,7 +30,7 @@
 
   const options = useOptions()
   const previewLevel = getPreviewLevel()
-  const valueCache = getContext<SvelteMap<string, unknown>>('value-cache')
+  const valueCache = useValueCache()
   let valueRetrieved = $state(false)
   let getterValue = $state<unknown>()
   let error = $state<InspectError>()

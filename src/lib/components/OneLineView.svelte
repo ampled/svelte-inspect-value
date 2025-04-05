@@ -33,7 +33,7 @@
   )
 
   let previewLevel = getPreviewLevel()
-  let isKey = getContext<boolean | undefined>('key')
+  let isKey = getContext<boolean | undefined>(Symbol.for('siv.key'))
 </script>
 
 <div

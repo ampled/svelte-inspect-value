@@ -50,11 +50,11 @@
     ...rest
   }: PreviewProps = $props()
 
-  const previewLevel = getContext<number | undefined>('preview') ?? startLevel
+  const previewLevel = getContext<number | undefined>(Symbol.for('siv.preview-level')) ?? startLevel
   const options = useOptions()
   let { previewEntries, previewDepth, showPreview: optsShowPreview } = $derived(options.value)
 
-  setContext('preview', (previewLevel ?? 0) + 1)
+  setContext(Symbol.for('siv.preview-level'), (previewLevel ?? 0) + 1)
 
   let list = $derived(previewList?.slice(0, previewEntries))
   let keyValue = $derived(previewKeyValue?.slice(0, previewEntries))

@@ -54,7 +54,7 @@
   let { expandAll, expandPaths, showLength: optsShowLength } = $derived(options.value)
   const inspectState = useState()
   const previewLevel = getPreviewLevel()
-  const isKey = getContext<boolean>('key')
+  const isKey = getContext<boolean>(Symbol.for('siv.key'))
   let stringifiedPath = $derived(stringifyPath(path))
   let collapseState = $derived(inspectState.value[stringifiedPath])
   let collapsed = $derived.by(() => {

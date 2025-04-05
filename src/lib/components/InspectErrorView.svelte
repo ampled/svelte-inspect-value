@@ -27,9 +27,9 @@
     })
   )
 
-  setContext('error-use-defaults', true)
-  const depth = getContext<number | undefined>('inspect-error-depth') ?? 0
-  setContext('inspect-error-depth', depth + 1)
+  setContext(Symbol.for('siv.use-defaults'), true)
+  const depth = getContext<number | undefined>(Symbol.for('siv.error-depth')) ?? 0
+  setContext(Symbol.for('siv.error-depth'), depth + 1)
 </script>
 
 {#if depth <= 3}
