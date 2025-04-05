@@ -201,6 +201,12 @@ export type InspectOptions = {
    */
   onLog: ((value: unknown, type: string, path: unknown[]) => void) | undefined
   /**
+   * Called whenever a node is collapsed or expanded.
+   *
+   * @default undefined
+   */
+  onCollapseChange: ((state: InspectState) => void) | undefined
+  /**
    * Enable or disable svelte-store inspection.
    * Objects with a `subscribe` method will be inspected as stores and show their subscription value.
    *
@@ -233,6 +239,7 @@ export const DEFAULT_OPTIONS: InspectOptions = {
   onCopy: undefined,
   canCopy: undefined,
   onLog: undefined,
+  onCollapseChange: undefined,
   stores: true,
 } as const
 
@@ -241,7 +248,7 @@ export const OPTIONS_KEYS = Object.keys(DEFAULT_OPTIONS) as (keyof InspectOption
 export function mergeOptions(
   fromProps: Partial<InspectOptions>,
   fromContext: Partial<InspectOptions> = {}
-) {
+): InspectOptions {
   const definedPropOptions = Object.entries(fromProps).filter(([, v]) => v != null)
 
   return {

@@ -6,13 +6,16 @@ import type { InspectState } from './state.svelte.js'
 import type { ValueType } from './util.js'
 
 export type InspectProps = {
-  value?: unknown
-  name?: string
   /**
-   * Called whenever a node is collapsed or expanded
-   * @param state
+   * Any value of any type to be inspected
    */
-  onCollapseChange?: (state: InspectState) => void
+  value?: unknown
+  /**
+   * Name of inspected value. Will be displayed as the "key" of the value.
+   *
+   * @see {@link InspectOptions.expandPaths}
+   */
+  name?: string
   debug?: boolean
 } & Partial<InspectOptions> &
   SvelteHTMLElements['div']
