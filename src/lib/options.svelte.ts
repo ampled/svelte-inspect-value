@@ -1,5 +1,7 @@
 import { getContext, setContext } from 'svelte'
+import type { InspectState } from './state.svelte.js'
 import type { CustomComponents } from './types.js'
+import { clamp } from './util.js'
 
 export const OPTIONS_CONTEXT = Symbol('inspect-options')
 export const GLOBAL_OPTIONS_CONTEXT = Symbol('inspect-options')
@@ -250,7 +252,6 @@ export function mergeOptions(
   fromContext: Partial<InspectOptions> = {}
 ): InspectOptions {
   const definedPropOptions = Object.entries(fromProps).filter(([, v]) => v != null)
-
   return {
     ...DEFAULT_OPTIONS,
     ...fromContext,
@@ -261,7 +262,7 @@ export function mergeOptions(
 export function createOptions(options: () => InspectOptions) {
   const transitionDuration = $derived(options().noanimate ? 0 : 200)
   // this could be Infinity but let's set a cap just to be sure
-  const expandLevel = $derived(options().expandAll ? 100 : options().expandLevel)
+  const expandLevel = $derived(clamp(options().expandAll ? 30 : options().expandLevel, 0, 30))
 
   return {
     get value() {

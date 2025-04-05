@@ -285,3 +285,7 @@ export function sortProps(props: InspectProps) {
 
   return [out, restProps]
 }
+
+export function clamp(value: number, min: number, max: number) {
+  return Math.min(Math.max(value, min), max)
+}

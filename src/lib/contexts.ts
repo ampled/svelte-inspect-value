@@ -11,7 +11,6 @@ export function useValueCache<T = unknown>() {
   return getContext<SvelteMap<string, T>>(VALUE_CACHE)
 }
 
-
 export function getPreviewLevel(): number {
   return getContext(Symbol.for('siv.preview-level')) ?? 0
 }
