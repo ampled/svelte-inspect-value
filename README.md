@@ -20,7 +20,7 @@ Install `svelte-inspect-value` with your favourite package manager.
 
 ```html
 <script>
-  import { Inspect } from 'svelte-inspect-value'
+  import Inspect from 'svelte-inspect-value'
 </script>
 
 <Inspect value="hello world" />
@@ -40,32 +40,30 @@ Install `svelte-inspect-value` with your favourite package manager.
   - `Class`
 - customizable theming
 - syntax highlighting for functions and html elements using hljs
-- use custom components to override how certain types are shown
 - embed media if a string value is a link / path ending with an embeddable image or audio file extension (disabled by default)
 
 ### Props
 
-| **Name**         | **Type**             | **Description**                                                                                                                                                                                                                    | **Default** |
-| ---------------- | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| value            | any                  | value to inspect. can be any javascript value                                                                                                                                                                                      | `undefined` |
-| name             | string               | name of outer value. displayed as key                                                                                                                                                                                              | `undefined` |
-| **Options**      |                      | _Can also be set using `setGlobalInspectOptions` or `InspectOptionsProvider`_                                                                                                                                                      |
-| stringCollapse   | boolean              | set a max display length for string values. 0 means full string will be displayed                                                                                                                                                  | `0`         |
-| showLength       | boolean              | display length of arrays or strings and number of nested entries in objects / maps etc                                                                                                                                             | `true`      |
-| showTypes        | boolean              | display type labels before values e.g. "string" / "number." Mainly affects basic primitive types                                                                                                                                   | `true`      |
-| showPreview      | boolean              | display preview of nested values of object, array, map, set etc.                                                                                                                                                                   | `true`      |
-| showTools        | boolean              | display row of utility-"tools" when hovering an entry                                                                                                                                                                              | `true`      |
-| noanimate        | boolean              | disable animations / transitions                                                                                                                                                                                                   | `false`     |
-| embedMedia       | boolean              | embed images and audio if a string value is a path or url that ends with an image or audio file extension                                                                                                                          | `false`     |
-| theme            | string               | set color theme class available built-in themes: 'drak','stereo','dark','light','cotton-candy'                                                                                                                                     | `'inspect'` |
-| expandAll        | boolean              | initially expand all nodes. can be a performance hitch with a lot of entries                                                                                                                                                       | `false`     |
-| expandLevel      | number               | default level of initially expanded nested nodes                                                                                                                                                                                   | `1`         |
-| expandPaths      | array                | array of (string) paths to initially expanded nodes                                                                                                                                                                                | `[ ]`       |
-| borderless       | boolean              | remove background color, border and padding                                                                                                                                                                                        | `false`     |
-| quotes           | `'single'\|'double'` | quote type for string values. 'single' or 'double'                                                                                                                                                                                 | `'single'`  |
-| customComponents | object               | custom components for values. object with type as keyname and arry of component, optional prop modification function and predicate that reverts to default component if it returns false                                           | `{}`        |
-| elementView      | `'simple'\|'full'`   | determines what properties are shown when inspecting html elements. <br/> `simple` renders a minimal view with class, styles, dataset, dimensions and scroll positions.<br/>`full` renders all enumerable properties of an element | `'simple'`  |
-| renderIf         | `any \| () => any`   | render `Inspect` if value or return value is truthy                                                                                                                                                                                | `true`      |
-| parseJson        | boolean              | if enabled, attempt to parse strings that start with `'{'` or `'['` and display the parsed value if it was valid JSON                                                                                                              | `false`     |
+| **Name**       | **Type**                     | **Description**                                                                                           | **Default** |
+| -------------- | ---------------------------- | --------------------------------------------------------------------------------------------------------- | ----------- |
+| value          | any                          | value to inspect. can be any javascript value                                                             | `undefined` |
+| name           | string                       | name of outer value. displayed as key                                                                     | `undefined` |
+| **Options**    |                              | _Can also be set using `setGlobalInspectOptions` or `InspectOptionsProvider`_                             |
+| stringCollapse | boolean                      | set a max display length for string values. 0 means full string will be displayed                         | `0`         |
+| showLength     | boolean                      | display length of arrays or strings and number of nested entries in objects / maps etc                    | `true`      |
+| showTypes      | boolean                      | display type labels before values e.g. "string" / "number." Mainly affects basic primitive types          | `true`      |
+| showPreview    | boolean                      | display preview of nested values of object, array, map, set etc.                                          | `true`      |
+| showTools      | boolean                      | display row of utility-"tools" when hovering an entry                                                     | `true`      |
+| noanimate      | boolean                      | disable animations / transitions                                                                          | `false`     |
+| embedMedia     | boolean                      | embed images and audio if a string value is a path or url that ends with an image or audio file extension | `false`     |
+| theme          | string                       | set color theme class available built-in themes: inspect,drak,stereo,dark,light                           | `'inspect'` |
+| expandAll      | boolean                      | initially expand all nodes. can be a performance hitch with a lot of entries                              | `false`     |
+| expandLevel    | number                       | default level of initially expanded nested nodes                                                          | `1`         |
+| expandPaths    | array                        | array of (string) paths to initially expanded nodes                                                       | `[ ]`       |
+| borderless     | boolean                      | remove background color, border and padding                                                               | `false`     |
+| quotes         | `'single'\|'double'\|'none'` | quote type for string values.                                                                             | `'single'`  |
+| elementView    | `'simple'\|'full'`           | determines what properties are shown when inspecting html elements.                                       | `'simple'`  |
+| renderIf       | `any \| () => any`           | render `Inspect` if value or return value is truthy                                                       | `true`      |
+| parseJson      | boolean                      | if enabled, parse strings that start with `'{'` or `'['` and display the parsed value                     | `false`     |
 
 [Full list of props here](https://inspect.eirik.space/getting-started#props)
