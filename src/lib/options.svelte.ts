@@ -102,11 +102,11 @@ export type InspectOptions = {
   /**
    * Set color theme class
    *
-   * Available themes: `'inspect'|'drak'|'monokai'|'default-dark'|'default-light'|'solarized-dark'|'cotton-candy'`
+   * Available themes: `'inspect'|'drak'|'stereo'|'dark'|'light'|'plain'|'cotton-candy'`
    *
    * @default 'inspect'
    */
-  theme: string
+  theme: ('inspect' | 'drak' | 'stereo' | 'dark' | 'light' | 'plain') | (string & {})
   /**
    * Expand all expandable nodes by default
    *
