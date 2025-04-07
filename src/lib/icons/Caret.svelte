@@ -3,7 +3,7 @@
   import { flashOnUpdate, type FlashFn } from '../action/update-flash.svelte.js'
   import { useOptions } from '../options.svelte.js'
 
-  type Props = { value: unknown } & SVGAttributes<SVGElement>
+  type Props = { value?: unknown } & SVGAttributes<SVGElement>
 
   const { value, ...svgAttributes }: Props = $props()
 

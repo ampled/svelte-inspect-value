@@ -4,22 +4,13 @@
   import { DEV } from 'esm-env'
 
   import { page } from '$app/stores'
+  import { globalValues } from '$lib/global.svelte.js'
+  import GlobalInspect from '$lib/GlobalInspect.svelte'
   import Inspect from '$lib/Inspect.svelte'
   import InspectOptionsProvider from '$lib/InspectOptionsProvider.svelte'
   import { setGlobalInspectOptions, type InspectOptions } from '$lib/options.svelte.js'
   import { setContext } from 'svelte'
   import GlobalOptions from './GlobalOptions.svelte'
-
-  // onNavigate((navigation) => {
-  //   if (!document.startViewTransition) return
-
-  //   return new Promise((resolve) => {
-  //     document.startViewTransition(async () => {
-  //       resolve()
-  //       await navigation.complete
-  //     })
-  //   })
-  // })
 
   const { children } = $props()
 
@@ -66,6 +57,11 @@
   setGlobalInspectOptions(() => ({}))
 
   setContext('set-global-option', setOption)
+  $effect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    $page.route.id
+    globalValues.set('page', () => $page)
+  })
 </script>
 
 <svelte:window {onkeydown} />
@@ -120,6 +116,8 @@
       </ul>
     </nav>
     <main>
+      <GlobalInspect value={options} name="globalOptions" position={['middle', 'right']} />
+
       {@render children()}
       <GlobalOptions bind:options />
     </main>
