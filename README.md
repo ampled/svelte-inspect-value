@@ -18,7 +18,7 @@ It aims to be a valuable devtool for monitoring state and debugging.
 
 Install `svelte-inspect-value` with your favourite package manager.
 
-```html
+```svelte
 <script>
   import Inspect from 'svelte-inspect-value'
 
@@ -26,7 +26,7 @@ Install `svelte-inspect-value` with your favourite package manager.
   let age = $state(42)
 </script>
 
-<Inspect value="{name,age}" />
+<Inspect value={{ name, age }} />
 <!-- or -->
 <Inspect.Values {name} {age} />
 ```
