@@ -1,7 +1,7 @@
 import { setContext } from 'svelte'
 import ValuesBase from './InspectValues.svelte'
 import type { InspectOptions } from './options.svelte.js'
-import type { InspectValuesOptions, IntRange, Prettify } from './types.js'
+import type { InspectValuesOptions, IntRange } from './types.js'
 
 export type ConfigurableOptions = () => Partial<InspectValuesOptions>
 
@@ -11,23 +11,63 @@ type ExpandRange = IntRange<0, 11>
 type ExpandKey = `Expand${ExpandRange}`
 
 export type Configurable<T> = T & {
+  /**
+   * Configure `Inspect.Values` or other variants created with `withOptions` or `configured`
+   *
+   * The component will also inherit options set with `setGlobalInspectOptions` or `InspectOptionsProvider`.
+   *
+   * "Global" options will be overriden by options passed to this method.
+   *
+   * @example
+   * ```svelte
+   * <script>
+   *  import Inspect from 'svelte-inspect-value'
+   *
+   *  const InspectValues = Inspect.withOptions(() => ({ theme: 'plain', showPreview: false }))
+   *  const Ins = InspectValues.withOptions(() => ({ showTypes: false })) // inherits from InspectValues
+   *
+   *  let str = 'hi'
+   *  let obj = {}
+   * </script>
+   *
+   * <InspectValues {str} {obj} arr={[1,2,3]} />
+   * ```
+   */
   withOptions: (options: ConfigurableOptions) => Configurable<T>
-  configure: (options: ConfigurableOptions) => Configurable<T>
-  /** Initially expand all props */
+  /** Initially expand all nodes (max 30) */
   ExpandAll: Configurable<T>
 } & {
   [key in ExpandKey]: Configurable<T>
 } & {
+  /**
+   * Use chainable inline configuration in a template.
+   * Complete configuration and return component with `Ok`
+   *
+   * Will override global options and options passed with `withOptions`
+   *
+   * @example
+   * ```svelte
+   * <script>
+   *  import Inspect from 'svelte-inspect-value'
+   *  import data from './data.js'
+   * </script>
+   *
+   * <Inspect.Values.Expand0.Config.Borderless.DoubleQuotes.DarkTheme.Ok
+   *  {data}
+   * />
+   * ```
+   */
   Config: InlineConfig<T>
 }
 
 export type InlineConfig<T> = {
   [key in keyof typeof optionProps]: InlineConfig<T>
 } & {
+  /**
+   * Finish inline configuration and return component
+   */
   Ok: Configurable<T>
 }
-
-type A = Prettify<InlineConfig<typeof ValuesBase>>
 
 const optionProps = {
   DarkTheme: { theme: 'dark' },

@@ -106,7 +106,7 @@ describe('inspect values', () => {
     unmount()
   })
 
-  test('it can be configured using inline chainable props', async () => {
+  test('it can be configured using inline chainable configuration', async () => {
     const { unmount } = render(Inspect.Values.Config.PlainTheme.NoLength.NoAnimate.Ok, {
       props: { test: { test: '123456' } },
       context: new Map([
@@ -116,15 +116,8 @@ describe('inspect values', () => {
 
     const inspect = screen.getByTestId('inspect')
 
-    console.log(inspect.className)
-
     expect(inspect).toHaveClass('plain')
     expect(inspect).toHaveClass('noanimate')
-
-    // const key = screen.getByTestId('key')
-    // const value = screen.queryByTestId('value')
-    // expect(value).toBe(null) // no value (123456) has been rendered
-    // expect(key).toHaveTextContent('test')
 
     unmount()
   })

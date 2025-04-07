@@ -4,6 +4,19 @@ import InspectBase from './Inspect.svelte'
 import { setGlobalInspectOptions } from './options.svelte.js'
 ;(InspectBase as unknown as { Values: typeof InspectValues }).Values = InspectValues
 
+/**
+ * Value-inspector component.
+ *
+ * @example
+ * ```svelte
+ * <script>
+ *  import Inspect from 'svelte-inspect-value'
+ *  import data from './data.js'
+ * </script>
+ *
+ * <Inspect value={data} />
+ * ```
+ */
 export const Inspect = InspectBase as typeof InspectBase & {
   /**
    * Another version of `Inspect` that will inspect any value passed to it instead of using the `value`-prop.
@@ -13,13 +26,13 @@ export const Inspect = InspectBase as typeof InspectBase & {
    * <script>
    *  import Inspect from 'svelte-inspect-value'
    *
-   *  const DarkInspect = Inspect.Values.withOptions(() => ({ theme: 'dark' }))
+   *  const InspectValues = Inspect.Values.withOptions(() => ({ theme: 'dark' }))
    *
    *  let str = 'hi'
    *  let obj = { a: 1 }
    * </script>
    *
-   * <Inspect.Values {str} {obj} arr={[1,2,3]} />
+   * <InspectValues {str} {obj} arr={[1,2,3]} />
    *
    * <DarkInspect {...obj} />
    * ```
