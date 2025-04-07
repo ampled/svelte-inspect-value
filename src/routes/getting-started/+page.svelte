@@ -94,7 +94,7 @@ Result:
 
 <p>
   <code>Inspect.Values</code> and configured variants can all have <code>expandLevel</code> set by using
-  "Expand" properties from 0 to 30 (default 1.)
+  "Expand" properties from 0 to 10 (default 1.)
 </p>
 
 Result:
