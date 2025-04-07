@@ -28,7 +28,7 @@ Install `svelte-inspect-value` with your favourite package manager.
 
 <Inspect value="{{name,age}}" />
 <!-- or -->
-<Inspect.Values {name} {age}></Inspect.Values>
+<Inspect.Values {name} {age} />
 ```
 
 ### Features
