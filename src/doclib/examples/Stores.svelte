@@ -54,6 +54,16 @@
       s()
     }
   })
+
+  const stores = $derived({
+    writableStore: writable('i am the store value'),
+    readableStore: readable({ a: { b: { c: { d: { e: 'end' } } } } }),
+    customStore: customStore(0),
+    clickObservable: eventObservable,
+    fakeStore: {
+      subscribe: () => 'hi',
+    },
+  })
 </script>
 
 <div class="flex col">
@@ -66,18 +76,7 @@
     throws an error the store will be displayed as a regular object using the default object-view.
   </p>
 
-  <Inspect
-    value={{
-      writableStore: writable('i am the store value'),
-      readableStore: readable({ a: { b: { c: { d: { e: 'end' } } } } }),
-      customStore: customStore(0),
-      clickObservable: eventObservable,
-      fakeStore: {
-        subscribe: () => 'hi',
-      },
-    }}
-    name="stores"
-  />
+  <Inspect.Values.Expand0 {...stores} />
 
   <p>
     This can be enabled / disabled with the <code>stores</code>-prop:

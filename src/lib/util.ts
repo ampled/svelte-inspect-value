@@ -1,6 +1,13 @@
-import type { Component } from 'svelte'
+import { setContext, type Component } from 'svelte'
 import type { Readable } from 'svelte/store'
-import { type InspectOptions, OPTIONS_KEYS } from './options.svelte.js'
+import { initValueCache } from './contexts.js'
+import {
+  OPTIONS_CONTEXT,
+  OPTIONS_KEYS,
+  type InspectOptions,
+  type OptionsContext,
+} from './options.svelte.js'
+import { STATE_CONTEXT_KEY, type StateContext } from './state.svelte.js'
 import type {
   CustomComponentEntry,
   CustomComponentPredicate,
@@ -8,6 +15,12 @@ import type {
   InspectProps,
   KeyType,
 } from './types.js'
+
+export function initialize(opts: OptionsContext, state: StateContext) {
+  setContext(OPTIONS_CONTEXT, opts)
+  setContext(STATE_CONTEXT_KEY, state)
+  initValueCache()
+}
 
 export function getType(value: unknown, stores: boolean = false) {
   const t = typeOf(value)

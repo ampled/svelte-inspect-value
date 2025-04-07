@@ -33,10 +33,5 @@
   <h3 id="classes">Classes</h3>
   <p>Display "static" properties of classes</p>
 
-  <Inspect
-    value={{
-      class: Greeter,
-      classInstance: new Greeter('world'),
-    }}
-  />
+  <Inspect.Values.Expand0 {...{ class: Greeter, classInstance: new Greeter('world') }} />
 </div>

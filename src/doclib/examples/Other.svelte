@@ -66,5 +66,5 @@
     are updated (enabled / disabled with the <code>flashOnUpdate</code>-prop)
   </p>
 
-  <Inspect {value} />
+  <Inspect.Values.Expand0 {...value} />
 </div>

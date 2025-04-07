@@ -21,9 +21,14 @@ Install `svelte-inspect-value` with your favourite package manager.
 ```html
 <script>
   import Inspect from 'svelte-inspect-value'
+
+  let name = $state('')
+  let age = $state(42)
 </script>
 
-<Inspect value="hello world" />
+<Inspect value="{{name,age}}" />
+<!-- or -->
+<Inspect.Values {name} {age}></Inspect.Values>
 ```
 
 ### Features
@@ -56,7 +61,7 @@ Install `svelte-inspect-value` with your favourite package manager.
 | showTools      | boolean                      | display row of utility-"tools" when hovering an entry                                                     | `true`      |
 | noanimate      | boolean                      | disable animations / transitions                                                                          | `false`     |
 | embedMedia     | boolean                      | embed images and audio if a string value is a path or url that ends with an image or audio file extension | `false`     |
-| theme          | string                       | set color theme class available built-in themes: inspect,drak,stereo,dark,light                           | `'inspect'` |
+| theme          | string                       | set color theme class available built-in themes: inspect,drak,stereo,dark,light,plain                     | `'inspect'` |
 | expandAll      | boolean                      | initially expand all nodes. can be a performance hitch with a lot of entries                              | `false`     |
 | expandLevel    | number                       | default level of initially expanded nested nodes                                                          | `1`         |
 | expandPaths    | array                        | array of (string) paths to initially expanded nodes                                                       | `[ ]`       |
@@ -67,3 +72,8 @@ Install `svelte-inspect-value` with your favourite package manager.
 | parseJson      | boolean                      | if enabled, parse strings that start with `'{'` or `'['` and display the parsed value                     | `false`     |
 
 [Full list of props here](https://inspect.eirik.space/getting-started#props)
+
+# Acknowledgements
+
+- the "drak"-theme is based on the [dracula](https://draculatheme.com/) color scheme
+- the "stereo"-theme is based on the [monokai](https://monokai.pro/) color scheme

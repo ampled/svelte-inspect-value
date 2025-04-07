@@ -29,6 +29,7 @@
     keyStyle?: HTMLButtonAttributes['style']
     showKey?: boolean
     bracketStyle?: string
+    usedefaults?: boolean
   } & SvelteHTMLElements['div']
 
   let {
@@ -47,6 +48,7 @@
     showPreview = false,
     class: classValue,
     bracketStyle = '',
+    usedefaults,
     ...rest
   }: PreviewProps = $props()
 
@@ -146,7 +148,7 @@
 {#snippet valuePreview(value: unknown, key?: KeyType)}
   {@const valType = getType(value, options.value.stores)}
   {#if alwaysRender(valType) || previewLevel < previewDepth}
-    <Node {path} {key} {value} {showKey} {keyDelim} {keyStyle} />
+    <Node {path} {key} {value} {showKey} {keyDelim} {keyStyle} {usedefaults} />
   {:else}
     <div class="key-type-preview">
       {#if showKey}

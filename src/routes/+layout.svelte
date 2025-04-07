@@ -6,7 +6,7 @@
   import { page } from '$app/stores'
   import Inspect from '$lib/Inspect.svelte'
   import InspectOptionsProvider from '$lib/InspectOptionsProvider.svelte'
-  import { type InspectOptions } from '$lib/options.svelte.js'
+  import { setGlobalInspectOptions, type InspectOptions } from '$lib/options.svelte.js'
   import { setContext } from 'svelte'
   import GlobalOptions from './GlobalOptions.svelte'
 
@@ -28,7 +28,8 @@
     { href: '/examples', title: 'Examples' },
     { href: '/custom', title: 'Custom components', devonly: true },
     { href: '/theming', title: 'Theming' },
-    { href: '/alltypes', title: 'alltypes', devonly: true },
+    { href: '/alltypes', title: 'All Types', devonly: true },
+    { href: '/testing', title: 'Testing', devonly: true },
   ]
 
   let options = $state<Partial<InspectOptions>>({
@@ -62,9 +63,9 @@
     options[name] = value
   }
 
-  setContext('set-global-option', setOption)
+  setGlobalInspectOptions(() => ({}))
 
-  const _ba = [[[[[[[[[[[[[]]]]]]]]]]]]]
+  setContext('set-global-option', setOption)
 </script>
 
 <svelte:window {onkeydown} />

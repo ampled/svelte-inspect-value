@@ -1,0 +1,36 @@
+<script>
+ import Inspect from 'svelte-inspect-value'
+ import data from './data.js'
+</script>
+
+<Inspect.Values.Config.PlainTheme.ParseJSON.Borderless.NoAnimate.Ok {data} />
+<!--            ^ start inline config                            ^ end config
+
+Available inline configurations:
+
+DarkTheme
+LightTheme
+DrakTheme
+StereoTheme
+DefaultTheme
+PlainTheme
+Borderless
+Border
+NoAnimate
+Animate
+ExpandAll
+NoTools
+ShowTools
+NoLength
+ShowLength
+NoTypes
+ShowTypes
+NoPreview
+ShowPreview
+ParseJSON
+EmbedMedia
+Stores
+NoStores
+SingleQuotes
+DoubleQuotes
+NoQuotes -->

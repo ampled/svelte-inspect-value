@@ -1,0 +1,23 @@
+<script>
+ import Inspect, {configured} from 'svelte-inspect-value'
+ import data from './data.js'
+
+  const InspectVals = Inspect.Values.withOptions(() => ({ expandLevel: 0 }))
+
+  // elementAttributes will be to applied to outermost Inspect div
+  const DarkInspect = configured(() => ({ 
+    theme: 'dark',
+    elementAttributes: { style: 'max-width: 500px' } 
+  }))
+
+  // create another variation that will inherit from the previous one 
+  const DarkBorderless = DarkInspect.withOptions(() => ({ borderless: true }))
+</script>
+
+<InspectVals msg="i have been configured" {data} />
+
+<!-- Override initial expandLevel using ".Expand[1-10]"  -->
+<DarkInspect.Expand0 msg="me too" {data} />
+
+<!-- spread properties of data as individiual values -->
+<DarkBorderless.Expand1 msg="i inherit options from DarkInspect" {...data} />

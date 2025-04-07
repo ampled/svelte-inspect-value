@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Inspect } from '$lib/index.js'
+  import _Inspect from '$lib/index.js'
   import { getContext } from 'svelte'
   import type { SvelteMap } from 'svelte/reactivity'
   import Code from '../Code.svelte'
@@ -17,8 +17,23 @@
     }
   }
 
-  let value = $state({
+  async function* suspensefulFibonacci() {
+    let current = 1
+    let next = 1
+    while (true) {
+      await new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(undefined)
+        }, 1000)
+      })
+      yield current
+      ;[current, next] = [next, current + next]
+    }
+  }
+
+  let iterators = $state({
     fibonacci: fibonacci(),
+    suspensefulFibonacci: suspensefulFibonacci(),
     array: [1, 2, 3, 4].values(),
     set: new Set([12, 34, 45]).values(),
     map: new Map<unknown, unknown>([
@@ -39,6 +54,12 @@
   })
 
   getContext<SvelteMap<string, string>>('toc')?.set('Iterators & Generators', 'iterators')
+
+  const Inspect = _Inspect.Values.withOptions(() => ({
+    expandLevel: 0,
+    previewDepth: 20,
+    previewEntries: Infinity,
+  }))
 </script>
 
 <div class="flex col">
@@ -50,12 +71,8 @@
       <!-- eslint-disable-next-line svelte/no-at-html-tags -->
       {@html code}
     </Code>
-    <Inspect
-      name="iteratorsAndGenerators"
-      style="flex-basis: 50%"
-      {value}
-      previewEntries={10}
-      previewDepth={2}
-    />
+    <div style="flex-basis: 50%">
+      <Inspect {...iterators} />
+    </div>
   </Stack>
 </div>

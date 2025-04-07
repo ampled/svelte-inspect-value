@@ -3,19 +3,24 @@
   import Inspect from '$lib/Inspect.svelte'
   import { SvelteMap } from 'svelte/reactivity'
   import Code from '../../doclib/Code.svelte'
+  import ConfiguredExample from '../../doclib/examples/ConfiguredExample.svelte'
   import globalConfigCode from '../../doclib/examples/globalconfig.txt?raw'
   import globalConfigCodeLayout from '../../doclib/examples/globalconfiglayout.txt?raw'
+  import inlineconfigcode from '../../doclib/examples/inlineconfig.txt?raw'
   import MinimalExample from '../../doclib/examples/MinimalExample.svelte'
-
-  let packageName = 'svelte-inspect-value'
-
   import minimalcode from '../../doclib/examples/minimalexample.txt?raw'
+  import MinimalExampleValues from '../../doclib/examples/MinimalExampleValues.svelte'
   import MultiCode from '../../doclib/examples/MultiCode.svelte'
 
+  let { data } = $props()
+  let { minimalCode, valuesCode, configuredCode } = $derived(data.codeSamples)
+
+  const packageName = 'svelte-inspect-value'
   let stringCollapse = $state(20)
 
   const toc = new SvelteMap<string, string>([
     ['Usage & Conditional Rendering', 'usage'],
+    ['Inspect.Values', 'values'],
     ['Global Options', 'global'],
     ['Props', 'props'],
   ])
@@ -44,12 +49,69 @@
   for checking conditional environment variables with different bundlers and runtimes.
 </p>
 
-<Code code={minimalcode} />
+<Code code={minimalcode}>
+  <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+  {@html minimalCode}
+</Code>
 
 Result:
 <div class="center">
   <MinimalExample />
 </div>
+
+<h2 id="values">Inspect.Values</h2>
+
+<p>
+  The basic <code>Inspect</code> component is a "single value"-inspector, meaning it can only have
+  one "root" node. If you have multiple values you want to inspect, you can pack the values into an
+  object and array and pass it to the <code>value</code>-prop. Another solution is passing the
+  values as props to <code>Inspect.Values</code>:
+</p>
+
+<Code code={valuesCode}>
+  <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+  {@html valuesCode}
+</Code>
+
+Result:
+<div class="center">
+  <MinimalExampleValues />
+</div>
+
+<p>
+  <code>Inspect.Values</code> does not accept any configuration props since any value passed as a
+  prop will simply be inspected. If you want to change the behavior of <code>Inspect.Values</code>
+  you can use <a href="#global">global options</a> or define a pre-configured version of the
+  component with
+  <code>Inspect.Values.withOptions</code>
+  or the <code>configured</code>-function:
+</p>
+
+<Code code={configuredCode}>
+  <!-- eslint-disable-next-line svelte/no-at-html-tags -->
+  {@html configuredCode}
+</Code>
+
+<p>
+  <code>Inspect.Values</code> and configured variants can all have <code>expandLevel</code> set by using
+  "Expand" properties from 0 to 30 (default 1.)
+</p>
+
+Result:
+<div class="center">
+  <ConfiguredExample />
+</div>
+
+<h3>Chainable inline configuration</h3>
+
+<p>
+  A final method to configuring <code>Inspect.Values</code> that will override global options and
+  <code>withOptions</code>-variations is "chainable inline configuration":
+</p>
+
+<Code code={inlineconfigcode} />
+
+<p></p>
 
 <h2 id="global">Global Options</h2>
 
@@ -82,7 +144,10 @@ Result:
 </label>
 <Inspect value={'no long strings in this neighbourhood thanks'} {stringCollapse} />
 
-<p>Options set with props will override any global options</p>
+<p>
+  Options set with props, <code>withOptions</code> or <code>configured</code> will override any global
+  options
+</p>
 
 <h2 id="props">Props</h2>
 
@@ -110,7 +175,7 @@ Result:
     <tr>
       <th>Options</th>
       <th colspan="2"
-        >The following props can be set using <code>setGlobalInspectOptions</code> or
+        >The following props can also be set using <code>setGlobalInspectOptions</code> or
         <code>InspectOptionsProvider</code></th
       >
     </tr>

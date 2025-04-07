@@ -1,17 +1,18 @@
 <script lang="ts">
-  import { getContext, setContext } from 'svelte'
-  import Root from './Root.svelte'
+  import { getContext } from 'svelte'
+  import Node from './components/Node.svelte'
   import {
     createOptions,
     GLOBAL_OPTIONS_CONTEXT,
     mergeOptions,
-    OPTIONS_CONTEXT,
     type InspectOptions,
   } from './options.svelte.js'
-  import type { InspectProps } from './types.js'
-  import { sortProps } from './util.js'
+  import { createState } from './state.svelte.js'
+  import { type InspectProps } from './types.js'
+  import { initialize, sortProps } from './util.js'
+  import Wrapper from './Wrapper.svelte'
 
-  let { value, name, ...props }: InspectProps = $props()
+  let { value, name, class: classValue, ...props }: InspectProps = $props()
 
   let [optionsProps, restProps] = $derived(sortProps(props))
 
@@ -27,15 +28,27 @@
   )
 
   let options = createOptions(() => mergedOptions)
-  setContext(OPTIONS_CONTEXT, options)
+
+  let { theme, noanimate, borderless, onCollapseChange } = $derived(options.value)
+
+  let initState = $state({})
+  const inspectState = createState(initState, (state) => onCollapseChange?.(state))
 
   let shouldRender = $derived(
     typeof options.value.renderIf === 'function'
       ? Boolean(options.value.renderIf())
       : Boolean(options.value.renderIf)
   )
+
+  initialize(options, inspectState)
 </script>
 
 {#if shouldRender}
-  <Root {value} {name} {...restProps} />
+  <Wrapper
+    data-testid="inspect"
+    class={[classValue, theme, noanimate && 'noanimate', borderless && 'borderless']}
+    {...restProps}
+  >
+    <Node {value} key={name} />
+  </Wrapper>
 {/if}

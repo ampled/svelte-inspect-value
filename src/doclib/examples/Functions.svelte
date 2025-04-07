@@ -5,7 +5,31 @@
 
   getContext<SvelteMap<string, string>>('toc')?.set('Functions', 'functions')
 
+  function* fibonacci() {
+    let current = 1
+    let next = 1
+    while (true) {
+      yield current
+      ;[current, next] = [next, current + next]
+    }
+  }
+
+  async function* suspensefulFibonacci() {
+    let current = 1
+    let next = 1
+    while (true) {
+      await new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(undefined)
+        }, 1000)
+      })
+      yield current
+      ;[current, next] = [next, current + next]
+    }
+  }
+
   const arrowFunction = eval(`(num) => num * 2`)
+  const asyncFn = eval(`async (num) => num * 2`)
   const someFunction = eval(`(function someFunction(some, thing) {
         if (!some) return thing
         const obj = {
@@ -29,11 +53,12 @@
   <h3 id="functions">Functions</h3>
   <p>Display bodies of functions with <code>hljs</code> syntax highlighting.</p>
 
-  <Inspect
-    name="functions"
-    value={{
-      arrowFunction,
-      someFunction,
-    }}
+  <Inspect.Values.Expand0
+    {arrowFunction}
+    {asyncFn}
+    {someFunction}
+    generator={fibonacci}
+    asyncGenerator={suspensefulFibonacci}
+    suspensefulFibonacciTest={suspensefulFibonacci()}
   />
 </div>

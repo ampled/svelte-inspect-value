@@ -9,11 +9,5 @@
   <h3 id="multiline">Multi-line strings</h3>
   <p>Expandable view for multi-line strings</p>
 
-  <Inspect
-    style="width: 400px"
-    value={['normal boring string', 'cool \n multi-line \n  render 😎']}
-    name="strings"
-    expandLevel={2}
-    expandAll
-  />
+  <Inspect.Values normal="normal boring string" multiLine={'cool\n\tmulti-line\n\t\t\trender 😎'} />
 </div>

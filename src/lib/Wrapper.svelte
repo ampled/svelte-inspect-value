@@ -1,108 +1,25 @@
 <script lang="ts">
-  import { setContext } from 'svelte'
-  import { SvelteMap } from 'svelte/reactivity'
-  import InspectErrorView from './components/InspectErrorView.svelte'
-  import Node from './components/Node.svelte'
-  import InspectOptionsProvider from './InspectOptionsProvider.svelte'
-  import { DEFAULT_OPTIONS, useOptions } from './options.svelte.js'
-  import { createState, STATE_CONTEXT_KEY } from './state.svelte.js'
-  import { InspectError, type InspectProps } from './types.js'
+  import type { Snippet } from 'svelte'
+  import type { SvelteHTMLElements } from 'svelte/elements'
+  import NodeActionButton from './components/NodeActionButton.svelte'
 
   let {
-    value = undefined,
-    name = undefined,
-    onCollapseChange,
-    debug = false,
-    // Html Attributes
-    class: classValue = '',
+    children,
+    class: classValue,
     ...rest
-  }: InspectProps = $props()
-
-  const options = useOptions()
-  let { theme, noanimate, borderless } = $derived(options.value)
-
-  let initState = $state({})
-
-  const inspectState = createState(initState, (state) => onCollapseChange?.(state))
-
-  const valueCache = new SvelteMap<string, unknown>()
-  setContext('value-cache', valueCache)
-  setContext(STATE_CONTEXT_KEY, inspectState)
-
-  function setAllNodes(collapsed: boolean) {
-    if (inspectState.value) {
-      inspectState.value = Object.fromEntries(
-        Object.entries(inspectState.value).map(([key]) => [key, { collapsed }])
-      )
-    }
-  }
-
-  export function setAllCollapsed() {
-    options.value.expandAll = false
-    setAllNodes(true)
-  }
-  export function setAllExpanded() {
-    options.value.expandAll = true
-    setAllNodes(false)
-  }
+  }: SvelteHTMLElements['div'] & { children: Snippet } = $props()
 </script>
 
-<svelte:boundary onerror={(error) => console.error(error)}>
-  {#snippet failed(error, reset)}
-    {@const inspectError = new InspectError(
-      `Inspect instance failed. A possible cause is a hydration mismatch error.`,
-      value,
-      {
-        cause: error,
-      }
-    )}
-    <div class="svelte-inspect-value">
-      <div class="body">
-        <InspectOptionsProvider options={{ ...DEFAULT_OPTIONS, expandLevel: 0 }}>
-          <InspectErrorView value={inspectError} key="inspectRootError" path={[]} {reset} />
-          {#if debug}
-            <hr />
-            <Node
-              key="DEBUG"
-              value={{
-                state: inspectState.value,
-                options: options,
-                valueCache,
-              }}
-            />
-          {/if}
-        </InspectOptionsProvider>
-      </div>
-    </div>
-  {/snippet}
-
-  <div
-    data-testid="inspect"
-    class={[
-      'svelte-inspect-value',
-      classValue,
-      theme,
-      noanimate && 'noanimate',
-      borderless && 'borderless',
-    ]}
-    {...rest}
-  >
-    <div class="body">
-      <Node {value} key={name} />
-      {#if debug}
-        <hr />
-        <Node
-          key="DEBUG"
-          value={{
-            state: inspectState.value,
-            options: options,
-            valueCache,
-          }}
-        />
-      {/if}
-    </div>
+<div class={['svelte-inspect-value', classValue]} {...rest}>
+  <div class="body">
+    <svelte:boundary onerror={console.error}>
+      {#snippet failed(_, reset)}
+        root error (see console) <NodeActionButton onclick={reset}>reset</NodeActionButton>
+      {/snippet}
+      {@render children()}
+    </svelte:boundary>
   </div>
-</svelte:boundary>
+</div>
 
 <style>
   @import './themes.css';
@@ -207,7 +124,7 @@
   }
 
   :global .svelte-inspect-value ::selection {
-    background-color: var(--selection);
+    background-color: var(--_text-selection-background);
   }
 
   :global .svelte-inspect-value:not(.noanimate) {
@@ -479,14 +396,5 @@
   .svelte-inspect-value :global(code) {
     font-family: inherit;
     font-size: inherit;
-  }
-
-  hr {
-    all: unset;
-    display: block;
-    border-top: 2px solid var(--red);
-    min-height: 1px;
-    margin-block: 3px;
-    width: 100%;
   }
 </style>

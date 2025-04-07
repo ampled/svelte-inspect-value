@@ -9,8 +9,8 @@
 <div class="flex col">
   <h3 id="urls">URLs</h3>
 
-  <Inspect
-    value={{
+  <Inspect.Values.Expand0
+    {...{
       url: new URL('https://subdomain.example.org/about'),
       fullyFeaturedUrl: new URL(
         'https://anon:hunter2@example.org:8080/pathname/index.html?q=query&p=123&buh#result'
@@ -24,6 +24,5 @@
         ['query', 'elephants'],
       ]),
     }}
-    name="urlFeatures"
   />
 </div>

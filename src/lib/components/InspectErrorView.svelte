@@ -19,15 +19,6 @@
     reset,
   }: Props = $props()
 
-  // let entries: [string, unknown][] = $derived(
-  //   Object.entries({
-  //     message: value.message,
-  //     value: value.errorValue,
-  //     cause: value.cause,
-  //     stack: value.stack,
-  //   })
-  // )
-
   setContext(Symbol.for('siv.use-defaults'), true)
   const depth = getContext<number | undefined>(Symbol.for('siv.error-depth')) ?? 0
   setContext(Symbol.for('siv.error-depth'), depth + 1)

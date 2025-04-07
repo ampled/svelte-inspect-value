@@ -10,7 +10,7 @@
     }
   }
 
-  let value = $state({
+  let iterators = $state({
     fibonacci: fibonacci(),
     array: [1, 2, 3, 4].values(),
     set: new Set([12, 34, 45]).values(),
@@ -23,4 +23,4 @@
   })
 </script>
 
-<Inspect {value} />
+<Inspect.Values {...iterators} />

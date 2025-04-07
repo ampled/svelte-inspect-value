@@ -4,7 +4,10 @@ import type { CustomComponents } from './types.js'
 import { clamp } from './util.js'
 
 export const OPTIONS_CONTEXT = Symbol('inspect-options')
-export const GLOBAL_OPTIONS_CONTEXT = Symbol('inspect-options')
+/**
+ * Exported for tests. Use `setGlobalOptions` or `InspectOptionsProvider` instead
+ */
+export const GLOBAL_OPTIONS_CONTEXT = Symbol('inspect-global-options')
 
 export type InspectOptions = {
   /**
@@ -279,6 +282,17 @@ export function createOptions(options: () => InspectOptions) {
 
 export type OptionsContext = ReturnType<typeof createOptions>
 
+/**
+ * Set a context with configuration options for `Inspect`
+ */
+export function setGlobalInspectOptions(
+  options: () => Partial<InspectOptions>
+): Partial<InspectOptions>
+/**
+ * Set a context with configuration options for `Inspect`
+ * @deprecated pass a function that returns the options instead of an object
+ */
+export function setGlobalInspectOptions(options: Partial<InspectOptions>): Partial<InspectOptions>
 export function setGlobalInspectOptions(
   options: Partial<InspectOptions> | (() => Partial<InspectOptions>)
 ) {

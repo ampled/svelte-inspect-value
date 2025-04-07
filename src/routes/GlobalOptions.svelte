@@ -33,6 +33,7 @@
       <option>stereo</option>
       <option>dark</option>
       <option>light</option>
+      <option>plain</option>
     </select>
   </label>
 

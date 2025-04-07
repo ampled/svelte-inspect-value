@@ -1,0 +1,11 @@
+<script lang="ts">
+  import Inspect from 'svelte-inspect-value'
+
+  let number = $state(1)
+  let isEven = $derived(number % 2 === 0)
+  let doubled = $derived(number * 2)
+</script>
+
+<input type="number" bind:value={number}>
+
+<Inspect.Values {number} {isEven} {doubled}  />

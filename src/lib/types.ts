@@ -2,7 +2,6 @@
 import type { Component, ComponentProps } from 'svelte'
 import type { HTMLAttributes, SvelteHTMLElements } from 'svelte/elements'
 import type { InspectOptions } from './options.svelte.js'
-import type { InspectState } from './state.svelte.js'
 import type { ValueType } from './util.js'
 
 export type InspectProps = {
@@ -50,6 +49,12 @@ export type TypeViewProps<Value = unknown, Type = ValueType> = {
   forceType?: boolean
   note?: { title: string; description: string }
 }
+
+export type InspectValuesOptions = Partial<InspectOptions> & {
+  elementAttributes?: Partial<SvelteHTMLElements['div']>
+}
+
+export type ConfigurableOptions = () => InspectValuesOptions
 
 export type CustomComponentPropsTransformFn<TComponent extends Component<any>> = (
   props: ComponentProps<TComponent>
@@ -116,3 +121,13 @@ export type List =
   | Float64Array
   | BigInt64Array
   | BigUint64Array
+
+export type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] extends N
+  ? Acc[number]
+  : Enumerate<N, [...Acc, Acc['length']]>
+
+export type IntRange<F extends number, T extends number> = Exclude<Enumerate<T>, Enumerate<F>>
+
+export type Prettify<T> = {
+  [K in keyof T]: T[K]
+} & {}
