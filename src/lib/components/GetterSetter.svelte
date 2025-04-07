@@ -15,6 +15,7 @@
 
   type Props = TypeViewProps<unknown, 'get'> & {
     descriptor: PropertyDescriptor
+    usedefaults?: boolean
   } & HTMLAttributes<HTMLDivElement>
 
   let {
@@ -25,6 +26,7 @@
     descriptor,
     children,
     keyPrefix: _keyPrefix,
+    usedefaults,
     ...rest
   }: Props = $props()
 
@@ -191,15 +193,15 @@
     <!-- children -->
     {#if descriptor.get}
       <Entry i={0}>
-        <Node key="value" value={retrievedValue} {path} />
+        <Node key="value" value={retrievedValue} {path} {usedefaults} />
       </Entry>
       <Entry i={1}>
-        <Node key="getter" value={descriptor.get} {path} />
+        <Node key="getter" value={descriptor.get} {path} {usedefaults} />
       </Entry>
     {/if}
     {#if descriptor.set}
       <Entry i={2}>
-        <Node key="setter" value={descriptor.set} {path} />
+        <Node key="setter" value={descriptor.set} {path} {usedefaults} />
       </Entry>
     {/if}
     <!-- /children -->

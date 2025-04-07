@@ -80,12 +80,16 @@ export type CustomComponentEntry<TComponent extends Component<any> = Component<a
 export type CustomComponents = Record<string, CustomComponentEntry>
 
 export class InspectError extends Error {
-  value: unknown
+  private errorValue: unknown
+  public get value() {
+    return this.errorValue
+  }
+
   name = 'InspectError'
 
   constructor(message: string, value?: unknown, options?: ErrorOptions) {
     super(message, options)
-    this.value = value
+    this.errorValue = value
   }
 }
 
