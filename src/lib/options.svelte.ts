@@ -26,7 +26,7 @@ export type InspectOptions = {
   /**
    * Display preview of nested values
    *
-   * @Default true
+   * @default true
    */
   showPreview: boolean
   /**
