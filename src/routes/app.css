@@ -37,7 +37,7 @@
   --bg-light: var(--base07);
   --selection: var(--base02);
   --comments: var(--base03, #59456e);
-  --border-color: var(--base03, var(--comments));
+  --docs-border-color: var(--base03, var(--comments));
   --dark-fg: var(--base04);
   --fg: var(--base05, #b9a9be);
   --fg-light: var(--base06);
@@ -163,7 +163,7 @@ select {
   font-size: 12px;
   background-color: var(--bg);
   color: var(--fg);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--docs-border-color);
 }
 
 .flex {
@@ -198,7 +198,7 @@ select {
 
 button {
   all: unset;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--docs-border-color);
   font-size: 12px;
   padding: 0.5em;
   border-radius: 4px;
@@ -206,12 +206,12 @@ button {
   transition: all 100ms linear;
 
   &:hover:not(:disabled) {
-    background-color: var(--border-color);
+    background-color: var(--docs-border-color);
   }
 
   &:disabled {
     cursor: auto;
-    color: var(--border-color);
+    color: var(--docs-border-color);
   }
 }
 
@@ -252,7 +252,7 @@ button.unstyled {
   cursor: pointer;
 
   &:disabled {
-    color: var(--border-color);
+    color: var(--docs-border-color);
   }
 }
 
@@ -321,7 +321,7 @@ button.unstyled {
 
   &:hover {
     background-color: var(--bg);
-    /* border-color: var(--border-color);
+    /* border-color: var(--docs-border-color);
     border-width: 1px 0 1px 1px;
     border-style: solid; */
     opacity: 1;
@@ -335,7 +335,7 @@ button.unstyled {
 
     hr {
       opacity: 0;
-      border-color: var(--border-color);
+      border-color: var(--docs-border-color);
     }
   }
 

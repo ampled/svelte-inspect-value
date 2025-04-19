@@ -83,7 +83,7 @@
     background-color: #1e2c3e;
     border-radius: 8px;
     overflow: hidden;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--docs-border-color);
   }
 
   .wrapper:focus-within {

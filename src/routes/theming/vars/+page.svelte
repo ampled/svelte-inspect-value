@@ -26,17 +26,17 @@
     font-family: monospace;
     text-align: left;
     border-collapse: collapse;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--docs-border-color);
     font-size: 14px;
   }
 
   td,
   th {
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--docs-border-color);
     padding: 0.5em;
   }
 
   .varname {
-    width: 300px;
+    width: 400px;
   }
 </style>

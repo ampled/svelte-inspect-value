@@ -68,7 +68,7 @@
   .code {
     position: relative;
     border-radius: 8px;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--docs-border-color);
     background-color: var(--bg-code);
     font-size: 12px;
     overflow: hidden;
@@ -96,8 +96,8 @@
     right: 0;
     border-radius: 0 8px 0 8px;
     background-color: var(--bg-lighter);
-    border-left: 1px solid var(--border-color);
-    border-bottom: 1px solid var(--border-color);
+    border-left: 1px solid var(--docs-border-color);
+    border-bottom: 1px solid var(--docs-border-color);
     padding-block: 0.25em;
     font-size: 12px;
     padding-inline: 0.5em;
