@@ -1,9 +1,7 @@
-import { setContext } from 'svelte'
+import { setContext, type Component } from 'svelte'
 import ValuesBase from './InspectValues.svelte'
 import type { InspectOptions } from './options.svelte.js'
-import type { InspectValuesOptions, IntRange } from './types.js'
-
-export type ConfigurableOptions = () => Partial<InspectValuesOptions>
+import type { ConfigurableOptions, IntRange } from './types.js'
 
 type ExpandRange = IntRange<0, 11>
 
@@ -37,6 +35,9 @@ export type Configurable<T> = T & {
   /** Initially expand all nodes (max 30) */
   ExpandAll: Configurable<T>
 } & {
+  /**
+   * Set initial ExpandLevel
+   */
   [key in ExpandKey]: Configurable<T>
 } & {
   /**
@@ -69,7 +70,7 @@ export type InlineConfig<T> = {
   Ok: Configurable<T>
 }
 
-const optionProps = {
+export const optionProps = {
   DarkTheme: { theme: 'dark' },
   LightTheme: { theme: 'light' },
   DrakTheme: { theme: 'drak' },
@@ -117,7 +118,9 @@ const optionProps = {
 
 export function createConfigurable<T>(
   component: Configurable<T>,
-  inheritOptions: ConfigurableOptions
+  inheritOptions: ConfigurableOptions,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  returnComponent: Component<any, any, any> = ValuesBase
 ): Configurable<T> {
   // declare
   component.withOptions = function (options: ConfigurableOptions) {
@@ -128,7 +131,7 @@ export function createConfigurable<T>(
     function wrapped(...args: any[]) {
       setContext(Symbol.for('siv.with-options'), merged)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return (ValuesBase as any)(...args) as Configurable<T>
+      return (returnComponent as any)(...args) as Configurable<T>
     }
 
     return createConfigurable(wrapped as Configurable<T>, merged)
