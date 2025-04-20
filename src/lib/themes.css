@@ -36,13 +36,13 @@
 }
 
 .plain {
-  --base00: transparent;
+  --base00: color-mix(in srgb, currentColor, transparent 80%);
   --base01: color-mix(in srgb, currentColor, transparent 80%);
   --base02: unset;
   --base03: color-mix(in srgb, currentColor, #909090 40%);
   --base04: currentColor;
   --base05: currentColor;
-  --base06: color-mix(in srgb, currentColor, yellow 40%);
+  --base06: color-mix(in srgb, currentColor, yellow 50%);
   --base07: currentColor;
   --base08: color-mix(in srgb, currentColor, red 30%);
   --base09: color-mix(in srgb, currentColor, orange 30%);
@@ -50,9 +50,8 @@
   --base0B: color-mix(in srgb, currentColor, lightgreen 30%);
   --base0C: color-mix(in srgb, currentColor, cyan 30%);
   --base0D: color-mix(in srgb, currentColor, cyan 30%);
-  --base0E: color-mix(in srgb, currentColor, rebeccapurple 40%);
+  --base0E: color-mix(in srgb, currentColor, rgb(255, 0, 255) 40%);
   --base0F: currentColor;
-  --border-color: transparent;
 }
 
 .stereo {
