@@ -3,7 +3,7 @@
   import Inspect from '$lib/Inspect.svelte'
   import { getContext, type Snippet } from 'svelte'
   import type { HTMLAttributes } from 'svelte/elements'
-  import { fade } from 'svelte/transition'
+  import { fly } from 'svelte/transition'
   import { highlight } from './shiki.js'
 
   type CodeProps = {
@@ -55,7 +55,7 @@
       {#await highlighted}
         ...
       {:then result}
-        <div in:fade>
+        <div in:fly={{ x: -10 }}>
           <!-- eslint-disable-next-line svelte/no-at-html-tags -->
           {@html result}
         </div>
@@ -73,6 +73,10 @@
     font-size: 12px;
     overflow: hidden;
     padding: 1em;
+
+    :global .shiki {
+      border: none;
+    }
   }
 
   .code.multi {
