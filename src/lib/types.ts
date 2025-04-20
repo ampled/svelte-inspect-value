@@ -4,22 +4,126 @@ import type { HTMLAttributes, SvelteHTMLElements } from 'svelte/elements'
 import type { InspectOptions } from './options.svelte.js'
 import type { ValueType } from './util.js'
 
-export type InspectProps = {
+export type BaseProps = {
   /**
-   * Any value of any type to be inspected
+   * Any (single) value of any type to be inspected.
+   *
+   * Will not be inspected if {@linkcode InspectProps.values} is used
+   *
+   * If value is `undefined` or `null` without {@link InspectProps.name} being set,
+   * the value will not be inspected
+   *
+   * @default undefined
    */
   value?: unknown
   /**
+   * Inspect every enumerable property of a value, object or array-like.
+   *
+   * Allows for multiple root-level nodes, unlike {@linkcode InspectProps.value}.
+   *
+   * @default undefined
+   */
+  values?: unknown
+  /**
    * Name of inspected value. Will be displayed as the "key" of the value.
    *
-   * @see {@link InspectOptions.expandPaths}
+   * Will not be used if {@linkcode InspectProps.values} is set
+   *
+   * @see {@linkcode InspectOptions.expandPaths}
+   *
+   * @default undefined
    */
   name?: string
-  debug?: boolean
-} & Partial<InspectOptions> &
-  SvelteHTMLElements['div']
+  /**
+   * A `string` or {@linkcode Snippet} that will be rendered as a small heading with a collapse-button for the component.
+   *
+   * @default undefined
+   */
+  heading?: string | import('svelte').Snippet
+}
+
+export type InspectProps = BaseProps & Partial<InspectOptions> & SvelteHTMLElements['div']
+
+export type YPos = 'top' | 'bottom' | 'middle' | 'full-y' | (string & {})
+export type XPos = 'right' | 'left' | 'center' | 'full-x' | (string & {})
+export type PanelAppearance = 'solid' | 'glassy' | 'floating' | 'dense' | (string & {})
+export type PositionProp = [YPos, XPos | undefined]
+
+export type PanelProps = {
+  /**
+   * Initial panel position
+   *
+   * Format: `[<y-position>, <x-position>]`
+   *
+   * y-position can be one of `'top' | 'bottom' | 'middle' | 'full-y'`
+   *
+   * x-position can be one of `'left' | 'right' | 'center' | 'full-x'`
+   *
+   * @default ['top', 'right']
+   */
+  position?: [YPos] | [YPos, XPos]
+  /**
+   * Initially open panel
+   *
+   * @default false
+   */
+  open?: boolean
+  /**
+   * Panel should open on hover.
+   *
+   * Enabling this will leave part of the panel visible for easier reach.
+   *
+   * @default false
+   */
+  openOnHover?: boolean
+  /**
+   * Sets appearance of panel.
+   *
+   * Can be `'solid'|'glassy'|'dense'|'floating'`
+   *
+   * @default 'solid'
+   */
+  appearance?: PanelAppearance
+  /**
+   * Don't render Panel toolbar
+   *
+   * @default false
+   */
+  hideToolbar?: boolean
+  /**
+   * Don't display "global" values added with `addToPanel`
+   *
+   * @default false
+   */
+  hideGlobalValues?: boolean
+  /**
+   * Enable resizing
+   *
+   * @default true
+   */
+  resize?: boolean
+  /**
+   * Apply opacity to the panel when not hovered
+   *
+   * @default false
+   */
+  opacity?: boolean
+  /**
+   * Extra elements to be added at the bottom of the Panel
+   *
+   * @default undefined
+   */
+  children?: import('svelte').Snippet
+}
+
+export type InspectPanelProps = BaseProps &
+  PanelProps &
+  Partial<InspectOptions> &
+  SvelteHTMLElements['aside']
 
 export type KeyType = PropertyKey
+
+export type Note = { title?: string; description?: string }
 
 export type TypeViewProps<Value = unknown, Type = ValueType> = {
   value: Value
@@ -47,18 +151,28 @@ export type TypeViewProps<Value = unknown, Type = ValueType> = {
    * Force type indicator visibility for this node
    */
   forceType?: boolean
-  note?: { title: string; description: string }
+  note?: Note
 }
 
-export type InspectValuesOptions = Partial<InspectOptions> & {
-  elementAttributes?: Partial<SvelteHTMLElements['div']>
+/**
+ * @inheritdoc
+ * @augments InspectOptions
+ */
+export type InspectValuesOptions = InspectOptions & {
+  /**
+   * HTML-attributes (like `class` and `style`) that will be applied to the `Inspect.Values`-element.
+   *
+   * Will be overwritten, not merged if a child-variation defined with `withOptions` defines this object.
+   */
+  elementAttributes?: SvelteHTMLElements['div']
 }
 
-export type ConfigurableOptions = () => InspectValuesOptions
+export type ConfigurableOptions = () => Partial<InspectValuesOptions>
 
 export type CustomComponentPropsTransformFn<TComponent extends Component<any>> = (
   props: ComponentProps<TComponent>
 ) => Partial<ComponentProps<TComponent>>
+
 /**
  * Function returning boolean value. If false, use default component.
  */
@@ -66,12 +180,12 @@ export type CustomComponentPredicate<TComponent extends Component<any>> = (
   props: ComponentProps<TComponent>
 ) => boolean
 
-type CustomEntryComponentOnly<TComponent extends Component<any>> = [TComponent]
-type CustomEntryWithTransform<TComponent extends Component<any>> = [
+export type CustomEntryComponentOnly<TComponent extends Component<any>> = [TComponent]
+export type CustomEntryWithTransform<TComponent extends Component<any>> = [
   TComponent,
   CustomComponentPropsTransformFn<TComponent>,
 ]
-type CustomEntryWithPredicate<TComponent extends Component<any>> = [
+export type CustomEntryWithPredicate<TComponent extends Component<any>> = [
   TComponent,
   CustomComponentPropsTransformFn<TComponent> | undefined,
   CustomComponentPredicate<TComponent>,
@@ -122,12 +236,8 @@ export type List =
   | BigInt64Array
   | BigUint64Array
 
-export type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] extends N
+type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] extends N
   ? Acc[number]
   : Enumerate<N, [...Acc, Acc['length']]>
 
 export type IntRange<F extends number, T extends number> = Exclude<Enumerate<T>, Enumerate<F>>
-
-export type Prettify<T> = {
-  [K in keyof T]: T[K]
-} & {}
