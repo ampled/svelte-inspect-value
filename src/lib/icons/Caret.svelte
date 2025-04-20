@@ -18,8 +18,8 @@
 
 <svg
   use:flashOnUpdate={{
-    value: () => value,
-    enabled: () => options.value.flashOnUpdate,
+    value: () => value ?? '',
+    enabled: () => options?.value?.flashOnUpdate,
     flashStyle: () => ({
       color: 'var(--_update-flash-color)',
       filter: 'drop-shadow(0 0 4px var(--_update-flash-color))',
