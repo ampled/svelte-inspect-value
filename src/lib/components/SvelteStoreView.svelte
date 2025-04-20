@@ -1,5 +1,6 @@
 <script lang="ts">
   import { type Readable, type Writable } from 'svelte/store'
+  import { useOptions } from '../options.svelte.js'
   import type { TypeViewProps } from '../types.js'
   import { getAllProperties, type ValueType } from '../util.js'
   import Expandable from './Expandable.svelte'
@@ -12,6 +13,10 @@
   type Props = TypeViewProps<Readable<unknown> | Writable<unknown>>
 
   let { value, key = undefined, type, path = [], ...rest }: Props = $props()
+
+  const options = useOptions()
+
+  let { stores: storeMode } = $derived(options.value)
 
   const valueKey = Symbol('store-value')
 
@@ -45,37 +50,47 @@
 </script>
 
 {#if validStore}
-  <Expandable type={valueType} length={keys.length} {key} {path} {value} {...rest}>
-    {#snippet valuePreview({ showPreview })}
-      <Preview
-        style="margin-left: -0.5em"
-        showKey={false}
-        singleValue={{ value: $value }}
-        prefix="("
-        postfix=")"
-        startLevel={0}
-        bracketStyle="color: var(--_comment-color)"
-        {showPreview}
-      />
-    {/snippet}
-    <PropertyList {keys} {value} {type}>
-      {#snippet item({ key, descriptor })}
-        {#if descriptor?.get || descriptor?.set}
-          <GetterSetter {value} {descriptor} {key} {path} />
-        {:else if key === valueKey}
-          <Node
-            key="value"
-            keyPrefix="$"
-            keyStyle="--_text-color: var(--_comment-color); gap: 0;"
-            value={$value}
-            path={[...path, Symbol('$')]}
-          />
-        {:else}
-          <Node value={value[key as keyof typeof value]} {key} {path} />
-        {/if}
+  {#if storeMode === 'full' || storeMode === true}
+    <Expandable type={valueType} length={keys.length} {key} {path} {value} {...rest}>
+      {#snippet valuePreview({ showPreview })}
+        <Preview
+          style="margin-left: -0.5em"
+          showKey={false}
+          singleValue={{ value: $value }}
+          prefix="("
+          postfix=")"
+          startLevel={0}
+          bracketStyle="color: var(--_comment-color)"
+          {showPreview}
+        />
       {/snippet}
-    </PropertyList>
-  </Expandable>
+      <PropertyList {keys} {value} {type}>
+        {#snippet item({ key, descriptor })}
+          {#if descriptor?.get || descriptor?.set}
+            <GetterSetter {value} {descriptor} {key} {path} />
+          {:else if key === valueKey}
+            <Node
+              key="value"
+              keyPrefix="$"
+              keyStyle="--_text-color: var(--_comment-color); gap: 0;"
+              value={$value}
+              path={[...path, Symbol('$')]}
+            />
+          {:else}
+            <Node value={value[key as keyof typeof value]} {key} {path} />
+          {/if}
+        {/snippet}
+      </PropertyList>
+    </Expandable>
+  {:else if storeMode === 'value-only'}
+    <Node
+      {key}
+      path={path?.toSpliced(path.length - 1)}
+      value={$value}
+      {...rest}
+      note={{ title: 'store', description: 'Value was retrieved by subscribing to a store' }}
+    />
+  {/if}
 {:else}
   <ObjectView
     note={{
