@@ -1,0 +1,25 @@
+{
+  "plugin": ["typedoc-plugin-markdown"],
+  "entryPoints": ["src/lib/index.ts"],
+  "highlightLanguages": ["typescript", "javascript", "css", "svelte"],
+  "basePath": "src/lib",
+  "outputs": [
+    {
+      "name": "json",
+      "path": "./src/doclib/typedoc/docs.json"
+    },
+    {
+      "name": "markdown",
+      "path": "./docs/md",
+      "options": {
+        "hidePageTitle": true,
+        "hideBreadcrumbs": true,
+        "hidePageHeader": true,
+        "useCodeBlocks": true,
+        "expandObjects": true,
+        "expandParameters": true,
+        "disableSources": true
+      }
+    }
+  ]
+}
