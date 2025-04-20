@@ -69,6 +69,7 @@
     "eslint-plugin-svelte": "^2.46.1",
     "globals": "^15.0.0",
     "happy-dom": "^17.1.0",
+    "mdsvex": "^0.12.3",
     "p-memoize": "^7.1.1",
     "prettier": "^3.4.2",
     "prettier-plugin-organize-imports": "^4.1.0",
