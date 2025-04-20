@@ -41,7 +41,7 @@
       {@html code}
     </Code>
     {#if promises}
-      <Inspect.Values {...promises} />
+      <Inspect values={promises} />
     {/if}
   </Stack>
 </div>

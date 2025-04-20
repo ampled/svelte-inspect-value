@@ -1,5 +1,7 @@
 <script lang="ts">
-  import Inspect from '$lib/index.js'
+  import Inspect, { type InspectProps } from '$lib/index.js'
+
+  let props: InspectProps = $props()
 
   let demoObject = $state({
     id: undefined,
@@ -17,4 +19,4 @@
   })
 </script>
 
-<Inspect value={demoObject} name="demo" style="max-width: 500px;" />
+<Inspect value={demoObject} name="demo" style="max-width: 500px;" {...props} />
