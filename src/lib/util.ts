@@ -7,22 +7,19 @@ import {
   type InspectOptions,
   type OptionsContext,
 } from './options.svelte.js'
-import { STATE_CONTEXT_KEY, type StateContext } from './state.svelte.js'
 import type {
   CustomComponentEntry,
   CustomComponentPredicate,
   CustomComponentPropsTransformFn,
-  InspectProps,
   KeyType,
 } from './types.js'
 
-export function initialize(opts: OptionsContext, state: StateContext) {
+export function initialize(opts: OptionsContext) {
   setContext(OPTIONS_CONTEXT, opts)
-  setContext(STATE_CONTEXT_KEY, state)
   initValueCache()
 }
 
-export function getType(value: unknown, stores: boolean = false) {
+export function getType(value: unknown, stores: InspectOptions['stores'] = false) {
   const t = typeOf(value)
 
   if (t === 'function') {
@@ -245,13 +242,14 @@ export function shouldInitiallyExpandNode(
 /**
  * Helper-function for adding custom components with a props transform function.
  *
- * The function ensures proper typing for the props parameter of the transform function
+ * The function ensures proper typing for the props parameter of the transform / predicate functions
  *
  * @param component Custom component
  * @param transformProps Function modifying props passed to component
  * @param predicate Function returning boolean value. If false, use default component.
  *
  * @example
+ * ```svelte
  * <script lang="ts">
  *  import {Inspect, addComponent} from 'svelte-inspect-value';
  *  import CustomNumber from './CustomNumber.svelte';
@@ -271,6 +269,7 @@ export function shouldInitiallyExpandNode(
  *   string: [CustomString]
  *  }}
  * />
+ * ```
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function addComponent<TComponent extends Component<any> = Component<any>>(
@@ -283,16 +282,19 @@ export function addComponent<TComponent extends Component<any> = Component<any>>
   return [component]
 }
 
-export function sortProps(props: InspectProps) {
+export function sortProps<T extends Record<PropertyKey, unknown>>(
+  props: T
+): [Partial<InspectOptions>, Partial<T>] {
   const out = {} as Partial<InspectOptions>
-  const restProps = {} as Partial<InspectProps>
+  const restProps = {} as Partial<T>
 
   Object.entries(props).forEach(([key, value]) => {
     if (OPTIONS_KEYS.includes(key as keyof InspectOptions)) {
-      out[key as keyof InspectOptions] = value
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      out[key as keyof InspectOptions] = value as any
     } else {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      restProps[key as any] = value
+      restProps[key as keyof Partial<T>] = value as any
     }
   })
 
