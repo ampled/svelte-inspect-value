@@ -42,7 +42,7 @@
 
 <Expandable {...{ value, key, type, path }} length={entries.length} showLength={false}>
   {#snippet valuePreview()}
-    <StringValue {type} value={value.toString()} length />
+    <StringValue {type} value={value.toString()} />
   {/snippet}
   {#each entries as [key, value], i (key)}
     <Entry {i}>
