@@ -23,7 +23,7 @@
   .color {
     width: 3em;
     height: 1em;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--_border-color);
     border-radius: 2px;
     margin-inline: 0.25em;
   }
