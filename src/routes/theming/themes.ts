@@ -226,6 +226,25 @@ const uchu = {
   '--base0F': '#009e45',
 }
 
+const beach = {
+  '--base00': '#e0d3c1',
+  '--base01': '#cdbaa0',
+  '--base02': '#baa991',
+  '--base03': '#917e62',
+  '--base04': '#FFFFFF',
+  '--base05': '#45453b',
+  '--base06': '#fff2c2',
+  '--base07': '#FFFFFF',
+  '--base08': '#a653ac',
+  '--base09': '#917e62',
+  '--base0A': '#67714b',
+  '--base0B': '#99008c',
+  '--base0C': '#007399',
+  '--base0D': '#027399',
+  '--base0E': '#99008b',
+  '--base0F': '#FFFFFF',
+}
+
 export const themes = {
   inspect,
   drak,
@@ -239,6 +258,7 @@ export const themes = {
   javascript,
   ron,
   'uchu-dark': uchu,
+  beach,
 } as const
 
 export type ThemeKeys = keyof (typeof themes)['drak' | 'stereo']
