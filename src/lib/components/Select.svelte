@@ -77,6 +77,7 @@
     }
 
     .prefix {
+      box-sizing: border-box;
       position: absolute;
       left: 0;
       top: 0;
