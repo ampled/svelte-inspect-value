@@ -1,14 +1,14 @@
-import { cleanup, render, screen } from '@testing-library/svelte'
-import { afterAll, describe, expect, test } from 'vitest'
-import Inspect, { GLOBAL_OPTIONS_CONTEXT } from '../src/lib/index.js'
+import { screen } from '@testing-library/svelte'
 
-afterAll(() => {
-  cleanup()
-})
+import { describe, expect, test } from 'vitest'
+import Inspect, { GLOBAL_OPTIONS_CONTEXT } from '../src/lib/index.js'
+import { renderComponent } from './util/index.js'
 
 describe('inspect values', () => {
   test('it renders', async () => {
-    const { unmount } = render(Inspect.Values, { props: { a: 'a', b: 'b', c: 'c' } })
+    using rendered = renderComponent(Inspect.Values, { props: { a: 'a', b: 'b', c: 'c' } })
+
+    expect(rendered.result.component).toBeDefined()
 
     const [keyA, keyB, keyC] = screen.getAllByTestId('key')
     const [a, b, c] = screen.getAllByTestId('value')
@@ -19,8 +19,6 @@ describe('inspect values', () => {
     expect(a).toHaveTextContent(`'a'`)
     expect(b).toHaveTextContent(`'b'`)
     expect(c).toHaveTextContent(`'c'`)
-
-    unmount()
   })
 
   test('it can be configured', async () => {
@@ -32,19 +30,19 @@ describe('inspect values', () => {
       noanimate: true,
     }))
 
-    const { unmount } = render(Configured, {
+    using rendered = renderComponent(Configured, {
       props: { test: '123456' },
       context: new Map([
         // passing an empty context map avoids "lifecycle_outside_component" error
       ]),
     })
 
+    expect(rendered.result.component).toBeDefined()
+
     const key = screen.getByTestId('key')
     const value = screen.getByTestId('value')
-    expect(value).toHaveTextContent('12345…')
     expect(key).toHaveTextContent('test')
-
-    unmount()
+    expect(value).toHaveTextContent('12345…')
   })
 
   test('it can be configured and inherit configurations', async () => {
@@ -60,7 +58,7 @@ describe('inspect values', () => {
       quotes: 'double',
     }))
 
-    const configured = render(Configured, {
+    using renderedConfigured = renderComponent(Configured, {
       props: { test: '123456' },
       context: new Map([
         // passing an empty context map avoids "lifecycle_outside_component" error
@@ -72,23 +70,23 @@ describe('inspect values', () => {
     expect(value).toHaveTextContent('12345…')
     expect(key).toHaveTextContent('test')
 
-    configured.unmount()
+    renderedConfigured[Symbol.dispose]()
 
-    const inherits = render(Inherits, {
+    using rendered = renderComponent(Inherits, {
       props: { test: '123456' },
       context: new Map([]),
     })
 
+    expect(rendered.result.component).toBeDefined()
+
     const inheritsValue = screen.getByTestId('value')
 
-    // string should be collapsed (inherited) but have double quotes
+    // string should be collapsed (inherited option) but have double quotes
     expect(inheritsValue).toHaveTextContent('"12345…"')
-
-    inherits.unmount()
   })
 
   test('it can be rendered with a preset initial expand-level', async () => {
-    const { unmount } = render(Inspect.Values.Expand0, {
+    using rendered = renderComponent(Inspect.Values.Expand0, {
       props: { test: { test: '123456' } },
       context: new Map([
         [
@@ -98,27 +96,26 @@ describe('inspect values', () => {
       ]),
     })
 
+    expect(rendered.result.component).toBeDefined()
+
     const key = screen.getByTestId('key')
     const value = screen.queryByTestId('value')
     expect(value).toBe(null) // no value (123456) has been rendered
     expect(key).toHaveTextContent('test')
-
-    unmount()
   })
 
   test('it can be configured using inline chainable configuration', async () => {
-    const { unmount } = render(Inspect.Values.Config.PlainTheme.NoLength.NoAnimate.Ok, {
+    using rendered = renderComponent(Inspect.Values.Config.PlainTheme.NoAnimate.Ok, {
       props: { test: { test: '123456' } },
       context: new Map([
         [GLOBAL_OPTIONS_CONTEXT, { showPreview: false, showTools: false, showTypes: false }],
       ]),
     })
 
-    const inspect = screen.getByTestId('inspect')
+    expect(rendered.result.component).toBeDefined()
 
+    const inspect = screen.getByTestId('inspect')
     expect(inspect).toHaveClass('plain')
     expect(inspect).toHaveClass('noanimate')
-
-    unmount()
   })
 })

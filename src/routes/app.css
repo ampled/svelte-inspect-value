@@ -37,7 +37,7 @@
   --bg-light: var(--base07);
   --selection: var(--base02);
   --comments: var(--base03, #59456e);
-  --border-color: var(--base03, var(--comments));
+  --docs-border-color: var(--base03, var(--comments));
   --dark-fg: var(--base04);
   --fg: var(--base05, #b9a9be);
   --fg-light: var(--base06);
@@ -131,14 +131,6 @@ h6 {
   font-weight: bold;
 }
 
-h3 {
-  margin-top: 1em;
-}
-
-h2 {
-  font-size: 1.75em;
-}
-
 /* 8. Improve line wrapping */
 p {
   text-wrap: pretty;
@@ -156,6 +148,12 @@ h6 {
   /* margin-left: 1rem; */
 }
 
+h4 {
+  font-size: 12px;
+  font-family: monospace;
+  display: inline;
+}
+
 input[type='number'],
 input[type='text'],
 select {
@@ -163,7 +161,7 @@ select {
   font-size: 12px;
   background-color: var(--bg);
   color: var(--fg);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--docs-border-color);
 }
 
 .flex {
@@ -198,7 +196,7 @@ select {
 
 button {
   all: unset;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--docs-border-color);
   font-size: 12px;
   padding: 0.5em;
   border-radius: 4px;
@@ -206,12 +204,12 @@ button {
   transition: all 100ms linear;
 
   &:hover:not(:disabled) {
-    background-color: var(--border-color);
+    background-color: var(--docs-border-color);
   }
 
   &:disabled {
     cursor: auto;
-    color: var(--border-color);
+    color: var(--docs-border-color);
   }
 }
 
@@ -252,7 +250,7 @@ button.unstyled {
   cursor: pointer;
 
   &:disabled {
-    color: var(--border-color);
+    color: var(--docs-border-color);
   }
 }
 
@@ -302,17 +300,15 @@ button.unstyled {
   border-bottom-left-radius: 8px;
   padding: 1em;
   position: fixed;
-  /* display: flex; */
   right: 0;
   top: 50%;
-  bottom: 50%;
   margin-top: auto;
   margin-bottom: auto;
-
-  max-height: max-content;
+  max-height: 90vh;
+  overflow-y: auto;
   flex-direction: column;
   opacity: 0.5;
-  transform: translateX(50%);
+  transform: translateX(50%) translateY(-50%);
   z-index: 50;
 
   hr {
@@ -321,11 +317,11 @@ button.unstyled {
 
   &:hover {
     background-color: var(--bg);
-    /* border-color: var(--border-color);
+    border-color: var(--docs-border-color);
     border-width: 1px 0 1px 1px;
-    border-style: solid; */
+    border-style: solid;
     opacity: 1;
-    transform: translateX(0);
+    transform: translateX(0) translateY(-50%);
 
     a {
       opacity: 1;
@@ -335,7 +331,7 @@ button.unstyled {
 
     hr {
       opacity: 0;
-      border-color: var(--border-color);
+      border-color: var(--docs-border-color);
     }
   }
 
@@ -343,8 +339,8 @@ button.unstyled {
     opacity: 0;
     transition: all 250ms ease-in;
     font-size: 0.857em;
-    margin-top: 2px;
-    line-height: 1;
+    /* margin-top: 2px; */
+    line-height: 0.8;
     padding: 0.25em;
     text-decoration: none;
     color: var(--comments);
@@ -365,4 +361,34 @@ dfn {
   text-decoration-style: wavy;
   text-decoration-thickness: 1px;
   cursor: help;
+}
+
+.shiki {
+  font-size: 12px;
+  padding: 1ch;
+  border-radius: 8px;
+  border: 1px solid var(--docs-border-color);
+  overflow-y: auto;
+}
+
+hr {
+  border-color: var(--docs-border-color);
+}
+
+.md-types {
+  padding: 1ch;
+  background-color: rgb(0 0 0 / 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 1ch;
+
+  h1,
+  h2,
+  h3 {
+    font-family: monospace;
+  }
+
+  h3::before {
+    content: '# ';
+  }
 }

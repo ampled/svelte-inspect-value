@@ -1,123 +1,67 @@
+<!--
+ @component
+ Wrapper for different variants of Inspect
+-->
 <script lang="ts">
-  import type { Snippet } from 'svelte'
+  import { getContext, type Snippet } from 'svelte'
   import type { SvelteHTMLElements } from 'svelte/elements'
+  import { slide } from 'svelte/transition'
+  import CollapseButton from './components/CollapseButton.svelte'
   import NodeActionButton from './components/NodeActionButton.svelte'
+
+  type Props = {
+    children: Snippet
+    oninspectvaluechange?: () => void
+    heading?: string | Snippet
+    onhandleclick?: () => void
+  } & SvelteHTMLElements['div']
 
   let {
     children,
     class: classValue,
+    oninspectvaluechange,
+    heading,
+    onhandleclick,
     ...rest
-  }: SvelteHTMLElements['div'] & { children: Snippet } = $props()
+  }: Props = $props()
+
+  let collapsed = $state(false)
+
+  const inFixed = getContext(Symbol.for('siv.fixed'))
 </script>
 
-<div class={['svelte-inspect-value', classValue]} {...rest}>
-  <div class="body">
-    <svelte:boundary onerror={console.error}>
-      {#snippet failed(_, reset)}
-        root error (see console) <NodeActionButton onclick={reset}>reset</NodeActionButton>
-      {/snippet}
-      {@render children()}
-    </svelte:boundary>
-  </div>
+<div class={['svelte-inspect-value', inFixed && 'in-fixed', classValue]} {...rest}>
+  {#if heading}
+    <div class="heading" class:collapsed>
+      <CollapseButton
+        onclick={() => (collapsed = !collapsed)}
+        onchange={(c) => (collapsed = c)}
+        value
+        {collapsed}
+      />
+      {#if typeof heading === 'string'}
+        {heading}
+      {:else}
+        {@render heading()}
+      {/if}
+    </div>
+  {/if}
+  {#if !collapsed}
+    <div class="body" transition:slide>
+      <svelte:boundary onerror={console.error}>
+        {#snippet failed(_, reset)}
+          root error (see console) <NodeActionButton onclick={reset}>reset</NodeActionButton>
+        {/snippet}
+        {@render children()}
+      </svelte:boundary>
+    </div>
+  {/if}
 </div>
 
 <style>
   @import './themes.css';
-
-  .svelte-inspect-value {
-    /* commonly placed colors in base16 themes */
-    --cyan: var(--base0C);
-    --yellow: var(--base0A);
-    --green: var(--base0B);
-    --red: var(--base08);
-    --purple: var(--base0E);
-    --blue: var(--base0D);
-    --orange: var(--base09);
-
-    /* 
-      overrideable roles (somewhat accurately mapped to base16 roles) 
-      https://github.com/chriskempson/base16/blob/main/styling.md
-    */
-    --_background: var(--inspect-background, none);
-    --_background-color: var(--background-color, var(--base00));
-
-    --_hover-color: var(--hover-color, var(--base01));
-    --_text-selection-background: var(--text-selection-background, var(--base02));
-    --_length-color: var(--length-color, var(--base03));
-    --_bullet-color: var(--bullet-color, var(--base03));
-    --_comment-color: var(--comment-color, var(--base03));
-    --_caret-color: var(--caret-color, var(--base03));
-    --_caret-focus-color: var(--caret-focus-color, var(--base05));
-    --_caret-hover-color: var(--caret-hover-color, var(--base05));
-    --_text-color: var(--text-color, var(--base05));
-    --_child-update-flash-color: var(--child-update-flash-color, var(--base05));
-    --_update-flash-color: var(--update-flash-color, var(--base06));
-    --_delimiter-color: var(--delimiter-color, var(--base08));
-    --_note-color: var(--note-color, var(--base08));
-    --_button-color: var(--button-color, var(--base0E));
-    --_button-disabled-color: var(--button-disabled-color, var(--base03));
-    --_button-success-color: var(
-      --button-success-color,
-      var(--base0B)
-    ); /* e.g. copy to clipboard */
-    --_promise-pending-color: var(--promise-pending-color, var(--base0A));
-    --_promise-fulfilled-color: var(--promise-fulfilled-color, var(--base0B));
-    --_promise-rejected-color: var(--promise-rejected-color, var(--base08));
-    --_promise-bracket-color: var(--promise-bracket-color, var(--base03));
-
-    /* key */
-    --_key-whitespace-color: var(--key-whitespace-color, var(--base03));
-    --_key-whitespace-opacity: var(--key-whitespace-opacity, 0.5);
-    --_key-prefix-color: var(--key-prefix-color, var(--base08));
-
-    /* border */
-    --_border-radius: var(--border-radius, 8px);
-    --_border-color: var(--border-color, var(--base03));
-
-    /* tools */
-    --_tools-background-color: var(--tools-background-color, var(--base00));
-    --_tools-background-color-borderless: var(--tools-background-color-borderless, transparent);
-    --_tools-border-color: var(--tools-border-color, var(--base03));
-
-    /* value colors */
-    --_error-color: var(--error-color, var(--base08));
-    --_string-value-color: var(--string-value-color, var(--base0A));
-    --_function-name-color: var(--function-name-color, var(--base0B));
-    --_symbol-value-color: var(--symbol-value-color, var(--base0C));
-    --_regex-value-color: var(--regex-value-color, var(--base0C));
-    --_number-value-color: var(--number-value-color, var(--base0E));
-    --_bigint-value-color: var(--bigint-value-color, var(--base0E));
-    --_boolean-value-color: var(--boolean-value-color, var(--base0E));
-    --_class-name-color: var(--class-name-color, var(--base0D));
-
-    /* type colors */
-    --_niltype-bg-color: var(--niltype-bg-color, var(--base01));
-    --_niltype-text-color: var(--niltype-text-color, var(--base05));
-    --_number-type-color: var(--number-type-color, var(--base08));
-    --_bigint-type-color: var(--bigint-type-color, var(--base08));
-    --_boolean-type-color: var(--boolean-type-color, var(--base08));
-    --_symbol-type-color: var(--symbol-type-color, var(--base09));
-    --_regex-type-color: var(--regex-type-color, var(--base0B));
-    --_array-type-color: var(--array-type-color, var(--base0C));
-    --_date-type-color: var(--date-type-color, var(--base0C));
-    --_map-type-color: var(--map-type-color, var(--base0C));
-    --_set-type-color: var(--set-type-color, var(--base0C));
-    --_url-type-color: var(--url-type-color, var(--base0C));
-    --_urlsearchparams-type-color: var(--urlsearchparams-type-color, var(--base0C));
-    --_object-type-color: var(--object-type-color, var(--base0C));
-    --_class-type-color: var(--class-type-color, var(--base08));
-    --_function-type-color: var(--function-type-color, var(--base08));
-    --_string-type-color: var(--string-type-color, var(--base0E));
-
-    /* indent */
-    --_indent: var(--indent, 0.75em);
-    --_indent-compact: var(--indent-compact, 0.5em);
-    --_indent-color: var(--indent-color, var(--base03));
-
-    /* body */
-    --_padding: var(--padding, 0.25em);
-    --_padding-compact: var(--padding-compact, 0.25em);
-  }
+  @import './vars.css';
+  @import './action/resize.css';
 
   :global .svelte-inspect-value::selection {
     background-color: var(--_text-selection-background);
@@ -163,8 +107,7 @@
     max-width: var(--inspect-max-width, 100%);
     box-sizing: border-box;
     margin: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden;
     -webkit-font-smoothing: subpixel-antialiased;
     -moz-osx-font-smoothing: grayscale;
 
@@ -178,15 +121,72 @@
         background-color: transparent;
         border: none;
       }
+
+      .heading {
+        padding-inline: 0.25em;
+        font-weight: bold;
+      }
     }
+
+    &.dense {
+      border: none;
+      border-radius: 0;
+
+      .body {
+        padding: 0;
+        border: none;
+      }
+
+      .heading {
+        border-bottom: none;
+        padding-inline: 0.25em;
+      }
+
+      &.in-fixed {
+        .body,
+        .heading {
+          border-top: 1px solid var(--_border-color);
+        }
+      }
+    }
+
+    .heading {
+      color: var(--_text-color);
+      font-size: calc(var(--inspect-font-size, 12px) - 0px);
+      padding-inline: 0.5em;
+      padding-block: 0.25em;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 0.25em;
+      border-bottom: 1px solid var(--_border-color);
+
+      &.collapsed {
+        border: none;
+      }
+    }
+
+    /* hr {
+      border-color: var(--_border-color);
+      margin: 0 -1em;
+    } */
+  }
+
+  .svelte-inspect-value.in-fixed {
+    display: flex;
+    flex-direction: column;
+    /* outline: 1px solid hotpink; */
+    /* flex-grow: 0; */
+    /* flex-shrink: 0; */
+    /* min-height: min-content%; */
   }
 
   .body {
     /** compact */
     transition: all 200ms linear;
     position: relative;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: auto;
+    /* overflow-x: clip; */
     width: 100%;
     height: 100%;
     padding: var(--_padding-compact);

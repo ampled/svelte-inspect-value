@@ -9,7 +9,7 @@
   let { children, ...rest }: Props = $props()
 </script>
 
-<span {...rest}>
+<span data-testid="note" {...rest}>
   {@render children?.()}
 </span>
 

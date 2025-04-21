@@ -1,5 +1,8 @@
 <script lang="ts">
+  import { getContext, onDestroy } from 'svelte'
   import { blur } from 'svelte/transition'
+  import { globalInspectState } from '../Panel.svelte'
+  import { addToPanel, globalValues } from '../global.svelte.js'
   import { copyToClipBoard, logToConsole } from '../hello.svelte.js'
   import CollapseChildren from '../icons/CollapseChildren.svelte'
   import Console from '../icons/Console.svelte'
@@ -9,6 +12,7 @@
   import { useState, type NodeState } from '../state.svelte.js'
   import type { KeyType, TypeViewProps } from '../types.js'
   import { isPromise, stringifyPath } from '../util.js'
+  import NodeActionButton from './NodeActionButton.svelte'
 
   type Props = Partial<TypeViewProps<unknown, string>> & { collapsed?: boolean }
 
@@ -16,6 +20,7 @@
 
   let copied = $state(false)
 
+  const fixed = getContext(Symbol.for('siv.fixed'))
   let options = useOptions()
   let { onCopy, canCopy, onLog, borderless, showTools } = $derived(options.value)
   let inspectState = useState()
@@ -117,10 +122,29 @@
   }
 
   let treeAction = $derived(getTreeAction(nodeState))
+  let remove = $state<() => void>()
+
+  onDestroy(() => {
+    if (remove) remove()
+  })
 </script>
 
 {#if showTools}
   <div class="tools" class:borderless>
+    {#if !fixed && !globalValues.has(stringifiedPath) && globalInspectState.mounted.length}
+      <NodeActionButton
+        title="add to panel"
+        onclick={() => (remove = addToPanel(stringifiedPath, () => value, 'added manually'))}
+      >
+        +
+      </NodeActionButton>
+    {/if}
+    {#if globalValues.has(stringifiedPath)}
+      <NodeActionButton
+        title="remove from panel"
+        onclick={() => globalValues.delete(stringifiedPath)}>-</NodeActionButton
+      >
+    {/if}
     {#if treeAction}
       <button
         transition:blur={{ duration: options.transitionDuration }}

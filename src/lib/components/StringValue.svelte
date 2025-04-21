@@ -8,18 +8,14 @@
  
  -->
 <script lang="ts">
-  import { collapseString, stringify } from '../util.js'
-
-  import { getPreviewLevel } from '../contexts.js'
   import LinkIcon from '../icons/LinkIcon.svelte'
   import { useOptions } from '../options.svelte.js'
   import type { TypeViewProps } from '../types.js'
-  import Count from './Count.svelte'
+  import { collapseString, stringify } from '../util.js'
 
-  type Props = TypeViewProps<string> & { length?: boolean; inline?: boolean }
+  type Props = TypeViewProps<string> & { inline?: boolean }
 
-  let { value, display, length = false, type = 'string' }: Props = $props()
-  const previewLevel = getPreviewLevel()
+  let { value, display, type = 'string' }: Props = $props()
   const options = useOptions()
 
   let displayOrValue = $derived(display != null ? display : value)
@@ -46,9 +42,7 @@
       <LinkIcon />
     </span>
   {/if}
-</svelte:element>{#if length && !previewLevel}
-  <Count type="string" length={value.length} />
-{/if}
+</svelte:element>
 
 <style>
   .stringvalue {

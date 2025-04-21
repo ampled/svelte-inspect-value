@@ -6,12 +6,11 @@
   import { getContext, onMount } from 'svelte'
   import type { SvelteMap } from 'svelte/reactivity'
   import { readable, writable } from 'svelte/store'
-  import ToggleButton from '../../routes/ToggleButton.svelte'
 
   getContext<SvelteMap<string, string>>('toc')?.set('Stores', 'stores')
-  const globalInspectOptions = getContext<() => InspectOptions>(GLOBAL_OPTIONS_CONTEXT)()
+  const _globalInspectOptions = getContext<() => InspectOptions>(GLOBAL_OPTIONS_CONTEXT)()
 
-  const setOption =
+  const _setOption =
     getContext<(name: keyof InspectOptions, value: unknown) => void>('set-global-option')
 
   function customStore(initialValue = 0) {
@@ -57,6 +56,7 @@
 
   const stores = $derived({
     writableStore: writable('i am the store value'),
+    test: writable('i am the\n store value'),
     readableStore: readable({ a: { b: { c: { d: { e: 'end' } } } } }),
     customStore: customStore(0),
     clickObservable: eventObservable,
@@ -79,13 +79,6 @@
   <Inspect.Values.Expand0 {...stores} />
 
   <p>
-    This can be enabled / disabled with the <code>stores</code>-prop:
-    <span style="margin-left: 0.5em;">
-      <ToggleButton
-        bind:checked={() => globalInspectOptions.stores, (val) => setOption('stores', val)}
-      >
-        stores
-      </ToggleButton>
-    </span>
+    This can be enabled / disabled with the <code>stores</code>-prop.
   </p>
 </div>

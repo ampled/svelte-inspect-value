@@ -6,7 +6,20 @@
 </script>
 
 <div class="options">
-  <span class="options-title"> global options </span>
+  <div class="options-title">global options</div>
+
+  <label>
+    theme
+    <select bind:value={options.theme}>
+      <option>inspect</option>
+      <option>drak</option>
+      <option>stereo</option>
+      <option>dark</option>
+      <option>light</option>
+      <option>plain</option>
+    </select>
+  </label>
+
   <ToggleButton bind:checked={options.showLength}>lengths</ToggleButton>
 
   <ToggleButton bind:checked={options.showTypes}>types</ToggleButton>
@@ -22,20 +35,16 @@
   <ToggleButton bind:checked={options.flashOnUpdate}>flash on update</ToggleButton>
 
   <ToggleButton bind:checked={options.embedMedia}>embed media</ToggleButton>
-  <ToggleButton bind:checked={options.stores}>stores</ToggleButton>
-  <ToggleButton bind:checked={options.parseJson}>parse json</ToggleButton>
 
   <label>
-    theme
-    <select bind:value={options.theme}>
-      <option>inspect</option>
-      <option>drak</option>
-      <option>stereo</option>
-      <option>dark</option>
-      <option>light</option>
-      <option>plain</option>
+    store
+    <select bind:value={options.stores}>
+      <option>full</option>
+      <option value="value-only">value only</option>
+      <option value={false}>off</option>
     </select>
   </label>
+  <ToggleButton bind:checked={options.parseJson}>parse json</ToggleButton>
 
   <label>
     elementview
@@ -56,65 +65,51 @@
 
   <label>
     collapse strings
-    <input type="number" bind:value={options.stringCollapse} style="width: 5em" />
+    <input type="number" bind:value={options.stringCollapse} min="0" style="width: 5em" />
   </label>
 
   <label>
     preview depth
-    <input type="number" bind:value={options.previewDepth} style="width: 5em" />
+    <input type="number" bind:value={options.previewDepth} min="0" style="width: 5em" />
   </label>
   <label>
     preview entries
-    <input type="number" bind:value={options.previewEntries} style="width: 5em" />
+    <input type="number" bind:value={options.previewEntries} min="0" style="width: 5em" />
   </label>
 </div>
 
 <style>
   .options {
-    /* opacity: 0.5; */
-    position: fixed;
+    position: relative;
+    width: 100%;
+    max-width: 500px;
     font-size: 10px;
     display: flex;
-    overflow-y: visible;
-    overflow-x: auto;
-    flex-wrap: nowrap;
+    overflow: visible;
+    flex-wrap: wrap;
     align-items: flex-end;
     justify-content: flex-start;
-    margin-left: auto;
-    margin-right: auto;
-    bottom: 0;
-    left: 1em;
-    right: 1em;
-    /* width: 80%; */
-    background-color: var(--bg);
+    background-color: var(--_background-color);
+    color: var(--_text-color);
     gap: 1.245em;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
+    border-radius: 8px;
     padding: 1em;
     z-index: 10;
-    border: 1px solid var(--border-color);
-    border-bottom: 0;
-    scale: 1;
-    transform-origin: center bottom;
+    border: 1px solid var(--_border-color);
     transition: all 100ms linear;
-    transform: translateY(calc(100% - 15px));
-    view-transition-name: globalopts;
-
-    &:hover,
-    &:focus-within,
-    &:focus-visible,
-    &:has(*:focus) {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    margin-top: 1em;
   }
 
   .options-title {
     font-family: monospace;
     position: absolute;
-    top: 0;
-    left: 10px;
-    width: 100%;
+    text-align: center;
+    top: -0.75em;
+    /* left: 1em; */
+    padding-inline: 1ch;
+    background-color: var(--_background-color);
+    border-radius: 8px;
+    border: 1px solid var(--_border-color);
   }
 
   label:has(input:checked) {
@@ -139,5 +134,6 @@
     white-space: nowrap;
     flex-shrink: 0;
     font-family: monospace;
+    font-size: 10px;
   }
 </style>

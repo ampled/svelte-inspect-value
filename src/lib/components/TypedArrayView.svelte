@@ -1,24 +1,11 @@
 <script lang="ts">
-  import type { TypeViewProps } from '../types.js'
+  import type { List, TypeViewProps } from '../types.js'
   import Entry from './Entry.svelte'
   import Expandable from './Expandable.svelte'
   import Node from './Node.svelte'
   import Preview from './Preview.svelte'
 
-  type TypedArray =
-    | Int8Array
-    | Uint8Array
-    | Uint8ClampedArray
-    | Int16Array
-    | Uint16Array
-    | Int32Array
-    | Uint32Array
-    | Float32Array
-    | Float64Array
-    | BigInt64Array
-    | BigUint64Array
-
-  type Props = TypeViewProps<TypedArray>
+  type Props = TypeViewProps<List>
 
   let { value, key = undefined, type, path }: Props = $props()
 

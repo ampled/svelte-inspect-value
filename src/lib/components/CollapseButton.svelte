@@ -13,16 +13,7 @@
     type?: string
   } & Omit<HTMLButtonAttributes, 'onchange' | 'value' | 'type'>
 
-  let {
-    collapsed = $bindable(),
-    onchange,
-    onclick,
-    disabled,
-    value,
-    key,
-    type,
-    ...rest
-  }: Props = $props()
+  let { collapsed = $bindable(), onchange, disabled, value, key, type, ...rest }: Props = $props()
 
   let options = useOptions()
 
@@ -67,7 +58,6 @@
   class="collapse"
   aria-label={`${collapsed ? 'expand' : 'collapse'} ${keyOrType}`}
   title={`${collapsed ? 'expand' : 'collapse'} ${keyOrType}`}
-  {onclick}
   {disabled}
   {...rest}
   {onkeydown}

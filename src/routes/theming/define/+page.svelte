@@ -287,9 +287,6 @@ Result:
 
   label {
     display: flex;
-    /* border-right: 1px solid var(--border-color);
-    border-bottom: 1px solid var(--border-color); */
-    /* padding: 0.5em; */
   }
 
   .colors-and-preview {
@@ -360,7 +357,7 @@ Result:
     font-size: 12px;
     background-color: var(--bg);
     border-radius: 8px;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--docs-border-color);
     padding: 1em;
     overflow-x: auto;
 

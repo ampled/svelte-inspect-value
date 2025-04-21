@@ -1,4 +1,6 @@
-export const handleError = async ({ error }) => {
+import type { HandleServerError } from '@sveltejs/kit'
+
+export const handleError: HandleServerError = async ({ error }) => {
   console.log('#############################')
   console.log('#     SERVER SIDE ERROR     #')
   console.log('#############################')

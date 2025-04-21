@@ -3,11 +3,13 @@
   import type { InspectProps } from '$lib/types.js'
   import { addComponent } from '$lib/util.js'
   import { onMount } from 'svelte'
+  import type { SvelteHTMLElements } from 'svelte/elements'
   import { intervalEffect } from '../../doclib/interval-effect.svelte.js'
   import HexString from '../custom/HexString.svelte'
   import type { ThemeKeys } from './themes.js'
 
-  const props: InspectProps & { colors: Record<ThemeKeys, string> } = $props()
+  const props: InspectProps & SvelteHTMLElements['div'] & { colors: Record<ThemeKeys, string> } =
+    $props()
 
   class ClassName {}
 
@@ -60,26 +62,7 @@
   }
   const previewBrackets = [[[[[[[[[[[[[[[[[[['end']]]]]]]]]]]]]]]]]]]
 
-  const theming = $derived({
-    base00: [props.colors['--base00'], 'background-color'],
-    base01: [props.colors['--base01'], 'row-hover-color', 'nil-type-bg', null, undefined],
-    base02: [props.colors['--base02'], 'text-selection-background'],
-    base03: [props.colors['--base03'], 'border-color', ['expand-button'], 'length color'],
-    // base04: [props.colors['--base04']],
-    base05: [props.colors['--base05'], 'foreground / text-color'],
-    // base06: [props.colors['--base06']],
-    base06: [props.colors['--base06'], 'flash on update color', base06Preview.flashOnUpdateColor],
-    // base07: [props.colors['--base07'], 'flash on update color', base07Preview.flashOnUpdateColor],
-    base08: [props.colors['--base08'], base08Preview],
-    base09: [props.colors['--base09'], base09Preview],
-    base0A: [props.colors['--base0A'], 'base0A is the string color', { ['string keys']: '' }],
-    base0B: [props.colors['--base0B'], ...base0BPreview],
-    base0C: [props.colors['--base0C'], base0CPreview],
-    base0D: [props.colors['--base0D'], base0DPreview],
-    base0E: [props.colors['--base0E'], base0EPreview],
-    // base0F: [props.colors['--base0F']],
-    previewBrackets,
-    functionBodyPreview: eval(`
+  const functionBodyPreview = eval(`
 (function base0B(base09, ...params) {
     // comments: base03
     class Base0D {
@@ -99,7 +82,28 @@
     }
   
     return 'base0A' + demo.func + demo.func()
- })`),
+ })`)
+
+  const theming = $derived({
+    base00: [props.colors['--base00'], 'background-color'],
+    base01: [props.colors['--base01'], 'row-hover-color', 'nil-type-bg', null, undefined],
+    base02: [props.colors['--base02'], 'text-selection-background'],
+    base03: [props.colors['--base03'], 'border-color', ['expand-button'], 'length color'],
+    // base04: [props.colors['--base04']],
+    base05: [props.colors['--base05'], 'foreground / text-color'],
+    // base06: [props.colors['--base06']],
+    base06: [props.colors['--base06'], 'flash on update color', base06Preview.flashOnUpdateColor],
+    // base07: [props.colors['--base07'], 'flash on update color', base07Preview.flashOnUpdateColor],
+    base08: [props.colors['--base08'], base08Preview],
+    base09: [props.colors['--base09'], base09Preview],
+    base0A: [props.colors['--base0A'], 'base0A is the string color', { ['string keys']: '' }],
+    base0B: [props.colors['--base0B'], ...base0BPreview],
+    base0C: [props.colors['--base0C'], base0CPreview],
+    base0D: [props.colors['--base0D'], base0DPreview],
+    base0E: [props.colors['--base0E'], base0EPreview],
+    // base0F: [props.colors['--base0F']],
+    previewBrackets,
+    functionBodyPreview,
   })
 
   $effect.pre(() => {
@@ -112,23 +116,18 @@
     string: addComponent(
       HexString,
       () => ({
-        showString: false,
+        showString: true,
       }),
       (props) => props.value.startsWith('#')
     ),
   }}
-  value={theming}
+  values={theming}
   name="legend"
   showLength={true}
   showTypes
-  expandLevel={1}
-  expandPaths={[
-    'legend.base08.1',
-    'legend.base09',
-    'legend.base0C.1',
-    'legend.base0D.1',
-    'legend.base0E.1',
-  ]}
+  expandLevel={0}
+  heading="theme preview"
+  expandPaths={['base08.1', 'base09', 'base0C.1', 'base0D.1', 'base0E.1']}
   previewDepth={Infinity}
   previewEntries={10}
   {...props}
