@@ -39,7 +39,7 @@ const config = {
       handleMissingId: 'warn',
     },
   },
-  compilerOptions: { sourcemap: false },
+  compilerOptions: { sourcemap: false, runes: true },
   extensions: ['.svelte', '.md', '.svx'],
 }
 
