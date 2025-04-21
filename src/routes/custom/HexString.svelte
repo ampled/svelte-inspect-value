@@ -35,12 +35,11 @@
     padding-inline: 1ch;
     font-size: 10px;
     min-width: 56px;
+    text-align: center;
 
     .text {
-      background: inherit;
-      background-clip: text;
-      color: transparent;
-      filter: invert(1) grayscale(1) contrast(9);
+      mix-blend-mode: difference;
+      color: hotpink;
     }
   }
 </style>
