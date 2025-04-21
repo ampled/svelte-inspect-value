@@ -1,6 +1,6 @@
 <script lang="ts">
+  import MultiCode from '$doclib/examples/MultiCode.svelte'
   import { type CustomComponents, Inspect, addComponent } from '$lib/index.js'
-  import MultiCode from '../../doclib/examples/MultiCode.svelte'
   import CustomNumber from './CustomNumber.svelte'
   import customNumberCode from './CustomNumber.txt?raw'
   import ErrorOnHover from './ErrorOnHover.svelte'

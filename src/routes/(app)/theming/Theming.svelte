@@ -1,10 +1,10 @@
 <script lang="ts">
+  import { intervalEffect } from '$doclib/interval-effect.svelte.js'
   import Inspect from '$lib/Inspect.svelte'
   import type { InspectProps } from '$lib/types.js'
   import { addComponent } from '$lib/util.js'
   import { onMount } from 'svelte'
   import type { SvelteHTMLElements } from 'svelte/elements'
-  import { intervalEffect } from '../../doclib/interval-effect.svelte.js'
   import HexString from '../custom/HexString.svelte'
   import type { ThemeKeys } from './themes.js'
 

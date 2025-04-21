@@ -1,5 +1,5 @@
 <script>
-  import AllTypes from '../../../doclib/examples/AllTypes.svelte'
+  import AllTypes from '$doclib/examples/AllTypes.svelte'
 
   let color = $state('#ffffff')
   // let backgroundColor = $state('transparent')

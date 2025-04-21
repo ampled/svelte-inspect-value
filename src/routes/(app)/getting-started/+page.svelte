@@ -1,13 +1,12 @@
 <script lang="ts">
+  import Code from '$doclib/Code.svelte'
+  import globalConfigCode from '$doclib/examples/globalconfig.txt?raw'
+  import globalConfigCodeLayout from '$doclib/examples/globalconfiglayout.txt?raw'
+  import MinimalExample from '$doclib/examples/MinimalExample.svelte'
+  import minimalcode from '$doclib/examples/minimalexample.txt?raw'
+  import MultiCode from '$doclib/examples/MultiCode.svelte'
   import Inspect from '$lib/index.js'
   import { SvelteMap } from 'svelte/reactivity'
-  import Code from '../../doclib/Code.svelte'
-  import globalConfigCode from '../../doclib/examples/globalconfig.txt?raw'
-  import globalConfigCodeLayout from '../../doclib/examples/globalconfiglayout.txt?raw'
-  import MinimalExample from '../../doclib/examples/MinimalExample.svelte'
-  import minimalcode from '../../doclib/examples/minimalexample.txt?raw'
-
-  import MultiCode from '../../doclib/examples/MultiCode.svelte'
 
   let { data } = $props()
   let { minimalCode } = $derived(data.codeSamples)

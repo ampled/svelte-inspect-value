@@ -1,6 +1,6 @@
 <script lang="ts">
+  import Editor from '$doclib/Editor.svelte'
   import Inspect from '$lib/Inspect.svelte'
-  import Editor from '../../doclib/Editor.svelte'
 
   const original = `({ // edit me!
   aString: 'hello',

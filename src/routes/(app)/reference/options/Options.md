@@ -1,5 +1,5 @@
 <script>
-  import MinimalExample from '../../../doclib/examples/MinimalExample.svelte'
+  import MinimalExample from '$doclib/examples/MinimalExample.svelte'
 </script>
 
 <h2 id="inspect-options">InspectOptions</h2>

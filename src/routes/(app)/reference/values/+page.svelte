@@ -1,10 +1,10 @@
 <script lang="ts">
-  import Code from '../../../doclib/Code.svelte'
-  import ConfiguredExample from '../../../doclib/examples/ConfiguredExample.svelte'
-  import MinimalExampleValues from '../../../doclib/examples/MinimalExampleValues.svelte'
-  import configuredCode from '../../../doclib/examples/configured.txt?raw'
-  import inlineconfigcode from '../../../doclib/examples/inlineconfig.txt?raw'
-  import valuesCode from '../../../doclib/examples/inspectvalueexample.txt?raw'
+  import Code from '$doclib/Code.svelte'
+  import ConfiguredExample from '$doclib/examples/ConfiguredExample.svelte'
+  import MinimalExampleValues from '$doclib/examples/MinimalExampleValues.svelte'
+  import configuredCode from '$doclib/examples/configured.txt?raw'
+  import inlineconfigcode from '$doclib/examples/inlineconfig.txt?raw'
+  import valuesCode from '$doclib/examples/inspectvalueexample.txt?raw'
 
   import Configured from './Configured.md'
   import WithOptions from './WithOptions.md'
