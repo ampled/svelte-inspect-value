@@ -1,7 +1,7 @@
-<h2 id="configured">configured</h2>
+<h2 id="configured">configured()</h2>
 
 ```ts
-function configured(options: ConfigurableOptions): Configurable<LegacyComponentType>
+function configured(options: ConfigurableOptions): Configurable<typeof Inspect.Values>
 ```
 
 Creates a pre-configured Inspect-component that will inspect any value passed to it
@@ -40,7 +40,7 @@ type InspectValuesOptions = InspectOptions & {
 }
 ```
 
-### elementAttributes
+#### elementAttributes
 
 ```ts
 optional elementAttributes: SvelteHTMLElements["div"];

@@ -1,4 +1,4 @@
-<h3 id="with-options">withOptions()</h3>
+<h2 id="with-options">withOptions()</h2>
 
 ```ts
 withOptions: (options: ConfigurableOptions) => Configurable<T>

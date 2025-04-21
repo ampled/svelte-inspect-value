@@ -70,6 +70,8 @@ Result:
 
 <Code code={inlineconfigcode} />
 
-<WithOptions />
-
-<Configured />
+<div class="md-types">
+  <WithOptions />
+  <hr />
+  <Configured />
+</div>
