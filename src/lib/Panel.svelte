@@ -289,6 +289,23 @@
   @import './themes.css';
   @import './vars.css';
 
+  :global .inspect-panel {
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+    }
+  }
+
+  :global .inspect-panel.noanimate * {
+    transition: none !important;
+  }
+
+  .inspect-panel.noanimate {
+    transition: none !important;
+  }
+
   @keyframes wiggle {
     0%,
     100% {

@@ -15,9 +15,6 @@ const escapeSvelte = (str) =>
 
 /** @type {import('mdsvex').MdsvexOptions} */
 const mdsvexOptions = {
-  layout: {
-    docs: './src/routes/reference/+layout.svelte',
-  },
   extensions: ['.md', '.svx'],
   highlight: {
     highlighter: async (code, lang = 'text') => {
@@ -33,6 +30,10 @@ const mdsvexOptions = {
 const config = {
   preprocess: [vitePreprocess(), mdsvex(mdsvexOptions)],
   kit: {
+    alias: {
+      $lib: './src/lib',
+      $doclib: './src/doclib',
+    },
     adapter: adapter(),
     prerender: {
       handleHttpError: 'warn',

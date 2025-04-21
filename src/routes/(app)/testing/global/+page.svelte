@@ -1,8 +1,7 @@
 <script lang="ts">
   import { addToPanel } from '$lib/index.js'
   import { onDestroy } from 'svelte'
-  // import Inspect, { Drawer } from '$lib/index.js'
-  import deepNest from '../testing/deep-nest.js'
+  import deepNest from '../deep-nest.js'
 
   addToPanel('nested', () => deepNest)
 

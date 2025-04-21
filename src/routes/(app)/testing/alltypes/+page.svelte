@@ -1,6 +1,6 @@
 <script lang="ts">
-  import AllTypes from '../../doclib/examples/AllTypes.svelte'
-  import { intervalEffect } from '../../doclib/interval-effect.svelte.js'
+  import AllTypes from '$doclib/examples/AllTypes.svelte'
+  import { intervalEffect } from '$doclib/interval-effect.svelte.js'
 
   // let debug = $state(false)
   let value = $state.raw({ a: 'a', b: 'b', number: 1, c: 'c', d: 'd' })
