@@ -289,7 +289,7 @@
   @import './themes.css';
   @import './vars.css';
 
-  :global .inspect-panel {
+  :global(.inspect-panel) {
     *,
     *::before,
     *::after {

@@ -77,7 +77,6 @@
     }
 
     .prefix {
-      box-sizing: border-box;
       position: absolute;
       left: 0;
       top: 0;
@@ -91,7 +90,6 @@
       border-bottom-left-radius: 2px;
       width: 3ch;
       text-align: center;
-      /* pointer-events: none; */
       user-select: none;
       z-index: 1;
     }
