@@ -2,7 +2,7 @@
   import { getContext, onDestroy } from 'svelte'
   import { blur } from 'svelte/transition'
   import { globalInspectState } from '../Panel.svelte'
-  import { addToPanel, globalValues } from '../global.svelte.js'
+  import { globalValues } from '../global.svelte.js'
   import { copyToClipBoard, logToConsole } from '../hello.svelte.js'
   import CollapseChildren from '../icons/CollapseChildren.svelte'
   import Console from '../icons/Console.svelte'
@@ -122,22 +122,20 @@
   }
 
   let treeAction = $derived(getTreeAction(nodeState))
-  let remove = $state<() => void>()
+
+  function setAsPanelValue() {
+    globalValues.set(stringifiedPath, { value: () => value, note: { title: 'Added manually' } })
+  }
 
   onDestroy(() => {
-    if (remove) remove()
+    if (globalValues.has(stringifiedPath)) globalValues.delete(stringifiedPath)
   })
 </script>
 
 {#if showTools}
   <div class="tools" class:borderless>
     {#if !fixed && !globalValues.has(stringifiedPath) && globalInspectState.mounted.length}
-      <NodeActionButton
-        title="add to panel"
-        onclick={() => (remove = addToPanel(stringifiedPath, () => value, 'added manually'))}
-      >
-        +
-      </NodeActionButton>
+      <NodeActionButton title="add to panel" onclick={setAsPanelValue}>+</NodeActionButton>
     {/if}
     {#if globalValues.has(stringifiedPath)}
       <NodeActionButton
