@@ -27,15 +27,3 @@
 <div style="padding: 2em">
   <AllTypes />
 </div>
-
-<!-- <div style="padding: 2em">
-  <Inspect {value} expandLevel={1} />
-</div>
-
-<div style="padding: 2em">
-  <Inspect value={arr} expandLevel={0} />
-</div> -->
-
-<!-- <div style="padding: 2em">
-  <Inspect value={bouncyArr} expandLevel={1} />
-</div> -->
