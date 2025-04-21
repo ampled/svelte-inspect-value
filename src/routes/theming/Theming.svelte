@@ -3,11 +3,13 @@
   import type { InspectProps } from '$lib/types.js'
   import { addComponent } from '$lib/util.js'
   import { onMount } from 'svelte'
+  import type { SvelteHTMLElements } from 'svelte/elements'
   import { intervalEffect } from '../../doclib/interval-effect.svelte.js'
   import HexString from '../custom/HexString.svelte'
   import type { ThemeKeys } from './themes.js'
 
-  const props: InspectProps & { colors: Record<ThemeKeys, string> } = $props()
+  const props: InspectProps & SvelteHTMLElements['div'] & { colors: Record<ThemeKeys, string> } =
+    $props()
 
   class ClassName {}
 
@@ -114,23 +116,18 @@
     string: addComponent(
       HexString,
       () => ({
-        showString: false,
+        showString: true,
       }),
       (props) => props.value.startsWith('#')
     ),
   }}
-  value={theming}
+  values={theming}
   name="legend"
   showLength={true}
   showTypes
-  expandLevel={1}
-  expandPaths={[
-    'legend.base08.1',
-    'legend.base09',
-    'legend.base0C.1',
-    'legend.base0D.1',
-    'legend.base0E.1',
-  ]}
+  expandLevel={0}
+  heading="theme preview"
+  expandPaths={['base08.1', 'base09', 'base0C.1', 'base0D.1', 'base0E.1']}
   previewDepth={Infinity}
   previewEntries={10}
   {...props}

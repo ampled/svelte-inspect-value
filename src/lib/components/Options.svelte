@@ -90,7 +90,7 @@
     border-radius: 8px;
     background-color: var(--bg);
     overflow: auto;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--_border-color);
     max-height: max-content;
     display: flex;
     flex-direction: column;
@@ -122,7 +122,7 @@
       select {
         color: var(--fg);
         background-color: var(--bg-lighter);
-        border: 1px solid var(--border-color);
+        border: 1px solid var(--_border-color);
         text-align: right;
         /* padding-inline: 1em; */
       }
@@ -137,7 +137,7 @@
         display: flex;
         align-content: center;
         justify-content: center;
-        border: 1px solid var(--border-color);
+        border: 1px solid var(--_border-color);
         border-radius: 2px;
         accent-color: var(--bg-lighter);
       }
@@ -172,7 +172,7 @@
         flex-wrap: nowrap;
         /* align-items: flex-end; */
         color: var(--string);
-        border-bottom: 1px solid var(--border-color);
+        border-bottom: 1px solid var(--_border-color);
       }
     }
   }

@@ -1,23 +1,30 @@
 <script lang="ts">
-  import GlobalInspect from '$lib/GlobalInspect.svelte'
-  import { onMount } from 'svelte'
+  import { addToPanel } from '$lib/index.js'
+  import { onDestroy } from 'svelte'
+  // import Inspect, { Drawer } from '$lib/index.js'
+  import deepNest from '../testing/deep-nest.js'
 
-  let demo = $state<Record<string, unknown>>({})
+  addToPanel('nested', () => deepNest)
 
-  async function getBattery() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const nav = navigator as Record<string, any>
+  let remove: () => void
 
-    if (nav.getBattery) {
-      demo.battery = nav.getBattery()
-    }
+  function add() {
+    remove = addToPanel('nesteda', () => ({ ...deepNest }))
   }
 
-  onMount(() => {
-    getBattery()
+  onDestroy(() => {
+    remove?.()
+  })
+
+  $effect(() => {
+    const cleanup = addToPanel('nestedc', () => ({ ...deepNest }))
+
+    return cleanup
   })
 </script>
 
 <h2>Global Inspect</h2>
 
-<GlobalInspect position={['middle', 'left']} />
+<button onclick={add}>add</button>
+
+<button onclick={() => remove?.()}>remove</button>

@@ -88,7 +88,6 @@ describe('expandable values', () => {
       screen.queryByText('baz'),
     ]
 
-    // console.log(screen.getAllByTestId('key'))
     expect(foo).toBeInTheDocument()
     expect(bar).toBeInTheDocument()
     expect(baz).toBeInTheDocument()

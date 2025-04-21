@@ -287,9 +287,6 @@ Result:
 
   label {
     display: flex;
-    border-right: 1px solid var(--docs-border-color);
-    border-bottom: 1px solid var(--docs-border-color);
-    /* padding: 0.5em; */
   }
 
   .colors-and-preview {

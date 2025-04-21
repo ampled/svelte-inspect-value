@@ -114,6 +114,12 @@ export type PanelProps = {
    * @default undefined
    */
   children?: import('svelte').Snippet
+  /**
+   * z-index of panel
+   *
+   * @default 1000
+   */
+  zIndex?: number
 }
 
 export type InspectPanelProps = BaseProps &
@@ -123,6 +129,9 @@ export type InspectPanelProps = BaseProps &
 
 export type KeyType = PropertyKey
 
+/**
+ * @private
+ */
 export type Note = { title?: string; description?: string }
 
 export type TypeViewProps<Value = unknown, Type = ValueType> = {
