@@ -7,7 +7,7 @@
 
   type Props = TypeViewProps<Date>
 
-  let { value = new Date(), key, type, path }: Props = $props()
+  let { value, key, type, path }: Props = $props()
 
   let entries = $derived(
     Object.entries({
