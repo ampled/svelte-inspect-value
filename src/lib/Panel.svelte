@@ -53,10 +53,10 @@
     ...rest
   }: InspectPanelProps = $props()
 
-  const id = $props.id()
-
   let full = $state(false)
   let hovered = $state(false)
+  const handleLabel = $derived(open ? 'close panel' : 'open panel')
+  const id = $props.id()
 
   let shouldBeOpen = $derived.by(() => {
     if (openOnHover) {
@@ -162,7 +162,13 @@
     use:resizable={() => ({ handles: resizableHandles, enabled: resize })}
     {...restProps}
   >
-    <button onclick={() => (open = !open)} class="handle" type="button" aria-label="toggle panel">
+    <button
+      onclick={() => (open = !open)}
+      class="handle"
+      type="button"
+      aria-label={handleLabel}
+      title={handleLabel}
+    >
       <div class="caret">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"
           ><path
