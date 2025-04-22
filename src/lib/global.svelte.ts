@@ -75,7 +75,9 @@ export function addToPanel(name: PropertyKey, value: () => unknown, addedBy?: st
     }
   }
 
-  const entry: GlobalValue = { value, note: { title: addedBy, description: addedByPath } }
+  const note: Note | undefined = addedBy ? { title: addedBy, description: addedByPath } : undefined
+
+  const entry: GlobalValue = { value, note }
 
   try {
     $effect(() => {
