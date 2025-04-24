@@ -42,7 +42,7 @@
     {:else if descriptor?.get || descriptor?.set}
       <GetterSetter {value} {descriptor} key={key as keyof typeof value} {path} />
     {:else}
-      <Node value={value[key as keyof typeof value]} key={key as keyof typeof value} {path} />
+      <Node value={value?.[key as keyof typeof value]} key={key as keyof typeof value} {path} />
     {/if}
   </Entry>
 {/each}

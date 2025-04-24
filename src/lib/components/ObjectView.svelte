@@ -12,7 +12,7 @@
   let { value, key = undefined, type, path, ...rest }: Props = $props()
 
   let namedConstructor = $derived(
-    value.constructor.name !== 'Object' ? value.constructor.name : false
+    value?.constructor.name !== 'Object' ? value?.constructor.name : false
   )
 
   let objectType = $derived(namedConstructor ? (namedConstructor as ValueType) : type)
@@ -50,7 +50,7 @@
       {#if descriptor?.get || descriptor?.set}
         <GetterSetter {value} {descriptor} {key} {path} />
       {:else}
-        <Node value={value[key as keyof typeof value]} {key} {path} />
+        <Node value={value?.[key as keyof typeof value]} {key} {path} />
       {/if}
     {/snippet}
   </PropertyList>
