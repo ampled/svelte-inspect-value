@@ -24,8 +24,8 @@
   let options = useOptions()
   let { onCopy, canCopy, onLog, borderless, showTools } = $derived(options.value)
   let inspectState = useState()
+  let addedToPanel = $state(false)
   let stringifiedPath = $derived(stringifyPath(path))
-
   let level = $derived(path.length)
 
   let showCopyButton = $derived.by(() => {
@@ -49,7 +49,6 @@
   })
 
   let copyTimeout = $state<number>()
-
   function onCopySuccess() {
     copied = true
     if (copyTimeout) window.clearTimeout(copyTimeout)
@@ -124,11 +123,17 @@
   let treeAction = $derived(getTreeAction(nodeState))
 
   function setAsPanelValue() {
-    globalValues.set(stringifiedPath, { value: () => value, note: { title: 'Added manually' } })
+    addedToPanel = true
+    globalValues.set(stringifiedPath, {
+      get value() {
+        return value
+      },
+      note: { title: 'Added manually' },
+    })
   }
 
   onDestroy(() => {
-    if (globalValues.has(stringifiedPath)) globalValues.delete(stringifiedPath)
+    if (addedToPanel) globalValues.delete(stringifiedPath)
   })
 </script>
 
