@@ -1,24 +1,42 @@
 {
-  "plugin": ["typedoc-plugin-markdown"],
-  "entryPoints": ["src/lib/index.ts"],
-  "highlightLanguages": ["typescript", "javascript", "css", "svelte"],
+  "$schema": "https://typedoc.org/schema.json",
+  "plugin": [
+    "typedoc-plugin-markdown",
+    "./scripts/sanitize.mjs",
+    "typedoc-plugin-frontmatter",
+    "./scripts/frontmatter-headings.mjs"
+  ],
+  "entryPoints": ["src/lib/typedoc.ts"],
+  "highlightLanguages": ["svelte"],
   "basePath": "src/lib",
+  "markdownItOptions": {
+    "html": true,
+    "linkify": false
+  },
+  "useTsLinkResolution": true,
   "outputs": [
     {
-      "name": "json",
-      "path": "./src/doclib/typedoc/docs.json"
-    },
-    {
       "name": "markdown",
-      "path": "./docs/md",
+      "path": "./src/doclib/typedoc/md",
       "options": {
-        "hidePageTitle": true,
+        "router": "kind",
+        "excludeScopesInPaths": true,
+        "hidePageTitle": false,
         "hideBreadcrumbs": true,
         "hidePageHeader": true,
         "useCodeBlocks": true,
         "expandObjects": true,
         "expandParameters": true,
-        "disableSources": true
+        "parametersFormat": "list",
+        "disableSources": true,
+        "sanitizeComments": false,
+        "useHTMLEncodedBrackets": false,
+        "useHTMLAnchors": false,
+        "pageTitleTemplates": {
+          "index": "{projectName}",
+          "member": "{name}",
+          "module": "{name}"
+        }
       }
     }
   ]

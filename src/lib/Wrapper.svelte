@@ -160,6 +160,7 @@
       align-items: center;
       gap: 0.25em;
       border-bottom: 1px solid var(--_border-color);
+      font-weight: bold;
 
       &.collapsed {
         border: none;
@@ -194,7 +195,7 @@
     --line-gap: 0.375em;
     --unit-display: none;
 
-    @container (inline-size > 400px) {
+    @container (inline-size > 360px) {
       padding: var(--_padding);
       --__indent: var(--_indent, 0.75em);
       --line-gap: 0.5em;
