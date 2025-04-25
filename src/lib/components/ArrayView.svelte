@@ -39,7 +39,7 @@
 
   <PropertyList value={array} {type} {keys}>
     {#snippet item({ key })}
-      <Node value={array[key as number]} {key} {path} />
+      <Node value={array?.[key as number]} {key} {path} />
     {/snippet}
   </PropertyList>
 </Expandable>
