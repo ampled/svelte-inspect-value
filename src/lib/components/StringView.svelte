@@ -59,7 +59,7 @@
   >
     {#snippet valuePreview({ showPreview })}
       {#if showPreview}
-        <StringValue {value} length={false} />
+        <StringValue {value} />
       {/if}
     {/snippet}
     {#if isImageUrl && options.value.embedMedia}
@@ -78,8 +78,17 @@
   </Expandable>
 {:else}
   <!-- OneLineView should be more performant in nested preview mode as it has less initial logic -->
-  <OneLineView {showKey} {key} {type} {path} {value} title={stringify(value)} {...rest}>
-    <StringValue {value} length />
+  <OneLineView
+    {showKey}
+    {key}
+    {type}
+    {path}
+    {value}
+    length={value.length}
+    title={stringify(value)}
+    {...rest}
+  >
+    <StringValue {value} />
   </OneLineView>
 {/if}
 

@@ -1,14 +1,37 @@
 import { getContext, setContext } from 'svelte'
-import type { InspectState } from './state.svelte.js'
+import type { CollapseState } from './state.svelte.js'
 import type { CustomComponents } from './types.js'
-import { clamp } from './util.js'
+import * as util from './util.js'
 
-export const OPTIONS_CONTEXT = Symbol('inspect-options')
+export const OPTIONS_CONTEXT: symbol = Symbol('inspect-options')
 /**
+ * @internal
+ * @private
+ *
  * Exported for tests. Use `setGlobalOptions` or `InspectOptionsProvider` instead
  */
-export const GLOBAL_OPTIONS_CONTEXT = Symbol('inspect-global-options')
+export const GLOBAL_OPTIONS_CONTEXT: symbol = Symbol('inspect-global-options')
 
+/**
+ *
+ * Various options to configure the look and feel of components exported by `'svelte-inspect-value'`
+ *
+ * These can be set directly on `Inspect` and `Inspect.Panel` as props, or "globally" using
+ * {@link setGlobalInspectOptions} or `InspectOptionsProvider`
+ * Props will override any options using the provider methods.
+ *
+ * @example
+ * ```svelte
+ * <script>
+ *  import Inspect, {InspectOptionsProvider} from 'svelte-inspect-value'
+ *  import data from './data.js'
+ * </script>
+ *
+ * <InspectOptionsProvider options={{ expandLevel: 3, theme: 'light' }}>
+ *   <Inspect value={data} expandLevel={20} /> <!-- override expandLevel -->
+ * </InspectOptionsProvider>
+ * ```
+ */
 export type InspectOptions = {
   /**
    * Display length of arrays or strings and number of nested entries in objects / maps etc
@@ -26,7 +49,7 @@ export type InspectOptions = {
   /**
    * Display preview of nested values
    *
-   * @Default true
+   * @default true
    */
   showPreview: boolean
   /**
@@ -64,15 +87,16 @@ export type InspectOptions = {
    * An object with type as keyname and array of component and optional
    * prop modification function and predicate determining if custom component should be used.
    *
-   * Use the helper function `addComponent` to get properly typed props for the custom component.
+   * Use the helper function {@linkcode util.addComponent | addComponent} to get properly typed props for the custom component.
    *
    * @example
-   * // script
-   * import Inspect, {addComponent} from 'svelte-inspect-value'
-   * import HexColorDisplay from './HexColorDisplay.svelte'
-   * import CustomBigIntDisplay from './CustomBigIntDisplay.svelte'
+   * ```svelte
+   * <script lang="ts">
+   *  import Inspect, {addComponent} from 'svelte-inspect-value'
+   *  import HexColorDisplay from './HexColorDisplay.svelte'
+   *  import CustomBigIntDisplay from './CustomBigIntDisplay.svelte'
+   * </script>
    *
-   * // template
    * <Inspect customComponents={{
    *    bigint: [CustomBigIntDisplay],
    *    string: addComponent(
@@ -82,18 +106,19 @@ export type InspectOptions = {
    *      // revert to default string component if false
    *      (props) => props.value.startsWith('#'))
    * }} />
+   * ```
    *
    * @default {}
    */
   customComponents: CustomComponents
   /**
-   * Disable animations
+   * Disable all animations (both css and Svelte transitions)
    *
    * @default false
    */
   noanimate: boolean
   /**
-   * Use no borders and transparent background
+   * Render no borders or background
    *
    * @default false
    */
@@ -107,7 +132,7 @@ export type InspectOptions = {
   /**
    * Set color theme class
    *
-   * Available themes: `'inspect'|'drak'|'stereo'|'dark'|'light'|'plain'|'cotton-candy'`
+   * Available themes: `'inspect'|'drak'|'stereo'|'dark'|'light'|'plain'
    *
    * @default 'inspect'
    */
@@ -129,14 +154,20 @@ export type InspectOptions = {
    *
    * @default []
    * @example
-   * const value = {
-   *  a: { b: [{ c: '' }], d: 0 }
-   * }
+   * ```svelte
+   * <script>
+   *  import Inspect from 'svelte-inspect-value'
    *
-   * // default name of root expandable is "root"
+   *  const value = {
+   *   a: { b: [{ c: '' }], d: 0 }
+   *  }
+   * </script>
+   *
+   * <!-- default name of root expandable is "root" -->
    * <Inspect {value} expandPaths={['root.a.b.0']} />
-   * // if name is set:
+   * <!-- if name is set -->
    * <Inspect {value} name="obj" expandPaths={['obj.a.b.0']}
+   * ```
    */
   expandPaths: string[]
   /**
@@ -147,7 +178,6 @@ export type InspectOptions = {
   embedMedia: boolean
   /**
    * Determines what properties are shown when inspecting HTML elements
-   *
    *
    * `'simple'` - minimal list of properties including classList, styles, dataset and current scrollPositions
    *
@@ -181,7 +211,7 @@ export type InspectOptions = {
    * This overrides the default copy-button behavior.
    *
    * @see {@link InspectOptions.canCopy}
-   * @returns {boolean | Promise<boolean>} boolean or Promise resolving to boolean indicating copying value was successful if true. The copy button will change color on success.
+   * @returns {boolean | Promise<boolean>} `boolean` or `Promise` resolving to boolean indicating copying value was successful if true. The copy button will change color on success.
    * @default undefined
    */
   onCopy:
@@ -210,15 +240,27 @@ export type InspectOptions = {
    *
    * @default undefined
    */
-  onCollapseChange: ((state: InspectState) => void) | undefined
+  onCollapseChange: ((state: CollapseState) => void) | undefined
   /**
    * Enable or disable svelte-store inspection.
    * Objects with a `subscribe` method will be inspected as stores and show their subscription value.
    *
-   * @default true
+   * Set to `true`, `'value-only'` or `'full'` to enable.
+   *
+   * `'full' | true` - render store value as nested value along with other properties on the store object
+   *
+   * `'value-only'` - render store value only along with a note indicating the value was retrieved from a store
+   *
+   * @default 'full'
    */
-  stores: boolean
+  stores: boolean | 'value-only' | 'full'
 }
+
+/**
+ * @useDeclaredType
+ * @inline
+ */
+export type InspectOptionsProps = Partial<InspectOptions>
 
 export const DEFAULT_OPTIONS: InspectOptions = {
   noanimate: false,
@@ -245,7 +287,7 @@ export const DEFAULT_OPTIONS: InspectOptions = {
   canCopy: undefined,
   onLog: undefined,
   onCollapseChange: undefined,
-  stores: true,
+  stores: 'full',
 } as const
 
 export const OPTIONS_KEYS = Object.keys(DEFAULT_OPTIONS) as (keyof InspectOptions)[]
@@ -265,7 +307,9 @@ export function mergeOptions(
 export function createOptions(options: () => InspectOptions) {
   const transitionDuration = $derived(options().noanimate ? 0 : 200)
   // this could be Infinity but let's set a cap just to be sure
-  const expandLevel = $derived(clamp(options().expandAll ? 30 : options().expandLevel, 0, 30))
+  const expandLevel = $derived(
+    util.clamp(options().expandAll ? 30 : (options().expandLevel ?? 1), 0, 30)
+  )
 
   return {
     get value() {
@@ -284,6 +328,8 @@ export type OptionsContext = ReturnType<typeof createOptions>
 
 /**
  * Set a context with configuration options for `Inspect`
+ *
+ * Alternative to using the `InspectOptionsProvider`-component.
  */
 export function setGlobalInspectOptions(
   options: () => Partial<InspectOptions>
@@ -309,3 +355,9 @@ Set global options like this instead: setGlobalInspectOptions(() => {options val
 export function useOptions(): OptionsContext {
   return getContext<OptionsContext>(OPTIONS_CONTEXT)
 }
+
+export function useParentOptions() {
+  return getContext<OptionsContext | undefined>(OPTIONS_CONTEXT)
+}
+
+export type TestType = { foo: string }

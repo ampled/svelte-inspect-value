@@ -1,5 +1,8 @@
 <script lang="ts">
+  import { getContext, onDestroy, type Component } from 'svelte'
   import { blur } from 'svelte/transition'
+  import { globalInspectState } from '../Panel.svelte'
+  import { globalValues } from '../global.svelte.js'
   import { copyToClipBoard, logToConsole } from '../hello.svelte.js'
   import CollapseChildren from '../icons/CollapseChildren.svelte'
   import Console from '../icons/Console.svelte'
@@ -7,8 +10,9 @@
   import ExpandChildren from '../icons/ExpandChildren.svelte'
   import { useOptions } from '../options.svelte.js'
   import { useState, type NodeState } from '../state.svelte.js'
-  import type { KeyType, TypeViewProps } from '../types.js'
+  import type { TypeViewProps } from '../types.js'
   import { isPromise, stringifyPath } from '../util.js'
+  import NodeActionButton from './NodeActionButton.svelte'
 
   type Props = Partial<TypeViewProps<unknown, string>> & { collapsed?: boolean }
 
@@ -16,11 +20,12 @@
 
   let copied = $state(false)
 
+  const fixed = getContext(Symbol.for('siv.fixed'))
   let options = useOptions()
   let { onCopy, canCopy, onLog, borderless, showTools } = $derived(options.value)
   let inspectState = useState()
+  let addedToPanel = $state(false)
   let stringifiedPath = $derived(stringifyPath(path))
-
   let level = $derived(path.length)
 
   let showCopyButton = $derived.by(() => {
@@ -44,7 +49,6 @@
   })
 
   let copyTimeout = $state<number>()
-
   function onCopySuccess() {
     copied = true
     if (copyTimeout) window.clearTimeout(copyTimeout)
@@ -91,15 +95,21 @@
     }
   }
 
-  let collapseAction = {
+  type CollapseAction = {
+    hint: string
+    action: (level: number, path: PropertyKey[]) => void
+    icon: Component
+  }
+
+  let collapseAction: CollapseAction = {
     hint: 'collapse children',
-    action: (level: number, path: KeyType[]) => inspectState.collapseChildren(level, path),
+    action: (level, path) => inspectState.collapseChildren(level, path),
     icon: CollapseChildren,
   }
 
-  let expandAction = {
+  let expandAction: CollapseAction = {
     hint: 'expand children',
-    action: (level: number, path: KeyType[]) => inspectState.expandChildren(level, path),
+    action: (level: number, path) => inspectState.expandChildren(level, path),
     icon: ExpandChildren,
   }
 
@@ -117,10 +127,33 @@
   }
 
   let treeAction = $derived(getTreeAction(nodeState))
+
+  function setAsPanelValue() {
+    addedToPanel = true
+    globalValues.set(stringifiedPath, {
+      get value() {
+        return value
+      },
+      note: { title: 'Added manually' },
+    })
+  }
+
+  onDestroy(() => {
+    if (addedToPanel) globalValues.delete(stringifiedPath)
+  })
 </script>
 
 {#if showTools}
   <div class="tools" class:borderless>
+    {#if !fixed && !globalValues.has(stringifiedPath) && globalInspectState.mounted.length}
+      <NodeActionButton title="add to panel" onclick={setAsPanelValue}>+</NodeActionButton>
+    {/if}
+    {#if globalValues.has(stringifiedPath)}
+      <NodeActionButton
+        title="remove from panel"
+        onclick={() => globalValues.delete(stringifiedPath)}>-</NodeActionButton
+      >
+    {/if}
     {#if treeAction}
       <button
         transition:blur={{ duration: options.transitionDuration }}

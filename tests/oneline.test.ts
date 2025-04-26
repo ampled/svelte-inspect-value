@@ -38,7 +38,12 @@ test('it can display simple values', async () => {
 
   for (const { value, expectedType, expectedValue, expectedCount } of fixtures) {
     try {
-      await rerender({ value, showLength: expectedCount != null, showTypes: true })
+      await rerender({
+        value,
+        showLength: expectedCount != null,
+        showTypes: true,
+        name: expectedType,
+      })
       // check type
       const type = screen.getAllByTestId('type')[0]
       expect(type).toHaveTextContent(expectedType)

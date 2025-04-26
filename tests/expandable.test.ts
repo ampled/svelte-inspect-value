@@ -1,4 +1,5 @@
 import { cleanup, screen } from '@testing-library/svelte'
+import { readable } from 'svelte/store'
 import { afterAll, describe, expect, test } from 'vitest'
 import { renderInspect } from './util/index.js'
 
@@ -18,12 +19,15 @@ describe('expandable values', () => {
 
   test('it can display the keys and values of an object, including symbol keys', async () => {
     await rerender({
+      name: 'test',
       value: {
         foo: 1,
         bar: 2,
         [Symbol('baz')]: 33,
       },
     })
+
+    expect(screen.getAllByTestId('key')).toHaveLength(4)
 
     // check count
     const count = screen.queryByTestId('count')
@@ -49,8 +53,21 @@ describe('expandable values', () => {
     })
   })
 
+  test('it can list and display properties of an object at root level using the propertiesOf-prop', async () => {
+    await rerender({
+      values: {
+        foo: 1,
+        bar: 2,
+        [Symbol('baz')]: 33,
+      },
+    })
+
+    expect(screen.getAllByTestId('key')).toHaveLength(3)
+  })
+
   test('it can display the keys and values of a map', async () => {
     await rerender({
+      values: undefined,
       showPreview: true,
       expandAll: false,
       value: new Map<unknown, unknown>([
@@ -71,7 +88,6 @@ describe('expandable values', () => {
       screen.queryByText('baz'),
     ]
 
-    // console.log(screen.getAllByTestId('key'))
     expect(foo).toBeInTheDocument()
     expect(bar).toBeInTheDocument()
     expect(baz).toBeInTheDocument()
@@ -243,6 +259,35 @@ describe('expandable values', () => {
     const indent = screen.queryAllByTestId('indent')[0]
     expect(indent).toBeInTheDocument()
     expect(indent).toHaveClass('indent', 'htmlbodyelement')
+  })
+
+  test('it can display the value and other properties of stores', async () => {
+    await rerender({
+      value: readable('12345'),
+      name: undefined,
+      noanimate: true,
+      expandAll: true,
+      showPreview: false,
+      showTypes: true,
+      stores: true,
+    })
+
+    const [storeType, valueType] = screen.queryAllByTestId('type')
+    const [valueKey] = screen.queryAllByTestId('key')
+    const [value] = screen.queryAllByTestId('value')
+
+    expect(storeType).toHaveTextContent('readable')
+    expect(valueType).toHaveTextContent('str')
+    expect(valueKey).toHaveTextContent('$ value')
+    expect(value).toHaveTextContent(`'12345'`)
+
+    await rerender({ stores: 'value-only' })
+
+    const note = screen.getByTestId('note')
+
+    expect(note).toBeInTheDocument()
+    expect(note).toHaveTextContent('store')
+    expect(note).toHaveAttribute('title', 'Value was retrieved by subscribing to a store')
   })
 
   test('it can be opened and closed', async () => {

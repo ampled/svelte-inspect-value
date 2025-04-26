@@ -10,7 +10,7 @@
 
   type Props = TypeViewProps<Promise<unknown>>
 
-  let { value = Promise.resolve(), key, type, path }: Props = $props()
+  let { value = Promise.resolve(), key, type, path, ...rest }: Props = $props()
 
   const options = useOptions()
   let status = $state<'pending' | 'fulfilled' | 'rejected'>('pending')
@@ -65,7 +65,7 @@
   })
 </script>
 
-<Expandable {...{ value, key, type, path }} length={entries.length} showLength={false}>
+<Expandable {...{ value, key, type, path }} length={entries.length} showLength={false} {...rest}>
   {#snippet valuePreview({ showPreview })}
     {#key status}
       <span class="value promise {status}" in:fade={{ duration: options.transitionDuration }}>
@@ -100,7 +100,6 @@
     flex-direction: row;
     flex-wrap: nowrap;
     gap: 0;
-    margin-left: -0.5em;
 
     &.rejected {
       color: var(--_promise-rejected-color);

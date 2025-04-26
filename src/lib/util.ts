@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { setContext, type Component } from 'svelte'
 import type { Readable } from 'svelte/store'
 import { initValueCache } from './contexts.js'
@@ -7,22 +8,18 @@ import {
   type InspectOptions,
   type OptionsContext,
 } from './options.svelte.js'
-import { STATE_CONTEXT_KEY, type StateContext } from './state.svelte.js'
 import type {
   CustomComponentEntry,
   CustomComponentPredicate,
   CustomComponentPropsTransformFn,
-  InspectProps,
-  KeyType,
 } from './types.js'
 
-export function initialize(opts: OptionsContext, state: StateContext) {
+export function initialize(opts: OptionsContext) {
   setContext(OPTIONS_CONTEXT, opts)
-  setContext(STATE_CONTEXT_KEY, state)
   initValueCache()
 }
 
-export function getType(value: unknown, stores: boolean = false) {
+export function getType(value: unknown, stores: InspectOptions['stores'] = false) {
   const t = typeOf(value)
 
   if (t === 'function') {
@@ -59,7 +56,6 @@ export function isArray(value: unknown): value is unknown[] {
 }
 
 export function isStore(value: unknown): value is Readable<unknown> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return typeof (value as any).subscribe === 'function'
 }
 
@@ -76,8 +72,16 @@ function typeofAsFunction(value: unknown) {
   return typeof value
 }
 
+/** @inline */
 export type ValueType =
-  | ReturnType<typeof typeofAsFunction>
+  | 'string'
+  | 'number'
+  | 'bigint'
+  | 'boolean'
+  | 'symbol'
+  | 'undefined'
+  | 'object'
+  | 'function'
   | 'asyncfunction'
   | 'generatorfunction'
   | 'asyncgeneratorfunction'
@@ -95,6 +99,7 @@ export type ValueType =
   | 'iterator'
   | 'NaN'
   | 'store'
+  | (string & {})
 
 export function stringify(
   value: unknown,
@@ -141,7 +146,7 @@ export function stringifyOrToString(val: unknown): string {
   }
 }
 
-export const stringifyPath = (path: KeyType[]) => {
+export const stringifyPath = (path: PropertyKey[]) => {
   return path.map((k) => k.toString()).join('.')
 }
 
@@ -160,8 +165,8 @@ export function descriptorPrefix(descriptor?: PropertyDescriptor) {
     .join('|')
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getAllProperties(object: any) {
+  if (object == null) return []
   const enumerableKeys = []
   for (const enumerableKey in object) {
     enumerableKeys.push(enumerableKey)
@@ -176,7 +181,6 @@ export function getAllProperties(object: any) {
   ]
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getPropertyDescriptor(object: any, prop: PropertyKey) {
   if (!object) {
     return {}
@@ -197,7 +201,7 @@ export function getPropertyDescriptor(object: any, prop: PropertyKey) {
   }
 }
 
-export function ensureStringPath(path: string | KeyType[]) {
+export function ensureStringPath(path: string | PropertyKey[]) {
   let key: string
   if (Array.isArray(path)) {
     key = stringifyPath(path)
@@ -221,10 +225,10 @@ function matchPath(keyPath: string[], expandPaths: string[]) {
   return false
 }
 
-export const neverExpandInitial = ['constructor', 'prototype'] as (KeyType | undefined)[]
+export const neverExpandInitial = ['constructor', 'prototype'] as (PropertyKey | undefined)[]
 
 export function shouldInitiallyExpandNode(
-  currentPath: KeyType[],
+  currentPath: PropertyKey[],
   expandLevel: number,
   expandAll: boolean,
   expandPaths: string[]
@@ -245,13 +249,14 @@ export function shouldInitiallyExpandNode(
 /**
  * Helper-function for adding custom components with a props transform function.
  *
- * The function ensures proper typing for the props parameter of the transform function
+ * The function ensures proper typing for the props parameter of the transform / predicate functions
  *
  * @param component Custom component
  * @param transformProps Function modifying props passed to component
  * @param predicate Function returning boolean value. If false, use default component.
  *
  * @example
+ * ```svelte
  * <script lang="ts">
  *  import {Inspect, addComponent} from 'svelte-inspect-value';
  *  import CustomNumber from './CustomNumber.svelte';
@@ -271,8 +276,8 @@ export function shouldInitiallyExpandNode(
  *   string: [CustomString]
  *  }}
  * />
+ * ```
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function addComponent<TComponent extends Component<any> = Component<any>>(
   component: TComponent,
   transformProps?: CustomComponentPropsTransformFn<TComponent>,
@@ -283,16 +288,17 @@ export function addComponent<TComponent extends Component<any> = Component<any>>
   return [component]
 }
 
-export function sortProps(props: InspectProps) {
+export function sortProps<T extends Record<PropertyKey, unknown>>(
+  props: T
+): [Partial<InspectOptions>, Partial<T>] {
   const out = {} as Partial<InspectOptions>
-  const restProps = {} as Partial<InspectProps>
+  const restProps = {} as Partial<T>
 
   Object.entries(props).forEach(([key, value]) => {
     if (OPTIONS_KEYS.includes(key as keyof InspectOptions)) {
-      out[key as keyof InspectOptions] = value
+      out[key as keyof InspectOptions] = value as any
     } else {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      restProps[key as any] = value
+      restProps[key as keyof Partial<T>] = value as any
     }
   })
 

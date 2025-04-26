@@ -3,7 +3,7 @@
   import { flashOnUpdate, type FlashFn } from '../action/update-flash.svelte.js'
   import { useOptions } from '../options.svelte.js'
 
-  type Props = { value: unknown } & SVGAttributes<SVGElement>
+  type Props = { value?: unknown } & SVGAttributes<SVGElement>
 
   const { value, ...svgAttributes }: Props = $props()
 
@@ -18,8 +18,8 @@
 
 <svg
   use:flashOnUpdate={{
-    value: () => value,
-    enabled: () => options.value.flashOnUpdate,
+    value: () => value ?? '',
+    enabled: () => options?.value?.flashOnUpdate,
     flashStyle: () => ({
       color: 'var(--_update-flash-color)',
       filter: 'drop-shadow(0 0 4px var(--_update-flash-color))',

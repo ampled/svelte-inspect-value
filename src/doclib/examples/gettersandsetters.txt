@@ -17,4 +17,4 @@
   })
 </script>
 
-<Inspect {value} />
+<Inspect {value} name="gettersAndSetters" />

@@ -60,7 +60,7 @@
   let path = $derived(key != null && prevPath ? [...prevPath, key] : ['root'])
 </script>
 
-<svelte:boundary onerror={(e) => console.error(e)}>
+<svelte:boundary onerror={(e) => console.error(new Error(`Caught in Node.svelte`, { cause: e }))}>
   <TypeComponent {value} {key} {keyDelim} {type} {path} {...rest} {...componentProps} />
 
   {#snippet failed(error, reset)}

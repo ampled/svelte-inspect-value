@@ -1,0 +1,45 @@
+{
+  "$schema": "https://typedoc-plugin-markdown.org/schema.json",
+  "plugin": [
+    "typedoc-plugin-markdown",
+    "./scripts/sanitize.mjs",
+    "typedoc-plugin-frontmatter",
+    "./scripts/frontmatter-headings.mjs"
+  ],
+  "entryPoints": ["src/lib/typedoc.ts"],
+  "highlightLanguages": ["svelte"],
+  "basePath": "src/lib",
+  "markdownItOptions": {
+    "html": true,
+    "linkify": false
+  },
+  "useTsLinkResolution": true,
+  "readme": "none",
+  "outputs": [
+    {
+      "name": "markdown",
+      "path": "./src/doclib/typedoc/md",
+      "options": {
+        "readme": "none",
+        "entryFileName": "Docs",
+        "router": "kind",
+        "hidePageTitle": false,
+        "hideBreadcrumbs": true,
+        "hidePageHeader": true,
+        "useCodeBlocks": true,
+        "expandObjects": true,
+        "expandParameters": true,
+        "parametersFormat": "list",
+        "disableSources": true,
+        "sanitizeComments": false,
+        "useHTMLEncodedBrackets": false,
+        "useHTMLAnchors": false,
+        "pageTitleTemplates": {
+          "index": "{projectName}",
+          "member": "{name}",
+          "module": "{name}"
+        }
+      }
+    }
+  ]
+}

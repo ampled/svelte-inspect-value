@@ -3,7 +3,7 @@
   import { GLOBAL_OPTIONS_CONTEXT, type InspectOptions } from '$lib/options.svelte.js'
   import { getContext } from 'svelte'
   import type { SvelteMap } from 'svelte/reactivity'
-  import ToggleButton from '../../routes/ToggleButton.svelte'
+  import ToggleButton from '../../routes/(app)/ToggleButton.svelte'
   import Editor from '../Editor.svelte'
   import Stack from '../Stack.svelte'
 

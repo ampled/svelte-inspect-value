@@ -1,6 +1,6 @@
 import { render } from '@testing-library/svelte'
 import { userEvent } from '@testing-library/user-event'
-import type { ComponentProps } from 'svelte'
+import type { Component, ComponentProps } from 'svelte'
 import Inspect from '../../src/lib/Inspect.svelte'
 
 export function renderInspect(
@@ -25,5 +25,15 @@ export function renderInspect(
   return {
     ...renderResult,
     user,
+  }
+}
+
+export function renderComponent<T extends Component>(...args: Parameters<typeof render<T>>) {
+  const result = render(...args)
+  return {
+    result,
+    [Symbol.dispose]() {
+      result.unmount()
+    },
   }
 }

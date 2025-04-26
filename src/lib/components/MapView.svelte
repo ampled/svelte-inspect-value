@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { KeyType, TypeViewProps } from '../types.js'
+  import type { TypeViewProps } from '../types.js'
   import Entry from './Entry.svelte'
   import Expandable from './Expandable.svelte'
   import Node from './Node.svelte'
@@ -11,7 +11,7 @@
   let { value, key = undefined, type, path = [], ...rest }: Props = $props()
 
   let keys = $derived([...value.keys()])
-  let entries = $derived<[KeyType, unknown][]>([...value.entries()] as [KeyType, unknown][])
+  let entries = $derived<[PropertyKey, unknown][]>([...value.entries()] as [PropertyKey, unknown][])
 </script>
 
 <Expandable {...{ value, key, type, path }} length={entries.length} {...rest}>
@@ -50,7 +50,7 @@
           <Node key="key" value={key} path={[...path, index]} />
         </Entry>
         <Entry i={1}>
-          <Node key="value" value={value.get(key)} path={[...path, index]} />
+          <Node key="value" value={value?.get(key)} path={[...path, index]} />
         </Entry>
       </Expandable>
     {/snippet}

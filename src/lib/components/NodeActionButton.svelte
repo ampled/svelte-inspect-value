@@ -41,6 +41,8 @@
     border-radius: 2px;
     transition: all 150ms ease-in-out;
     transform-origin: bottom center;
+    user-select: none;
+    font-weight: normal;
 
     &:disabled {
       cursor: default;

@@ -81,16 +81,19 @@
     }
   })
 
+  function setCollapse(collapsed: boolean) {
+    inspectState.setCollapse(stringifiedPath, { collapsed })
+  }
+
   function toggleCollapse() {
-    inspectState.setCollapse(stringifiedPath, { collapsed: !collapsed })
+    setCollapse(!collapsed)
   }
 </script>
 
-<!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
   ondblclick={toggleCollapse}
   data-testid="expandable"
-  class={['line', 'title-bar', previewLevel && 'preview', !showKey && 'nokey']}
+  class={['line', previewLevel && 'preview', !showKey && 'nokey']}
   aria-expanded={!collapsed}
   {...rest}
 >
@@ -103,12 +106,13 @@
         {key}
         {type}
         onclick={toggleCollapse}
+        onchange={(c) => setCollapse(c)}
         disabled={length === 0}
       />
     {/if}
     {#if showKey}
       <Key
-        disabled={previewLevel > 0}
+        disabled={previewLevel > 0 || length === 0}
         onclick={toggleCollapse}
         delim={keyDelim}
         prefix={keyPrefix}
@@ -118,9 +122,6 @@
       />
     {/if}
   </div>
-  {#if note && !previewLevel}
-    <NodeNote title={note.description}>{note.title}</NodeNote>
-  {/if}
   {#if !isKey}
     <Type {type} force={forceType} />
   {/if}
@@ -128,11 +129,15 @@
   {@render valuePreview({ showPreview: collapsed || previewLevel > 0 || keepPreviewOnExpand })}
 
   {#if !previewLevel}
+    {#if note && !previewLevel}
+      <NodeNote style="justify-self: right;" title={note.description}>{note.title}</NodeNote>
+    {/if}
+
     {#if showLength && optsShowLength}
       <Count {length} {type} />
     {/if}
 
-    <Tools {value} {path} {collapsed} {type} />
+    <Tools {value} {path} {collapsed} {type}></Tools>
   {/if}
 </div>
 

@@ -4,12 +4,13 @@
   import { getPreviewLevel } from '../contexts.js'
   import type { TypeViewProps } from '../types.js'
   import Bullet from './Bullet.svelte'
+  import Count from './Count.svelte'
   import Key from './Key.svelte'
   import NodeNote from './NodeNote.svelte'
   import Tools from './Tools.svelte'
   import Type from './Type.svelte'
 
-  type Props = TypeViewProps<T> & HTMLAttributes<HTMLDivElement>
+  type Props = TypeViewProps<T> & { length?: number } & HTMLAttributes<HTMLDivElement>
 
   let {
     value,
@@ -22,8 +23,9 @@
     type,
     forceType,
     path,
-    children,
+    length,
     note,
+    children,
     ...rest
   }: Props = $props()
 
@@ -51,9 +53,6 @@
       <Key disabled prefix={keyPrefix} delim={keyDelim} style={keyStyle} {key} {path} />
     {/if}
   </div>
-  {#if note && !previewLevel}
-    <NodeNote title={note.description}>{note.title}</NodeNote>
-  {/if}
   {#if !isKey}
     <Type {type} force={forceType} />
   {/if}
@@ -64,9 +63,17 @@
       {displayOrValue}
     </span>
   {/if}
+  {#if !previewLevel}
+    {#if note}
+      <NodeNote title={note.description}>{note.title}</NodeNote>
+    {/if}
+    {#if typeof length === 'number'}
+      <Count {length} {type} />
+    {/if}
 
-  {#if !previewLevel && !isKey}
-    <Tools {value} {path} {type} />
+    {#if !isKey}
+      <Tools {value} {path} {type}></Tools>
+    {/if}
   {/if}
 </div>
 
