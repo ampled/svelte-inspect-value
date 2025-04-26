@@ -82,7 +82,9 @@
   appearance="solid"
   open
   zIndex={999}
-></Inspect.Panel>
+>
+  <p>👈 try resizing the panel!</p>
+</Inspect.Panel>
 <div class="board">
   <input
     class="new-todo"
@@ -178,5 +180,9 @@
 
   label:hover button {
     opacity: 1;
+  }
+
+  p {
+    color: var(--_text-color);
   }
 </style>
