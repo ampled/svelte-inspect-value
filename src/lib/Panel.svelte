@@ -362,6 +362,7 @@
     --handle-offset: 0;
     --inspect-min-width: 100%;
     container-type: inline-size;
+    box-sizing: border-box;
     position: fixed;
     display: flex;
     transition:
@@ -377,15 +378,12 @@
       outline 400ms ease-in-out,
       outline-color 200ms ease-in-out,
       transform 400ms ease-in-out;
-
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5em;
     padding: 0.5em;
     width: 420px;
-    /* min-width: 425px; */
     background-color: transparent;
-    /* z-index: 9998; */
     min-height: 100px;
     max-height: 100vh;
     overflow: visible;
