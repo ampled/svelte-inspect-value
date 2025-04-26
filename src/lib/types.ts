@@ -4,67 +4,99 @@ import type { HTMLAttributes, SvelteHTMLElements } from 'svelte/elements'
 import type { InspectOptions } from './options.svelte.js'
 import type { ValueType } from './util.js'
 
+/**
+ * Shared props for `Inspect` and `Inspect.Panel`
+ *
+ * @inline
+ */
 export type BaseProps = {
   /**
    * Any (single) value of any type to be inspected.
    *
-   * Will not be inspected if {@linkcode InspectProps.values} is used
+   * Will not be inspected if {@linkcode BaseProps.values} is used
    *
-   * If value is `undefined` or `null` without {@link InspectProps.name} being set,
+   * If value is `undefined` or `null` without {@linkcode BaseProps.name} being set,
    * the value will not be inspected
-   *
-   * @default undefined
    */
   value?: unknown
   /**
    * Inspect every enumerable property of a value, object or array-like.
    *
-   * Allows for multiple root-level nodes, unlike {@linkcode InspectProps.value}.
-   *
-   * @default undefined
+   * Allows for multiple root-level nodes, unlike {@linkcode BaseProps.value}.
    */
   values?: unknown
   /**
    * Name of inspected value. Will be displayed as the "key" of the value.
    *
-   * Will not be used if {@linkcode InspectProps.values} is set
+   * Will not be used if {@linkcode BaseProps.values} is set
    *
    * @see {@linkcode InspectOptions.expandPaths}
-   *
-   * @default undefined
    */
   name?: string
   /**
-   * A `string` or {@linkcode Snippet} that will be rendered as a small heading with a collapse-button for the component.
-   *
-   * @default undefined
+   * A `string` or `Snippet` that will be rendered as a small heading with a collapse-button for the component.
    */
   heading?: string | import('svelte').Snippet
 }
 
+/**
+ * Props for `Inspect`
+ *
+ * @see {@link InspectOptions}
+ */
 export type InspectProps = BaseProps & Partial<InspectOptions> & SvelteHTMLElements['div']
 
-export type YPos = 'top' | 'bottom' | 'middle' | 'full-y' | (string & {})
-export type XPos = 'right' | 'left' | 'center' | 'full-x' | (string & {})
-export type PanelAppearance = 'solid' | 'glassy' | 'floating' | 'dense' | (string & {})
-export type PositionProp = [YPos, XPos | undefined]
+/**
+ * @inline
+ */
+export type PanelAppearance = 'solid' | 'glassy' | 'floating' | 'dense'
 
+export type XPos = 'left' | 'right' | 'center' | 'full'
+export type YPos = 'top' | 'bottom' | 'middle' | 'full'
+
+/**
+ * All possible positions for `Inspect.Panel`
+ */
+export type PositionProp<X extends XPos = XPos, Y extends YPos = YPos> =
+  | (X extends 'center' | 'full'
+      ? `${XPos} ${Exclude<YPos, 'full' | 'middle'>}`
+      : Y extends 'middle' | 'full'
+        ? `${Exclude<XPos, 'full' | 'center'>} ${YPos}`
+        : never)
+  | ('left' | 'right')
+
+/**
+ * Props for `Inspect.Panel`
+ *
+ * @see {@link InspectOptions}
+ */
 export type PanelProps = {
   /**
    * Initial panel position
    *
-   * Format: `[<y-position>, <x-position>]`
+   * Format: `'<x-position> <y-position?>'` (y is optional)
    *
-   * y-position can be one of `'top' | 'bottom' | 'middle' | 'full-y'`
+   * x-position can be one of `'left' | 'right' | 'center' | 'full'`
    *
-   * x-position can be one of `'left' | 'right' | 'center' | 'full-x'`
+   * y-position can be one of `'top' | 'bottom' | 'middle' | 'full'`
    *
-   * @default ['top', 'right']
+   * *Note: if only x-position is given it can only be `'left'` or `'right'`*
+   *
+   * **Bindable**
+   * @example
+   * ```svelte
+   * <Inspect.Panel align="left">
+   * <Inspect.Panel align="right middle">
+   * <Inspect.Panel align="center top">
+   * ```
+   *
+   * @default 'right full'
    */
-  position?: [YPos] | [YPos, XPos]
+  align?: PositionProp
   /**
    * Initially open panel
    *
+   * **Bindable**
    * @default false
    */
   open?: boolean
@@ -81,11 +113,12 @@ export type PanelProps = {
    *
    * Can be `'solid'|'glassy'|'dense'|'floating'`
    *
+   * **Bindable**
    * @default 'solid'
    */
   appearance?: PanelAppearance
   /**
-   * Don't render Panel toolbar
+   * Don't render Panel toolbar with controls for setting position, opacity and appearance
    *
    * @default false
    */
@@ -103,40 +136,48 @@ export type PanelProps = {
    */
   resize?: boolean
   /**
-   * Apply opacity to the panel when not hovered
    *
+   * Apply opacity to the panel when not hovered or focused
+   *
+   * **Bindable**
    * @default false
    */
   opacity?: boolean
   /**
-   * Extra elements to be added at the bottom of the Panel
-   *
-   * @default undefined
+   * Extra elements to be added at the bottom of the panel
    */
   children?: import('svelte').Snippet
   /**
-   * z-index of panel
+   * Z-index of panel
    *
    * @default 1000
    */
   zIndex?: number
-}
-
-export type InspectPanelProps = BaseProps &
-  PanelProps &
+  /**
+   * When closed, wiggle the panel button when an inspected value is updated
+   *
+   * @default true
+   */
+  wiggleOnUpdate?: boolean
+  /**
+   * Callback for when panel is opened or closed
+   *
+   * @param open
+   * @default undefined
+   */
+  onOpenChange?: (open: boolean) => void
+} & BaseProps &
   Partial<InspectOptions> &
   SvelteHTMLElements['aside']
 
-export type KeyType = PropertyKey
-
 /**
- * @private
+ * @inline
  */
 export type Note = { title?: string; description?: string }
 
 export type TypeViewProps<Value = unknown, Type = ValueType> = {
   value: Value
-  key?: KeyType
+  key?: PropertyKey
   keyPrefix?: string
   showKey?: boolean
   keyDelim?: string
@@ -144,7 +185,7 @@ export type TypeViewProps<Value = unknown, Type = ValueType> = {
   /**
    * Path of the node
    */
-  path?: KeyType[]
+  path?: PropertyKey[]
   /**
    * Representation of value.
    *
@@ -164,19 +205,20 @@ export type TypeViewProps<Value = unknown, Type = ValueType> = {
 }
 
 /**
- * @inheritdoc
- * @augments InspectOptions
+ * Options for `Inspect.Values`
+ *
+ * Includes `elementAttributes` for setting HTML-attributes on the element without using props.
  */
-export type InspectValuesOptions = InspectOptions & {
-  /**
-   * HTML-attributes (like `class` and `style`) that will be applied to the `Inspect.Values`-element.
-   *
-   * Will be overwritten, not merged if a child-variation defined with `withOptions` defines this object.
-   */
-  elementAttributes?: SvelteHTMLElements['div']
-}
-
-export type ConfigurableOptions = () => Partial<InspectValuesOptions>
+export type InspectValuesOptions = () => Partial<
+  InspectOptions & {
+    /**
+     * HTML-attributes (like `class` and `style`) that will be applied to the `Inspect.Values`-element.
+     *
+     * Will be overwritten, not merged if a child-variation defined with `withOptions` defines this object.
+     */
+    elementAttributes?: SvelteHTMLElements['div']
+  }
+>
 
 export type CustomComponentPropsTransformFn<TComponent extends Component<any>> = (
   props: ComponentProps<TComponent>
@@ -224,6 +266,8 @@ export class InspectError extends Error {
 /**
  * Props received by custom components.
  * Define extra props using third generic parameter
+ *
+ * @see {@linkcode TypeViewProps}
  */
 export type CustomComponentProps<
   T = unknown,
