@@ -70,7 +70,7 @@ type InspectOptions = {
   expandPaths: string[];
   flashOnUpdate: boolean;
   noanimate: boolean;
-  onCollapseChange: (state: InspectState) => void | undefined;
+  onCollapseChange: (state: CollapseState) => void | undefined;
   onCopy: (value: unknown, type: string, path: unknown[]) => Promise<boolean | void> | boolean | void
      | undefined;
   onLog: (value: unknown, type: string, path: unknown[]) => void
@@ -94,8 +94,7 @@ type InspectOptions = {
 Various options to configure the look and feel of components exported by `'svelte-inspect-value'`
 
 These can be set directly on `Inspect` and `Inspect.Panel` as props, or "globally" using
-[setGlobalInspectOptions](../functions/setGlobalInspectOptions) or \[InspectOptionsProvider\](./InspectOptionsProvider.svelte).
-
+[setGlobalInspectOptions](../functions/setGlobalInspectOptions) or `InspectOptionsProvider`
 Props will override any options using the provider methods.
 
 ## Example
@@ -119,7 +118,7 @@ Props will override any options using the provider methods.
 borderless: boolean;
 ```
 
-Use no borders and transparent background
+Render no borders or background
 
 #### Default
 
@@ -157,7 +156,7 @@ Custom components for displaying types.
 An object with type as keyname and array of component and optional
 prop modification function and predicate determining if custom component should be used.
 
-Use the helper function `addComponent` to get properly typed props for the custom component.
+Use the helper function [`addComponent`](../functions/addComponent) to get properly typed props for the custom component.
 
 #### Example
 
@@ -310,7 +309,7 @@ true
 noanimate: boolean;
 ```
 
-Disable animations
+Disable all animations (both css and Svelte transitions)
 
 #### Default
 
@@ -323,7 +322,7 @@ false
 ### onCollapseChange
 
 ```ts
-onCollapseChange: (state: InspectState) => void | undefined;
+onCollapseChange: (state: CollapseState) => void | undefined;
 ```
 
 Called whenever a node is collapsed or expanded.

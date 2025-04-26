@@ -33,7 +33,7 @@ children:
 type TypeViewProps<Value, Type> = {
   display: string;
   forceType: boolean;
-  key: KeyType;
+  key: PropertyKey;
   keyDelim: string;
   keyPrefix: string;
   keyStyle: HTMLAttributes<HTMLDivElement>["style"];
@@ -41,7 +41,7 @@ type TypeViewProps<Value, Type> = {
      description: string;
      title: string;
   };
-  path: KeyType[];
+  path: PropertyKey[];
   showKey: boolean;
   type: Type;
   value: Value;
@@ -56,14 +56,14 @@ type TypeViewProps<Value, Type> = {
 
 ### Type
 
-`Type` = `ValueType`
+`Type` = [`ValueType`](ValueType)
 
 ## Properties
 
 ### display?
 
 ```ts
-optional display: string;
+display: string;
 ```
 
 Representation of value.
@@ -76,7 +76,7 @@ value for other purposes
 ### forceType?
 
 ```ts
-optional forceType: boolean;
+forceType: boolean;
 ```
 
 Force type indicator visibility for this node
@@ -86,7 +86,7 @@ Force type indicator visibility for this node
 ### key?
 
 ```ts
-optional key: KeyType;
+key: PropertyKey;
 ```
 
 ***
@@ -94,7 +94,7 @@ optional key: KeyType;
 ### keyDelim?
 
 ```ts
-optional keyDelim: string;
+keyDelim: string;
 ```
 
 ***
@@ -102,7 +102,7 @@ optional keyDelim: string;
 ### keyPrefix?
 
 ```ts
-optional keyPrefix: string;
+keyPrefix: string;
 ```
 
 ***
@@ -110,7 +110,7 @@ optional keyPrefix: string;
 ### keyStyle?
 
 ```ts
-optional keyStyle: HTMLAttributes<HTMLDivElement>["style"];
+keyStyle: HTMLAttributes<HTMLDivElement>["style"];
 ```
 
 ***
@@ -118,7 +118,7 @@ optional keyStyle: HTMLAttributes<HTMLDivElement>["style"];
 ### note?
 
 ```ts
-optional note: {
+note: {
   description: string;
   title: string;
 };
@@ -127,13 +127,13 @@ optional note: {
 #### description?
 
 ```ts
-optional description: string;
+description: string;
 ```
 
 #### title?
 
 ```ts
-optional title: string;
+title: string;
 ```
 
 ***
@@ -141,7 +141,7 @@ optional title: string;
 ### path?
 
 ```ts
-optional path: KeyType[];
+path: PropertyKey[];
 ```
 
 Path of the node
@@ -151,7 +151,7 @@ Path of the node
 ### showKey?
 
 ```ts
-optional showKey: boolean;
+showKey: boolean;
 ```
 
 ***
@@ -159,7 +159,7 @@ optional showKey: boolean;
 ### type?
 
 ```ts
-optional type: Type;
+type: Type;
 ```
 
 Type of the value

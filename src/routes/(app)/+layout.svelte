@@ -1,50 +1,49 @@
 <script lang="ts">
   import { page } from '$app/state'
+  import { removeFromPanel } from '$lib/global.svelte.js'
   import Inspect, { InspectOptionsProvider, addToPanel, type InspectOptions } from '$lib/index.js'
   import { DEV } from 'esm-env'
-  import { setContext } from 'svelte'
+  import { setContext, type Snippet } from 'svelte'
+  import { slide } from 'svelte/transition'
+  import type { LayoutData } from './$types.js'
   import './app.css'
+  import ExpandRoute from './Expandroute.svelte'
   import GlobalOptions from './GlobalOptions.svelte'
+  import ToggleButton from './ToggleButton.svelte'
 
   let drawerOpen = $state(true)
-  let showDevItems = true
+  let showDevItems = false
 
-  const { children } = $props()
+  setContext(Symbol('SIV.DEBUG'), true)
 
-  let routes = [
-    // { href: '/examples', title: 'Examples' },
+  const { children, data }: { children: Snippet; data: LayoutData } = $props()
+
+  type Route = {
+    title: string
+    children?: Route[]
+    href?: string
+    devonly?: boolean
+    expandable?: true
+  }
+
+  let routes: Route[] = [
     {
-      title: '',
+      title: 'Getting Started',
+      href: '/getting-started',
       children: [
         {
-          href: '/getting-started',
-          title: 'Getting Started',
-        },
-        {
-          href: '/examples',
-          title: 'Examples',
-        },
-      ],
-    },
-    {
-      title: 'Reference',
-      children: [
-        {
-          href: '/reference/inspect',
-          title: 'Inspect',
+          href: '/reference/panel',
+          title: 'Panel',
         },
         {
           href: '/reference/values',
           title: 'Values',
         },
         {
-          href: '/reference/panel',
-          title: 'Panel',
+          href: '/examples',
+          title: 'Examples',
         },
-        {
-          href: '/reference/options',
-          title: 'Options',
-        },
+        { href: '/custom', title: 'Custom components' },
       ],
     },
     {
@@ -61,7 +60,39 @@
         },
       ],
     },
-    { title: 'Other', children: [{ href: '/custom', title: 'Custom components' }] },
+
+    {
+      title: 'Types',
+      expandable: true,
+      href: '/docs/types',
+      children: data.docs
+        .filter((d) => ['types'].includes(d.type ?? '') && !d.title[1].includes('Custom'))
+        .map((d) => ({
+          title: d.title?.[1] ?? '',
+          href: `/docs/${d.type}/${d.title[1]}`,
+        })),
+    },
+    {
+      title: 'Utility',
+      expandable: true,
+      href: '/docs/functions',
+      children: data.docs
+        .filter((d) => ['functions'].includes(d.type ?? ''))
+        .map((d) => ({
+          title: `${d.title?.[1] ?? ''}()`,
+          href: `/docs/${d.type}/${d.title[1]}`,
+        })),
+    },
+    {
+      title: 'Variables',
+      devonly: true,
+      children: data.docs
+        .filter((d) => ['variables'].includes(d.type ?? ''))
+        .map((d) => ({
+          title: d.title?.[1] ?? '',
+          href: `/docs/${d.type}/${d.title[1]}`,
+        })),
+    },
     { href: '/alltypes', title: 'All Types', devonly: true },
     { href: '/testing', title: 'Testing', devonly: true },
     { href: '/global', title: 'Global', devonly: true },
@@ -87,7 +118,7 @@
     stores: 'full',
   })
 
-  let renderDevOnlyPanel = $state(true)
+  let renderDevOnlyPanel = $state(false)
   function onkeydown(event: KeyboardEvent & { currentTarget: EventTarget & Window }) {
     if (event.key === 'æ') {
       options.renderIf = !options.renderIf
@@ -105,17 +136,65 @@
   setContext('set-global-option', setOption)
 
   $effect(() => {
-    addToPanel('page', () => ({ ...page }))
+    if (renderDevOnlyPanel) {
+      addToPanel('page', () => ({ ...page }))
+    } else {
+      removeFromPanel('page')
+    }
+
+    return () => {
+      removeFromPanel('page')
+    }
   })
+  let wiggleOnUpdate = $state(true)
 </script>
 
 <svelte:window {onkeydown} />
 
+{#snippet entry(route: Route)}
+  {@const active = page.url.pathname.includes(route.href ?? route.title.toLowerCase())}
+  {#if !route.devonly || (route.devonly && DEV && showDevItems)}
+    {#if route.expandable}
+      <li>
+        <ExpandRoute>
+          {#snippet title()}
+            <span class:active>{route.title}</span>
+          {/snippet}
+          {#snippet subRoutes(expanded)}
+            {#if route.children && (expanded || active)}
+              <ul transition:slide>
+                {#each route.children as child}
+                  {@render entry(child)}
+                {/each}
+              </ul>
+            {/if}
+          {/snippet}
+        </ExpandRoute>
+      </li>
+    {:else}
+      <li>
+        {#if route.href}
+          <a class:active href={route.href}>{route.title}</a>
+        {:else}
+          <span class:active>{route.title}</span>
+        {/if}
+        {#if route.children}
+          <ul>
+            {#each route.children as child}
+              {@render entry(child)}
+            {/each}
+          </ul>
+        {/if}
+      </li>
+    {/if}
+  {/if}
+{/snippet}
+
 <InspectOptionsProvider {options}>
   <Inspect.Panel
-    style="width: 290px; min-width: 290px;"
+    style="max-width: 230px; min-width: 230px; max-height: 100vh;"
     bind:open={drawerOpen}
-    position={['full-y', 'left']}
+    align="left full"
     hideGlobalValues
     openOnHover
     hideToolbar
@@ -124,27 +203,9 @@
     <div class="drawer-content">
       <nav class="drawer-nav">
         <ul>
-          <li><a style="font-size: 32px;" href="/">Home</a></li>
-          {#each routes as { href, title, devonly, children }}
-            {#if !devonly || (devonly && DEV && showDevItems)}
-              <li>
-                {#if href}
-                  <a class:active={page.url.pathname.includes(href)} {href}>{title}</a>
-                {:else}
-                  <span class:active={page.url.pathname.includes(title.toLowerCase())}>{title}</span
-                  >
-                {/if}
-                {#if children}
-                  <ul>
-                    {#each children as child}
-                      <a class:active={page.url.pathname.includes(child.href)} href={child.href}
-                        >{child.title}</a
-                      >
-                    {/each}
-                  </ul>
-                {/if}
-              </li>
-            {/if}
+          <li><a style="font-size: 32px; line-height: 1" href="/">Home</a></li>
+          {#each routes as route}
+            {@render entry(route)}
           {/each}
         </ul>
       </nav>
@@ -171,8 +232,14 @@
       </div>
     </div>
   </Inspect.Panel>
-  <Inspect.Panel appearance="floating" theme="stereo" renderIf={DEV && renderDevOnlyPanel}
-  ></Inspect.Panel>
+  <Inspect.Panel
+    appearance="solid"
+    theme="stereo"
+    renderIf={DEV && renderDevOnlyPanel}
+    {wiggleOnUpdate}
+  >
+    <ToggleButton bind:checked={wiggleOnUpdate}>wiggle</ToggleButton>
+  </Inspect.Panel>
 
   <svelte:boundary>
     {#snippet failed(error, reset)}
@@ -236,8 +303,8 @@
   }
 
   nav {
-    padding-inline: 1em;
-    padding-top: 0.5em;
+    padding-left: 0.5rem;
+    /* padding-top: 0.5em; */
     view-transition-name: nav;
   }
 
@@ -297,13 +364,13 @@
       width: 90%;
       /* padding-left: 3em; */
       padding-top: 0.5em;
-      padding-right: 3em;
+      padding-right: 3rem;
     }
 
     main.drawer-open {
-      width: 90%;
-      padding-left: calc(1.5em + 320px);
-      /* padding-right: 0; */
+      width: 100%;
+      padding-left: calc(3em + 230px);
+      padding-right: 8rem;
     }
 
     .title {
@@ -369,20 +436,30 @@
 
   nav.drawer-nav {
     font-family: 'EB Garamond', serif;
-    font-size: 16px;
+    /* font-size: 16px; */
+    overflow-y: auto;
 
     ul {
       display: flex;
       flex-direction: column;
       padding: 0;
-      font-size: 24px;
+      font-size: 18px;
       font-weight: bold;
-      margin-bottom: 1em;
+      /* margin-bottom: 1em; */
 
       ul {
         padding-left: 1ch;
-        font-size: 20px;
+        font-size: 18px;
         font-weight: normal;
+
+        ul {
+          font-size: 12px;
+          font-family: monospace;
+
+          /* li::before {
+            content: '- ';
+          } */
+        }
       }
     }
 
@@ -391,12 +468,17 @@
       color: var(--_text-color) !important;
       line-height: 1.5;
 
-      &:hover {
+      &:hover:not(span) {
         text-decoration: underline;
       }
     }
 
-    ul li a.active {
+    ul li span {
+      font-weight: bold;
+    }
+
+    ul li a.active,
+    ul li span.active {
       color: var(--red) !important;
     }
 

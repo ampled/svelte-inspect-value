@@ -1,6 +1,6 @@
 <script lang="ts">
   import { addToPanel } from '$lib/index.js'
-  import { onDestroy } from 'svelte'
+  // import { onDestroy } from 'svelte'
   import deepNest from '../deep-nest.js'
 
   addToPanel('nested', () => deepNest)
@@ -11,11 +11,12 @@
     remove = addToPanel('nesteda', () => ({ ...deepNest }))
   }
 
-  onDestroy(() => {
-    remove?.()
-  })
+  // onDestroy(() => {
+  //   remove?.()
+  // })
 
   $effect(() => {
+    console.log('addToPanel from effect')
     const cleanup = addToPanel('nestedc', () => ({ ...deepNest }))
 
     return cleanup

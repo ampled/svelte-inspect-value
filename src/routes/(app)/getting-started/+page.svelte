@@ -29,11 +29,15 @@
 
 <h2>Getting Started</h2>
 
-<h3 id="usage">Usage & Conditional Rendering</h3>
-
 <p>
   Install <code>{packageName}</code> with your favorite package manager.<br />
+
+  Importing <code>Inspect</code> from <code>{packageName}</code> makes three components available:<br
+  />
+  <code>Inspect</code>, <code>Inspect.Panel</code>, and <code>Inspect.Values</code>
 </p>
+
+<h3 id="usage">Usage & Conditional Rendering</h3>
 
 <p>
   A common use case for a component like this is to only render it during development.<br />If you
@@ -87,8 +91,10 @@ Result:
 <Inspect value={'no long strings in this neighbourhood thanks'} {stringCollapse} />
 
 <p>
-  Options set with props, <code>withOptions</code> or <code>configured</code> will override any global
-  options
+  Options set with props, <code
+    ><a href="/docs/types/Configurable#with-options">Inspect.Values.withOptions</a></code
+  >
+  or <code><a href="/docs/functions/configured">configured</a></code> will override any global options
 </p>
 
 <style>

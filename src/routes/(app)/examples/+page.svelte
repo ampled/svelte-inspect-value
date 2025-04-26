@@ -12,6 +12,7 @@
   import Promises from '$doclib/examples/Promises.svelte'
   import Stores from '$doclib/examples/Stores.svelte'
   import Urls from '$doclib/examples/Urls.svelte'
+  import { PanelValue } from '$lib/index.js'
   import { setContext } from 'svelte'
   import { SvelteMap } from 'svelte/reactivity'
 
@@ -23,6 +24,8 @@
 
   setContext('toc', toc)
 </script>
+
+<PanelValue key="toc" value={toc} />
 
 <div class="toc">
   {#each toc as [title, id]}

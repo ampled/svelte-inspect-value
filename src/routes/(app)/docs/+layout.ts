@@ -1,5 +1,3 @@
-export const prerender = 'auto'
-
 import type { Document } from '$doclib/types.js'
 import type { LayoutLoad } from './$types.js'
 

@@ -35,7 +35,7 @@ Props for `Inspect.Panel`
 ### align?
 
 ```ts
-optional align: PositionProp;
+align: PositionProp;
 ```
 
 Initial panel position
@@ -67,7 +67,7 @@ y-position can be one of `'top' | 'bottom' | 'middle' | 'full'`
 ### appearance?
 
 ```ts
-optional appearance: "solid" | "glassy" | "floating" | "dense";
+appearance: "solid" | "glassy" | "floating" | "dense";
 ```
 
 Sets appearance of panel.
@@ -85,7 +85,7 @@ Can be `'solid'|'glassy'|'dense'|'floating'`
 ### children?
 
 ```ts
-optional children: Snippet;
+children: Snippet;
 ```
 
 Extra elements to be added at the bottom of the panel
@@ -93,7 +93,7 @@ Extra elements to be added at the bottom of the panel
 ### hideGlobalValues?
 
 ```ts
-optional hideGlobalValues: boolean;
+hideGlobalValues: boolean;
 ```
 
 Don't display "global" values added with `addToPanel`
@@ -107,7 +107,7 @@ false
 ### hideToolbar?
 
 ```ts
-optional hideToolbar: boolean;
+hideToolbar: boolean;
 ```
 
 Don't render Panel toolbar with controls for setting position, opacity and appearance
@@ -121,7 +121,7 @@ false
 ### onOpenChange()?
 
 ```ts
-optional onOpenChange: (open: boolean) => void;
+onOpenChange: (open: boolean) => void;
 ```
 
 Callback for when panel is opened or closed
@@ -145,7 +145,7 @@ undefined
 ### opacity?
 
 ```ts
-optional opacity: boolean;
+opacity: boolean;
 ```
 
 Apply opacity to the panel when not hovered or focused
@@ -161,7 +161,7 @@ false
 ### open?
 
 ```ts
-optional open: boolean;
+open: boolean;
 ```
 
 Initially open panel
@@ -177,7 +177,7 @@ false
 ### openOnHover?
 
 ```ts
-optional openOnHover: boolean;
+openOnHover: boolean;
 ```
 
 Panel should open on hover.
@@ -193,7 +193,7 @@ false
 ### resize?
 
 ```ts
-optional resize: boolean;
+resize: boolean;
 ```
 
 Enable resizing
@@ -207,7 +207,7 @@ true
 ### wiggleOnUpdate?
 
 ```ts
-optional wiggleOnUpdate: boolean;
+wiggleOnUpdate: boolean;
 ```
 
 When closed, wiggle the panel button when an inspected value is updated
@@ -221,7 +221,7 @@ true
 ### zIndex?
 
 ```ts
-optional zIndex: number;
+zIndex: number;
 ```
 
 Z-index of panel
@@ -237,7 +237,7 @@ Z-index of panel
 ### heading?
 
 ```ts
-optional heading: string | Snippet<[]>;
+heading: string | Snippet<[]>;
 ```
 
 A `string` or `Snippet` that will be rendered as a small heading with a collapse-button for the component.
@@ -245,7 +245,7 @@ A `string` or `Snippet` that will be rendered as a small heading with a collapse
 ### name?
 
 ```ts
-optional name: string;
+name: string;
 ```
 
 Name of inspected value. Will be displayed as the "key" of the value.
@@ -259,7 +259,7 @@ Will not be used if [`BaseProps.values`](InspectProps) is set
 ### value?
 
 ```ts
-optional value: unknown;
+value: unknown;
 ```
 
 Any (single) value of any type to be inspected.
@@ -272,7 +272,7 @@ the value will not be inspected
 ### values?
 
 ```ts
-optional values: unknown;
+values: unknown;
 ```
 
 Inspect every enumerable property of a value, object or array-like.

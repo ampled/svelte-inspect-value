@@ -7,7 +7,7 @@ title:
 # configured()
 
 ```ts
-function configured(options: ConfigurableOptions): Configurable<Component>;
+function configured(options: InspectValuesOptions): Configurable<Component>;
 ```
 
 Creates a pre-configured Inspect-component that will inspect any value passed to it
@@ -21,7 +21,7 @@ The component will also inherit options set with `setGlobalInspectOptions` or `I
 
 ### options
 
-`ConfigurableOptions`
+[`InspectValuesOptions`](../types/InspectValuesOptions)
 
 ## Returns
 
@@ -44,5 +44,5 @@ The component will also inherit options set with `setGlobalInspectOptions` or `I
 
 ## See
 
- - [`setGlobalInspectOptions`](setGlobalInspectOptions)
+ - [`options.setGlobalInspectOptions`](setGlobalInspectOptions)
  - [`Configurable.withOptions`](../types/Configurable)

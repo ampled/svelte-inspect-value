@@ -175,6 +175,7 @@
     <input type="number" bind:value={fontSize} />
   </label>
   <button
+    title="output theme object to console"
     class="unstyled"
     style="width: 2em; height: 2em;"
     onclick={() => console.log($state.snapshot(colors))}

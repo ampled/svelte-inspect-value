@@ -10,7 +10,7 @@
 
   <label>
     theme
-    <select bind:value={options.theme}>
+    <select bind:value={options.theme} name="theme">
       <option>inspect</option>
       <option>drak</option>
       <option>stereo</option>
@@ -38,7 +38,7 @@
 
   <label>
     store
-    <select bind:value={options.stores}>
+    <select bind:value={options.stores} name="stores">
       <option>full</option>
       <option value="value-only">value only</option>
       <option value={false}>off</option>
@@ -48,7 +48,7 @@
 
   <label>
     elementview
-    <select bind:value={options.elementView}>
+    <select bind:value={options.elementView} name="element-view">
       <option>simple</option>
       <option>full</option>
     </select>
@@ -56,7 +56,7 @@
 
   <label>
     quotes
-    <select bind:value={options.quotes}>
+    <select bind:value={options.quotes} name="quotes">
       <option>single</option>
       <option>double</option>
       <option>none</option>
@@ -65,16 +65,34 @@
 
   <label>
     collapse strings
-    <input type="number" bind:value={options.stringCollapse} min="0" style="width: 5em" />
+    <input
+      type="number"
+      bind:value={options.stringCollapse}
+      min="0"
+      style="width: 5em"
+      name="collapse-strings"
+    />
   </label>
 
   <label>
     preview depth
-    <input type="number" bind:value={options.previewDepth} min="0" style="width: 5em" />
+    <input
+      type="number"
+      bind:value={options.previewDepth}
+      min="0"
+      style="width: 5em"
+      name="preview-depth"
+    />
   </label>
   <label>
     preview entries
-    <input type="number" bind:value={options.previewEntries} min="0" style="width: 5em" />
+    <input
+      type="number"
+      bind:value={options.previewEntries}
+      min="0"
+      style="width: 5em"
+      name="preview-entries"
+    />
   </label>
 </div>
 

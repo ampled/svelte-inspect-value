@@ -28,7 +28,6 @@
       error = undefined
     } catch (e) {
       if (e instanceof Error) {
-        // console.log(e);
         error = e.message
       }
       demoInputValid = false

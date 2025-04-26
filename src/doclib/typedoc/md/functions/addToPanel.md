@@ -9,8 +9,8 @@ title:
 ```ts
 function addToPanel(
    name: PropertyKey, 
-   value: () => unknown, 
-   addedBy?: string): () => boolean;
+   val: () => unknown, 
+   addedBy?: string): () => void;
 ```
 
 Register a "global" value to be inspected with `Inspect.Panel`.
@@ -33,7 +33,7 @@ Can also safely be run inside an $effect that will re-add the value if removed a
 
 display name of inspected value
 
-### value
+### val
 
 () => `unknown`
 
@@ -50,12 +50,12 @@ function returning value to be inspected
 Function that removes added value when called. Returns `true` if value was removed, `false` if value didn't exist
 
 ```ts
-(): boolean;
+(): void;
 ```
 
 ### Returns
 
-`boolean`
+`void`
 
 ## Example
 

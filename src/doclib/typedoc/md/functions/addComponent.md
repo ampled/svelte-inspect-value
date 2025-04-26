@@ -35,13 +35,13 @@ Custom component
 
 ### transformProps?
 
-`CustomComponentPropsTransformFn` `<` `TComponent` `>` 
+[`CustomComponentPropsTransformFn`](../types/CustomComponentPropsTransformFn) `<` `TComponent` `>` 
 
 Function modifying props passed to component
 
 ### predicate?
 
-`CustomComponentPredicate` `<` `TComponent` `>` 
+[`CustomComponentPredicate`](../types/CustomComponentPredicate) `<` `TComponent` `>` 
 
 Function returning boolean value. If false, use default component.
 

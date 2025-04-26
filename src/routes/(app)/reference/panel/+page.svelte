@@ -1,30 +1,11 @@
 <script lang="ts">
-  import AddToPanel from './AddToPanel.md'
   import PanelExample from './PanelExample.svelte'
-  import Props from './Props.md'
-
-  const toc = [
-    'appearance',
-    'children',
-    'hideGlobalValues',
-    'opacity',
-    'open',
-    'openOnHover',
-    'position',
-    'resize',
-  ]
+  import PanelExampleCode from './PanelExampleCode.md'
 </script>
 
-<div class="toc">
-  <a href="#props" style="font-weight: bold">Props</a>
-  {#each toc as prop}
-    <a href={`#${prop}`}>- {prop} </a>
-    <hr />
-  {/each}
-  <a href="#add-to-panel" style="font-weight: bold">addToPanel()</a>
-</div>
-
 <h2 id="panel">Inspect.Panel</h2>
+
+<a href="/docs/types/PanelProps">Props</a>
 
 <p>
   <code>Inspect.Panel</code> is a fixed-position version of <code>Inspect</code>.<br />
@@ -33,6 +14,8 @@
 </p>
 
 <PanelExample />
+
+<PanelExampleCode />
 
 <p>
   <code>Inspect.Panel</code> will also render any children passed to it, a nice place to put any
@@ -46,13 +29,7 @@
 <p>
   In addition to using the <code>value</code> or
   <code>values</code>-props, panels can also receive "global" values with the utility function
-  <a href="#add-to-panel"><code>addToPanel</code></a>.<br />
+  <a href="/docs/functions/addToPanel"><code>addToPanel</code></a>.<br />
   Also, if any instances of <code>Inspect</code> / <code>Inspect.Panel</code> are used outside of a panel,
   you can add values to the panel from those instances.
 </p>
-
-<div class="md-types">
-  <Props />
-
-  <AddToPanel />
-</div>

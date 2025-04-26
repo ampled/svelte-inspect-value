@@ -24,5 +24,6 @@ export function load(app) {
       .replaceAll('\\{', ' `{` ')
       .replaceAll('\\}', ' `}` ')
       .replaceAll('*extends*', '`extends`')
+      .replaceAll(/^optional /gm, '')
   })
 }

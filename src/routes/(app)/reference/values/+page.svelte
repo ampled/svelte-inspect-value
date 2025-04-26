@@ -6,14 +6,9 @@
   import inlineconfigcode from '$doclib/examples/inlineconfig.txt?raw'
   import valuesCode from '$doclib/examples/inspectvalueexample.txt?raw'
 
-  import Configured from './Configured.md'
-  import WithOptions from './WithOptions.md'
-
   const toc = new Map([
     ['Configuring', 'configuring'],
     ['Chainable inline configuration', 'chainable'],
-    ['withOptions()', 'with-options'],
-    ['configured()', 'configured'],
   ])
 </script>
 
@@ -43,10 +38,10 @@ Result:
 <p>
   <code>Inspect.Values</code> does not accept any configuration props since any value passed as a
   prop will simply be inspected. If you want to change the behavior of <code>Inspect.Values</code>
-  you can use <a href="/reference/options">global options</a> or define a pre-configured version of
-  the component with
+  you can use <a href="/docs/functions/setGlobalInspectOptions">global options</a> or define a
+  pre-configured version of the component with
   <code>Inspect.Values.withOptions</code>
-  or the <code><a href="#configured">configured</a></code>-function:
+  or the <code><a href="/docs/functions/configured">configured</a></code>-function:
 </p>
 
 <Code code={configuredCode} />
@@ -69,9 +64,3 @@ Result:
 </p>
 
 <Code code={inlineconfigcode} />
-
-<div class="md-types">
-  <WithOptions />
-  <hr />
-  <Configured />
-</div>

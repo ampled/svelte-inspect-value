@@ -1,5 +1,5 @@
 {
-  "$schema": "https://typedoc.org/schema.json",
+  "$schema": "https://typedoc-plugin-markdown.org/schema.json",
   "plugin": [
     "typedoc-plugin-markdown",
     "./scripts/sanitize.mjs",
@@ -14,13 +14,15 @@
     "linkify": false
   },
   "useTsLinkResolution": true,
+  "readme": "none",
   "outputs": [
     {
       "name": "markdown",
       "path": "./src/doclib/typedoc/md",
       "options": {
+        "readme": "none",
+        "entryFileName": "Docs",
         "router": "kind",
-        "excludeScopesInPaths": true,
         "hidePageTitle": false,
         "hideBreadcrumbs": true,
         "hidePageHeader": true,

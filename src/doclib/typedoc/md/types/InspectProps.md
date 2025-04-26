@@ -22,7 +22,7 @@ Props for `Inspect`
 ### heading?
 
 ```ts
-optional heading: string | Snippet<[]>;
+heading: string | Snippet<[]>;
 ```
 
 A `string` or `Snippet` that will be rendered as a small heading with a collapse-button for the component.
@@ -30,7 +30,7 @@ A `string` or `Snippet` that will be rendered as a small heading with a collapse
 ### name?
 
 ```ts
-optional name: string;
+name: string;
 ```
 
 Name of inspected value. Will be displayed as the "key" of the value.
@@ -44,7 +44,7 @@ Will not be used if `BaseProps.values` is set
 ### value?
 
 ```ts
-optional value: unknown;
+value: unknown;
 ```
 
 Any (single) value of any type to be inspected.
@@ -57,7 +57,7 @@ the value will not be inspected
 ### values?
 
 ```ts
-optional values: unknown;
+values: unknown;
 ```
 
 Inspect every enumerable property of a value, object or array-like.
