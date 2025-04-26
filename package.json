@@ -34,8 +34,7 @@
   "files": [
     "dist",
     "!dist/**/*.test.*",
-    "!dist/**/*.spec.*",
-    "!readme.png"
+    "!dist/**/*.spec.*"
   ],
   "sideEffects": [
     "**/*.css"
