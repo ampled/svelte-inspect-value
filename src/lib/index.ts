@@ -2,7 +2,7 @@ import type { Component } from 'svelte'
 import { InspectValues, type Configurable } from './configurable.js'
 import InspectBase from './Inspect.svelte'
 import Panel from './Panel.svelte'
-import type { InspectPanelProps, InspectProps } from './types.js'
+import type { InspectProps, PanelProps } from './types.js'
 ;(InspectBase as unknown as { Values: typeof InspectValues }).Values = InspectValues
 ;(InspectBase as unknown as { Panel: typeof Panel }).Panel = Panel
 
@@ -11,6 +11,7 @@ import type { InspectPanelProps, InspectProps } from './types.js'
  *
  * Also used to access variations of the component: {@linkcode Inspect.Values} and {@linkcode Inspect.Panel}
  *
+ * @see {@link InspectProps}
  *
  * @example
  * ```svelte
@@ -77,10 +78,10 @@ export const Inspect = InspectBase as unknown as Component<InspectProps> & {
    * ```
    */
   Panel: Component<
-    InspectPanelProps,
+    PanelProps,
     // eslint-disable-next-line @typescript-eslint/no-empty-object-type
     {},
-    'position' | 'resize' | 'open' | 'appearance' | 'opacity'
+    'align' | 'resize' | 'open' | 'appearance' | 'opacity'
   >
 }
 
@@ -94,12 +95,7 @@ export {
   setGlobalInspectOptions,
   type InspectOptions,
 } from './options.svelte.js'
-export type {
-  CustomComponentProps,
-  CustomComponents,
-  InspectPanelProps,
-  InspectProps,
-  InspectValuesOptions,
-} from './types.js'
+export { default as PanelValue } from './PanelValue.svelte'
+export type { CustomComponentProps, CustomComponents, InspectProps, PanelProps } from './types.js'
 export { addComponent } from './util.js'
 export default Inspect

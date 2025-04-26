@@ -1,16 +1,26 @@
 import { DEV } from 'esm-env'
+import { onDestroy } from 'svelte'
 import { SvelteMap } from 'svelte/reactivity'
 import type { Note } from './types.js'
 
 type GlobalValue = {
   note?: Note
-  value: () => unknown
+  value: unknown
 }
 
-export const globalValues = new SvelteMap<unknown, GlobalValue>()
+export const globalValues = new SvelteMap<PropertyKey, GlobalValue>()
+
+// $inspect(globalValues)
 
 const _componentNameRegex = /(\+)?\w+\.svelte/gm
-const componentNameWithPathRegex = /([A-z$_-]+\/)+(\+)?(\w+[^Tools])\.svelte(?!\.ts)/gm
+const componentNameWithPathRegex = /([()A-z$_-]+\/)+(\+)?(\w+[^Tools])\.svelte(?!\.ts)/gm
+
+/**
+ * Remove a registered "global" value
+ */
+export function removeFromPanel(name: PropertyKey) {
+  globalValues.delete(name)
+}
 
 /**
  * Register a "global" value to be inspected with `Inspect.Panel`.
@@ -61,10 +71,11 @@ const componentNameWithPathRegex = /([A-z$_-]+\/)+(\+)?(\w+[^Tools])\.svelte(?!\
  * ```
  *
  * @param name display name of inspected value
- * @param value function returning value to be inspected
+ * @param val function returning value to be inspected
  * @param addedBy (optional) label of where value was added from
+ * @returns Function that removes added value when called. Returns `true` if value was removed, `false` if value didn't exist
  */
-export function addToPanel(name: PropertyKey, value: () => unknown, addedBy?: string) {
+export function addToPanel(name: PropertyKey, val: () => unknown, addedBy?: string) {
   let addedByPath: string | undefined
   if (DEV && addedBy == null) {
     const err = new Error()
@@ -76,27 +87,29 @@ export function addToPanel(name: PropertyKey, value: () => unknown, addedBy?: st
   }
 
   const note: Note | undefined = addedBy ? { title: addedBy, description: addedByPath } : undefined
+  const entry = {
+    note,
+    get value() {
+      return val()
+    },
+  }
 
-  const entry: GlobalValue = { value, note }
+  const remove = () => {
+    globalValues.delete(name)
+  }
 
   try {
     $effect(() => {
-      value()
+      val()
       globalValues.set(name, entry)
-      return () => globalValues.delete(name)
     })
+    onDestroy(remove)
   } catch {
-    return $effect.root(() => {
-      $effect(() => {
-        value()
-        globalValues.set(name, entry)
-      })
-      return () => globalValues.delete(name)
-    })
+    // lifecycle_outside_component error
+    // return manual remove fn
+    globalValues.set(name, entry)
+    return remove
   }
-  return () => globalValues.delete(name)
-}
 
-export function removeFromPanel(name: PropertyKey) {
-  globalValues.delete(name)
+  return remove
 }

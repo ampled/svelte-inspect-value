@@ -1,7 +1,3 @@
-<!--
-@component Panel
--->
-
 <script module lang="ts">
   export let globalInspectState = $state({
     mounted: [] as string[],
@@ -10,6 +6,7 @@
 
 <script lang="ts">
   import { getContext, setContext, untrack } from 'svelte'
+  import type { ClassValue } from 'svelte/elements'
   import { resizable, type ResizableDirections } from './action/resizable.svelte.js'
   import CollapseStateProvider from './CollapseStateProvider.svelte'
   import Node from './components/Node.svelte'
@@ -30,33 +27,39 @@
     mergeOptions,
     type InspectOptions,
   } from './options.svelte.js'
-  import type { InspectPanelProps, XPos, YPos } from './types.js'
+  import type { PanelProps, PositionProp, XPos, YPos } from './types.js'
   import { getAllProperties, initialize, sortProps } from './util.js'
   import Wrapper from './Wrapper.svelte'
 
   let {
-    children,
+    // base props
     value,
     values,
-    heading,
     name,
-    position = $bindable(['top', 'right']),
+    heading,
+    // panel props
+    align = $bindable('right full'),
+    appearance = $bindable('solid'),
+    open = $bindable(false),
+    opacity = $bindable(false),
     hideToolbar = false,
     hideGlobalValues = false,
-    resize = $bindable(true),
-    open = $bindable(false),
-    appearance = $bindable('solid'),
-    opacity = $bindable(false),
+    resize = true,
     openOnHover = false,
     zIndex = 1000,
+    wiggleOnUpdate = true,
+    onOpenChange,
+    children,
+    // inspect options and element attributes
     class: className,
     ...rest
-  }: InspectPanelProps = $props()
+  }: PanelProps = $props()
 
+  const id = $props.id()
   let full = $state(false)
   let hovered = $state(false)
+  let flash = $state(false)
   const handleLabel = $derived(open ? 'close panel' : 'open panel')
-  const id = $props.id()
 
   let shouldBeOpen = $derived.by(() => {
     if (openOnHover) {
@@ -65,68 +68,76 @@
     return open
   })
 
-  let [yPosition, xPosition = 'right'] = $derived(position)
+  let [xPos, yPos = 'full', xPosClassname, yPosClassname] = $derived.by(() => {
+    let [x, y = 'full'] = align.split(' ') as [XPos, YPos]
+
+    if (['full', 'center'].includes(x)) {
+      if (!['top', 'bottom'].includes(y)) {
+        y = 'top'
+      }
+    }
+    if (['full', 'middle'].includes(y)) {
+      if (!['right', 'left'].includes(x)) {
+        x = 'right'
+      }
+    }
+
+    return [x, y, x === 'full' ? 'full-x' : x, y === 'full' ? 'full-y' : y]
+  })
+
   let keys = $derived.by(() => {
     if (values) return getAllProperties(values)
     return []
   })
-
-  let [optionsProps, restProps] = $derived(sortProps(rest))
-
-  let globalOptions = getContext<Partial<InspectOptions> | (() => Partial<InspectOptions>)>(
-    GLOBAL_OPTIONS_CONTEXT
-  )
-
-  let mergedOptions = $derived(
-    mergeOptions(
-      { ...optionsProps },
-      typeof globalOptions === 'function' ? globalOptions() : globalOptions
-    )
-  )
-
-  let options = createOptions(() => mergedOptions)
-  let { theme, noanimate, borderless, onCollapseChange } = $derived(options.value)
-
-  let shouldRender = $derived(
-    typeof options.value.renderIf === 'function'
-      ? Boolean(options.value.renderIf())
-      : Boolean(options.value.renderIf)
-  )
-
-  function onPositionChange(yPos: YPos, xPos: XPos) {
-    position = [yPos, xPos]
-  }
-
-  let flash = $state(false)
-  function oninspectvaluechange(): void {
-    flash = true
-    setTimeout(() => {
-      flash = false
-    }, 500)
-  }
 
   let resizableHandles = $derived.by<ResizableDirections[]>(() => {
     const ret = [] as ResizableDirections[]
 
     if (full) return []
 
-    if (['bottom', 'middle'].includes(yPosition)) {
+    if (['bottom', 'middle'].includes(yPos)) {
       ret.push('top')
     }
 
-    if (['right', 'center'].includes(xPosition)) {
+    if (['right', 'center'].includes(xPos)) {
       ret.push('left')
     }
 
-    if (['left', 'center'].includes(xPosition)) {
+    if (['left', 'center'].includes(xPos)) {
       ret.push('right')
     }
 
-    if (['top', 'middle'].includes(yPosition)) {
+    if (['top', 'middle'].includes(yPos)) {
       ret.push('bottom')
     }
 
     return ret
+  })
+
+  let [optionsProps, restProps] = $derived(sortProps(rest))
+  let globalOptions = getContext<Partial<InspectOptions> | (() => Partial<InspectOptions>)>(
+    GLOBAL_OPTIONS_CONTEXT
+  )
+  let mergedOptions = $derived(
+    mergeOptions(
+      { ...optionsProps },
+      typeof globalOptions === 'function' ? globalOptions() : globalOptions
+    )
+  )
+  let options = createOptions(() => mergedOptions)
+  let { theme, noanimate, borderless, onCollapseChange } = $derived(options.value)
+  let shouldRender = $derived(
+    typeof options.value.renderIf === 'function'
+      ? Boolean(options.value.renderIf())
+      : Boolean(options.value.renderIf)
+  )
+  let wrapperClasses = $derived<ClassValue>([theme, borderless && 'borderless', className])
+
+  $effect(() => {
+    globalValues.keys()
+    untrack(() => {
+      if (wiggleOnUpdate) oninspectvaluechange()
+    })
   })
 
   $effect(() => {
@@ -139,6 +150,24 @@
 
   setContext(Symbol.for('siv.fixed'), true)
   initialize(options)
+
+  function oninspectvaluechange(): void {
+    if (flash) return
+    flash = true
+    setTimeout(() => {
+      flash = false
+    }, 500)
+  }
+
+  function onAlignChange(x: XPos, y: YPos) {
+    align = `${x} ${y}` as PositionProp
+  }
+
+  function onHandleClick() {
+    open = !open
+    hovered = false
+    onOpenChange?.(open)
+  }
 </script>
 
 {#if shouldRender}
@@ -150,12 +179,12 @@
     class={[
       'inspect-panel',
       theme,
-      full ? 'full' : [xPosition, yPosition],
+      full ? 'full' : [xPosClassname, yPosClassname],
       appearance,
       borderless && 'borderless',
       noanimate && 'noanimate',
       opacity && 'opacity',
-      flash && 'flash',
+      flash && wiggleOnUpdate && !hideGlobalValues && 'flash',
       shouldBeOpen && 'open',
       openOnHover && 'hoverable',
     ]}
@@ -163,7 +192,7 @@
     {...restProps}
   >
     <button
-      onclick={() => (open = !open)}
+      onclick={onHandleClick}
       class="handle"
       type="button"
       aria-label={handleLabel}
@@ -183,57 +212,52 @@
       </div>
     </button>
     {#if !hideToolbar}
-      <div class={['toolbar', yPosition]}>
-        {#if !full}
-          <NodeIconButton title="toggle opacity" onclick={() => (opacity = !opacity)}>
-            {#if opacity}
-              <OpacityIcon />
+      <div class={['toolbar', yPos]}>
+        <div class="group">
+          {#if !full}
+            <NodeIconButton title="toggle opacity" onclick={() => (opacity = !opacity)}>
+              {#if opacity}
+                <OpacityIcon />
+              {:else}
+                <CircleSolid />
+              {/if}
+            </NodeIconButton>
+          {/if}
+          <NodeIconButton title="toggle full" onclick={() => (full = !full)}>
+            {#if full}
+              <FullscreenExit />
             {:else}
-              <CircleSolid />
+              <Fullscreen />
             {/if}
           </NodeIconButton>
-        {/if}
-        <NodeIconButton title="toggle full" onclick={() => (full = !full)}>
-          {#if full}
-            <FullscreenExit />
-          {:else}
-            <Fullscreen />
-          {/if}
-        </NodeIconButton>
-        {#if !full}
-          <div class="spacer"></div>
-        {/if}
+        </div>
 
         {#if !full}
           <div class="group">
             <Select
-              prefix="y"
-              name="y-position"
-              value={yPosition}
-              onchange={(e) => onPositionChange(e.currentTarget.value, xPosition)}
+              prefix="x"
+              name="x-position"
+              value={xPos}
+              onchange={(e) => onAlignChange(e.currentTarget.value as XPos, yPos)}
             >
-              <option>top</option>
-              <option disabled={xPosition === 'full-x' || xPosition == 'center'}>middle</option>
-              <option>bottom</option>
-              <option value="full-y" disabled={['center', 'full-x'].includes(xPosition)}
-                >full</option
-              >
+              <option>left</option>
+              <option disabled={['middle', 'full'].includes(yPos)}>center</option>
+              <option>right</option>
+              <option disabled={['middle', 'full'].includes(yPos)}>full</option>
             </Select>
 
             <Select
-              prefix="x"
-              name="x-position"
-              value={xPosition}
-              onchange={(e) => onPositionChange(yPosition, e.currentTarget.value)}
+              prefix="y"
+              name="y-position"
+              value={yPos}
+              onchange={(e) => onAlignChange(xPos, e.currentTarget.value as YPos)}
             >
-              <option>left</option>
-              <option disabled={yPosition === 'full-y' || yPosition === 'middle'}>center</option>
-              <option>right</option>
-              <option value="full-x" disabled={['middle', 'full-y'].includes(yPosition)}
-                >full</option
-              >
+              <option>top</option>
+              <option disabled={['full', 'center'].includes(xPos)}>middle</option>
+              <option>bottom</option>
+              <option disabled={['center', 'full'].includes(xPos)}>full</option>
             </Select>
-            <Select bind:value={appearance}>
+            <Select bind:value={appearance} name="appearance">
               <option>solid</option>
               <option>dense</option>
               <option>glassy</option>
@@ -246,11 +270,7 @@
 
     {#if value || name || (keys.length && values)}
       <CollapseStateProvider {onCollapseChange}>
-        <Wrapper
-          class={[theme, borderless && 'borderless', className]}
-          {heading}
-          style={hideToolbar ? 'border-top: none' : ''}
-        >
+        <Wrapper class={wrapperClasses} {heading} style={hideToolbar ? 'border-top: none' : ''}>
           {#if values && keys.length}
             <PropertyList value={values} {keys} />
           {:else if name || value}
@@ -263,7 +283,7 @@
     {/if}
     {#if globalValues.size > 0 && !hideGlobalValues}
       <CollapseStateProvider {onCollapseChange}>
-        <Wrapper class={[theme, borderless && 'borderless', className]}>
+        <Wrapper class={wrapperClasses}>
           {#snippet heading()}
             global values
             <div
@@ -278,9 +298,10 @@
               <NodeActionButton onclick={() => globalValues.clear()}>clear</NodeActionButton>
             </div>
           {/snippet}
-          {#each globalValues as [key, { note, value }] (key)}
-            <Node {note} key={key as PropertyKey} value={value()} />
+          {#each globalValues as [key, entry] (key)}
+            <Node note={entry.note} key={key as PropertyKey} value={entry.value} />
           {/each}
+          <!-- <Node value={globalValues.entries()} key="globalVals" /> -->
         </Wrapper>
       </CollapseStateProvider>
     {/if}
@@ -339,6 +360,8 @@
   .inspect-panel {
     --border-radius: 8px;
     --handle-offset: 0;
+    --inspect-min-width: 100%;
+    container-type: inline-size;
     position: fixed;
     display: flex;
     transition:
@@ -359,7 +382,8 @@
     align-items: flex-start;
     gap: 0.5em;
     padding: 0.5em;
-    min-width: 425px;
+    width: 420px;
+    /* min-width: 425px; */
     background-color: transparent;
     /* z-index: 9998; */
     min-height: 100px;
@@ -381,7 +405,7 @@
       justify-content: center;
       align-items: center;
       position: fixed;
-      /* z-index: 20; */
+      z-index: 20;
 
       .caret {
         color: var(--_button-color);
@@ -424,8 +448,10 @@
         height: 40px;
         transform-origin: 100% 50%;
         border-radius: 0;
-        border: 1px solid var(--_border-color);
+        border: 1px double var(--_border-color);
         border-right: none;
+        /* border-right: 1px dotted var(--_border-color); */
+        box-shadow: -1px 0px 1px var(--_border-color) inset;
 
         &:hover,
         &:focus {
@@ -440,7 +466,7 @@
 
       :global .svelte-inspect-value {
         padding: 0;
-        background-color: none;
+        background-color: transparent;
         border-radius: 0;
         border: none;
         border-top: 1px solid var(--_border-color);
@@ -579,7 +605,9 @@
         top: 12px;
       }
 
-      &.center .handle {
+      &.center .handle,
+      &.full-x .handle {
+        left: 50%;
         bottom: var(--handle-offset);
         transform: rotate(-90deg) translate(-100%, -50%);
       }
@@ -600,6 +628,7 @@
     }
 
     &.middle {
+      max-height: 100%;
       top: 50%;
       --translate-y: -50%;
 
@@ -750,11 +779,16 @@
     transition: margin 150ms ease-in-out;
     transition-delay: 100ms;
     border-radius: 8px;
+    min-height: 2em;
+    flex-shrink: 0;
     width: 100%;
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
     align-items: center;
     gap: 0.5em;
+    overflow: auto;
+    flex-wrap: wrap;
 
     .spacer {
       width: 100%;
@@ -763,7 +797,19 @@
     .group {
       display: flex;
       flex-direction: row;
+      flex-wrap: wrap;
       gap: 0.5em;
+    }
+
+    @container (inline-size < 220px) {
+      gap: 0.25;
+
+      .group {
+        width: 100%;
+        justify-content: flex-end;
+        /* flex-wrap: wrap; */
+        gap: 0.25em;
+      }
     }
   }
 </style>

@@ -1,7 +1,7 @@
 import { getContext, setContext } from 'svelte'
-import type { InspectState } from './state.svelte.js'
+import type { CollapseState } from './state.svelte.js'
 import type { CustomComponents } from './types.js'
-import { clamp } from './util.js'
+import * as util from './util.js'
 
 export const OPTIONS_CONTEXT: symbol = Symbol('inspect-options')
 /**
@@ -13,11 +13,11 @@ export const OPTIONS_CONTEXT: symbol = Symbol('inspect-options')
 export const GLOBAL_OPTIONS_CONTEXT: symbol = Symbol('inspect-global-options')
 
 /**
+ *
  * Various options to configure the look and feel of components exported by `'svelte-inspect-value'`
  *
  * These can be set directly on `Inspect` and `Inspect.Panel` as props, or "globally" using
- * {@link setGlobalInspectOptions} or {@linkcode [InspectOptionsProvider](./InspectOptionsProvider.svelte)}.
- *
+ * {@link setGlobalInspectOptions} or `InspectOptionsProvider`
  * Props will override any options using the provider methods.
  *
  * @example
@@ -87,7 +87,7 @@ export type InspectOptions = {
    * An object with type as keyname and array of component and optional
    * prop modification function and predicate determining if custom component should be used.
    *
-   * Use the helper function `addComponent` to get properly typed props for the custom component.
+   * Use the helper function {@linkcode util.addComponent | addComponent} to get properly typed props for the custom component.
    *
    * @example
    * ```svelte
@@ -112,13 +112,13 @@ export type InspectOptions = {
    */
   customComponents: CustomComponents
   /**
-   * Disable animations
+   * Disable all animations (both css and Svelte transitions)
    *
    * @default false
    */
   noanimate: boolean
   /**
-   * Use no borders and transparent background
+   * Render no borders or background
    *
    * @default false
    */
@@ -132,7 +132,7 @@ export type InspectOptions = {
   /**
    * Set color theme class
    *
-   * Available themes: `'inspect'|'drak'|'stereo'|'dark'|'light'|'plain'|'cotton-candy'`
+   * Available themes: `'inspect'|'drak'|'stereo'|'dark'|'light'|'plain'
    *
    * @default 'inspect'
    */
@@ -240,7 +240,7 @@ export type InspectOptions = {
    *
    * @default undefined
    */
-  onCollapseChange: ((state: InspectState) => void) | undefined
+  onCollapseChange: ((state: CollapseState) => void) | undefined
   /**
    * Enable or disable svelte-store inspection.
    * Objects with a `subscribe` method will be inspected as stores and show their subscription value.
@@ -255,6 +255,12 @@ export type InspectOptions = {
    */
   stores: boolean | 'value-only' | 'full'
 }
+
+/**
+ * @useDeclaredType
+ * @inline
+ */
+export type InspectOptionsProps = Partial<InspectOptions>
 
 export const DEFAULT_OPTIONS: InspectOptions = {
   noanimate: false,
@@ -301,7 +307,9 @@ export function mergeOptions(
 export function createOptions(options: () => InspectOptions) {
   const transitionDuration = $derived(options().noanimate ? 0 : 200)
   // this could be Infinity but let's set a cap just to be sure
-  const expandLevel = $derived(clamp(options().expandAll ? 30 : options().expandLevel, 0, 30))
+  const expandLevel = $derived(
+    util.clamp(options().expandAll ? 30 : (options().expandLevel ?? 1), 0, 30)
+  )
 
   return {
     get value() {
@@ -320,6 +328,8 @@ export type OptionsContext = ReturnType<typeof createOptions>
 
 /**
  * Set a context with configuration options for `Inspect`
+ *
+ * Alternative to using the `InspectOptionsProvider`-component.
  */
 export function setGlobalInspectOptions(
   options: () => Partial<InspectOptions>
@@ -349,3 +359,5 @@ export function useOptions(): OptionsContext {
 export function useParentOptions() {
   return getContext<OptionsContext | undefined>(OPTIONS_CONTEXT)
 }
+
+export type TestType = { foo: string }

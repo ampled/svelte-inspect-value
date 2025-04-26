@@ -1,16 +1,18 @@
+/** @import type {TestType} from "./options.svelte.js" */
+/** @import * as opts from "./options.svelte.ts" */
+/** @import * as _opts from "./options.svelte" */
+
 import { setContext, type Component } from 'svelte'
 import ValuesBase from './InspectValues.svelte'
-import type { InspectOptions } from './options.svelte.js'
-import type { ConfigurableOptions, IntRange } from './types.js'
+import * as options from './options.svelte.js'
+import type { InspectValuesOptions } from './types.js'
 
-type ExpandRange = IntRange<0, 11>
-
-/** Set initial expandLevel */
-type ExpandKey = `Expand${ExpandRange}`
-
-export type Configurable<T> = T & {
+/**
+ * Utility-type used to enhance `Inspect.Values` with {@linkcode Configurable.withOptions} and chainable inline configuration.
+ */
+export type Configurable<TComponent = Component> = TComponent & {
   /**
-   * Configure `Inspect.Values` or other variants created with `withOptions` or `configured`
+   * Configure `Inspect.Values` or other variants created with `withOptions` or {@linkcode configured}
    *
    * The component will also inherit options set with `setGlobalInspectOptions` or `InspectOptionsProvider`.
    *
@@ -31,15 +33,31 @@ export type Configurable<T> = T & {
    * <InspectValues {str} {obj} arr={[1,2,3]} />
    * ```
    */
-  withOptions: (options: ConfigurableOptions) => Configurable<T>
+  withOptions: (options: InspectValuesOptions) => Configurable<TComponent>
   /** Initially expand all nodes (max 30) */
-  ExpandAll: Configurable<T>
-} & {
-  /**
-   * Set initial ExpandLevel
-   */
-  [key in ExpandKey]: Configurable<T>
-} & {
+  ExpandAll: Configurable<TComponent>
+  /** Set initial expand depth to 0 */
+  Expand0: Configurable<TComponent>
+  /** Set initial expand depth to 1 */
+  Expand1: Configurable<TComponent>
+  /** Set initial expand depth to 2 */
+  Expand2: Configurable<TComponent>
+  /** Set initial expand depth to 3 */
+  Expand3: Configurable<TComponent>
+  /** Set initial expand depth to 4 */
+  Expand4: Configurable<TComponent>
+  /** Set initial expand depth to 5 */
+  Expand5: Configurable<TComponent>
+  /** Set initial expand depth to 6 */
+  Expand6: Configurable<TComponent>
+  /** Set initial expand depth to 7 */
+  Expand7: Configurable<TComponent>
+  /** Set initial expand depth to 8 */
+  Expand8: Configurable<TComponent>
+  /** Set initial expand depth to 9 */
+  Expand9: Configurable<TComponent>
+  /** Set initial expand depth to 10 */
+  Expand10: Configurable<TComponent>
   /**
    * Use chainable inline configuration in a template.
    * Complete configuration and return component with `Ok`
@@ -58,11 +76,33 @@ export type Configurable<T> = T & {
    * />
    * ```
    */
-  Config: InlineConfig<T>
+  Config: InlineConfig<TComponent>
 }
 
-export type InlineConfig<T> = {
-  [key in keyof typeof optionProps]: InlineConfig<T>
+/**
+ * @inline
+ *
+ * Use chainable inline configuration in a template.
+ * Complete configuration and return component with `Ok`
+ *
+ * Will override global options and options passed with `withOptions`
+ *
+ * @see {@link inlineConfigProperties}
+ *
+ * @example
+ * ```svelte
+ * <script>
+ *  import Inspect from 'svelte-inspect-value'
+ *  import data from './data.js'
+ * </script>
+ *
+ * <Inspect.Values.Expand0.Config.Borderless.DoubleQuotes.DarkTheme.Ok
+ *  {data}
+ * />
+ * ```
+ */
+export type InlineConfig<T = Component> = {
+  [key in keyof typeof inlineConfigProperties]: InlineConfig<T>
 } & {
   /**
    * Finish inline configuration and return component
@@ -70,7 +110,7 @@ export type InlineConfig<T> = {
   Ok: Configurable<T>
 }
 
-export const optionProps = {
+export const inlineConfigProperties = {
   DarkTheme: { theme: 'dark' },
   LightTheme: { theme: 'light' },
   DrakTheme: { theme: 'drak' },
@@ -114,17 +154,17 @@ export const optionProps = {
   SingleQuotes: { quotes: 'single' },
   DoubleQuotes: { quotes: 'double' },
   NoQuotes: { quotes: 'none' },
-} as const satisfies Record<string, Partial<InspectOptions>>
+} as const satisfies Record<string, Partial<options.InspectOptions>>
 
 export function createConfigurable<T>(
   component: Configurable<T>,
-  inheritOptions: ConfigurableOptions,
+  inheritOptions: InspectValuesOptions,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   returnComponent: Component<any, any, any> = ValuesBase
 ): Configurable<T> {
   // declare
-  component.withOptions = function (options: ConfigurableOptions) {
-    const merged: ConfigurableOptions = () => ({ ...inheritOptions(), ...options() })
+  component.withOptions = function (options: InspectValuesOptions) {
+    const merged: InspectValuesOptions = () => ({ ...inheritOptions(), ...options() })
 
     // wrapper component
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -145,7 +185,7 @@ export function createConfigurable<T>(
       },
     }
 
-    Object.entries(optionProps).forEach(([property, options]) => {
+    Object.entries(inlineConfigProperties).forEach(([property, options]) => {
       Object.defineProperty(cfg, property, {
         get(this: typeof cfg) {
           this.config = { ...this.config, ...options }
@@ -207,9 +247,9 @@ export const InspectValues = createConfigurable(
  * <Inspect {str} {obj} arr={[1,2,3]} />
  * ```
  *
- * @see setGlobalInspectOptions
- * @see {@link Inspect.Values}
+ * @see {@linkcode options.setGlobalInspectOptions}
+ * @see {@linkcode Configurable.withOptions}
  */
-export function configured(options: ConfigurableOptions) {
+export function configured(options: InspectValuesOptions) {
   return InspectValues.withOptions(options)
 }

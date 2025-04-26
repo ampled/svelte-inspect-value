@@ -9,13 +9,13 @@
     mergeOptions,
     type InspectOptions,
   } from './options.svelte.js'
-  import type { ConfigurableOptions } from './types.js'
+  import type { InspectValuesOptions } from './types.js'
   import { initialize } from './util.js'
 
   let props: Record<string, unknown> = $props()
   let values = $derived(Object.entries(props))
 
-  let withOptionsContext = getContext<ConfigurableOptions | undefined>(
+  let withOptionsContext = getContext<InspectValuesOptions | undefined>(
     Symbol.for('siv.with-options')
   )
   let withOptions = $derived.by(() => {

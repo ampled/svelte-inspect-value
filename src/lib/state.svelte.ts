@@ -1,31 +1,30 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { getContext } from 'svelte'
-import type { KeyType } from './types.js'
 import { ensureStringPath } from './util.js'
 
 export const STATE_CONTEXT_KEY = Symbol('inspect-state')
 
+/** @inline */
 export type NodeState = {
   collapsed: boolean
 }
 
-export type InspectState = {
-  [key: string]: NodeState
-}
+/** @inline */
+export type CollapseState = Record<string, NodeState>
 
-export function createState(init: InspectState, onChange?: (value: InspectState) => void) {
+export function createState(init: CollapseState, onChange?: (value: CollapseState) => void) {
   function emitChanged() {
     onChange?.($state.snapshot(init))
   }
 
   return {
-    get value(): InspectState {
+    get value(): CollapseState {
       return init
     },
-    set value(val: InspectState) {
+    set value(val: CollapseState) {
       init = val
     },
-    setCollapse: (keyOrPath: string | KeyType[], newValues: NodeState) => {
+    setCollapse: (keyOrPath: string | PropertyKey[], newValues: NodeState) => {
       try {
         const key = ensureStringPath(keyOrPath)
         let changed = false
@@ -41,11 +40,11 @@ export function createState(init: InspectState, onChange?: (value: InspectState)
         console.error(e)
       }
     },
-    getCollapse(keyOrPath: string | KeyType[]) {
+    getCollapse(keyOrPath: string | PropertyKey[]) {
       const key = ensureStringPath(keyOrPath)
       return init?.[key]
     },
-    collapseChildren: (level: number, path: KeyType[]) => {
+    collapseChildren: (level: number, path: PropertyKey[]) => {
       if (init) {
         let changed = false
         Object.entries(init).forEach((entry) => {
@@ -60,7 +59,7 @@ export function createState(init: InspectState, onChange?: (value: InspectState)
         }
       }
     },
-    expandChildren: (currentLevel: number, currentPath: string | KeyType[]) => {
+    expandChildren: (currentLevel: number, currentPath: string | PropertyKey[]) => {
       if (init) {
         let changed = false
 
@@ -89,7 +88,7 @@ export function useState(): StateContext {
   return getContext<StateContext>(STATE_CONTEXT_KEY)
 }
 
-export function useNodeState(keyOrPath: () => string | KeyType[]) {
+export function useNodeState(keyOrPath: () => string | PropertyKey[]) {
   const ctx = useState()
   const key = ensureStringPath(keyOrPath())
   return () => ctx.value?.[key]

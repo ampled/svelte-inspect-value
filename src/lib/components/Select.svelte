@@ -41,6 +41,7 @@
     font-size: 0.8em;
     height: 1.5em;
     line-height: 1.5em;
+    min-width: 64px;
     color: var(--_button-color);
     background-color: var(--_background-color);
     outline: 1px solid var(--_button-color);
