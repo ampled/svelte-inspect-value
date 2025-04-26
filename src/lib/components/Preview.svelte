@@ -1,12 +1,12 @@
 <script
   lang="ts"
-  generics="V extends Record<KeyType, unknown> | List = Record<KeyType, unknown> | List, K extends keyof V = keyof V"
+  generics="V extends Record<PropertyKey, unknown> | List = Record<PropertyKey, unknown> | List, K extends keyof V = keyof V"
 >
   import { getContext, setContext } from 'svelte'
   import type { HTMLButtonAttributes, SvelteHTMLElements } from 'svelte/elements'
   import { fly, slide } from 'svelte/transition'
   import { useOptions } from '../options.svelte.js'
-  import type { KeyType, List, TypeViewProps } from '../types.js'
+  import type { List, TypeViewProps } from '../types.js'
   import { getPropertyDescriptor, getType } from '../util.js'
   import GetterSetter from './GetterSetter.svelte'
   import Key from './Key.svelte'
@@ -18,7 +18,7 @@
     prefix?: string
     postfix?: string
     list?: List
-    keyValue?: [KeyType, unknown][]
+    keyValue?: [PropertyKey, unknown][]
     keys?: K[]
     value?: V
     singleValue?: { value: unknown }
@@ -145,7 +145,7 @@
 {/if}
 
 <!-- At configured previewDepth, stop rendering nested item previews and just render their types -->
-{#snippet valuePreview(value: unknown, key?: KeyType)}
+{#snippet valuePreview(value: unknown, key?: PropertyKey)}
   {@const valType = getType(value, options.value.stores)}
   {#if alwaysRender(valType) || previewLevel < previewDepth}
     <Node {path} {key} {value} {showKey} {keyDelim} {keyStyle} {usedefaults} />

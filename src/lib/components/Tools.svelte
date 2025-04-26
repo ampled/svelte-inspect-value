@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getContext, onDestroy } from 'svelte'
+  import { getContext, onDestroy, type Component } from 'svelte'
   import { blur } from 'svelte/transition'
   import { globalInspectState } from '../Panel.svelte'
   import { globalValues } from '../global.svelte.js'
@@ -10,7 +10,7 @@
   import ExpandChildren from '../icons/ExpandChildren.svelte'
   import { useOptions } from '../options.svelte.js'
   import { useState, type NodeState } from '../state.svelte.js'
-  import type { KeyType, TypeViewProps } from '../types.js'
+  import type { TypeViewProps } from '../types.js'
   import { isPromise, stringifyPath } from '../util.js'
   import NodeActionButton from './NodeActionButton.svelte'
 
@@ -95,15 +95,21 @@
     }
   }
 
-  let collapseAction = {
+  type CollapseAction = {
+    hint: string
+    action: (level: number, path: PropertyKey[]) => void
+    icon: Component
+  }
+
+  let collapseAction: CollapseAction = {
     hint: 'collapse children',
-    action: (level: number, path: KeyType[]) => inspectState.collapseChildren(level, path),
+    action: (level, path) => inspectState.collapseChildren(level, path),
     icon: CollapseChildren,
   }
 
-  let expandAction = {
+  let expandAction: CollapseAction = {
     hint: 'expand children',
-    action: (level: number, path: KeyType[]) => inspectState.expandChildren(level, path),
+    action: (level: number, path) => inspectState.expandChildren(level, path),
     icon: ExpandChildren,
   }
 

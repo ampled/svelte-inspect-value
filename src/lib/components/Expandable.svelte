@@ -112,7 +112,7 @@
     {/if}
     {#if showKey}
       <Key
-        disabled={previewLevel > 0}
+        disabled={previewLevel > 0 || length === 0}
         onclick={toggleCollapse}
         delim={keyDelim}
         prefix={keyPrefix}
