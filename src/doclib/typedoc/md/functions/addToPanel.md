@@ -13,6 +13,8 @@ function addToPanel(
    addedBy?: string): () => void;
 ```
 
+**`Experimental`**
+
 Register a "global" value to be inspected with `Inspect.Panel`.
 It is recommended to call this during component initialization.
 

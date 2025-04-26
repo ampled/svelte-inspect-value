@@ -29,7 +29,7 @@
 <p>
   In addition to using the <code>value</code> or
   <code>values</code>-props, panels can also receive "global" values with the utility function
-  <a href="/docs/functions/addToPanel"><code>addToPanel</code></a>.<br />
+  <a href="/docs/functions/addToPanel"><code>addToPanel</code></a> (experimental.)<br />
   Also, if any instances of <code>Inspect</code> / <code>Inspect.Panel</code> are used outside of a panel,
   you can add values to the panel from those instances.
 </p>
