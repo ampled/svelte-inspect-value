@@ -86,6 +86,15 @@
   }
 </script>
 
+<svelte:head>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=Fira+Code:wght@300..700&family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Inconsolata:wght@200..900&family=Reddit+Mono:wght@200..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+    rel="stylesheet"
+  />
+</svelte:head>
+
 <div class="flex row gap align-end">
   <label>
     presets
@@ -157,17 +166,22 @@
     <input type="number" style="max-width: 5em" step={0.125} bind:value={indent} />
   </label>
   <label>
-    font (local)
+    font
     <select bind:value={font}>
-      <option>monospace</option>
-      <option>Menlo</option>
-      <option>Monaco</option>
+      <option value="monospace">monospace (system)</option>
+      <option>Roboto Mono</option>
+      <option>Inconsolata</option>
+      <option>Source Code Pro</option>
+      <option>IBM Plex Mono</option>
+      <option>Courier Prime</option>
+      <option>Ubuntu Mono</option>
+      <option>Fira Code</option>
+      <option>Reddit Mono</option>
+      <option disabled>Local install required:</option>
       <option>Consolas</option>
       <option>Pixel Code</option>
       <option>Dank Mono</option>
-      <option>Fira Code</option>
       <option>Andale Mono</option>
-      <option>Comic Sans MS</option>
     </select>
   </label>
   <label>
