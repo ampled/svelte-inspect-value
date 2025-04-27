@@ -83,6 +83,7 @@
 
 <style>
   .type {
+    transition: color 250ms ease-in-out;
     font-weight: 900;
     flex-shrink: 0;
   }

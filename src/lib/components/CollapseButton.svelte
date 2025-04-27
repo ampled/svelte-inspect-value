@@ -94,7 +94,7 @@
     min-width: 1em;
     max-width: 1em;
     user-select: none;
-    transition: all 100ms linear;
+    transition: color 250ms ease-in-out;
 
     &:hover {
       background-color: transparent;

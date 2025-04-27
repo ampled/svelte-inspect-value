@@ -87,9 +87,5 @@
 }
 
 :global(.grabber.selected) {
-  /* border: dotted 1px var(--_button-color); */
-  /* border-style:dotted; */
-  /* background-color: var(--_button-color) !important; */
-  /* border-radius: 8px; */
   opacity: 0.5;
 }

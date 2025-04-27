@@ -194,11 +194,11 @@
   :global(.title-bar:focus-within) .tools {
     opacity: 1;
     display: flex;
-    transition: all 250ms ease-in-out allow-discrete;
+    transition: opacity 250ms ease-in-out allow-discrete;
   }
 
   .tools {
-    transition: all 250ms ease-in-out allow-discrete;
+    transition: opacity 250ms ease-in-out allow-discrete;
     background-color: var(--_tools-background-color);
     border-left: 1px solid var(--_tools-border-color);
     backdrop-filter: blur(1px);
@@ -230,7 +230,7 @@
       cursor: pointer;
 
       :global(svg) {
-        transition: color 250ms ease-in-out;
+        transition: color 100 ease-in-out;
       }
 
       &.copied {

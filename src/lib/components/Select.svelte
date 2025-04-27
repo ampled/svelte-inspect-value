@@ -48,7 +48,6 @@
     padding-inline: 0.5em;
     cursor: pointer;
     border-radius: 2px;
-    transition: all 150ms ease-in-out;
     transform-origin: bottom center;
     text-align: center;
 

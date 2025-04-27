@@ -138,8 +138,7 @@
 
   .key {
     user-select: text;
-    transition: all 100ms linear;
-    /* font-weight: bold; */
+    transition: color 250ms ease-in-out;
 
     &.number {
       color: var(--_number-value-color);

@@ -25,7 +25,9 @@
     padding-inline: 0.5em;
     cursor: help;
     border-radius: 2px;
-    transition: all 150ms ease-in-out;
+    transition:
+      color 150ms ease-in-out,
+      background-color 150ms ease-in out;
     transform-origin: bottom center;
   }
 </style>

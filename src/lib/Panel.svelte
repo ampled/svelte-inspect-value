@@ -270,7 +270,11 @@
 
     {#if value || name || (keys.length && values)}
       <CollapseStateProvider {onCollapseChange}>
-        <Wrapper class={wrapperClasses} {heading} style={hideToolbar ? 'border-top: none' : ''}>
+        <Wrapper
+          class={wrapperClasses}
+          {heading}
+          style={hideToolbar && appearance === 'dense' ? 'border-top: none' : ''}
+        >
           {#if values && keys.length}
             <PropertyList value={values} {keys} />
           {:else if name || value}
@@ -366,7 +370,8 @@
     position: fixed;
     display: flex;
     transition:
-      background-color 400ms ease-in-out,
+      background-color 250ms ease-in-out,
+      color 250ms ease-in-out,
       width 400ms ease-in-out,
       height 400ms ease-in-out,
       top 400ms ease-in-out,
@@ -448,7 +453,6 @@
         border-radius: 0;
         border: 1px double var(--_border-color);
         border-right: none;
-        /* border-right: 1px dotted var(--_border-color); */
         box-shadow: -1px 0px 1px var(--_border-color) inset;
 
         &:hover,
@@ -676,7 +680,6 @@
 
     &.right {
       --translate-x: var(--closed-percent);
-      /* left: calc(100% - 425px); */
       right: 0;
       border-right: none;
       max-width: calc(100vw - 30px);
@@ -734,7 +737,6 @@
       left: 50%;
       align-items: center;
       --translate-x: -50%;
-      /* transform: translateX(-50%); */
     }
 
     &.hidden {
@@ -774,8 +776,6 @@
     background-color: var(--_background-color);
     border: 1px solid var(--_border-color);
     padding: 0.375em 0.5em;
-    transition: margin 150ms ease-in-out;
-    transition-delay: 100ms;
     border-radius: 8px;
     min-height: 2em;
     flex-shrink: 0;
@@ -805,7 +805,6 @@
       .group {
         width: 100%;
         justify-content: flex-end;
-        /* flex-wrap: wrap; */
         gap: 0.25em;
       }
     }

@@ -73,6 +73,7 @@
 
 <style>
   .count {
+    transition: color 250ms ease-in-out;
     color: var(--_length-color);
     font-style: italic;
     font-weight: bold;

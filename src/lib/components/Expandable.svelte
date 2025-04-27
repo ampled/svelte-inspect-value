@@ -164,6 +164,8 @@
   @import './styles/line.css';
 
   .indent {
+    transition-property: margin-left, border-color;
+    transition-duration: 100ms;
     margin-left: var(--__indent);
     border-left: 1px solid var(--_indent-color);
     overflow-x: clip;

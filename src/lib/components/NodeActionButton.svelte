@@ -39,7 +39,12 @@
     padding-inline: 0.5em;
     cursor: pointer;
     border-radius: 2px;
-    transition: all 150ms ease-in-out;
+    transition:
+      color 150ms,
+      background-color 250ms,
+      outline-color 150ms,
+      transform 150ms;
+    transition-timing-function: ease-in-out;
     transform-origin: bottom center;
     user-select: none;
     font-weight: normal;

@@ -224,7 +224,6 @@
 
   .pre,
   .post {
-    /* margin-inline: 0.125em; */
     color: var(--_text-color);
 
     &.level-0 {

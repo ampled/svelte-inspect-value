@@ -25,7 +25,9 @@
     line-height: 1.5em;
     color: var(--_button-color);
     cursor: pointer;
-    transition: all 150ms ease-in-out;
+    transition:
+      color 250ms ease-in-out,
+      background-color 250ms ease-in-out;
     transform-origin: bottom center;
 
     &:disabled {
