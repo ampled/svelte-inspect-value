@@ -16,8 +16,8 @@
   let todo = $derived(todos.filter((t) => !t.done))
   let done = $derived(todos.filter((t) => t.done))
 
-  addToDrawer('isTurtleFed', () => todos[2].done)
-  addToDrawer('allTodos', () => todos)
+  addToPanel('isTurtleFed', () => todos[2].done)
+  addToPanel('allTodos', () => todos)
 </script>
 
 <h3>Demo</h3>
