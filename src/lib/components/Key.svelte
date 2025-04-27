@@ -16,7 +16,7 @@
     allowUndefined?: boolean
   } & HTMLButtonAttributes
 
-  let { key, path = [], delim = ':', prefix, disabled, ...rest }: Props = $props()
+  let { key, path = [], delim = ':', prefix, disabled, onclick, ...rest }: Props = $props()
   const options = useOptions()
   const keyTypes = ['string', 'number', 'symbol', 'quotedstring']
   const simpleKeys = ['bigint', 'regexp']
@@ -53,6 +53,11 @@
   function onerror(error: unknown): void {
     throw new Error('Error in Key.svelte', { cause: error })
   }
+
+  function handleClick(e: MouseEvent & { currentTarget: HTMLButtonElement }) {
+    if (disabled) return
+    onclick?.(e)
+  }
 </script>
 
 {#if shouldShow}
@@ -61,11 +66,12 @@
       <svelte:element
         this={ele}
         data-testid="key"
-        type="button"
+        type={ele === 'button' ? 'button' : undefined}
         class={['key-button', disabled && 'disabled']}
         {disabled}
         aria-label={key?.toString()}
         title={previewLevel === 0 ? stringifyPath(path) : undefined}
+        onclick={handleClick}
         {...rest}
       >
         {#if prefix}

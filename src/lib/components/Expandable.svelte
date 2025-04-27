@@ -55,6 +55,7 @@
   const inspectState = useState()
   const previewLevel = getPreviewLevel()
   const isKey = getContext<boolean>(Symbol.for('siv.key'))
+  let expandingDisabled = $derived(length === 0 || previewLevel > 0)
   let stringifiedPath = $derived(stringifyPath(path))
   let collapseState = $derived(inspectState.value[stringifiedPath])
   let collapsed = $derived.by(() => {
@@ -88,10 +89,16 @@
   function toggleCollapse() {
     setCollapse(!collapsed)
   }
+
+  function ondblclick(event: MouseEvent & { currentTarget: EventTarget & HTMLDivElement }) {
+    if (expandingDisabled) return
+    event.preventDefault()
+    toggleCollapse()
+  }
 </script>
 
 <div
-  ondblclick={toggleCollapse}
+  {ondblclick}
   data-testid="expandable"
   class={['line', previewLevel && 'preview', !showKey && 'nokey']}
   aria-expanded={!collapsed}
@@ -107,12 +114,12 @@
         {type}
         onclick={toggleCollapse}
         onchange={(c) => setCollapse(c)}
-        disabled={length === 0}
+        disabled={expandingDisabled}
       />
     {/if}
     {#if showKey}
       <Key
-        disabled={previewLevel > 0 || length === 0}
+        disabled={expandingDisabled}
         onclick={toggleCollapse}
         delim={keyDelim}
         prefix={keyPrefix}
