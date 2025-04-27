@@ -4,7 +4,7 @@
   let value = $state({
     value: 10,
     multiplier: 4.2,
-    get current() { return this.count },
+    get current() { return this.value },
     set current(value) {
       if (typeof value !== 'number') throw 'not a number'
       this.value = value
