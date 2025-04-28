@@ -398,4 +398,4 @@
   })
 </script>
 
-<Inspect name="allTypes" value={allTypes} {...props} />
+<Inspect heading="all types" name="allTypes" value={allTypes} {...props} />

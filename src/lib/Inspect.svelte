@@ -19,7 +19,7 @@
     values,
     name,
     class: classValue,
-    heading,
+    heading = 'y',
     ...props
   }: InspectProps & SvelteHTMLElements['div'] = $props()
 

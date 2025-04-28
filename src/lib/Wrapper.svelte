@@ -3,10 +3,11 @@
  Wrapper for different variants of Inspect
 -->
 <script lang="ts">
-  import { getContext, type Snippet } from 'svelte'
+  import { getContext, setContext, type Snippet } from 'svelte'
   import type { SvelteHTMLElements } from 'svelte/elements'
   import { slide } from 'svelte/transition'
   import CollapseButton from './components/CollapseButton.svelte'
+  import Input from './components/Input.svelte'
   import NodeActionButton from './components/NodeActionButton.svelte'
 
   type Props = {
@@ -26,7 +27,9 @@
   }: Props = $props()
 
   let collapsed = $state(false)
+  let searchInput = $state('')
 
+  setContext(Symbol.for('siv.search-text'), () => searchInput)
   const inFixed = getContext(Symbol.for('siv.fixed'))
 </script>
 
@@ -39,11 +42,14 @@
         value
         {collapsed}
       />
-      {#if typeof heading === 'string'}
-        {heading}
-      {:else}
-        {@render heading()}
-      {/if}
+      <div class="heading-text">
+        {#if typeof heading === 'string'}
+          {heading}
+        {:else}
+          {@render heading()}
+        {/if}
+      </div>
+      <Input bind:value={searchInput} />
     </div>
   {/if}
   {#if !collapsed}
@@ -163,6 +169,10 @@
       gap: 0.25em;
       border-bottom: 1px solid var(--_border-color);
       font-weight: bold;
+
+      .heading-text {
+        width: 100%;
+      }
 
       &.collapsed {
         border: none;
