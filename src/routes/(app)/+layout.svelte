@@ -1,7 +1,6 @@
 <script lang="ts">
   import { page } from '$app/state'
-  import { removeFromPanel } from '$lib/global.svelte.js'
-  import Inspect, { InspectOptionsProvider, addToPanel, type InspectOptions } from '$lib/index.js'
+  import Inspect, { InspectOptionsProvider, type InspectOptions } from '$lib/index.js'
   import { DEV } from 'esm-env'
   import { setContext, type Snippet } from 'svelte'
   import { slide } from 'svelte/transition'
@@ -9,7 +8,6 @@
   import './app.css'
   import ExpandRoute from './Expandroute.svelte'
   import GlobalOptions from './GlobalOptions.svelte'
-  import ToggleButton from './ToggleButton.svelte'
 
   let drawerOpen = $state(true)
   let showDevItems = false
@@ -86,6 +84,7 @@
     {
       title: 'Variables',
       devonly: true,
+      expandable: true,
       children: data.docs
         .filter((d) => ['variables'].includes(d.type ?? ''))
         .map((d) => ({
@@ -93,9 +92,15 @@
           href: `/docs/${d.type}/${d.title[1]}`,
         })),
     },
-    { href: '/alltypes', title: 'All Types', devonly: true },
-    { href: '/testing', title: 'Testing', devonly: true },
-    { href: '/global', title: 'Global', devonly: true },
+    {
+      href: '/testing',
+      title: 'Testing',
+      devonly: true,
+      children: [
+        { href: '/testing/alltypes', title: 'All Types', devonly: true },
+        { href: '/testing/global', title: 'Global', devonly: true },
+      ],
+    },
   ]
 
   let options = $state<Partial<InspectOptions>>({
@@ -135,17 +140,6 @@
 
   setContext('set-global-option', setOption)
 
-  $effect(() => {
-    if (renderDevOnlyPanel) {
-      addToPanel('page', () => ({ ...page }))
-    } else {
-      removeFromPanel('page')
-    }
-
-    return () => {
-      removeFromPanel('page')
-    }
-  })
   let wiggleOnUpdate = $state(true)
 </script>
 
@@ -233,13 +227,13 @@
     </div>
   </Inspect.Panel>
   <Inspect.Panel
+    heading="+layout.svelte"
     appearance="solid"
     theme="stereo"
     renderIf={DEV && renderDevOnlyPanel}
     {wiggleOnUpdate}
-  >
-    <ToggleButton bind:checked={wiggleOnUpdate}>wiggle</ToggleButton>
-  </Inspect.Panel>
+    values={{ options, page: { ...page } }}
+  />
 
   <svelte:boundary>
     {#snippet failed(error, reset)}
@@ -267,20 +261,20 @@
 <style>
   header {
     display: flex;
+    flex-wrap: wrap;
     /* justify-content: space-between; */
     align-items: flex-start;
     gap: 1em;
     /* padding-inline: 1em; */
     padding-top: 1em;
-    flex-wrap: wrap;
     view-transition-name: header;
   }
 
   .title {
-    text-decoration: none;
+    width: max-content;
     font-weight: bold;
     font-size: 0.8rem;
-    width: max-content;
+    text-decoration: none;
   }
 
   h1 {
@@ -291,15 +285,15 @@
   }
 
   main {
-    transition: all 200ms ease-in-out;
     display: flex;
     position: relative;
     flex-direction: column;
     gap: 0.5em;
-    padding-left: 3em;
-    padding-top: 0.5em;
-    width: 100%;
+    transition: all 200ms ease-in-out;
     margin-bottom: 150px;
+    padding-top: 0.5em;
+    padding-left: 3em;
+    width: 100%;
   }
 
   nav {
@@ -310,11 +304,11 @@
 
   nav:not(.drawer-nav) {
     ul {
-      padding: 0;
       display: flex;
-      align-items: flex-end;
       flex-wrap: wrap;
+      align-items: flex-end;
       gap: 1em;
+      padding: 0;
 
       li {
         display: inline;
@@ -324,20 +318,20 @@
   }
 
   a {
-    color: #fafafa;
     transition: color 300ms linear;
-    text-decoration: none;
+    color: #fafafa;
     line-height: 1;
+    text-decoration: none;
     white-space: nowrap;
 
     h1 {
       text-decoration: none;
 
       code {
-        font-size: 0.8em;
+        background: transparent;
         padding-inline: 0.2em;
         font-weight: normal;
-        background: transparent;
+        font-size: 0.8em;
 
         .inspect {
           color: var(--red);
@@ -345,8 +339,8 @@
         }
 
         .value {
-          font-weight: normal;
           color: var(--blue);
+          font-weight: normal;
         }
       }
     }
@@ -354,23 +348,23 @@
 
   a.active,
   span.active {
-    color: var(--red);
     /* text-decoration: underline; */
     position: relative;
+    color: var(--red);
   }
 
   @media (min-width: 768px) {
     main {
-      width: 90%;
       /* padding-left: 3em; */
       padding-top: 0.5em;
       padding-right: 3rem;
+      width: 90%;
     }
 
     main.drawer-open {
-      width: 100%;
-      padding-left: calc(3em + 230px);
       padding-right: 8rem;
+      padding-left: calc(3em + 230px);
+      width: 100%;
     }
 
     .title {
@@ -380,9 +374,9 @@
 
   @media (min-width: 1024px) {
     main {
-      width: 90%;
       /* padding-left: 1em; */
       padding-right: 3em;
+      width: 90%;
     }
 
     .title {
@@ -435,22 +429,22 @@
   }
 
   nav.drawer-nav {
-    font-family: 'EB Garamond', serif;
     /* font-size: 16px; */
     overflow-y: auto;
+    font-family: 'EB Garamond', serif;
 
     ul {
       display: flex;
       flex-direction: column;
       padding: 0;
-      font-size: 18px;
       font-weight: bold;
+      font-size: 18px;
       /* margin-bottom: 1em; */
 
       ul {
         padding-left: 1ch;
-        font-size: 18px;
         font-weight: normal;
+        font-size: 18px;
 
         ul {
           font-size: 12px;
@@ -488,9 +482,9 @@
   }
 
   .drawer-content {
-    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    height: 100%;
   }
 </style>

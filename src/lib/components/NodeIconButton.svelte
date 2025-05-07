@@ -17,28 +17,30 @@
 <style>
   button {
     all: unset;
-    font-family: var(--inspect-font);
-    font-size: 0.8em;
-    height: 1.5em;
-    width: 1.5em;
-    min-width: 1.5em;
-    line-height: 1.5em;
-    color: var(--_button-color);
-    cursor: pointer;
+    transform-origin: bottom center;
     transition:
       color 250ms ease-in-out,
-      background-color 250ms ease-in-out;
-    transform-origin: bottom center;
+      background-color 250ms ease-in-out,
+      transform 250ms ease-in-out;
+    cursor: pointer;
+    width: 1.5em;
+    min-width: 1.5em;
+    height: 1.5em;
+    color: var(--_button-color);
+    font-size: 1em;
+    line-height: 1.5em;
+    font-family: var(--inspect-font);
+    text-align: center;
 
     &:disabled {
       cursor: default;
-      color: var(--border-disabled-color);
+      color: var(--_button-disabled-color) !important;
     }
 
     &:active:not(:disabled) {
-      color: var(--_button-color);
-      background-color: transparent;
       transform: scaleY(0.85);
+      background-color: transparent;
+      color: var(--_button-color);
     }
 
     &:hover:not(:disabled):not(:active),

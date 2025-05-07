@@ -173,8 +173,8 @@
 
 <style>
   .comma {
-    margin-left: 0;
     margin-right: 0.5em;
+    margin-left: 0;
     color: var(--_text-color);
   }
 
@@ -183,34 +183,34 @@
   }
 
   .preview {
-    font-size: var(--inspect-font-size);
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: center;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    min-width: 0;
-    color: var(--_text-color);
     transform-origin: bottom right;
+    min-width: 0;
+    overflow: hidden;
+    color: var(--_text-color);
+    font-size: var(--inspect-font-size);
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .inner {
-    min-width: 0;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: center;
-    white-space: nowrap;
+    min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .key-type-preview {
     display: inline-flex;
-    align-items: center;
     justify-content: flex-start;
+    align-items: center;
     gap: 0.25em;
   }
 

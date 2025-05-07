@@ -35,17 +35,16 @@
   code.value.function.hl.inline {
     display: inline;
     padding: 0;
-    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   :global code.value.function.hl {
     background-color: unset;
+    padding: var(--_indent);
     color: var(--_text-color) !important;
     white-space: pre;
-    padding: var(--_indent);
-    padding-left: 0.75em;
 
     .title.function_ {
       color: var(--_function-name-color);

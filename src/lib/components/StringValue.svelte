@@ -48,10 +48,10 @@
   .stringvalue {
     display: inline-flex;
     align-items: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
     text-wrap: nowrap;
     white-space: pre !important;
     white-space-collapse: preserve-spaces;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 </style>

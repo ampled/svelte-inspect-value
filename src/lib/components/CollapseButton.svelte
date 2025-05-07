@@ -78,23 +78,22 @@
 <style>
   .collapse {
     all: unset;
-    margin: 0;
-    padding: 0;
-    border: none;
-    all: unset;
-    overflow: visible;
-    cursor: pointer;
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    color: var(--_caret-color);
+    transition: color 250ms ease-in-out;
+    cursor: pointer;
+    margin: 0;
+    border: none;
+    padding: 0;
     aspect-ratio: 1 / 1;
     width: 1em;
-    height: 1em;
     min-width: 1em;
     max-width: 1em;
+    height: 1em;
+    overflow: visible;
+    color: var(--_caret-color);
     user-select: none;
-    transition: color 250ms ease-in-out;
 
     &:hover {
       background-color: transparent;
@@ -106,8 +105,8 @@
     }
 
     &:focus-visible {
-      color: var(--_caret-focus-color);
       transform: scale(1.2);
+      color: var(--_caret-focus-color);
     }
 
     &:disabled {

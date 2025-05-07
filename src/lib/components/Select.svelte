@@ -37,36 +37,36 @@
 
   .inspect-select {
     position: relative;
-    font-family: var(--inspect-font);
-    font-size: 0.8em;
-    height: 1.5em;
-    line-height: 1.5em;
-    min-width: 64px;
-    color: var(--_button-color);
-    background-color: var(--_background-color);
-    outline: 1px solid var(--_button-color);
-    padding-inline: 0.5em;
-    cursor: pointer;
-    border-radius: 2px;
     transform-origin: bottom center;
+    cursor: pointer;
+    outline: 1px solid var(--_button-color);
+    border-radius: 2px;
+    background-color: var(--_background-color);
+    padding-inline: 0.5em;
+    min-width: 64px;
+    height: 1.5em;
+    color: var(--_button-color);
+    font-size: 0.8em;
+    line-height: 1.5em;
+    font-family: var(--inspect-font);
     text-align: center;
 
     &.with-prefix {
-      padding-left: 0;
       padding-right: 0.5em;
+      padding-left: 0;
     }
 
     &:disabled {
       cursor: default;
-      color: var(--border-disabled-color);
-      outline-color: var(--border-disabled-color);
+      outline-color: var(--_button-disabled-color);
+      color: var(--_button-disabled-color);
     }
 
     &:active:not(:disabled) {
+      transform: scaleY(0.85);
+      outline: 1px solid var(--_button-color);
       background-color: var(--_background-color);
       color: var(--_button-color);
-      outline: 1px solid var(--_button-color);
-      transform: scaleY(0.85);
     }
 
     &:hover:not(:disabled):not(:active),
@@ -78,20 +78,20 @@
 
     .prefix {
       position: absolute;
-      left: 0;
       top: 0;
       bottom: 0;
-      background-color: var(--_background-color);
-      color: var(--_button-color);
-      border-right: 1px solid var(--_button-color);
-      padding-inline: 0.25em;
+      left: 0;
+      z-index: 1;
       cursor: default;
+      border-right: 1px solid var(--_button-color);
       border-top-left-radius: 2px;
       border-bottom-left-radius: 2px;
+      background-color: var(--_background-color);
+      padding-inline: 0.25em;
       width: 3ch;
-      text-align: center;
+      color: var(--_button-color);
       user-select: none;
-      z-index: 1;
+      text-align: center;
     }
   }
 </style>

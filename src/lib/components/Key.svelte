@@ -111,12 +111,12 @@
 
   .key-button {
     all: unset;
-    padding: 0;
-    margin: 0;
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 0.5em;
+    margin: 0;
+    padding: 0;
 
     &:focus:not(.disabled),
     &:hover:not(.disabled) {
@@ -131,14 +131,14 @@
   }
 
   .whitespace {
-    color: var(--_key-whitespace-color);
     opacity: var(--_key-whitespace-opacity);
+    color: var(--_key-whitespace-color);
     user-select: none;
   }
 
   .key {
-    user-select: text;
     transition: color 250ms ease-in-out;
+    user-select: text;
 
     &.number {
       color: var(--_number-value-color);
@@ -168,10 +168,5 @@
   .prefix {
     color: var(--_key-prefix-color);
     font-weight: 900;
-  }
-
-  button {
-    cursor: default;
-    background-color: transparent !important;
   }
 </style>

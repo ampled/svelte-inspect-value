@@ -22,16 +22,19 @@
     align-items: center;
     aspect-ratio: 1 / 1;
     width: 1em;
-    height: 1em;
     min-width: 1em;
     max-width: 1em;
+    height: 1em;
     user-select: none;
 
     .dash {
+      transition-duration: 250ms;
+      transition-property: width, height, border-radius, background-color;
+      transition-timing-function: ease-in-out;
+      border-radius: 0px;
       background-color: var(--_bullet-color);
       width: 4px;
       height: 1px;
-      border-radius: 0px;
       overflow: visible;
     }
   }

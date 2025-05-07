@@ -365,10 +365,12 @@
     --border-radius: 8px;
     --handle-offset: 0;
     --inspect-min-width: 100%;
-    container-type: inline-size;
-    box-sizing: border-box;
-    position: fixed;
     display: flex;
+    position: fixed;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5em;
+    transform: translateX(var(--translate-x, 0)) translateY(var(--translate-y, 0));
     transition:
       background-color 250ms ease-in-out,
       color 250ms ease-in-out,
@@ -383,44 +385,42 @@
       outline 400ms ease-in-out,
       outline-color 200ms ease-in-out,
       transform 400ms ease-in-out;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5em;
+    box-sizing: border-box;
+    container-type: inline-size;
+    background-color: transparent;
     padding: 0.5em;
     width: 420px;
-    background-color: transparent;
     min-height: 100px;
     max-height: 100vh;
     overflow: visible;
-    font-family: var(--_inspect-font, monospace);
     font-size: var(--inspect-font-size, 12px);
-    transform: translateX(var(--translate-x, 0)) translateY(var(--translate-y, 0));
+    font-family: var(--_inspect-font, monospace);
 
     .handle {
       all: unset;
+      display: flex;
+      position: fixed;
+      justify-content: center;
+      align-items: center;
+      z-index: 20;
       transition:
         all 400ms ease-in-out,
         background-color 0ms,
         border 0ms;
-      box-sizing: border-box;
       cursor: pointer;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: fixed;
-      z-index: 20;
+      box-sizing: border-box;
 
       .caret {
-        color: var(--_button-color);
+        rotate: 180deg;
         transition: all 400ms ease-in-out 200ms;
         width: 100%;
         height: 100%;
-        rotate: 180deg;
+        color: var(--_button-color);
       }
 
       svg {
-        height: 100%;
         width: 100%;
+        height: 100%;
       }
     }
 
@@ -429,8 +429,8 @@
     }
 
     &.resizing {
-      outline: 1px solid var(--_button-color);
       transition: none;
+      outline: 1px solid var(--_button-color);
 
       .handle {
         transition: none;
@@ -439,21 +439,21 @@
     }
 
     &.dense {
-      padding: 0;
       gap: 0;
+      border: 1px solid var(--_border-color);
       border-radius: 0 !important;
       background-color: var(--_background-color);
-      border: 1px solid var(--_border-color);
+      padding: 0;
 
       .handle {
+        transform-origin: 100% 50%;
+        box-shadow: -1px 0px 1px var(--_border-color) inset;
+        border: 1px double var(--_border-color);
+        border-right: none;
+        border-radius: 0;
         background-color: inherit;
         width: 20px;
         height: 40px;
-        transform-origin: 100% 50%;
-        border-radius: 0;
-        border: 1px double var(--_border-color);
-        border-right: none;
-        box-shadow: -1px 0px 1px var(--_border-color) inset;
 
         &:hover,
         &:focus {
@@ -462,30 +462,30 @@
       }
 
       .toolbar {
-        background-color: transparent;
         border: none;
+        background-color: transparent;
       }
 
       :global .svelte-inspect-value {
-        padding: 0;
-        background-color: transparent;
-        border-radius: 0;
         border: none;
         border-top: 1px solid var(--_border-color);
+        border-radius: 0;
+        background-color: transparent;
+        padding: 0;
       }
     }
 
     &.solid {
       --solid-bg: color-mix(in srgb, var(--_background-color), black 20%);
-      background-color: var(--solid-bg);
       border: 1px solid var(--_border-color);
+      background-color: var(--solid-bg);
 
       &.borderless {
         background-color: var(--_background-color);
 
         .toolbar {
-          background-color: transparent;
           border: none;
+          background-color: transparent;
         }
 
         .handle {
@@ -501,13 +501,13 @@
       }
 
       .handle {
+        transform-origin: 100% 50%;
+        border: 1px solid var(--_border-color);
+        border-right: none;
+        border-radius: var(--border-radius) 0 0 var(--border-radius);
         background-color: inherit;
         width: 20px;
         height: 40px;
-        transform-origin: 100% 50%;
-        border-radius: var(--border-radius) 0 0 var(--border-radius);
-        border: 1px solid var(--_border-color);
-        border-right: none;
 
         &:hover,
         &:focus {
@@ -517,16 +517,16 @@
     }
 
     &.glassy {
-      background-color: color-mix(in srgb, var(--_background-color), rgba(255 255 255 / 0.1) 50%);
       backdrop-filter: blur(5px);
+      background-color: color-mix(in srgb, var(--_background-color), rgba(255 255 255 / 0.1) 50%);
 
       .handle {
+        transform-origin: 100% 50%;
+        border-right: none;
+        border-radius: var(--border-radius) 0 0 var(--border-radius);
         background-color: inherit;
         width: 20px;
         height: 40px;
-        transform-origin: 100% 50%;
-        border-radius: var(--border-radius) 0 0 var(--border-radius);
-        border-right: none;
 
         &:hover,
         &:focus {
@@ -537,8 +537,8 @@
 
     &.floating {
       --handle-offset: -1em;
-      background-color: transparent;
       outline: 1px solid transparent;
+      background-color: transparent;
 
       &:hover {
         outline-color: var(--_button-color);
@@ -546,11 +546,11 @@
 
       .handle {
         transform-origin: 100% 50%;
-        background-color: var(--_background-color);
-        height: 30px;
-        width: 30px;
-        border-radius: 9999px;
         border: 1px solid var(--_border-color);
+        border-radius: 9999px;
+        background-color: var(--_background-color);
+        width: 30px;
+        height: 30px;
 
         .caret {
           width: 15px;
@@ -565,16 +565,16 @@
     }
 
     &.full {
-      transition: all 0ms ease-in-out;
       top: 0;
+      right: 0;
       bottom: 0;
       left: 0;
-      right: 0;
-      max-width: 100%;
-      width: 100%;
-      border-radius: 0;
       opacity: 1 !important;
+      transition: all 0ms ease-in-out;
       border: none;
+      border-radius: 0;
+      width: 100%;
+      max-width: 100%;
 
       .handle {
         display: none;
@@ -582,10 +582,10 @@
     }
 
     &.flash:not(.open) {
-      animation-name: wiggle;
       animation-duration: 0.5s;
       animation-timing-function: linear;
       animation-iteration-count: infinite;
+      animation-name: wiggle;
     }
 
     &.opacity {
@@ -598,8 +598,8 @@
     }
 
     &.top {
-      border-top: none;
       top: 0;
+      border-top: none;
       max-height: calc(100% - 30px);
 
       &.right .handle,
@@ -609,14 +609,14 @@
 
       &.center .handle,
       &.full-x .handle {
-        left: 50%;
         bottom: var(--handle-offset);
+        left: 50%;
         transform: rotate(-90deg) translate(-100%, -50%);
       }
 
       &.center {
-        border-bottom-left-radius: var(--border-radius);
         border-bottom-right-radius: var(--border-radius);
+        border-bottom-left-radius: var(--border-radius);
       }
 
       &.full-x,
@@ -630,8 +630,8 @@
     }
 
     &.middle {
-      max-height: 100%;
       top: 50%;
+      max-height: 100%;
       --translate-y: -50%;
 
       &.open {
@@ -645,10 +645,10 @@
     }
 
     &.bottom {
-      justify-content: flex-end;
-      max-height: calc(100% - 30px);
       bottom: 0;
+      justify-content: flex-end;
       border-bottom: none;
+      max-height: calc(100% - 30px);
 
       &.right .handle,
       &.left .handle {
@@ -663,8 +663,8 @@
       }
 
       &.center {
-        border-top-left-radius: var(--border-radius);
         border-top-right-radius: var(--border-radius);
+        border-top-left-radius: var(--border-radius);
       }
 
       &.full-x,
@@ -746,11 +746,11 @@
     &.full-y {
       top: 0;
       bottom: 0;
-      height: 100%;
       flex-direction: column;
-      border-radius: 0;
       border-top: none;
       border-bottom: none;
+      border-radius: 0;
+      height: 100%;
 
       .handle {
         top: 12px;
@@ -763,30 +763,30 @@
     }
 
     &.full-x {
-      width: 100%;
-      left: 0;
       right: 0;
-      border-radius: 0;
-      border-left: none;
+      left: 0;
       border-right: none;
+      border-left: none;
+      border-radius: 0;
+      width: 100%;
     }
   }
 
   .toolbar {
-    background-color: var(--_background-color);
-    border: 1px solid var(--_border-color);
-    padding: 0.375em 0.5em;
-    border-radius: 8px;
-    min-height: 2em;
-    flex-shrink: 0;
-    width: 100%;
     display: flex;
+    flex-shrink: 0;
     flex-direction: row;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
     gap: 0.5em;
+    border: 1px solid var(--_border-color);
+    border-radius: 8px;
+    background-color: var(--_background-color);
+    padding: 0.375em 0.5em;
+    width: 100%;
+    min-height: 2em;
     overflow: auto;
-    flex-wrap: wrap;
 
     .spacer {
       width: 100%;
@@ -803,9 +803,9 @@
       gap: 0.25;
 
       .group {
-        width: 100%;
         justify-content: flex-end;
         gap: 0.25em;
+        width: 100%;
       }
     }
   }

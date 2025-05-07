@@ -192,42 +192,43 @@
   :global(.line:focus-within) .tools,
   :global(.title-bar:hover) .tools,
   :global(.title-bar:focus-within) .tools {
-    opacity: 1;
     display: flex;
+    opacity: 1;
     transition: opacity 250ms ease-in-out allow-discrete;
   }
 
   .tools {
-    transition: opacity 250ms ease-in-out allow-discrete;
-    background-color: var(--_tools-background-color);
-    border-left: 1px solid var(--_tools-border-color);
-    backdrop-filter: blur(1px);
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    padding-inline: 0.5em;
     display: flex;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    flex-wrap: nowrap;
     justify-content: center;
     align-items: center;
     gap: 0.25em;
     opacity: 0;
-    max-height: 1.5em;
     z-index: calc(var(--index) + 1);
-    flex-wrap: nowrap;
+    backdrop-filter: blur(1px);
+    transition: opacity 250ms ease-in-out allow-discrete;
+    border-left: 1px solid var(--_tools-border-color);
+    background-color: var(--_tools-background-color);
+    padding-inline: 0.5em;
+    max-height: 1.5em;
     overflow: clip;
+    font-size: 1em;
 
     button {
       all: unset;
-      padding: 2px;
+      cursor: pointer;
       margin: 0;
       border: none;
-      height: 1.5em;
-      min-height: 1.5em;
+      padding: 2px;
       width: 1.5em;
       min-width: 1.5em;
+      height: 1.5em;
+      min-height: 1.5em;
       color: var(--_button-color);
-      cursor: pointer;
 
       :global(svg) {
         transition: color 100 ease-in-out;
@@ -248,7 +249,7 @@
   .tools.borderless {
     position: relative;
     transition-property: opacity !important;
-    background-color: var(--_tools-background-color-borderless);
     border-left: 0;
+    background-color: var(--_tools-background-color-borderless);
   }
 </style>

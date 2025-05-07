@@ -164,13 +164,13 @@
   @import './styles/line.css';
 
   .indent {
-    transition-property: margin-left, border-color;
+    position: relative;
     transition-duration: 100ms;
+    transition-property: margin-left, border-color;
     margin-left: var(--__indent);
     border-left: 1px solid var(--_indent-color);
+    max-height: calc(102 * 1.5em);
     overflow-x: clip;
     overflow-y: auto;
-    position: relative;
-    max-height: calc(102 * 1.5em);
   }
 </style>

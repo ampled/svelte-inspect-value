@@ -62,24 +62,24 @@
 
 html {
   background: var(--sdr-gradient);
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  background-color: var(--bg);
   background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-color: var(--bg);
   overscroll-behavior: none;
   /* height: 100%; */
 }
 
 body {
   box-sizing: border-box;
+  width: 100%;
+  height: 100%;
   overscroll-behavior: none;
 
   color: var(--fg);
+  font-size: 20px;
   font-family: 'EB Garamond', serif;
   font-optical-sizing: auto;
-  width: 100%;
-  height: 100%;
-  font-size: 20px;
   font-optical-sizing: auto;
 }
 
@@ -127,14 +127,14 @@ h3,
 h4,
 h5,
 h6 {
-  overflow-wrap: break-word;
   font-weight: bold;
+  overflow-wrap: break-word;
 }
 
 /* 8. Improve line wrapping */
 p {
-  text-wrap: pretty;
   max-width: 800px;
+  text-wrap: pretty;
 }
 
 h1,
@@ -149,25 +149,25 @@ h6 {
 }
 
 h4 {
+  display: inline;
   font-size: 12px;
   font-family: monospace;
-  display: inline;
 }
 
 input[type='number'],
 input[type='text'],
 select {
-  height: 1.5em;
-  font-size: 12px;
-  background-color: var(--bg);
-  color: var(--fg);
   border: 1px solid var(--docs-border-color);
+  background-color: var(--bg);
+  height: 1.5em;
+  color: var(--fg);
+  font-size: 12px;
 }
 
 .flex {
   display: flex;
-  align-items: flex-start;
   justify-content: flex-start;
+  align-items: flex-start;
   gap: 0.5em;
   max-width: 100%;
   /* background-color: antiquewhite; */
@@ -196,12 +196,12 @@ select {
 
 button {
   all: unset;
-  border: 1px solid var(--docs-border-color);
-  font-size: 12px;
-  padding: 0.5em;
-  border-radius: 4px;
-  cursor: pointer;
   transition: all 100ms linear;
+  cursor: pointer;
+  border: 1px solid var(--docs-border-color);
+  border-radius: 4px;
+  padding: 0.5em;
+  font-size: 12px;
 
   &:hover:not(:disabled) {
     background-color: var(--docs-border-color);
@@ -214,7 +214,6 @@ button {
 }
 
 label {
-  font-family: monospace;
   /* height: 3.5rem; */
   display: flex;
   /* border: 1px solid; */
@@ -222,6 +221,7 @@ label {
   align-items: center;
   justify-items: flex-start;
   font-size: 12px;
+  font-family: monospace;
   /* gap: 0.5rem; */
   /* padding: 1em; */
 }
@@ -233,11 +233,11 @@ button {
 p code,
 ul code,
 table code {
-  font-family: monospace;
-  background-color: var(--bg-lighter);
   border-radius: 2px;
+  background-color: var(--bg-lighter);
   padding-inline: 0.3em;
   font-size: 0.8em;
+  font-family: monospace;
 }
 
 a {
@@ -246,8 +246,8 @@ a {
 
 button.unstyled {
   all: unset;
-  font-family: monospace;
   cursor: pointer;
+  font-family: monospace;
 
   &:disabled {
     color: var(--docs-border-color);
@@ -295,38 +295,38 @@ button.unstyled {
 
 .toc {
   display: none;
+  position: fixed;
+  top: 50%;
+  right: 0;
+  flex-direction: column;
+  transform: translateX(60%) translateY(-50%);
+  opacity: 0.5;
+  z-index: 50;
   transition: all 250ms ease-in;
+  margin-top: auto;
+  margin-bottom: auto;
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
   padding: 1em;
-  position: fixed;
-  right: 0;
-  top: 50%;
-  margin-top: auto;
-  margin-bottom: auto;
   max-height: 90vh;
   overflow-y: auto;
-  flex-direction: column;
-  opacity: 0.5;
-  transform: translateX(60%) translateY(-50%);
-  z-index: 50;
 
   hr {
     transition: all 250ms ease-in;
   }
 
   &:hover {
-    background-color: var(--bg);
-    border-color: var(--docs-border-color);
+    transform: translateX(0) translateY(-50%);
+    opacity: 1;
     border-width: 1px 0 1px 1px;
     border-style: solid;
-    opacity: 1;
-    transform: translateX(0) translateY(-50%);
+    border-color: var(--docs-border-color);
+    background-color: var(--bg);
 
     a {
       opacity: 1;
-      color: var(--fg);
       background-color: transparent;
+      color: var(--fg);
     }
 
     hr {
@@ -338,14 +338,14 @@ button.unstyled {
   a {
     opacity: 0;
     transition: all 250ms ease-in;
+    /* background-color: var(--comments); */
+    border-radius: 8px;
+    padding: 0.25em;
+    color: var(--comments);
     font-size: 0.857em;
     /* margin-top: 2px; */
     line-height: 0.8;
-    padding: 0.25em;
     text-decoration: none;
-    color: var(--comments);
-    /* background-color: var(--comments); */
-    border-radius: 8px;
   }
 }
 
@@ -357,10 +357,10 @@ button.unstyled {
 
 dfn {
   all: unset;
+  cursor: help;
   text-decoration: underline;
   text-decoration-style: wavy;
   text-decoration-thickness: 1px;
-  cursor: help;
 }
 
 hr {
@@ -368,20 +368,20 @@ hr {
 }
 
 .shiki {
-  font-size: 12px;
-  padding: 1ch;
-  border-radius: 8px;
   border: 1px solid var(--docs-border-color);
-  overflow-y: auto;
+  border-radius: 8px;
+  padding: 1ch;
   max-width: max-content;
+  overflow-y: auto;
+  font-size: 12px;
 }
 
 .md-types {
-  padding: 1ch;
-  background-color: rgb(0 0 0 / 0.1);
   display: flex;
   flex-direction: column;
   gap: 0.5ch;
+  background-color: rgb(0 0 0 / 0.1);
+  padding: 1ch;
 
   /* p {
     padding: 1ch;
@@ -394,8 +394,8 @@ hr {
 
   table {
     background-color: var(--bg-lighter);
-    font-family: monospace;
     font-size: 12px;
+    font-family: monospace;
 
     th {
       font-size: 12px;
