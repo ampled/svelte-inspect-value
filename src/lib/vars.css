@@ -18,6 +18,7 @@
 
   --_hover-color: var(--hover-color, var(--base01));
   --_text-selection-background: var(--text-selection-background, var(--base02));
+  --_text-search-highlight-color: var(--text-search-highlight-color, var(--base0A));
   --_length-color: var(--length-color, var(--base03));
   --_bullet-color: var(--bullet-color, var(--base03));
   --_comment-color: var(--comment-color, var(--base03));

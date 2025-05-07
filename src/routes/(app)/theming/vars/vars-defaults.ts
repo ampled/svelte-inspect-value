@@ -28,6 +28,7 @@ export default [
   ['--background-color', '--base00'],
   ['--hover-color', '--base01'],
   ['--text-selection-background', '--base02'],
+  ['--text-search-highlight-color', '--base0A'],
   ['--indent-color', '--base03'],
   ['--indent', '0.75em'],
   ['--indent-compact', '0.5em'],
