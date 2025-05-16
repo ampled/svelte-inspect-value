@@ -7,7 +7,7 @@
 
   type Props = TypeViewProps<List>
 
-  let { value, key = undefined, type, path }: Props = $props()
+  let { value, key = undefined, type, path, ...rest }: Props = $props()
 
   const internalKeys = ['buffer', 'byteLength', 'byteOffset', 'length']
 
@@ -21,7 +21,7 @@
   let preview = $derived(value.slice(0, 3))
 </script>
 
-<Expandable {...{ value, key, type, path }} length={value.length}>
+<Expandable {...{ value, key, type, path }} length={value.length} {...rest}>
   {#snippet valuePreview({ showPreview })}
     <Preview prefix="[" postfix="]" list={preview} showKey={false} {showPreview} />
   {/snippet}
