@@ -96,7 +96,7 @@
     note={{
       title: 'invalid store',
       description:
-        'subscribe function did not return a valid subscriber.\nreverted to default object view.',
+        'Subscribe function did not return a valid subscriber.\nreverted to default object view.',
     }}
     {value}
     {key}
