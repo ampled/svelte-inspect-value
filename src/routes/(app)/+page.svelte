@@ -9,9 +9,10 @@
   <Inspect
     showTools
     style="max-width: 640px"
-    name="packageInfo"
-    expandPaths={['packageInfo.installCommands']}
-    value={{
+    heading="packageInfo"
+    expandLevel={1}
+    expandPaths={['installCommands']}
+    values={{
       name: 'svelte-inspect-value',
       installCommands: [
         'copy to clipboard 👉',
@@ -20,14 +21,11 @@
         'bun add svelte-inspect-value',
         'yarn add svelte-inspect-value',
       ],
-      npm: {
-        package: 'https://www.npmjs.com/package/svelte-inspect-value',
-        'dist-tags': data.packageMetaData?.['dist-tags'],
-        versions: data.packageMetaData?.versions,
-      },
+      npm: 'https://www.npmjs.com/package/svelte-inspect-value',
       github: 'https://github.com/ampled/svelte-inspect-value',
       docs: 'https://inspect.eirik.space/',
-      playground: 'https://svelte.dev/playground/956365d6905c44298234ff4d9c60741e?version=5.17.3',
+      playground: 'https://svelte.dev/playground/956365d6905c44298234ff4d9c60741e?version=5',
+      stats: data.stats,
     }}
   />
 </div>

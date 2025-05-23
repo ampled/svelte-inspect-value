@@ -29,7 +29,7 @@
 
     .dash {
       transition-duration: 250ms;
-      transition-property: width, height, border-radius, background-color;
+      transition-property: width, height, border-radius, background-color, transform;
       transition-timing-function: ease-in-out;
       border-radius: 0px;
       background-color: var(--_bullet-color);

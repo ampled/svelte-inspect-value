@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { HTMLButtonAttributes } from 'svelte/elements'
+  import type { SvelteHTMLElements } from 'svelte/elements'
   import { scale } from 'svelte/transition'
   import Caret from '../icons/Caret.svelte'
   import { useOptions } from '../options.svelte.js'
@@ -11,7 +11,8 @@
     value: unknown
     key?: string | symbol | number
     type?: string
-  } & Omit<HTMLButtonAttributes, 'onchange' | 'value' | 'type'>
+    disabled?: boolean
+  } & SvelteHTMLElements['div']
 
   let { collapsed = $bindable(), onchange, disabled, value, key, type, ...rest }: Props = $props()
 
@@ -23,26 +24,6 @@
     return 90
   })
 
-  function onkeydown(event: KeyboardEvent & { currentTarget: EventTarget & HTMLButtonElement }) {
-    // event.preventDefault()
-    if (onchange) {
-      switch (event.key) {
-        case 'ArrowDown':
-        case 'ArrowRight':
-          event.preventDefault()
-          onchange(false)
-          break
-        case 'ArrowUp':
-        case 'ArrowLeft':
-          event.preventDefault()
-          onchange(true)
-          break
-        default:
-          break
-      }
-    }
-  }
-
   let caret = $state<ReturnType<typeof Caret>>()
 
   export function flash() {
@@ -52,15 +33,11 @@
   let keyOrType = $derived((key ?? type)?.toString())
 </script>
 
-<button
+<div
   data-testid="collapse-button"
-  type="button"
   class="collapse"
   aria-label={`${collapsed ? 'expand' : 'collapse'} ${keyOrType}`}
-  title={`${collapsed ? 'expand' : 'collapse'} ${keyOrType}`}
-  {disabled}
   {...rest}
-  {onkeydown}
 >
   {#if disabled}
     <Bullet />
@@ -73,7 +50,7 @@
       />
     </div>
   {/if}
-</button>
+</div>
 
 <style>
   .collapse {
@@ -82,7 +59,6 @@
     justify-content: center;
     align-items: center;
     transition: color 250ms ease-in-out;
-    cursor: pointer;
     margin: 0;
     border: none;
     padding: 0;

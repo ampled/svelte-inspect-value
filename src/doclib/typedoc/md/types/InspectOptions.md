@@ -39,6 +39,8 @@ children:
     - quotes
   - - render-if
     - renderIf
+  - - search
+    - search
   - - show-length
     - showLength
   - - show-preview
@@ -80,6 +82,7 @@ type InspectOptions = {
   previewEntries: number;
   quotes: "single" | "double" | "none";
   renderIf: unknown;
+  search: boolean | "highlight" | "filter" | "filter-strict";
   showLength: boolean;
   showPreview: boolean;
   showTools: boolean;
@@ -194,9 +197,8 @@ elementView: "simple" | "full";
 
 Determines what properties are shown when inspecting HTML elements
 
-`'simple'` - minimal list of properties including classList, styles, dataset and current scrollPositions
-
-`'full'` - lists all enumerable properties of an element
+- `'simple'` - minimal list of properties including classList, styles, dataset and current scrollPositions
+- `'full'` - lists all enumerable properties of an element
 
 #### Default
 
@@ -470,6 +472,28 @@ true
 
 ***
 
+### search
+
+```ts
+search: boolean | "highlight" | "filter" | "filter-strict";
+```
+
+Enable or disable search functionality.
+
+Three modes are available:
+
+- `'filter' | true` - children and siblings of matching nodes will be visible
+- `'filter-strict'` - only matches will be visible
+- `'highlight'` - no nodes will be hidden, but matches will be highlighted
+
+#### Default
+
+```ts
+false
+```
+
+***
+
 ### showLength
 
 ```ts
@@ -546,9 +570,8 @@ Objects with a `subscribe` method will be inspected as stores and show their sub
 
 Set to `true`, `'value-only'` or `'full'` to enable.
 
-`'full' | true` - render store value as nested value along with other properties on the store object
-
-`'value-only'` - render store value only along with a note indicating the value was retrieved from a store
+- `'full' | true` - render store value as nested value along with other properties on the store object
+- `'value-only'` - render store value only along with a note indicating the value was retrieved from a store
 
 #### Default
 

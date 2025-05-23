@@ -147,6 +147,7 @@ export const inlineConfigProperties = {
   ParseJSON: { parseJson: true },
   /** Enable inspecting Svelte stores / observables */
   Stores: { stores: true },
+  StoreValues: { stores: 'value-only' },
   /** Disable inspecting Svelte store / observables */
   NoStores: { stores: false },
   /** Enable embedding images and sounds */
@@ -154,6 +155,9 @@ export const inlineConfigProperties = {
   SingleQuotes: { quotes: 'single' },
   DoubleQuotes: { quotes: 'double' },
   NoQuotes: { quotes: 'none' },
+  Search: { search: 'filter' },
+  SearchStrict: { search: 'filter-strict' },
+  SearchHighlight: { search: 'highlight' },
 } as const satisfies Record<string, Partial<options.InspectOptions>>
 
 export function createConfigurable<T>(

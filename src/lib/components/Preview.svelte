@@ -147,12 +147,13 @@
 <!-- At configured previewDepth, stop rendering nested item previews and just render their types -->
 {#snippet valuePreview(value: unknown, key?: PropertyKey)}
   {@const valType = getType(value, options.value.stores)}
+  {@const newPath = path && key ? [...path, key] : undefined}
   {#if alwaysRender(valType) || previewLevel < previewDepth}
     <Node {path} {key} {value} {showKey} {keyDelim} {keyStyle} {usedefaults} />
   {:else}
     <div class="key-type-preview">
       {#if showKey}
-        <Key disabled {path} {key} delim={keyDelim} style={keyStyle} allowUndefined />
+        <Key disabled path={newPath} {key} delim={keyDelim} style={keyStyle} allowUndefined />
       {/if}
       <Type type={valType} force />
     </div>

@@ -226,6 +226,13 @@ label {
   /* padding: 1em; */
 }
 
+label:has(input[type='checkbox']) {
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
+  margin-bottom: 0.5em;
+}
+
 button {
   font-family: monospace;
 }

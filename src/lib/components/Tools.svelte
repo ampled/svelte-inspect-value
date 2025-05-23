@@ -1,18 +1,19 @@
 <script lang="ts">
-  import { getContext, onDestroy, type Component } from 'svelte'
-  import { blur } from 'svelte/transition'
+  import { getContext, onDestroy } from 'svelte'
   import { globalInspectState } from '../Panel.svelte'
+  import { useSearchContext } from '../contexts.js'
   import { globalValues } from '../global.svelte.js'
   import { copyToClipBoard, logToConsole } from '../hello.svelte.js'
-  import CollapseChildren from '../icons/CollapseChildren.svelte'
+  import ClipBoardIcon from '../icons/ClipBoardIcon.svelte'
   import Console from '../icons/Console.svelte'
-  import Copy from '../icons/Copy.svelte'
-  import ExpandChildren from '../icons/ExpandChildren.svelte'
+  import ExpandCollapseIcon from '../icons/ExpandCollapseIconTwo.svelte'
   import { useOptions } from '../options.svelte.js'
   import { useState, type NodeState } from '../state.svelte.js'
   import type { TypeViewProps } from '../types.js'
-  import { isPromise, stringifyPath } from '../util.js'
+  import { isPromise, stringifyPath, wait } from '../util.js'
+  import type { SearchIndex } from '../util/search.js'
   import NodeActionButton from './NodeActionButton.svelte'
+  import NodeIconButton from './NodeIconButton.svelte'
 
   type Props = Partial<TypeViewProps<unknown, string>> & { collapsed?: boolean }
 
@@ -27,6 +28,7 @@
   let addedToPanel = $state(false)
   let stringifiedPath = $derived(stringifyPath(path))
   let level = $derived(path.length)
+  let settingCollapse = $state(false)
 
   let showCopyButton = $derived.by(() => {
     if (onCopy) {
@@ -41,12 +43,13 @@
 
   let nodeState = $derived(inspectState.value[stringifyPath(path)])
 
-  let hasExpandedChildren = $derived.by(() => {
-    const children = Object.entries(inspectState.value).filter(
+  let childNodes = $derived(
+    Object.entries(inspectState.value).filter(
       ([k]) => k.startsWith(stringifiedPath) && k.split('.').length === level + 1
     )
-    return children.some(([, v]) => !v.collapsed)
-  })
+  )
+  let hasExpandedChildren = $derived(childNodes.some(([, state]) => !state.collapsed))
+  let hasChildren = $derived(childNodes.length > 0)
 
   let copyTimeout = $state<number>()
   function onCopySuccess() {
@@ -97,32 +100,60 @@
 
   type CollapseAction = {
     hint: string
-    action: (level: number, path: PropertyKey[]) => void
-    icon: Component
+    action: () => void | Promise<void>
+    expand: boolean
   }
 
   let collapseAction: CollapseAction = {
     hint: 'collapse children',
-    action: (level, path) => inspectState.collapseChildren(level, path),
-    icon: CollapseChildren,
+    action: async () => {
+      settingCollapse = true
+      for (const [path, state] of childNodes) {
+        if (!state.collapsed) {
+          inspectState.setCollapse(path, { collapsed: true })
+          await wait()
+        }
+      }
+      settingCollapse = false
+    },
+    expand: false,
   }
 
   let expandAction: CollapseAction = {
     hint: 'expand children',
-    action: (level: number, path) => inspectState.expandChildren(level, path),
-    icon: ExpandChildren,
+    action: async () => {
+      settingCollapse = true
+      for (const [path, state] of childNodes) {
+        if (state.collapsed) {
+          inspectState.setCollapse(path, { collapsed: false })
+          await wait()
+        }
+      }
+      settingCollapse = false
+    },
+    expand: true,
+  }
+
+  let expandSelfAndChildrenAction: CollapseAction = {
+    hint: 'expand node and children',
+    action: async () => {
+      inspectState.setCollapse(stringifiedPath, { collapsed: false })
+      expandAction.action()
+    },
+    expand: true,
   }
 
   function getTreeAction(nodeState: NodeState) {
     if (nodeState) {
       if (nodeState.collapsed) {
-        return expandAction
-      } else if (hasExpandedChildren) {
-        return collapseAction
-      } else {
-        return expandAction
+        return expandSelfAndChildrenAction
+      }
+
+      if (hasChildren) {
+        return hasExpandedChildren ? collapseAction : expandAction
       }
     }
+
     return undefined
   }
 
@@ -141,10 +172,26 @@
   onDestroy(() => {
     if (addedToPanel) globalValues.delete(stringifiedPath)
   })
+
+  const searchIndex = getContext<() => SearchIndex>(Symbol.for('siv.build-index'))
+  const searchRes = useSearchContext()
+
+  function deb() {
+    const sIndex = searchIndex?.()
+    if (sIndex) {
+      console.log(
+        'index entry',
+        sIndex.find((e) => e.path === stringifiedPath)
+      )
+    }
+    console.log('searchres:', searchRes?.())
+    console.log('collapseState:', $state.snapshot(inspectState.value))
+  }
 </script>
 
 {#if showTools}
   <div class="tools" class:borderless>
+    <NodeIconButton type="button" title="?" aria-label="?" onclick={deb}>?</NodeIconButton>
     {#if !fixed && !globalValues.has(stringifiedPath) && globalInspectState.mounted.length}
       <NodeActionButton title="add to panel" onclick={setAsPanelValue}>+</NodeActionButton>
     {/if}
@@ -155,34 +202,34 @@
       >
     {/if}
     {#if treeAction}
-      <button
-        transition:blur={{ duration: options.transitionDuration }}
-        type="button"
+      <NodeIconButton
+        disabled={settingCollapse}
         title={treeAction.hint}
         aria-label={treeAction.hint}
-        onclick={() => treeAction.action(level, path)}
+        onclick={() => treeAction.action()}
       >
-        <treeAction.icon />
-      </button>
+        <ExpandCollapseIcon expand={treeAction.expand} />
+      </NodeIconButton>
     {/if}
-    <button
+    <NodeIconButton
       type="button"
       title="log value to console"
       aria-label="log value to console"
       onclick={() => log()}
+      style="font-size: 1em;width: 1.5em; height: 1.5em;"
     >
       <Console />
-    </button>
+    </NodeIconButton>
     {#if showCopyButton}
-      <button
+      <NodeIconButton
         type="button"
         title="copy value to clipboard"
         aria-label="copy value to clipboard"
         onclick={() => copy()}
-        class:copied
+        success={copied}
       >
-        <Copy />
-      </button>
+        <ClipBoardIcon {copied} />
+      </NodeIconButton>
     {/if}
   </div>
 {/if}
@@ -217,33 +264,6 @@
     max-height: 1.5em;
     overflow: clip;
     font-size: 1em;
-
-    button {
-      all: unset;
-      cursor: pointer;
-      margin: 0;
-      border: none;
-      padding: 2px;
-      width: 1.5em;
-      min-width: 1.5em;
-      height: 1.5em;
-      min-height: 1.5em;
-      color: var(--_button-color);
-
-      :global(svg) {
-        transition: color 100 ease-in-out;
-      }
-
-      &.copied {
-        color: var(--_button-success-color) !important;
-      }
-
-      &:hover,
-      &:focus-visible {
-        background-color: transparent;
-        color: var(--_text-color);
-      }
-    }
   }
 
   .tools.borderless {

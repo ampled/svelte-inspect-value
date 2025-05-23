@@ -1,10 +1,17 @@
 <script module lang="ts">
   import core from 'highlight.js/lib/core'
   import javascript from 'highlight.js/lib/languages/javascript'
+  import memoize from 'memoize'
 
   const hljs = core.newInstance()
   hljs.configure({ classPrefix: '' })
   hljs.registerLanguage('javascript', javascript)
+
+  function highlightMarkup(markup: string) {
+    return hljs.highlight(markup, { language: 'javascript' })
+  }
+
+  const highlight_markup = memoize(highlightMarkup)
 </script>
 
 <script lang="ts">
@@ -18,17 +25,18 @@
 
   let options = useOptions()
 
-  const highlight = (markup: string, stringCollapse: number) =>
-    hljs.highlight(collapseString(markup, stringCollapse), { language: 'javascript' }).value
+  const hljsHighlight = (markup: string, stringCollapse: number) => {
+    return highlight_markup(collapseString(markup, stringCollapse)).value
+  }
 
   let highlighted: string = $derived(
-    highlight(value.replaceAll('\t', ' '), options.value.stringCollapse)
+    hljsHighlight(value.replaceAll('\t', ' '), options.value.stringCollapse)
   )
 </script>
 
 <!-- eslint-disable svelte/no-at-html-tags -->
-<code data-testid="value" title={value} class:inline class="value function hl"
-  >{@html highlighted}
+<code data-testid="value" title={value} class:inline class="value function hl">
+  {@html highlighted}
 </code>
 
 <style>
@@ -42,7 +50,7 @@
 
   :global code.value.function.hl {
     background-color: unset;
-    padding: var(--_indent);
+    padding-left: var(--_indent);
     color: var(--_text-color) !important;
     white-space: pre;
 

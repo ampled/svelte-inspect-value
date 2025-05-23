@@ -10,7 +10,7 @@
   import GlobalOptions from './GlobalOptions.svelte'
 
   let drawerOpen = $state(true)
-  let showDevItems = false
+  let showDevItems = true
 
   setContext(Symbol('SIV.DEBUG'), true)
 
@@ -99,6 +99,7 @@
       children: [
         { href: '/testing/alltypes', title: 'All Types', devonly: true },
         { href: '/testing/global', title: 'Global', devonly: true },
+        { href: '/testing/search', title: 'Search', devonly: true },
       ],
     },
   ]
@@ -121,6 +122,8 @@
     parseJson: false,
     renderIf: true,
     stores: 'full',
+    search: 'highlight',
+    highlightMatches: true,
   })
 
   let renderDevOnlyPanel = $state(false)

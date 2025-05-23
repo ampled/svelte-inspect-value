@@ -1,11 +1,31 @@
 <script lang="ts">
+  import { useOptions } from '../options.svelte.js'
+  import type { Snippet } from 'svelte'
   import type { SvelteHTMLElements } from 'svelte/elements'
+  import { slide, type FlyParams, type SlideParams } from 'svelte/transition'
 
   type Props = {
     busy?: boolean
+    transition?: typeof slide
+    transitionParams?: SlideParams | FlyParams
+    icon?: Snippet
+    containerAttrs?: SvelteHTMLElements['div']
   } & SvelteHTMLElements['input']
 
-  let { onclick, busy, disabled, value = $bindable(''), ...rest }: Props = $props()
+  const options = useOptions()
+
+  let {
+    onclick,
+    busy,
+    disabled,
+    value = $bindable(''),
+    class: className,
+    transition = slide,
+    transitionParams = { duration: options.transitionDuration },
+    containerAttrs = {},
+    icon,
+    ...rest
+  }: Props = $props()
 
   let input = $state<HTMLInputElement>()
 
@@ -14,33 +34,47 @@
   }
 </script>
 
-<input
-  bind:this={input}
-  bind:value
-  type="text"
-  disabled={disabled || busy}
-  aria-busy={busy}
-  {...rest}
-/>
+<div
+  class="siv-input"
+  transition:transition={{ ...transitionParams, duration: options.transitionDuration }}
+  {...containerAttrs}
+>
+  <input
+    bind:this={input}
+    bind:value
+    class={className}
+    type="text"
+    disabled={disabled || busy}
+    aria-busy={busy}
+    {...rest}
+  />
+  {#if icon}
+    <div class="icon">
+      {@render icon()}
+    </div>
+  {/if}
+</div>
 
 <style>
   input::-webkit-search-cancel-button {
-    visibility: hidden;
+    display: none;
   }
 
   .siv-input {
     display: flex;
     align-items: center;
+    transform-origin: center top;
     outline: 1px solid var(--_button-color);
     border-radius: 2px;
     background-color: var(--_background-color);
     width: 100%;
     height: 1.5em;
-    font-size: 1em;
+    font-size: 0.916666em;
     font-family: var(--inspect-font);
 
     input {
       all: unset;
+      transform-origin: center top;
       transition:
         color 150ms,
         background-color 250ms,
@@ -55,7 +89,7 @@
       height: 100%;
       color: var(--_button-color);
       font-weight: normal;
-      font-size: 1em;
+      font-size: 0.916666em;
       line-height: 1.5em;
       font-family: var(--inspect-font);
       user-select: none;

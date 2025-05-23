@@ -1,7 +1,24 @@
 <script lang="ts">
-  import type { HTMLButtonAttributes } from 'svelte/elements'
+  import { useOptions } from '../options.svelte.js'
+  import type { Snippet } from 'svelte'
+  import type { SvelteHTMLElements } from 'svelte/elements'
+  import { slide, type SlideParams } from 'svelte/transition'
 
-  let { children, onclick, ...rest }: HTMLButtonAttributes = $props()
+  type Props = {
+    children: Snippet
+    success?: boolean
+    transition?: typeof slide
+    transitionParams?: SlideParams
+  } & SvelteHTMLElements['button']
+
+  const options = useOptions()
+  let {
+    children,
+    success = false,
+    transition = slide,
+    transitionParams = { axis: 'x', duration: options.transitionDuration },
+    ...rest
+  }: Props = $props()
 
   let button = $state<HTMLButtonElement>()
 
@@ -10,7 +27,13 @@
   }
 </script>
 
-<button bind:this={button} type="button" {onclick} {...rest}>
+<button
+  transition:transition={{ duration: options.transitionDuration, ...transitionParams }}
+  bind:this={button}
+  class:success
+  type="button"
+  {...rest}
+>
   {@render children?.()}
 </button>
 
@@ -21,7 +44,7 @@
     transition:
       color 250ms ease-in-out,
       background-color 250ms ease-in-out,
-      transform 250ms ease-in-out;
+      transform 100ms ease-in-out;
     cursor: pointer;
     width: 1.5em;
     min-width: 1.5em;
@@ -31,6 +54,10 @@
     line-height: 1.5em;
     font-family: var(--inspect-font);
     text-align: center;
+
+    &.success {
+      color: var(--_button-success-color) !important;
+    }
 
     &:disabled {
       cursor: default;

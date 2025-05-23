@@ -85,8 +85,8 @@
 
   let visible = $derived.by(() => {
     if (previewLevel > 0) return true
-    if (matchingPaths.includes('*')) return true
-    if (matchingPaths.length > 1) {
+    if (matchingPaths.length === 0) return true
+    if (matchingPaths.length > 0) {
       const searchMode = options.value.search
       if (!searchMode) {
         return true

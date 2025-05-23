@@ -61,6 +61,11 @@
   let flash = $state(false)
   const handleLabel = $derived(open ? 'close panel' : 'open panel')
 
+  let globalEntries = $derived.by(() => {
+    const entries = [...globalValues.entries()].map(([k, v]) => [k, v.value] as const)
+    return Object.fromEntries(entries)
+  })
+
   let shouldBeOpen = $derived.by(() => {
     if (openOnHover) {
       return hovered || open
@@ -269,11 +274,12 @@
     {/if}
 
     {#if value || name || (keys.length && values)}
-      <CollapseStateProvider {onCollapseChange}>
+      <CollapseStateProvider {onCollapseChange} {value} {name} {keys} {values}>
         <Wrapper
           class={wrapperClasses}
           {heading}
           style={hideToolbar && appearance === 'dense' ? 'border-top: none' : ''}
+          showExpandCollapse={values != null && keys.length > 0}
         >
           {#if values && keys.length}
             <PropertyList value={values} {keys} />
@@ -286,21 +292,23 @@
       </CollapseStateProvider>
     {/if}
     {#if globalValues.size > 0 && !hideGlobalValues}
-      <CollapseStateProvider {onCollapseChange}>
-        <Wrapper class={wrapperClasses}>
+      <CollapseStateProvider
+        {onCollapseChange}
+        values={globalEntries}
+        keys={Array.from(globalValues.keys())}
+      >
+        <Wrapper class={wrapperClasses} showExpandCollapse>
           {#snippet heading()}
             global values
-            <div
-              style="display: flex; align-items: center; justify-content: flex-end; gap: 0.5em; flex-basis: 100%"
+          {/snippet}
+          {#snippet headingExtra()}
+            <NodeIconButton
+              onclick={() => logToConsole(['global values'], globalValues, 'map')}
+              style="width: 2em; height: 2em"
             >
-              <NodeIconButton
-                onclick={() => logToConsole(['global values'], globalValues, 'map')}
-                style="width: 2em; height: 2em"
-              >
-                <Console />
-              </NodeIconButton>
-              <NodeActionButton onclick={() => globalValues.clear()}>clear</NodeActionButton>
-            </div>
+              <Console />
+            </NodeIconButton>
+            <NodeActionButton onclick={() => globalValues.clear()}>clear</NodeActionButton>
           {/snippet}
           {#each globalValues as [key, entry] (key)}
             <Node note={entry.note} key={key as PropertyKey} value={entry.value} />

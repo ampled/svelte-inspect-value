@@ -179,9 +179,8 @@ export type InspectOptions = {
   /**
    * Determines what properties are shown when inspecting HTML elements
    *
-   * `'simple'` - minimal list of properties including classList, styles, dataset and current scrollPositions
-   *
-   * `'full'` - lists all enumerable properties of an element
+   * - `'simple'` - minimal list of properties including classList, styles, dataset and current scrollPositions
+   * - `'full'` - lists all enumerable properties of an element
    *
    * @default 'simple'
    */
@@ -247,13 +246,32 @@ export type InspectOptions = {
    *
    * Set to `true`, `'value-only'` or `'full'` to enable.
    *
-   * `'full' | true` - render store value as nested value along with other properties on the store object
-   *
-   * `'value-only'` - render store value only along with a note indicating the value was retrieved from a store
+   * - `'full' | true` - render store value as nested value along with other properties on the store object
+   * - `'value-only'` - render store value only along with a note indicating the value was retrieved from a store
    *
    * @default 'full'
    */
   stores: boolean | 'value-only' | 'full'
+  /**
+   * Enable or disable search functionality.
+   *
+   * Three modes are available:
+   *
+   * - `'filter' | true` - children and siblings of matching nodes will be visible
+   * - `'filter-strict'` - only matches will be visible
+   * - `'highlight'` - no nodes will be hidden, but matches will be highlighted
+   *
+   * @default false
+   */
+  search: boolean | 'highlight' | 'filter' | 'filter-strict'
+  /**
+   * When `search` is enabled, highlight matches in keys,
+   * types and values when typing in the search input box.
+   *
+   * @see {@link InspectOptions.search}
+   * @default true
+   */
+  highlightMatches: boolean
 }
 
 /**
@@ -288,6 +306,8 @@ export const DEFAULT_OPTIONS: InspectOptions = {
   onLog: undefined,
   onCollapseChange: undefined,
   stores: 'full',
+  search: true,
+  highlightMatches: true,
 } as const
 
 export const OPTIONS_KEYS = Object.keys(DEFAULT_OPTIONS) as (keyof InspectOptions)[]
@@ -355,9 +375,3 @@ Set global options like this instead: setGlobalInspectOptions(() => {options val
 export function useOptions(): OptionsContext {
   return getContext<OptionsContext>(OPTIONS_CONTEXT)
 }
-
-export function useParentOptions() {
-  return getContext<OptionsContext | undefined>(OPTIONS_CONTEXT)
-}
-
-export type TestType = { foo: string }

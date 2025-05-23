@@ -13,7 +13,7 @@
     Iterator<unknown> | AsyncIterator<unknown> | Generator | AsyncGenerator
   >
 
-  let { value: iterator, key = undefined, type, path = [], showKey }: Props = $props()
+  let { value: iterator, key = undefined, type, path = [], showKey, ...rest }: Props = $props()
 
   const valueCache = useValueCache<{ done: boolean; unwrap: unknown[] } | undefined>()
   const previewLevel = getPreviewLevel()
@@ -33,7 +33,8 @@
     }
   })
 
-  async function next() {
+  async function next(e: UIEvent) {
+    e.stopPropagation()
     busy = true
     const { value, done } = await iterator.next()
     busy = false
@@ -44,7 +45,8 @@
     valueCache.set(stringifiedPath, { unwrap: $state.snapshot(unwrap), done: isDone as boolean })
   }
 
-  async function complete() {
+  async function complete(e: UIEvent) {
+    e.stopPropagation()
     busy = true
     let result = await iterator.next()
     let i = 0
@@ -64,6 +66,7 @@
   length={unwrap.length}
   {showKey}
   showLength={false}
+  {...rest}
 >
   {#snippet valuePreview({ showPreview })}
     {#if !previewLevel}

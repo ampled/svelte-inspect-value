@@ -5,6 +5,8 @@ title:
 children:
   - - display
     - display
+  - - exact-match
+    - exactMatch
   - - force-type
     - forceType
   - - key
@@ -32,6 +34,7 @@ children:
 ```ts
 type TypeViewProps<Value, Type> = {
   display: string;
+  exactMatch: boolean;
   forceType: boolean;
   key: PropertyKey;
   keyDelim: string;
@@ -70,6 +73,14 @@ Representation of value.
 
 Use to customize how a value is represented while still being able to pass the original
 value for other purposes
+
+***
+
+### exactMatch?
+
+```ts
+exactMatch: boolean;
+```
 
 ***
 

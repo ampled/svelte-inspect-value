@@ -1,25 +1,22 @@
-<script lang="ts" generics="Type extends string = ValueType">
-  import { getContext, onMount, type Snippet } from 'svelte'
+<script lang="ts">
+  import { onMount, type Snippet } from 'svelte'
   import type { HTMLAttributes } from 'svelte/elements'
-  import { getPreviewLevel } from '../contexts.js'
+  import { scope } from '../action/focus.svelte.js'
+  import { getIsKey, getPreviewLevel } from '../contexts.js'
   import { useOptions } from '../options.svelte.js'
   import { useState } from '../state.svelte.js'
   import { slideXY } from '../transition/slideXY.js'
   import type { TypeViewProps } from '../types.js'
-  import {
-    neverExpandInitial,
-    shouldInitiallyExpandNode,
-    stringifyPath,
-    type ValueType,
-  } from '../util.js'
+  import { neverExpandInitial, shouldInitiallyExpandNode, stringifyPath } from '../util.js'
   import CollapseButton from './CollapseButton.svelte'
   import Count from './Count.svelte'
   import Key from './Key.svelte'
   import NodeNote from './NodeNote.svelte'
+  import Row from './Row.svelte'
   import Tools from './Tools.svelte'
   import Type from './Type.svelte'
 
-  type Props = TypeViewProps<unknown, Type> & {
+  type Props = TypeViewProps<unknown> & {
     length?: number
     valuePreview: Snippet<[{ showPreview: boolean }]>
     forceType?: boolean
@@ -46,15 +43,16 @@
     showLength = true,
     children,
     note,
+    exactMatch,
     ...rest
   }: Props = $props()
 
   let buttonComponent = $state<ReturnType<typeof CollapseButton>>()
   const options = useOptions()
-  let { expandAll, expandPaths, showLength: optsShowLength } = $derived(options.value)
   const inspectState = useState()
   const previewLevel = getPreviewLevel()
-  const isKey = getContext<boolean>(Symbol.for('siv.key'))
+  const isKey = getIsKey()
+  let { expandAll, expandPaths, showLength: optsShowLength, borderless } = $derived(options.value)
   let expandingDisabled = $derived(length === 0 || previewLevel > 0)
   let stringifiedPath = $derived(stringifyPath(path))
   let collapseState = $derived(inspectState.value[stringifiedPath])
@@ -83,28 +81,45 @@
   })
 
   function setCollapse(collapsed: boolean) {
-    inspectState.setCollapse(stringifiedPath, { collapsed })
+    if (!expandingDisabled) {
+      inspectState.setCollapse(stringifiedPath, { collapsed })
+    }
   }
 
   function toggleCollapse() {
     setCollapse(!collapsed)
   }
 
-  function ondblclick(event: MouseEvent & { currentTarget: EventTarget & HTMLDivElement }) {
+  function ondblclick(event: MouseEvent & { currentTarget: EventTarget | HTMLDivElement }) {
     if (expandingDisabled) return
     event.preventDefault()
     toggleCollapse()
   }
+
+  let shouldRenderChildren = $derived.by(() => {
+    if (exactMatch && type !== 'string' && type !== 'function') {
+      return length != null && length > 0 && !previewLevel
+    } else {
+      return length != null && length > 0 && !collapsed && !previewLevel
+    }
+  })
 </script>
 
 <div
   {ondblclick}
   data-testid="expandable"
-  class={['line', previewLevel && 'preview', !showKey && 'nokey']}
+  class={['line', previewLevel && 'preview', !showKey && 'nokey', exactMatch && 'match']}
   aria-expanded={!collapsed}
   {...rest}
 >
-  <div class="indicator-and-key">
+  <Row
+    {collapsed}
+    {previewLevel}
+    {borderless}
+    disabled={expandingDisabled}
+    onchange={setCollapse}
+    isFocusTarget={previewLevel === 0}
+  >
     {#if !previewLevel && !isKey}
       <CollapseButton
         bind:this={buttonComponent}
@@ -112,15 +127,12 @@
         {value}
         {key}
         {type}
-        onclick={toggleCollapse}
-        onchange={(c) => setCollapse(c)}
         disabled={expandingDisabled}
       />
     {/if}
     {#if showKey}
       <Key
         disabled={expandingDisabled}
-        onclick={toggleCollapse}
         delim={keyDelim}
         prefix={keyPrefix}
         style={keyStyle}
@@ -128,33 +140,36 @@
         {path}
       />
     {/if}
-  </div>
-  {#if !isKey}
-    <Type {type} force={forceType} />
-  {/if}
+    {#if !isKey}
+      <Type {type} force={forceType} />
+    {/if}
 
-  {@render valuePreview({ showPreview: collapsed || previewLevel > 0 || keepPreviewOnExpand })}
+    {@render valuePreview({
+      showPreview: (collapsed || previewLevel > 0 || keepPreviewOnExpand) && !shouldRenderChildren,
+    })}
 
-  {#if !previewLevel}
     {#if note && !previewLevel}
       <NodeNote style="justify-self: right;" title={note.description}>{note.title}</NodeNote>
     {/if}
 
-    {#if showLength && optsShowLength}
+    {#if typeof length === 'number' && showLength && optsShowLength && !previewLevel}
       <Count {length} {type} />
     {/if}
+  </Row>
 
+  {#if !previewLevel}
     <Tools {value} {path} {collapsed} {type}></Tools>
   {/if}
 </div>
 
-{#if children && length != null && length > 0 && !collapsed && !previewLevel}
+{#if children && shouldRenderChildren}
   <div
-    transition:slideXY={{ duration: options.transitionDuration * 2 }}
+    transition:slideXY={{ duration: options.transitionDuration * 3 }}
     oninspectvaluechange={() => buttonComponent?.flash()}
     role="list"
     data-testid="indent"
-    class="indent {type}"
+    class={['indent', type, exactMatch && 'exact-match']}
+    use:scope={previewLevel === 0}
   >
     {@render children()}
   </div>
@@ -165,12 +180,20 @@
 
   .indent {
     position: relative;
-    transition-duration: 100ms;
+    transition-duration: 200ms;
     transition-property: margin-left, border-color;
     margin-left: var(--__indent);
     border-left: 1px solid var(--_indent-color);
     max-height: calc(102 * 1.5em);
     overflow-x: clip;
     overflow-y: auto;
+
+    &.exact-match {
+      border-color: var(--base0A);
+    }
+  }
+
+  :global .indent:has(.highlight):not(.exact-match) {
+    border-color: color-mix(in srgb, var(--_indent-color), var(--_text-search-highlight-color) 50%);
   }
 </style>

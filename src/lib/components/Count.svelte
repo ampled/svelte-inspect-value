@@ -1,23 +1,15 @@
 <script lang="ts">
-  import { useOptions } from '../options.svelte.js'
   import type { ValueType } from '../util.js'
+  import Highlight from './Highlight.svelte'
 
   type Props = {
-    length?: number
+    length: number
     type?: ValueType | string
   }
 
   let { length, type }: Props = $props()
 
-  const options = useOptions()
-
-  let { showLength } = $derived(options.value)
-
   let prefix = $derived.by(() => {
-    if (!showLength) {
-      return ''
-    }
-    // if (!type) return ''
     switch (type) {
       case 'urlsearchparams':
         return 'size:'
@@ -27,11 +19,9 @@
   })
 
   let unit = $derived.by(() => {
-    if (!showLength) {
-      return ''
-    }
-    // if (!type) return ''
     switch (type) {
+      case undefined:
+        return
       case 'urlsearchparams':
         return
       case 'array':
@@ -55,24 +45,30 @@
   })
 </script>
 
-{#if showLength && typeof length === 'number'}
-  <span data-testid="count" class="count">
+{#if typeof length === 'number'}
+  <div data-testid="count" class="count">
     {#if length > 0}
       {#if prefix}
         <span class="unit">{prefix}</span>
       {/if}
-      {length}
+      <span>
+        {length}
+      </span>
       {#if unit}
-        <span class="unit">{unit}</span>
+        <span class="unit">
+          <Highlight value={unit} field="token" />
+        </span>
       {/if}
     {:else}
-      empty
+      <Highlight value="empty" field="token" />
     {/if}
-  </span>
+  </div>
 {/if}
 
 <style>
   .count {
+    display: flex;
+    gap: 0.5ch;
     transition: color 250ms ease-in-out;
     color: var(--_length-color);
     font-style: italic;

@@ -202,6 +202,7 @@ export type TypeViewProps<Value = unknown, Type = ValueType> = {
    */
   forceType?: boolean
   note?: Note
+  exactMatch?: boolean
 }
 
 /**
@@ -294,3 +295,11 @@ type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] exte
   : Enumerate<N, [...Acc, Acc['length']]>
 
 export type IntRange<F extends number, T extends number> = Exclude<Enumerate<T>, Enumerate<F>>
+
+export type SecondArgOf<T> = T extends (
+  first: any,
+  second: infer SecondArgument,
+  ...args: any[]
+) => any
+  ? SecondArgument
+  : never

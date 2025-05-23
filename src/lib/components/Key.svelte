@@ -1,27 +1,28 @@
 <script lang="ts">
-  import { setContext } from 'svelte'
-  import type { HTMLButtonAttributes } from 'svelte/elements'
-  import { getPreviewLevel } from '../contexts.js'
+  import type { SvelteHTMLElements } from 'svelte/elements'
+  import { getPreviewLevel, setIsKey } from '../contexts.js'
   import { useOptions } from '../options.svelte.js'
   import type { TypeViewProps } from '../types.js'
   import { getType, stringify, stringifyPath } from '../util.js'
   import Node from './Node.svelte'
   import Type from './Type.svelte'
 
+  import Highlight from './Highlight.svelte'
+
   type Props = {
     prefix?: string
     key: TypeViewProps<unknown>['key'] | unknown
     path?: TypeViewProps<unknown>['path']
     delim?: string
+    disabled?: boolean
     allowUndefined?: boolean
-  } & HTMLButtonAttributes
+  } & SvelteHTMLElements['span']
 
   let { key, path = [], delim = ':', prefix, disabled, onclick, ...rest }: Props = $props()
+
   const options = useOptions()
   const keyTypes = ['string', 'number', 'symbol', 'quotedstring']
   const simpleKeys = ['bigint', 'regexp']
-  const ele = $derived<'span' | 'button'>(disabled ? 'span' : 'button')
-
   const shouldBeQuoted = /[^A-zÀ-ú0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F_$]|[\\[\]`]/
   const previewLevel = getPreviewLevel()
 
@@ -48,37 +49,28 @@
 
   let shouldShow = $derived(key === undefined ? previewLevel > 0 : true)
 
-  setContext(Symbol.for('siv.key'), true)
-
   function onerror(error: unknown): void {
     throw new Error('Error in Key.svelte', { cause: error })
   }
-
-  function handleClick(e: MouseEvent & { currentTarget: HTMLButtonElement }) {
-    if (disabled) return
-    onclick?.(e)
-  }
+  setIsKey()
 </script>
 
 {#if shouldShow}
   <svelte:boundary {onerror}>
-    <div class="key-outer">
-      <svelte:element
-        this={ele}
+    <div class="key-and-delimiter">
+      <div
         data-testid="key"
-        type={ele === 'button' ? 'button' : undefined}
-        class={['key-button', disabled && 'disabled']}
-        {disabled}
+        class={['key-outer', disabled && 'disabled']}
         aria-label={key?.toString()}
-        title={previewLevel === 0 ? stringifyPath(path) : undefined}
-        onclick={handleClick}
+        title={stringifyPath(path)}
+        data-search-ignore={previewLevel > 0 ? '' : undefined}
         {...rest}
       >
         {#if prefix}
           <span class="prefix">{prefix}</span>
         {/if}
         {#if keyTypes.includes(keyType)}
-          <span class="key {keyType}">
+          <span class={['key', keyType, disabled && 'disabled']}>
             {#if keyType === 'quotedstring' && key !== ''}
               {#each display as string as char}
                 {#if char === ' '}
@@ -88,7 +80,11 @@
                 {/if}
               {/each}
             {:else}
-              {display?.toString()}
+              <Highlight
+                value={display?.toString() ?? ''}
+                field="path"
+                alsoMatch={stringifyPath(path)}
+              />
             {/if}
           </span>
         {:else if simpleKeys.includes(keyType)}
@@ -96,7 +92,7 @@
         {:else}
           <Type type={keyType} force />
         {/if}
-      </svelte:element>
+      </div>
       {#if delim}
         <span class="delim">{delim}</span>
       {/if}
@@ -105,12 +101,11 @@
 {/if}
 
 <style>
-  .key-outer {
+  .key-and-delimiter {
     display: flex;
   }
 
-  .key-button {
-    all: unset;
+  .key-outer {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -126,10 +121,6 @@
     }
   }
 
-  .key-button:not(.disabled) {
-    cursor: pointer;
-  }
-
   .whitespace {
     opacity: var(--_key-whitespace-opacity);
     color: var(--_key-whitespace-color);
@@ -137,7 +128,11 @@
   }
 
   .key {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     transition: color 250ms ease-in-out;
+    height: 100%;
     user-select: text;
 
     &.number {

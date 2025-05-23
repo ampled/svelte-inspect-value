@@ -1,9 +1,19 @@
 <script lang="ts">
   import type { SvelteHTMLElements } from 'svelte/elements'
 
-  type Props = SvelteHTMLElements['select'] & { prefix?: string }
+  type Props = SvelteHTMLElements['select'] & {
+    prefix?: string
+    containerAttrs?: SvelteHTMLElements['div']
+  }
 
-  let { children, onclick, value = $bindable(undefined), prefix, ...rest }: Props = $props()
+  let {
+    children,
+    onclick,
+    value = $bindable(undefined),
+    prefix,
+    containerAttrs = {},
+    ...rest
+  }: Props = $props()
 
   let button = $state<HTMLSelectElement>()
 
@@ -12,7 +22,7 @@
   }
 </script>
 
-<div class="inspect-select" class:with-prefix={prefix}>
+<div class="inspect-select" class:with-prefix={prefix} {...containerAttrs}>
   {#if prefix}
     <div class="prefix">{prefix}</div>
   {/if}

@@ -19,7 +19,7 @@
     values,
     name,
     class: classValue,
-    heading = 'y',
+    heading,
     ...props
   }: InspectProps & SvelteHTMLElements['div'] = $props()
 
@@ -47,7 +47,21 @@
   )
 
   let keys = $derived.by(() => {
-    if (values) return getAllProperties(values)
+    if (values) {
+      if (Array.isArray(values)) {
+        return [
+          ...values.keys(),
+          ...getAllProperties(values).filter((prop) => {
+            if (typeof prop === 'string') {
+              return /\d+/.test(prop) === false && prop !== 'length'
+            }
+            return true
+          }),
+        ]
+      }
+
+      return getAllProperties(values)
+    }
     return []
   })
 
@@ -55,11 +69,12 @@
 </script>
 
 {#if shouldRender}
-  <CollapseStateProvider {onCollapseChange}>
+  <CollapseStateProvider {onCollapseChange} {value} {values} {name} {keys}>
     <Wrapper
       data-testid="inspect"
       class={[classValue, theme, noanimate && 'noanimate', borderless && 'borderless']}
       {heading}
+      showExpandCollapse={values != null}
       {...restProps}
     >
       {#if values && keys.length}
