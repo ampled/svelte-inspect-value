@@ -8,9 +8,10 @@
   import './app.css'
   import ExpandRoute from './Expandroute.svelte'
   import GlobalOptions from './GlobalOptions.svelte'
+  import DocSearch from '$doclib/DocSearch.svelte'
 
   let drawerOpen = $state(true)
-  let showDevItems = true
+  let showDevItems = false
 
   setContext(Symbol('SIV.DEBUG'), true)
 
@@ -37,6 +38,7 @@
           href: '/reference/values',
           title: 'Values',
         },
+        { href: '/reference/usage', title: 'Usage Guide' },
         {
           href: '/examples',
           title: 'Examples',
@@ -246,7 +248,7 @@
     <main class:drawer-open={drawerOpen}>
       <header>
         <a href="/" class="title">
-          <h1>
+          <h1 aria-label="Svelte Inspect Value" class="header-lib-title">
             Svelte
             <code
               >{'<'}<span class="inspect">Inspect</span>
@@ -255,6 +257,7 @@
             </code>
           </h1>
         </a>
+        <DocSearch />
       </header>
       {@render children()}
     </main>
@@ -265,8 +268,8 @@
   header {
     display: flex;
     flex-wrap: wrap;
-    /* justify-content: space-between; */
-    align-items: flex-start;
+    justify-content: space-between;
+    align-items: flex-end;
     gap: 1em;
     /* padding-inline: 1em; */
     padding-top: 1em;
@@ -280,7 +283,7 @@
     text-decoration: none;
   }
 
-  h1 {
+  h1.header-lib-title {
     max-width: max-content;
     text-decoration: none;
     text-wrap: nowrap;
