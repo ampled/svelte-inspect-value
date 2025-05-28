@@ -10,8 +10,6 @@ type GlobalValue = {
 
 export const globalValues = new SvelteMap<PropertyKey, GlobalValue>()
 
-// $inspect(globalValues)
-
 const _componentNameRegex = /(\+)?\w+\.svelte/gm
 const componentNameWithPathRegex = /([()A-z$_-]+\/)+(\+)?(\w+[^Tools])\.svelte(?!\.ts)/gm
 
