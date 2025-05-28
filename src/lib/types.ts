@@ -1,8 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { Component, ComponentProps } from 'svelte'
+import type { Component, ComponentProps, Snippet } from 'svelte'
 import type { HTMLAttributes, SvelteHTMLElements } from 'svelte/elements'
 import type { InspectOptions } from './options.svelte.js'
 import type { ValueType } from './util.js'
+
+export type HeadingSnippet = Snippet<
+  [
+    {
+      /**
+       * Indicates if the `Inspect`-instance is collapsed.
+       *
+       * Use this to show or hide content in your custom header based on the collapse status.
+       */
+      collapsed: boolean
+    },
+  ]
+>
 
 /**
  * Shared props for `Inspect` and `Inspect.Panel`
@@ -36,7 +49,7 @@ export type BaseProps = {
   /**
    * A `string` or `Snippet` that will be rendered as a small heading with a collapse-button for the component.
    */
-  heading?: string | import('svelte').Snippet
+  heading?: string | HeadingSnippet
 }
 
 /**
