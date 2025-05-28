@@ -99,6 +99,26 @@
       'a\nb',
       'a\nb',
       'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
     ],
     stores: {
       a: readable('test'),
@@ -420,9 +440,32 @@
   })
 </script>
 
-<label>
-  flashing
-  <input type="checkbox" bind:checked={seeFlashing} />
-</label>
+<Inspect name="allTypes" values={allTypes} {...props} expandLevel={0}>
+  {#snippet heading({ collapsed })}
+    DEMO
+    {#if !collapsed}
+      <!-- svelte-ignore a11y_click_events_have_key_events -->
+      <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+      <label
+        onclick={(e) => {
+          e.stopPropagation()
+        }}
+      >
+        increment number
+        <input type="checkbox" bind:checked={seeFlashing} />
+      </label>
+    {/if}
+  {/snippet}
+</Inspect>
 
-<Inspect name="allTypes" values={allTypes} {...props} expandLevel={0} />
+<style>
+  label {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1ch;
+    margin: 0 !important;
+    width: 100%;
+    font-size: 0.8em;
+  }
+</style>
