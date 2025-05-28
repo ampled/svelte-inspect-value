@@ -1,35 +1,43 @@
+import { getContext, setContext } from 'svelte'
 import { focusBySearch } from './action/focus.svelte.js'
 
 /*
  * Adapted from https://github.com/trbrc/svelte-inspect
  */
-let typingBuffer = $state('')
-let hasSearchBufferTimeout = $state(false)
-let clearBufferTimeout = $state<number | undefined>()
-export function type(char: string) {
-  typingBuffer += char
-  if (!hasSearchBufferTimeout) {
-    hasSearchBufferTimeout = true
-    setTimeout(() => {
-      hasSearchBufferTimeout = false
-      focusBySearch(typingBuffer)
-    }, 100)
+
+export class TypingBuffer {
+  typingBuffer = $state('')
+  hasSearchBufferTimeout = false
+  clearBufferTimeout: number | undefined
+
+  constructor(private scopeId: string) {}
+
+  type(char: string) {
+    this.typingBuffer += char
+    if (!this.hasSearchBufferTimeout) {
+      this.hasSearchBufferTimeout = true
+      setTimeout(() => {
+        this.hasSearchBufferTimeout = false
+        focusBySearch(this.typingBuffer, this.scopeId)
+      }, 100)
+    }
+    clearTimeout(this.clearBufferTimeout)
+    this.clearBufferTimeout = setTimeout(() => {
+      this.typingBuffer = ''
+    }, 600)
   }
-  clearTimeout(clearBufferTimeout)
-  clearBufferTimeout = setTimeout(() => {
-    typingBuffer = ''
-  }, 600)
-}
 
-export function typebuffer() {
-  return typingBuffer
-}
-
-export const typeBufferValue = {
   get current() {
-    return typingBuffer
-  },
-  set current(value) {
-    typingBuffer = value
-  },
+    return this.typingBuffer
+  }
+}
+
+const TYPING_BUFFER_CONTEXT = Symbol('siv.typing-buffer')
+
+export function createTypingBufferContext(scopeId: string) {
+  return setContext(TYPING_BUFFER_CONTEXT, new TypingBuffer(scopeId))
+}
+
+export function getTypingBuffer(): TypingBuffer {
+  return getContext(TYPING_BUFFER_CONTEXT)
 }
