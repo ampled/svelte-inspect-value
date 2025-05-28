@@ -2,12 +2,14 @@
   import {
     enterFocusScope,
     exitFocusScope,
+    focusFirst,
+    focusLast,
     focusNext,
     focusPrev,
     focusTarget,
   } from '../action/focus.svelte.js'
-  import { tick, type Snippet } from 'svelte'
-  import { type } from '../typingbuffer.svelte.js'
+  import { getContext, tick, type Snippet } from 'svelte'
+  import { getTypingBuffer } from '../typingbuffer.svelte.js'
 
   type Props = {
     collapsed?: boolean
@@ -29,14 +31,16 @@
     borderless = false,
   }: Props = $props()
 
+  const focusId = getContext<string>('siv-focus-id')
+  const typingBuffer = getTypingBuffer()
+
   function onclick() {
     onchange?.(!collapsed)
   }
 
   function onkeydown(event: KeyboardEvent) {
-    console.log('key:', event.key)
     let shouldPreventDefault = true
-    if (event.metaKey) {
+    if (event.metaKey || event.ctrlKey) {
       return
     }
     switch (event.code) {
@@ -45,18 +49,18 @@
         break
       }
       case 'ArrowUp': {
-        focusPrev()
+        focusPrev(focusId)
         break
       }
       case 'ArrowDown': {
-        focusNext()
+        focusNext(focusId)
         break
       }
       case 'ArrowLeft': {
         if (!collapsed) {
           onchange?.(true)
         } else {
-          exitFocusScope()
+          exitFocusScope(focusId)
         }
         break
       }
@@ -72,7 +76,7 @@
             }
           }
         } else {
-          focusNext()
+          focusNext(focusId)
         }
         break
       }
@@ -81,15 +85,23 @@
           onchange?.(false)
         } else {
           if (!enterFocusScope()) {
-            focusNext()
+            focusNext(focusId)
           }
         }
+        break
+      }
+      case 'Home': {
+        focusFirst(focusId)
+        break
+      }
+      case 'End': {
+        focusLast(focusId)
         break
       }
       default: {
         shouldPreventDefault = false
         if (event.key.length === 1) {
-          type(event.key)
+          typingBuffer.type(event.key)
         }
         break
       }

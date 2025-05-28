@@ -5,8 +5,6 @@ title:
 children:
   - - display
     - display
-  - - exact-match
-    - exactMatch
   - - force-type
     - forceType
   - - key
@@ -17,12 +15,18 @@ children:
     - keyPrefix
   - - key-style
     - keyStyle
+  - - length
+    - length
+  - - match
+    - match
   - - note
     - note
   - - path
     - path
   - - show-key
     - showKey
+  - - show-length
+    - showLength
   - - type
     - type
   - - value
@@ -34,18 +38,20 @@ children:
 ```ts
 type TypeViewProps<Value, Type> = {
   display: string;
-  exactMatch: boolean;
   forceType: boolean;
   key: PropertyKey;
   keyDelim: string;
   keyPrefix: string;
   keyStyle: HTMLAttributes<HTMLDivElement>["style"];
+  length: number;
+  match: boolean;
   note: {
      description: string;
      title: string;
   };
   path: PropertyKey[];
   showKey: boolean;
+  showLength: boolean;
   type: Type;
   value: Value;
 };
@@ -76,14 +82,6 @@ value for other purposes
 
 ***
 
-### exactMatch?
-
-```ts
-exactMatch: boolean;
-```
-
-***
-
 ### forceType?
 
 ```ts
@@ -108,6 +106,8 @@ key: PropertyKey;
 keyDelim: string;
 ```
 
+Key delimiter
+
 ***
 
 ### keyPrefix?
@@ -116,6 +116,8 @@ keyDelim: string;
 keyPrefix: string;
 ```
 
+Prefix for key e.g. "get" or "static"
+
 ***
 
 ### keyStyle?
@@ -123,6 +125,29 @@ keyPrefix: string;
 ```ts
 keyStyle: HTMLAttributes<HTMLDivElement>["style"];
 ```
+
+Style overrides for key
+
+***
+
+### length?
+
+```ts
+length: number;
+```
+
+Number of child entries / items.
+Also determines if expandables can be expanded (needs to be not `undefined`/`null`/`zero`).
+
+***
+
+### match?
+
+```ts
+match: boolean;
+```
+
+The node is a search match
 
 ***
 
@@ -134,6 +159,8 @@ note: {
   title: string;
 };
 ```
+
+Title / description for node note, e.g. "parsed" for parsed JSON strings
 
 #### description?
 
@@ -164,6 +191,18 @@ Path of the node
 ```ts
 showKey: boolean;
 ```
+
+Should key be shown
+
+***
+
+### showLength?
+
+```ts
+showLength: boolean;
+```
+
+Should the node show it's given length / count
 
 ***
 

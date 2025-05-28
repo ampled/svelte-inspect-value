@@ -1,17 +1,15 @@
 <script lang="ts">
   import { getContext, onDestroy } from 'svelte'
   import { globalInspectState } from '../Panel.svelte'
-  import { useSearchContext } from '../contexts.js'
   import { globalValues } from '../global.svelte.js'
   import { copyToClipBoard, logToConsole } from '../hello.svelte.js'
   import ClipBoardIcon from '../icons/ClipBoardIcon.svelte'
   import Console from '../icons/Console.svelte'
-  import ExpandCollapseIcon from '../icons/ExpandCollapseIconTwo.svelte'
+  import ExpandCollapseIcon from '../icons/ExpandCollapseIcon.svelte'
   import { useOptions } from '../options.svelte.js'
   import { useState, type NodeState } from '../state.svelte.js'
   import type { TypeViewProps } from '../types.js'
   import { isPromise, stringifyPath, wait } from '../util.js'
-  import type { SearchIndex } from '../util/search.js'
   import NodeActionButton from './NodeActionButton.svelte'
   import NodeIconButton from './NodeIconButton.svelte'
 
@@ -28,7 +26,7 @@
   let addedToPanel = $state(false)
   let stringifiedPath = $derived(stringifyPath(path))
   let level = $derived(path.length)
-  let settingCollapse = $state(false)
+  let settingCollapse = $state<false | 'collapsing' | 'expanding'>(false)
 
   let showCopyButton = $derived.by(() => {
     if (onCopy) {
@@ -107,8 +105,8 @@
   let collapseAction: CollapseAction = {
     hint: 'collapse children',
     action: async () => {
-      settingCollapse = true
-      for (const [path, state] of childNodes) {
+      settingCollapse = 'collapsing'
+      for (const [path, state] of childNodes.toReversed()) {
         if (!state.collapsed) {
           inspectState.setCollapse(path, { collapsed: true })
           await wait()
@@ -122,7 +120,7 @@
   let expandAction: CollapseAction = {
     hint: 'expand children',
     action: async () => {
-      settingCollapse = true
+      settingCollapse = 'expanding'
       for (const [path, state] of childNodes) {
         if (state.collapsed) {
           inspectState.setCollapse(path, { collapsed: false })
@@ -172,26 +170,10 @@
   onDestroy(() => {
     if (addedToPanel) globalValues.delete(stringifiedPath)
   })
-
-  const searchIndex = getContext<() => SearchIndex>(Symbol.for('siv.build-index'))
-  const searchRes = useSearchContext()
-
-  function deb() {
-    const sIndex = searchIndex?.()
-    if (sIndex) {
-      console.log(
-        'index entry',
-        sIndex.find((e) => e.path === stringifiedPath)
-      )
-    }
-    console.log('searchres:', searchRes?.())
-    console.log('collapseState:', $state.snapshot(inspectState.value))
-  }
 </script>
 
 {#if showTools}
   <div class="tools" class:borderless>
-    <NodeIconButton type="button" title="?" aria-label="?" onclick={deb}>?</NodeIconButton>
     {#if !fixed && !globalValues.has(stringifiedPath) && globalInspectState.mounted.length}
       <NodeActionButton title="add to panel" onclick={setAsPanelValue}>+</NodeActionButton>
     {/if}
@@ -203,12 +185,12 @@
     {/if}
     {#if treeAction}
       <NodeIconButton
-        disabled={settingCollapse}
+        disabled={settingCollapse !== false}
         title={treeAction.hint}
         aria-label={treeAction.hint}
         onclick={() => treeAction.action()}
       >
-        <ExpandCollapseIcon expand={treeAction.expand} />
+        <ExpandCollapseIcon expand={treeAction.expand} setting={settingCollapse} />
       </NodeIconButton>
     {/if}
     <NodeIconButton

@@ -1,40 +1,12 @@
-import highlightWordsCopied from '../src/lib/util/highlight-words/index.js'
 import { highlightText } from '../src/lib/util/highlight-text.js'
-import { describe, test } from 'vitest'
-import highlightWords from 'highlight-words'
-
-const { log } = console
+import { describe, test, expect } from 'vitest'
 
 describe('highlight', () => {
-  test('lib', async () => {
-    console.time('lib')
-    log(
-      highlightWordsCopied({
-        text: `it should highlight the search terms in the text` + crypto.randomUUID(),
-        query: 'the',
-      })
-    )
-    console.timeEnd('lib')
-  })
-
-  test('liboriginal', async () => {
-    console.time('lib')
-    log(
-      highlightWords({
-        text: `it should highlight the search terms in the text` + crypto.randomUUID(),
-        query: 'the',
-      })
-    )
-    console.timeEnd('lib')
-  })
-
   test('it should highlight the search terms in the text', async () => {
-    console.time('diy')
-    log(
-      highlightText(`it should highlight the search terms in the text` + crypto.randomUUID(), [
-        { value: `the`, exact: false },
-      ])
-    )
-    console.timeEnd('diy')
+    const chunks = highlightText(`it should highlight the search terms in the text`, [
+      { value: `the`, exact: false },
+    ])
+
+    expect(chunks.some((chunk) => chunk.text === 'the' && chunk.match)).toBeTruthy()
   })
 })

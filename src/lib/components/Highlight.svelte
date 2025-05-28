@@ -9,7 +9,6 @@
 
 <script lang="ts">
   import { useSearchContext } from '../contexts.js'
-  import { parseSearchTerms } from '../util/search.js'
   import { useOptions } from '../options.svelte.js'
 
   type Props = {
@@ -21,10 +20,9 @@
   let { value: text, field = 'any', alsoMatch }: Props = $props()
   const searchCtx = useSearchContext()
   const options = useOptions()
-  const { query, matchingPaths } = $derived(searchCtx())
+  const { query, matchingPaths, terms } = $derived(searchCtx())
   const { highlightMatches, search } = $derived(options.value)
 
-  let terms = $derived(highlightMatches && search ? parseSearchTerms(query, false) : [])
   let chunks = $derived.by(() => {
     if (terms.length && highlightMatches && search) {
       try {

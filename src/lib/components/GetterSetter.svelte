@@ -5,7 +5,7 @@
   import { getPreviewLevel, useSearchContext, useValueCache } from '../contexts.js'
   import { useOptions } from '../options.svelte.js'
   import { InspectError, type TypeViewProps } from '../types.js'
-  import { descriptorPrefix, stringifyPath } from '../util.js'
+  import { descriptorPrefix, nodeActionKeydown, stringifyPath } from '../util.js'
   import Entry from './Entry.svelte'
   import Expandable from './Expandable.svelte'
   import Input from './Input.svelte'
@@ -13,6 +13,8 @@
   import Node from './Node.svelte'
   import NodeActionButton from './NodeActionButton.svelte'
   import Preview from './Preview.svelte'
+  import CloseIcon from '../icons/CloseIcon.svelte'
+  import NodeIconButton from './NodeIconButton.svelte'
 
   type Props = TypeViewProps<unknown, 'get'> & {
     descriptor: PropertyDescriptor
@@ -52,7 +54,7 @@
   let retrievedValue = $derived(
     valueRetrieved ? getterValue : hasCachedValue ? valueCache.get(stringifiedPath) : undefined
   )
-  let exactMatch = $derived(searchResult?.().matchingPaths.includes(stringifiedPath))
+  let match = $derived(searchResult?.().matchingPaths.includes(stringifiedPath))
 
   function callGetter(e: UIEvent) {
     e.stopPropagation()
@@ -125,6 +127,20 @@
       callSetter(event)
     }
   }
+
+  async function showInput(e: UIEvent) {
+    e.stopPropagation()
+    isSetting = true
+    await tick()
+    inputElement?.focus()
+  }
+
+  async function hideInput(e: UIEvent) {
+    e.stopPropagation()
+    isSetting = false
+    await tick()
+    setButton?.focus()
+  }
 </script>
 
 {#if error}
@@ -139,7 +155,7 @@
     showLength={false}
     keepPreviewOnExpand
     length={1}
-    {exactMatch}
+    {match}
     {...rest}
   >
     {#snippet valuePreview({ showPreview })}
@@ -156,37 +172,29 @@
           containerAttrs={{ style: 'max-width: 20ch;' }}
           {onkeydown}
           {onkeyup}
-        >
-          <!-- {#snippet icon()}{/snippet} -->
-        </Input>
+        />
         <NodeActionButton
           title={`set ${key?.toString()}`}
           onclick={callSetter}
+          onkeydown={nodeActionKeydown(callSetter)}
           style="padding-right: 0.5em"
         >
           set
         </NodeActionButton>
-        <NodeActionButton
+        <NodeIconButton
           title={`cancel`}
-          onclick={async (e) => {
-            e.stopPropagation()
-            isSetting = false
-            await tick()
-            setButton?.focus()
-          }}
-          >x
-        </NodeActionButton>
+          onclick={hideInput}
+          onkeydown={nodeActionKeydown(hideInput)}
+        >
+          <CloseIcon />
+        </NodeIconButton>
       {:else}
         {#if descriptor.set && previewLevel === 0}
           <NodeActionButton
             bind:this={setButton}
             title={`set ${key?.toString()}`}
-            onclick={async (e) => {
-              e.stopPropagation()
-              isSetting = true
-              await tick()
-              inputElement?.focus()
-            }}
+            onclick={showInput}
+            onkeydown={nodeActionKeydown(showInput)}
           >
             set
           </NodeActionButton>
@@ -196,7 +204,7 @@
             <NodeActionButton
               title={`get ${key?.toString()}`}
               onclick={callGetter}
-              onkeydown={callGetter}
+              onkeydown={nodeActionKeydown(callGetter)}
             >
               get
             </NodeActionButton>

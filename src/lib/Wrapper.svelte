@@ -17,7 +17,7 @@
   import Search from './components/Search.svelte'
   import { wait } from './util.js'
   import ExpandCollapseIcon from './icons/ExpandCollapseIcon.svelte'
-  import { clearSearchCache } from './util/search.js'
+  import { clearSearchCache, parseSearchTerms } from './util/search.js'
   import type { HeadingSnippet } from './types.js'
   import { scope } from './action/focus.svelte.js'
 
@@ -46,19 +46,21 @@
   const collapseState = useState()
   const options = useOptions()
 
+  let { search } = $derived(options.value)
   let collapsed = $state(false)
   let searchInput = $state('')
   let matchingPaths = $state([])
+  let terms = $derived(search && searchInput.length ? parseSearchTerms(searchInput) : [])
   const typingBuffer = createTypingBufferContext(id)
   let container = $state<HTMLDivElement>()
   let searchEle = $state<Search>()
   let settingCollapse = $state<false | 'expanding' | 'collapsing'>(false)
-  let { search } = $derived(options.value)
 
   setSearchContext(() => ({
     searching: searchInput.length > 1,
     matchingPaths,
     query: searchInput,
+    terms,
   }))
 
   setContext('siv-focus-id', id)

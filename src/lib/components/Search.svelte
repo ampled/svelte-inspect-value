@@ -8,7 +8,7 @@
   import Input from './Input.svelte'
   import NodeIconButton from './NodeIconButton.svelte'
   import { wait } from '../util.js'
-  import AndOrIcon from '$lib/icons/AndOrIcon.svelte'
+  import AndOrIcon from '../icons/AndOrIcon.svelte'
 
   type Props = {
     query: string

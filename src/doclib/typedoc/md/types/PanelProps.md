@@ -21,7 +21,7 @@ type PanelProps = {
   wiggleOnUpdate: boolean;
   zIndex: number;
 } & {
-  heading: string | Snippet<[]>;
+  heading: string | HeadingSnippet;
   name: string;
   value: unknown;
   values: unknown;
@@ -237,7 +237,7 @@ Z-index of panel
 ### heading?
 
 ```ts
-heading: string | Snippet<[]>;
+heading: string | HeadingSnippet;
 ```
 
 A `string` or `Snippet` that will be rendered as a small heading with a collapse-button for the component.

@@ -1,5 +1,6 @@
 import { getContext, setContext } from 'svelte'
 import { SvelteMap } from 'svelte/reactivity'
+import type { SearchTerm } from './util/search.js'
 
 const VALUE_CACHE = Symbol('siv.value-cache')
 const SEARCH = Symbol('siv.search')
@@ -21,6 +22,7 @@ type SearchContext = () => {
   searching: boolean
   matchingPaths: string[]
   query: string
+  terms: SearchTerm[]
 }
 
 export function setSearchContext(value: SearchContext) {

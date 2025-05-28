@@ -550,7 +550,7 @@ export function searchStructuredIndex(
   }
 }
 
-type SearchTerm = {
+export type SearchTerm = {
   field: 'value' | 'path' | 'type' | 'any'
   value: string
   exact: boolean

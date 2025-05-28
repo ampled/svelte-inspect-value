@@ -17,14 +17,12 @@
   import Type from './Type.svelte'
 
   type Props = TypeViewProps<unknown> & {
-    length?: number
     valuePreview: Snippet<[{ showPreview: boolean }]>
     forceType?: boolean
     keyDelim?: string
     showKey?: boolean
     children?: Snippet
     keepPreviewOnExpand?: boolean
-    showLength?: boolean
   } & HTMLAttributes<HTMLDivElement>
 
   let {
@@ -43,7 +41,7 @@
     showLength = true,
     children,
     note,
-    exactMatch,
+    match,
     ...rest
   }: Props = $props()
 
@@ -57,7 +55,7 @@
   let stringifiedPath = $derived(stringifyPath(path))
   let collapseState = $derived(inspectState.value[stringifiedPath])
   let collapsed = $derived.by(() => {
-    if (previewLevel) return true
+    if (previewLevel || !length) return true
 
     if (collapseState) {
       return collapseState.collapsed
@@ -97,7 +95,7 @@
   }
 
   let shouldRenderChildren = $derived.by(() => {
-    if (exactMatch && type !== 'string' && type !== 'function') {
+    if (match && type !== 'string' && type !== 'function') {
       return length != null && length > 0 && !previewLevel
     } else {
       return length != null && length > 0 && !collapsed && !previewLevel
@@ -108,7 +106,7 @@
 <div
   {ondblclick}
   data-testid="expandable"
-  class={['line', previewLevel && 'preview', !showKey && 'nokey', exactMatch && 'match']}
+  class={['line', previewLevel && 'preview', !showKey && 'nokey', match && 'match']}
   aria-expanded={!collapsed}
   {...rest}
 >
@@ -145,7 +143,7 @@
     {/if}
 
     {@render valuePreview({
-      showPreview: (collapsed || previewLevel > 0 || keepPreviewOnExpand) && !shouldRenderChildren,
+      showPreview: collapsed || previewLevel > 0 || keepPreviewOnExpand,
     })}
 
     {#if note && !previewLevel}
@@ -168,7 +166,7 @@
     oninspectvaluechange={() => buttonComponent?.flash()}
     role="list"
     data-testid="indent"
-    class={['indent', type, exactMatch && 'exact-match']}
+    class={['indent', type, match && 'match']}
     use:scope={previewLevel === 0}
   >
     {@render children()}
@@ -188,12 +186,12 @@
     overflow-x: clip;
     overflow-y: auto;
 
-    &.exact-match {
+    &.match {
       border-color: var(--base0A);
     }
   }
 
-  :global .indent:has(.highlight):not(.exact-match) {
+  :global .indent:has(.highlight):not(.match) {
     border-color: color-mix(in srgb, var(--_indent-color), var(--_text-search-highlight-color) 50%);
   }
 </style>

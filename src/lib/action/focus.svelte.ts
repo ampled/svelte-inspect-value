@@ -63,8 +63,21 @@ function getTargetAfter(element: HTMLElement) {
   return getElementAfter(element, document.querySelectorAll('[data-focus-target]'))
 }
 
-function getParentScope(element: HTMLElement) {
-  return element.closest('[data-focus-scope]') as HTMLElement
+function getParentScope(element: HTMLElement, scopeId?: string) {
+  if (scopeId) {
+    const outer = document.querySelectorAll<HTMLDivElement>(`[data-focus-id="${scopeId}"]`).item(0)
+    if (outer) return outer
+  }
+
+  return element.closest('[data-focus-scope]') as HTMLElement | null
+}
+
+function getAllFocusTargets(outer: Element) {
+  return outer.querySelectorAll<HTMLElement>('[data-focus-target]')
+}
+
+function getCurrentFocusContainer(ele: Element, focusId?: string) {
+  return ele.closest<HTMLElement>(`[data-focus-id="${focusId}"]`)
 }
 
 function setFocus(targetElement: HTMLElement) {
@@ -82,23 +95,66 @@ function setFocus(targetElement: HTMLElement) {
   return false
 }
 
-export function focusPrev() {
+export function focusPrev(focusId: string) {
   if (!document.activeElement) return false
-  return setFocus(getTargetBefore(document.activeElement as HTMLElement))
+  const outer = getCurrentFocusContainer(document.activeElement, focusId)
+  const target = getTargetBefore(document.activeElement as HTMLElement)
+  if (outer) {
+    if (outer.contains(target)) {
+      return setFocus(target)
+    }
+
+    return focusLast(focusId)
+  }
+
+  return false
 }
 
-export function focusNext() {
+export function focusNext(focusId: string) {
   if (!document.activeElement) return false
+  const outer = getCurrentFocusContainer(document.activeElement, focusId)
+  const target = getTargetAfter(document.activeElement as HTMLElement)
+  if (outer) {
+    if (outer.contains(target)) {
+      return setFocus(target)
+    }
 
-  return setFocus(getTargetAfter(document.activeElement as HTMLElement))
+    return focusFirst(focusId)
+  }
+
+  return false
 }
 
-export function exitFocusScope() {
+export function focusLast(focusId: string) {
+  if (!document.activeElement) return false
+  const outer = getCurrentFocusContainer(document.activeElement, focusId)
+  if (outer) {
+    const targets = getAllFocusTargets(outer)
+    const last = targets.item(targets.length - 1)
+    if (last) return setFocus(last)
+  }
+  return false
+}
+
+export function focusFirst(focusId: string) {
+  if (!document.activeElement) return false
+  const outer = getCurrentFocusContainer(document.activeElement, focusId)
+  if (outer) {
+    const targets = getAllFocusTargets(outer)
+    const first = targets.item(0)
+    if (first) return setFocus(first)
+  }
+  return false
+}
+
+export function exitFocusScope(focusId: string) {
+  const outer = document.querySelectorAll<HTMLDivElement>(`[data-focus-id="${focusId}"]`).item(0)
+
   const parent = getParentScope(document.activeElement as HTMLElement)
-  if (parent) {
+  if (parent && outer && outer.contains(parent)) {
     return setFocus(getTargetBefore(parent))
   } else {
-    return focusPrev()
+    return focusPrev(focusId)
   }
 }
 
@@ -122,38 +178,41 @@ export function enterFocusScope() {
   }
 }
 
-export function focusBySearch(string: string) {
+export function focusBySearch(string: string, focusId: string) {
   // Find a focus target that matches the string.
   try {
     const regex = new RegExp(string.split('').join('[^a-z0-9]*.?[^a-z0-9]*'), 'i')
+
     let scope = document.activeElement as HTMLElement
+    const outer = scope.closest(`[data-focus-id="${focusId}"]`)
 
     do {
-      scope = getParentScope(scope.parentElement as HTMLElement)
-      const targets = (scope || document).querySelectorAll<HTMLElement>('[data-focus-target]')
-      for (let i = 0; i < targets.length; i++) {
+      scope = getParentScope(scope.parentElement as HTMLElement) as HTMLElement
+
+      const targets = scope?.querySelectorAll<HTMLElement>('[data-focus-target]')
+      for (let i = 0; i < targets?.length; i++) {
         const target = targets[i]
         // check non-preview keys first
-        const keyElements = target.querySelectorAll<HTMLElement>(
+        const keyElements = target?.querySelectorAll<HTMLElement>(
           '.key-button:not([data-search-ignore])'
         )
         if (keyElements.length) {
           for (let j = 0; j < keyElements.length; j++) {
             const t = keyElements[j]
             const text = t.textContent ?? ''
-            if (regex.test(text)) {
+            if (regex.test(text) && outer?.contains(target)) {
               return setFocus(target)
             }
           }
         }
         const text = target.textContent ?? ''
-        if (regex.test(text)) {
+        if (regex.test(text) && outer?.contains(target)) {
           return setFocus(target)
         }
       }
     } while (scope)
-  } catch (_e: unknown) {
-    // no worky
+  } catch (e) {
+    console.error('error while setting focus using typebuffer search:', e)
   }
   return false
 }

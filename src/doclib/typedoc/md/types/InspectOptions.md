@@ -21,6 +21,8 @@ children:
     - expandPaths
   - - flash-on-update
     - flashOnUpdate
+  - - highlight-matches
+    - highlightMatches
   - - noanimate
     - noanimate
   - - on-collapse-change
@@ -41,6 +43,8 @@ children:
     - renderIf
   - - search
     - search
+  - - search-mode
+    - searchMode
   - - show-length
     - showLength
   - - show-preview
@@ -71,6 +75,7 @@ type InspectOptions = {
   expandLevel: number;
   expandPaths: string[];
   flashOnUpdate: boolean;
+  highlightMatches: boolean;
   noanimate: boolean;
   onCollapseChange: (state: CollapseState) => void | undefined;
   onCopy: (value: unknown, type: string, path: unknown[]) => Promise<boolean | void> | boolean | void
@@ -83,6 +88,7 @@ type InspectOptions = {
   quotes: "single" | "double" | "none";
   renderIf: unknown;
   search: boolean | "highlight" | "filter" | "filter-strict";
+  searchMode: "and" | "or";
   showLength: boolean;
   showPreview: boolean;
   showTools: boolean;
@@ -305,6 +311,27 @@ true
 
 ***
 
+### highlightMatches
+
+```ts
+highlightMatches: boolean;
+```
+
+When `search` is enabled, highlight matches in keys,
+types and values when typing in the search input box.
+
+#### See
+
+[InspectOptions.search](#search)
+
+#### Default
+
+```ts
+true
+```
+
+***
+
 ### noanimate
 
 ```ts
@@ -490,6 +517,25 @@ Three modes are available:
 
 ```ts
 false
+```
+
+***
+
+### searchMode
+
+```ts
+searchMode: "and" | "or";
+```
+
+Initial multi-term search mode
+
+- `'and'` - nodes must match every term
+- `'or'` - nodes can match one of the terms
+
+#### Default
+
+```ts
+'or'
 ```
 
 ***
