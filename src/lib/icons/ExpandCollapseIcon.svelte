@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { backInOut, backOut } from 'svelte/easing'
+  import { backOut, sineIn } from 'svelte/easing'
   import { useOptions } from '../options.svelte.js'
   import rotate from '../transition/rotate.js'
 
@@ -7,35 +7,96 @@
 
   type Props = {
     expand?: boolean
+    setting?: 'collapsing' | 'expanding' | false
   }
 
-  let { expand }: Props = $props()
+  let { expand, setting }: Props = $props()
 </script>
 
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-  <g fill="currentColor">
-    <path d="M9 9H4v1h5z" />
+<svg viewBox="0 0 24 24" stroke-linecap="square" stroke-linejoin="round">
+  <g fill="currentColor" stroke-width="2" stroke="currentColor">
+    <!-- vert -->
     {#if expand}
       <path
-        d="M7 12V7H6v5z"
+        d="M 10 11 l 0 6"
         style="transform-box: fill-box"
         transform-origin="center"
         in:rotate={{
           rotation: 360 - 90,
           opacity: 1,
           duration: options.transitionDuration * 3,
+          easing: backOut,
         }}
         out:rotate={{
-          rotation: 360 - 90,
+          rotation: 360 + 90,
           opacity: 1,
           duration: options.transitionDuration * 3,
+          easing: sineIn,
         }}
       />
     {/if}
+    <!-- horiz -->
     <path
-      fill-rule="evenodd"
-      d="m5 3l1-1h7l1 1v7l-1 1h-2v2l-1 1H3l-1-1V6l1-1h2zm1 2h4l1 1v4h2V3H6zm4 1H3v7h7z"
-      clip-rule="evenodd"
+      class={['minus', setting]}
+      d="M 7 14 l 6 0"
+      style="transform-box: fill-box"
+      transform-origin="center"
+    />
+    <path
+      fill="none"
+      d="
+        M 2, 20
+        l 0 -12
+        a 2 2 0 0 1 2 -2
+        h 12
+        a 2 2 0 0 1 2 2
+        v 12
+        a 2 2 0 0 1 -2 2
+        h -12
+        a 2 2 0 0 1 -2 -2
+        z"
+    />
+    <!-- behindbox -->
+    <path
+      fill="none"
+      d="
+        M 6, 6
+        l 0 -2
+        a 2 2 0 0 1 2 -2
+        h 12
+        a 2 2 0 0 1 2 2
+        v 12
+        a 2 2 0 0 1 -2 2"
     />
   </g>
 </svg>
+
+<style>
+  @keyframes spin {
+    from {
+      rotate: 0deg;
+    }
+    to {
+      rotate: 360deg;
+    }
+  }
+
+  .minus {
+    rotate: 0deg;
+    animation-duration: 450ms;
+    animation-timing-function: linear;
+  }
+
+  .expanding {
+    animation-delay: 600ms;
+    animation-iteration-count: infinite;
+    animation-name: spin;
+  }
+
+  .collapsing {
+    animation-delay: 200ms;
+    animation-iteration-count: infinite;
+    animation-direction: reverse;
+    animation-name: spin;
+  }
+</style>
