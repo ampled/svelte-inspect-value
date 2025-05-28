@@ -309,7 +309,7 @@ export function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max)
 }
 
-export const wait = (duration: number = 50) =>
+export const wait = (duration: number = 25) =>
   new Promise<void>((resolve) => {
     setTimeout(() => {
       resolve()
@@ -330,5 +330,15 @@ export function isValidStore(store: Readable<unknown> | Writable<unknown>) {
     }
   } catch {
     return false
+  }
+}
+
+export function nodeActionKeydown<F extends (e: UIEvent) => void | Promise<void>>(fn: F) {
+  return function (this: unknown, event: KeyboardEvent) {
+    if (['Enter', ' '].includes(event.key)) {
+      event.preventDefault()
+      event.stopPropagation()
+      fn.call(this, event)
+    }
   }
 }
