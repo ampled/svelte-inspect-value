@@ -117,6 +117,7 @@
     &:hover:not(.disabled) {
       .key {
         text-decoration: underline;
+        text-decoration-color: color-mix(in srgb, currentColor, transparent 50%);
       }
     }
   }
@@ -131,9 +132,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: color 250ms ease-in-out;
+    transition:
+      color 250ms ease-in-out,
+      text-decoration-color 250ms ease-in-out;
     height: 100%;
     user-select: text;
+    text-decoration: underline;
+    text-decoration-color: transparent;
 
     &.number {
       color: var(--_number-value-color);

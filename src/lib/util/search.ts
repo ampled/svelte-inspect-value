@@ -5,6 +5,7 @@ import type { InspectOptions } from '../options.svelte.js'
 import { descriptorPrefix, getType, isValidStore, stringify } from '../util.js'
 import { get, type Readable, type Writable } from 'svelte/store'
 import ManyKeysMap from 'many-keys-map'
+import type { List } from '$lib/types.js'
 
 type SearchNode = {
   path: string
@@ -37,6 +38,20 @@ const tokenizers = {
     return String(value).replaceAll('\n', '').replaceAll('\t', '')
   },
 }
+
+const typedArrays = [
+  'int8array',
+  'uint8array',
+  'uint8clampedarray',
+  'int16array',
+  'uint16array',
+  'int32array',
+  'uint32array',
+  'float32array',
+  'float64array',
+  'bigint64array',
+  'biguint64array',
+]
 
 function addNode(index: SearchIndex, path: unknown[], tokens: string[] | undefined, type: string) {
   index.push({
@@ -124,7 +139,7 @@ const indexers = {
   array: ({ value, prevPath, index, visited, maxDepth, depth = 0, type, options }) => {
     if (visited.has(value)) return index
     visited.add(value)
-    const array = value as ArrayLike<unknown>
+    const array = value as unknown[]
 
     addNode(index, prevPath, [array.length ? 'items' : 'empty'], type)
 
@@ -142,6 +157,43 @@ const indexers = {
         })
       })
     }
+
+    return index
+  },
+  typedarray: ({ value, prevPath, index, visited, maxDepth, depth = 0, type, options }) => {
+    if (visited.has(value)) return index
+    visited.add(value)
+    const array = value as List
+
+    addNode(index, prevPath, [array.length ? 'items' : 'empty'], type)
+
+    const internalKeys = ['buffer', 'byteLength', 'byteOffset', 'length'] as (keyof typeof array)[]
+
+    for (const [k, v] of array.entries()) {
+      buildSearchIndex({
+        value: v,
+        key: k,
+        prevPath,
+        index,
+        maxDepth,
+        depth: depth + 1,
+        visited,
+        options,
+      })
+    }
+
+    internalKeys.forEach((key) =>
+      buildSearchIndex({
+        value: array[key],
+        key,
+        prevPath,
+        index,
+        maxDepth,
+        depth: depth + 1,
+        visited,
+        options,
+      })
+    )
 
     return index
   },
@@ -239,22 +291,29 @@ const indexers = {
     )
     return index
   },
-  url: ({ value, prevPath, index, type, depth = 0, maxDepth, options }) => {
+  url: ({ value, prevPath = [], index, type, depth = 0, maxDepth, options }) => {
     const url = value as URL
-    index.push({
-      path: stringifyPath(prevPath),
-      tokens: [
-        url.toString(),
-        'protocol',
-        'host',
-        'port',
-        'pathname',
-        'hash',
-        'hostname',
-        'origin',
-        'href',
-      ],
-      type,
+
+    const { hash, host, hostname, href, origin, password, pathname, port, protocol, username } =
+      value
+
+    const entries = Object.entries({
+      protocol,
+      username,
+      password,
+      host,
+      port,
+      pathname,
+      hash,
+      hostname,
+      origin,
+      href,
+    }).filter((prop) => !!prop[1].toString())
+
+    addNode(index, prevPath, [url.toString()], type)
+
+    entries.forEach(([key, value]) => {
+      buildSearchIndex({ value, key, index, prevPath, options, maxDepth, depth: depth + 1 })
     })
 
     if (url.searchParams.size) {
@@ -418,7 +477,7 @@ export const buildSearchIndex = (indexArgs: BuildSearchIndexArgs) => {
   let indexerId: keyof typeof indexers | undefined = undefined
   const type = getType(value, options.stores)
 
-  if (type.includes('array')) indexerId = 'array'
+  if (typedArrays.includes(type)) indexerId = 'typedarray'
   if (type.includes('function')) indexerId = 'function'
   if (['iterator', 'generator'].some((t) => type.includes(t))) indexerId = 'iterator'
   if (descriptor && (descriptor.set || descriptor.get)) {
@@ -482,15 +541,7 @@ export function searchStructuredIndex(
   mode: 'and' | 'or' = 'or'
 ): string[] {
   if (!searchString.trim()) return []
-
-  // console.log({ searchString, mode })
-
   const terms = parseSearchTerms(searchString)
-
-  console.log(
-    'terms:',
-    terms.map((t) => t.value)
-  )
 
   if (mode === 'and') {
     return index.filter((node) => terms.every((term) => matchTerm(node, term))).map((n) => n.path)
@@ -499,18 +550,8 @@ export function searchStructuredIndex(
   }
 }
 
-// export function _searchInIndex(index: SearchNode[], searchString: string, searchKeys = true, mode: 'and' | 'or' = 'or') {
-//   if (!searchString.trim()) return []
-//   const terms = parseSearchTerms(searchString)
-//   const matches = new Set<string>()
-
-//   for (const node of index) {
-//     const match = mode === 'and' ? terms.every(t => matchTerms)
-//   }
-// }
-
 type SearchTerm = {
-  field: 'token' | 'path' | 'type' | 'any'
+  field: 'value' | 'path' | 'type' | 'any'
   value: string
   exact: boolean
 }
@@ -530,7 +571,7 @@ export function parseSearchTerms(input: string, lowercase = true): SearchTerm[] 
     const exact = !!quoted
 
     terms.push({
-      field: ['token', 'path', 'type'].includes(field) ? field : 'any',
+      field: ['value', 'path', 'type'].includes(field) ? field : 'any',
       value: lowercase ? value.toLowerCase() : value,
       exact,
     })
@@ -548,7 +589,7 @@ function matchesNode(node: SearchNode, terms: SearchTerm[], searchKeys: boolean)
     const matchToken = (t: string) => (exact ? t === value : t.includes(value))
 
     switch (field) {
-      case 'token':
+      case 'value':
         return tokens.some(matchToken)
 
       case 'path':
@@ -567,7 +608,7 @@ function matchesNode(node: SearchNode, terms: SearchTerm[], searchKeys: boolean)
   })
 }
 
-function matchTerms(
+function _matchTerms(
   node: SearchNode,
   terms: SearchTerm[],
   searchKeys: boolean,
@@ -580,7 +621,7 @@ function matchTerms(
   const matchesTerm = ({ field, value, exact }: SearchTerm): boolean => {
     const match = (token: string) => (exact ? token === value : token.includes(value))
 
-    const tokenMatch = (field === 'token' || field === 'any') && tokens.some(match)
+    const tokenMatch = (field === 'value' || field === 'any') && tokens.some(match)
     const pathMatch = (field === 'path' || field === 'any' || searchKeys) && match(path)
     const typeMatch = (field === 'type' || field === 'any') && match(type)
 
@@ -599,7 +640,7 @@ function matchTerm(node: SearchNode, term: SearchTerm) {
   const matchToken = (t: string) => (exact ? t === value : t.includes(value.toLowerCase()))
 
   switch (field) {
-    case 'token':
+    case 'value':
       return tokens.some(matchToken)
 
     case 'path':

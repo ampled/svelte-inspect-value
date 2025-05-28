@@ -71,7 +71,7 @@
   const searchResult = useSearchContext()
   const { matchingPaths } = $derived(searchResult())
 
-  let exactMatch = $derived.by(() => {
+  let match = $derived.by(() => {
     if (matchingPaths && matchingPaths.length) {
       return matchingPaths.findIndex((p) => p === stringifiedPath) > -1
     }
@@ -81,7 +81,7 @@
 
   const _parentIsExact = getContext<(() => boolean) | undefined>(Symbol.for('siv.exact'))
 
-  setContext(Symbol.for('siv.exact'), () => exactMatch)
+  setContext(Symbol.for('siv.exact'), () => match)
 
   let visible = $derived.by(() => {
     if (previewLevel > 0) return true
@@ -92,10 +92,10 @@
         return true
       }
       if (searchMode === true || searchMode === 'filter') {
-        return _parentIsExact || exactMatch
+        return _parentIsExact || match
       }
       if (searchMode === 'filter-strict') {
-        return exactMatch
+        return match
       }
     }
 
@@ -108,16 +108,7 @@
     onerror={(e) =>
       console.error(new Error(`Caught in Node.svelte. Key: ${String(key)}`, { cause: e }))}
   >
-    <TypeComponent
-      {value}
-      {key}
-      {keyDelim}
-      {type}
-      {path}
-      {exactMatch}
-      {...rest}
-      {...componentProps}
-    />
+    <TypeComponent {value} {key} {keyDelim} {type} {path} {match} {...rest} {...componentProps} />
 
     {#snippet failed(error, reset)}
       {@const inspectError = new InspectError(`Component for value of type ${type} failed`, value, {

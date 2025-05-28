@@ -12,10 +12,7 @@
   import Tools from './Tools.svelte'
   import Type from './Type.svelte'
 
-  type Props = TypeViewProps<unknown> & {
-    length?: number
-    showLength?: boolean
-  } & HTMLAttributes<HTMLDivElement>
+  type Props = TypeViewProps<unknown> & HTMLAttributes<HTMLDivElement>
 
   let {
     value,
@@ -31,7 +28,7 @@
     length,
     showLength = true,
     note,
-    exactMatch,
+    match,
     children,
     ...rest
   }: Props = $props()
@@ -48,10 +45,7 @@
 
 <div
   data-testid="line"
-  class="line"
-  class:match={exactMatch}
-  class:preview={previewLevel || isKey}
-  class:nokey={!showKey}
+  class={['line', match && 'match', (previewLevel || isKey) && 'preview', !showKey && 'nokey']}
   {...rest}
 >
   <Row

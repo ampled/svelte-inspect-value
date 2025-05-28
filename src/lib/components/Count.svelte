@@ -56,11 +56,11 @@
       </span>
       {#if unit}
         <span class="unit">
-          <Highlight value={unit} field="token" />
+          <Highlight value={unit} field="value" />
         </span>
       {/if}
     {:else}
-      <Highlight value="empty" field="token" />
+      <Highlight value="empty" field="value" />
     {/if}
   </div>
 {/if}
