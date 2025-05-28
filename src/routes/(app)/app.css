@@ -435,3 +435,23 @@ hr {
     }
   }
 }
+
+kbd {
+  display: inline-block;
+  box-shadow:
+    0 1px 1px rgba(0, 0, 0, 0.2),
+    0 2px 0 0 rgba(255, 255, 255, 0.7) inset;
+  border: 1px solid #b4b4b4;
+  border-radius: 3px;
+  background-color: #eee;
+  padding: 2px 4px;
+  color: #333;
+  font-weight: 700;
+  font-size: 0.85em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.DocSearch-Container {
+  z-index: 1000000 !important;
+}
