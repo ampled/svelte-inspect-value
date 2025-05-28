@@ -265,6 +265,15 @@ export type InspectOptions = {
    */
   search: boolean | 'highlight' | 'filter' | 'filter-strict'
   /**
+   * Initial multi-term search mode
+   *
+   * - `'and'` - nodes must match every term
+   * - `'or'` - nodes can match one of the terms
+   *
+   * @default 'or'
+   */
+  searchMode: 'and' | 'or'
+  /**
    * When `search` is enabled, highlight matches in keys,
    * types and values when typing in the search input box.
    *
@@ -307,6 +316,7 @@ export const DEFAULT_OPTIONS: InspectOptions = {
   onCollapseChange: undefined,
   stores: 'full',
   search: true,
+  searchMode: 'or',
   highlightMatches: true,
 } as const
 
