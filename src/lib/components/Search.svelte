@@ -8,7 +8,7 @@
   import Input from './Input.svelte'
   import NodeIconButton from './NodeIconButton.svelte'
   import { wait } from '../util.js'
-  import { fly } from 'svelte/transition'
+  import AndOrIcon from '$lib/icons/AndOrIcon.svelte'
 
   type Props = {
     query: string
@@ -19,13 +19,15 @@
   const collapseState = useState()
 
   const options = useOptions()
+  const { searchMode: initialMode, search: searchKind } = $derived(options.value)
   let searchEle = $state<Input>()
   let prevQuery = $state<string>()
-  let mode = $state<'and' | 'or'>('and')
+  // svelte-ignore state_referenced_locally
+  let mode = $state<'and' | 'or'>(initialMode)
   const id = $props.id()
 
   $effect(() => {
-    if (query.length === 0 || options.value.search === false) {
+    if (query.length === 0 || searchKind === false) {
       matchingPaths = []
     }
   })
@@ -115,7 +117,11 @@
     {/if}
     {#if query.split(' ').filter(Boolean).length > 1}
       <NodeIconButton
+        data-testid="search-mode-btn"
         style="min-width: 1ch; overflow: hidden;"
+        title={mode === 'and'
+          ? 'AND — node must match all terms'
+          : 'OR — node must match one of the terms'}
         onclick={() => {
           if (mode === 'and') {
             mode = 'or'
@@ -124,21 +130,7 @@
           }
         }}
       >
-        {#if mode === 'and'}
-          <div
-            title="AND — node must match all terms"
-            in:fly={{ duration: options.transitionDuration, y: 16 }}
-          >
-            &
-          </div>
-        {:else}
-          <div
-            title="OR — node must match one of the terms"
-            in:fly={{ duration: options.transitionDuration, y: -16 }}
-          >
-            ||
-          </div>
-        {/if}
+        <AndOrIcon {mode} />
       </NodeIconButton>
     {/if}
     <NodeIconButton onclick={search} disabled={query.length === 0}>
