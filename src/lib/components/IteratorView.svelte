@@ -8,6 +8,7 @@
   import NodeActionButton from './NodeActionButton.svelte'
   import Preview from './Preview.svelte'
   import PropertyList from './PropertyList.svelte'
+  import { nodeActionKeydown } from '../util.js'
 
   type Props = TypeViewProps<
     Iterator<unknown> | AsyncIterator<unknown> | Generator | AsyncGenerator
@@ -70,10 +71,19 @@
 >
   {#snippet valuePreview({ showPreview })}
     {#if !previewLevel}
-      <NodeActionButton {busy} disabled={isDone} onclick={next}>
+      <NodeActionButton {busy} disabled={isDone} onclick={next} onkeydown={nodeActionKeydown(next)}>
         {isDone ? 'done' : 'next'}
       </NodeActionButton>
-      <NodeActionButton {busy} disabled={isDone} onclick={complete}>100</NodeActionButton>
+      {#if !isDone}
+        <NodeActionButton
+          {busy}
+          disabled={isDone}
+          onclick={complete}
+          onkeydown={nodeActionKeydown(complete)}
+        >
+          100
+        </NodeActionButton>
+      {/if}
     {/if}
     <Preview {path} list={unwrap} prefix={'['} postfix={']'} {showPreview} showKey={false} />
   {/snippet}
