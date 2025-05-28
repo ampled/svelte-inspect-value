@@ -3,13 +3,12 @@
  Wrapper for different variants of Inspect
 -->
 <script lang="ts">
-  import { getContext, type Snippet } from 'svelte'
+  import { getContext, setContext, type Snippet } from 'svelte'
   import type { SvelteHTMLElements } from 'svelte/elements'
   import { fly, slide } from 'svelte/transition'
-  import { scope } from './action/index.js'
   import NodeActionButton from './components/NodeActionButton.svelte'
   import NodeIconButton from './components/NodeIconButton.svelte'
-  import { typebuffer } from './typingbuffer.svelte.js'
+  import { createTypingBufferContext } from './typingbuffer.svelte.js'
   import { setSearchContext } from './contexts.js'
   import Caret from './icons/Caret.svelte'
   import { useState } from './state.svelte.js'
@@ -17,15 +16,17 @@
   import { useOptions } from './options.svelte.js'
   import Search from './components/Search.svelte'
   import { wait } from './util.js'
-  import ExpandCollapseIcon from './icons/ExpandCollapseIconTwo.svelte'
+  import ExpandCollapseIcon from './icons/ExpandCollapseIcon.svelte'
   import { clearSearchCache } from './util/search.js'
+  import type { HeadingSnippet } from './types.js'
+  import { scope } from './action/focus.svelte.js'
 
   type Props = {
     showExpandCollapse?: boolean
     oninspectvaluechange?: () => void
     onhandleclick?: () => void
     headingExtra?: Snippet
-    heading?: string | Snippet
+    heading?: string | HeadingSnippet
     children: Snippet
   } & SvelteHTMLElements['div']
 
@@ -40,6 +41,7 @@
     ...rest
   }: Props = $props()
 
+  const id = $props.id()
   const inFixed = getContext(Symbol.for('siv.fixed'))
   const collapseState = useState()
   const options = useOptions()
@@ -47,10 +49,10 @@
   let collapsed = $state(false)
   let searchInput = $state('')
   let matchingPaths = $state([])
-  let typeBuffer = $derived(typebuffer())
+  const typingBuffer = createTypingBufferContext(id)
   let container = $state<HTMLDivElement>()
   let searchEle = $state<Search>()
-  let settingCollapse = $state(false)
+  let settingCollapse = $state<false | 'expanding' | 'collapsing'>(false)
   let { search } = $derived(options.value)
 
   setSearchContext(() => ({
@@ -59,15 +61,19 @@
     query: searchInput,
   }))
 
+  setContext('siv-focus-id', id)
+
   let lastFocusedEle = $state<HTMLElement | null>()
   function onKeyDown(event: KeyboardEvent & { currentTarget: EventTarget & Window }) {
     lastFocusedEle = document.activeElement as HTMLElement
     if (container?.contains(document.activeElement)) {
-      if (event.metaKey) {
+      if (event.metaKey || event.ctrlKey) {
         if (event.key === 'f') {
           event.preventDefault()
           event.stopPropagation()
-          searchEle?.focus()
+          if (search) {
+            searchEle?.focus()
+          }
         } else if (event.key === 'e') {
           event.preventDefault()
           event.stopPropagation()
@@ -102,19 +108,20 @@
     return false
   })
   async function setCollapse(collapsed: boolean) {
-    settingCollapse = true
-    const paths = Object.entries(collapseState.value).map((e) => e[0])
+    if (!settingCollapse) {
+      settingCollapse = collapsed ? 'collapsing' : 'expanding'
+      const paths = Object.entries(collapseState.value).map((e) => e[0])
 
-    for (const p of paths) {
-      if (p.split('.').length === 1) {
-        if (collapseState.value[p]?.collapsed !== collapsed) {
-          collapseState.setCollapse(p, { collapsed })
-          await wait() // avoid forced reflow (and get nice stagger effect)
+      for (const p of collapsed ? paths.toReversed() : paths) {
+        if (p.split('.').length === 1) {
+          if (collapseState.value[p]?.collapsed !== collapsed) {
+            collapseState.setCollapse(p, { collapsed })
+            await wait() // avoid forced reflow (and get nice stagger effect)
+          }
         }
       }
+      settingCollapse = false
     }
-
-    settingCollapse = false
   }
 
   // FIXME: only works for currently visible values but is the "cheapest" cache bust strat for now
@@ -130,8 +137,9 @@
   bind:this={container}
   class={['svelte-inspect-value', inFixed && 'in-fixed', classValue]}
   {...rest}
-  use:scope
+  data-focus-id={id}
   oninspectvaluechange={onNestedValueChange}
+  use:scope
 >
   {#if heading || search}
     <div
@@ -144,9 +152,11 @@
           <Caret style="rotate: {collapsed ? 0 : 90}deg; transition: rotate 250ms ease-in-out" />
         </div>
         {#if typeof heading === 'string'}
-          {heading}
+          <span class="heading-text">
+            {heading}
+          </span>
         {:else if typeof heading === 'function'}
-          {@render heading()}
+          {@render heading({ collapsed })}
         {/if}
       </button>
       <div class="heading-extra">
@@ -162,9 +172,9 @@
           <NodeIconButton
             title={hasExpandedTopLevel ? 'collapse all' : 'expand all'}
             onclick={() => setCollapse(hasExpandedTopLevel)}
-            disabled={settingCollapse}
+            disabled={settingCollapse !== false}
           >
-            <ExpandCollapseIcon expand={!hasExpandedTopLevel} />
+            <ExpandCollapseIcon expand={!hasExpandedTopLevel} setting={settingCollapse} />
           </NodeIconButton>
         {/if}
         {@render headingExtra?.()}
@@ -172,24 +182,23 @@
     </div>
   {/if}
   {#if !collapsed}
-    {#if typeBuffer.length}
+    {#if typingBuffer.current.length}
       <div
-        class={['typebuffer', typeBuffer.length && 'visible']}
+        class={['typebuffer', typingBuffer.current.length && 'visible']}
         transition:fly={{ duration: options.value.noanimate ? 0 : 100, y: -10 }}
       >
         <div style="height: 1em; width: 1em; flex-shrink: 0">
           <i.Search />
         </div>
-        <!-- <span style="font-weight: bold">?:</span> -->
         <div style="display: flex">
-          {#each typeBuffer as c, i (i)}
+          {#each typingBuffer.current as c, i (i)}
             <div
               style="color: var(--_text-color); width: 1ch;"
               in:slide={{ axis: 'x', duration: options.transitionDuration }}
             >
               {c}
             </div>
-          {/each}{#key typeBuffer}<span class="block">▊</span>{/key}
+          {/each}{#key typingBuffer.current}<span class="block">▊</span>{/key}
         </div>
       </div>
     {/if}
@@ -253,6 +262,7 @@
   }
 
   :global .svelte-inspect-value.noanimate * {
+    animation: none !important;
     transition: none !important;
   }
 
@@ -283,8 +293,9 @@
       display: flex;
       position: relative;
       flex-direction: row;
+      justify-content: space-between;
       align-items: center;
-      gap: var(--line-gap, 0.25em);
+      gap: 1ch;
       border-bottom: 1px solid var(--_border-color);
       padding-inline: 0.5em;
       padding-block: 0.25em;
@@ -298,22 +309,29 @@
       .heading-collapse-button {
         all: unset;
         display: flex;
-        flex-basis: 50%;
+        flex: 0 1 50%;
         align-items: center;
         gap: 0.5em;
         box-sizing: border-box;
+        padding-right: 0.25em;
+        overflow: hidden;
 
         &:hover {
           background-color: transparent;
+        }
+
+        .heading-text {
+          text-overflow: ellipsis;
         }
       }
 
       .heading-extra {
         display: flex;
-        flex-basis: 100%;
+        flex: 1 0 60%;
         justify-content: flex-end;
         align-items: center;
         gap: 0.5em;
+        max-width: 26em;
       }
 
       &.collapsed {
