@@ -5,8 +5,8 @@
   justify-content: flex-start;
   align-items: center;
   gap: var(--line-gap, 0.5em);
-  transition: background-position, background-size, color;
   transition-duration: 250ms;
+  transition-property: background-position, background-size, color;
   transition-timing-function: ease-in-out;
   background: linear-gradient(35deg, var(--_hover-color) 60%, transparent 80%);
   background-size: 0% 100%;
@@ -73,12 +73,11 @@
 :global .line.match {
   .bullet {
     .dash {
-      transform: translateX(-50%);
-      /* transform-origin: 100% 50%; */
       border-radius: 0px;
+      border-radius: 1px;
       background-color: var(--_text-search-highlight-color);
-      width: 16px;
-      height: 1px;
+      width: 4px;
+      height: 4px;
     }
   }
 
@@ -90,6 +89,7 @@
 :global .line.match.preview {
   .key,
   .value {
-    background-color: color-mix(in srgb, var(--_text-search-highlight-color), transparent 50%);
+    text-decoration: underline;
+    text-decoration-color: var(--_text-search-highlight-color);
   }
 }
