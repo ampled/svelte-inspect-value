@@ -192,7 +192,10 @@
     title="output theme object to console"
     class="unstyled"
     style="width: 2em; height: 2em;"
-    onclick={() => console.log($state.snapshot(colors))}
+    onclick={() => {
+      // eslint-disable-next-line no-console
+      console.log($state.snapshot(colors))
+    }}
   >
     <Console />
   </button>
