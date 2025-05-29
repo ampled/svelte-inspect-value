@@ -41,7 +41,6 @@
 
 <div class="flex col">
   <button onclick={() => reset()}>reset</button>
-  <!-- <Stack> -->
   <div class="playground">
     <Editor
       bind:this={editor}
@@ -52,14 +51,13 @@
     />
     <Inspect {value} name="demo" />
   </div>
-  <!-- </Stack> -->
 </div>
 
 <style>
   .playground {
-    width: 100%;
     display: flex;
-    gap: 0.5em;
     align-items: flex-start;
+    gap: 0.5em;
+    width: 100%;
   }
 </style>

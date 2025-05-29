@@ -25,6 +25,7 @@
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
     "format": "prettier --write .",
+    "prettiercheck": "prettier --check .",
     "lint": "prettier --check . && eslint .",
     "eslint": "eslint .",
     "test:unit": "vitest",
