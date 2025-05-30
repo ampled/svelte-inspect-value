@@ -11,9 +11,9 @@
   import DocSearch from '$doclib/DocSearch.svelte'
 
   let drawerOpen = $state(true)
-  let showDevItems = false
+  let showDevItems = true
 
-  setContext(Symbol('SIV.DEBUG'), true)
+  setContext(Symbol.for('SIV.DEBUG'), true)
 
   const { children, data }: { children: Snippet; data: LayoutData } = $props()
 
@@ -124,7 +124,7 @@
     parseJson: false,
     renderIf: true,
     stores: 'full',
-    search: 'highlight',
+    search: false,
     highlightMatches: true,
   })
 

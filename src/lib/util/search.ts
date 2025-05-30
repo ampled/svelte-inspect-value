@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-function-type */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import memoize, { memoizeClear } from 'memoize'
-import type { InspectOptions } from '../options.svelte.js'
-import { descriptorPrefix, getType, isValidStore, stringify } from '../util.js'
-import { get, type Readable, type Writable } from 'svelte/store'
 import ManyKeysMap from 'many-keys-map'
-import type { List } from '$lib/types.js'
+import memoize, { memoizeClear } from 'memoize'
+import { get, type Readable, type Writable } from 'svelte/store'
+import type { InspectOptions } from '../options.svelte.js'
+import type { List } from '../types.js'
+import { descriptorPrefix, getType, isValidStore, stringify } from '../util.js'
 
 type SearchNode = {
   path: string

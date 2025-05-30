@@ -6,7 +6,7 @@
   <kbd>⌘</kbd> <span style="font-weight: bolder;">/</span> <kbd>Ctrl</kbd>
 {/snippet}
 
-<h2>Usage</h2>
+<h2 id="usage">Usage</h2>
 
 <p>
   The <code>Inspect</code> component offers a lot of different functionality and interactivity.<br
@@ -107,7 +107,7 @@ While a node is focused, you can type to focus a certain (visible) node.<br />
 A box will appear showing your query, and a node matching the typed letters will be focused, prioritizing
 keys.
 
-<h2>Search and Text Highlight</h2>
+<h2 id="search">Search and Text Highlight</h2>
 
 <p>
   If <code><a href="/docs/types/InspectOptions#search">search</a></code> is enabled, a search input
@@ -140,7 +140,7 @@ keys.
   >
 </p>
 
-<h3>Multiple terms</h3>
+<h3 id="multiple-terms">Multiple terms</h3>
 
 <p>
   If multiple terms are entered (separated by space) a mode-selector appears letting you choose
@@ -154,14 +154,14 @@ keys.
   <code>'foo'</code> in their path / key.
 </p>
 
-<p>
-  All matching paths will be expanded. To keep highlighted matching paths expanded after clearing
-  the search results, hit enter again without changing the query.
-</p>
+<h3 id="expanding-matches">Expanding matches</h3>
 
 <p>
   All matching paths will be expanded. To keep highlighted matching paths expanded after clearing
-  the search results, hit enter again without changing the query.
+  the search results, hit <kbd>Enter</kbd> again without changing the query.<br />
+  The <kbd>Esc</kbd>-button will clear the input and search results when the search field is
+  focused, and if the search field was focused using the keyboard shortcut, the last focused node
+  will be re-focused.
 </p>
 
 <p>
@@ -181,7 +181,7 @@ keys.
   even if something is highlighted it might not count as a match.
 </p>
 
-<AllTypes />
+<AllTypes search="highlight" highlightMatches />
 
 <style>
   table {

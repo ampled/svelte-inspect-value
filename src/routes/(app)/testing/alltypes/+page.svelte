@@ -10,5 +10,5 @@
 </label>
 
 <div style="padding: 2em">
-  <AllTypes heading={heading ? 'all types' : undefined} />
+  <AllTypes heading={heading ? 'all types' : undefined} search="highlight" highlightMatches />
 </div>

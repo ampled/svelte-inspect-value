@@ -6,6 +6,8 @@
   import { readable, writable } from 'svelte/store'
   import sprite from './media/squirtle.png'
   import audio from './media/squirtle_cry.ogg'
+  import { GLOBAL_OPTIONS_CONTEXT, type InspectOptions } from '$lib/options.svelte.js'
+  import { getContext } from 'svelte'
 
   const props: InspectProps = $props()
 
@@ -425,10 +427,6 @@
     },
   })
 
-  // onMount(() => {
-  //   allTypes.body = document.body as unknown as null
-  // })
-
   let seeFlashing = $state(false)
 
   $effect(() => {
@@ -438,9 +436,21 @@
 
     return () => clearInterval(interval)
   })
+
+  const globalOptions = getContext<Partial<InspectOptions> | (() => Partial<InspectOptions>)>(
+    GLOBAL_OPTIONS_CONTEXT
+  )
+
+  const allTypesSearch = $derived.by(() => {
+    const globalOpts = typeof globalOptions === 'function' ? globalOptions() : globalOptions
+    if (globalOpts.search === false) {
+      return 'highlight'
+    }
+    return globalOpts.search
+  })
 </script>
 
-<Inspect name="allTypes" values={allTypes} {...props} expandLevel={0}>
+<Inspect name="allTypes" values={allTypes} search={allTypesSearch} {...props} expandLevel={0}>
   {#snippet heading({ collapsed })}
     DEMO
     {#if !collapsed}
