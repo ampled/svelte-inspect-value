@@ -18,9 +18,7 @@ export function highlightText(text: string, terms: HighlightSearchTerm[]): Chunk
   let currentIndex = 0
 
   // Build a regex pattern to match all terms
-  const regexParts = terms.map(({ value, exact }) =>
-    exact ? `\\b${escapeRegex(value)}\\b` : escapeRegex(value)
-  )
+  const regexParts = terms.map(({ value }) => escapeRegex(value))
   const regex = new RegExp(regexParts.join('|'), 'gi') // Case-insensitive global match
 
   let match: RegExpExecArray | null
