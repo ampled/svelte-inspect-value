@@ -85,11 +85,3 @@
     color: var(--_text-search-highlight-color);
   }
 }
-
-:global .line.match.preview {
-  .key,
-  .value {
-    text-decoration: underline;
-    text-decoration-color: var(--_text-search-highlight-color);
-  }
-}
