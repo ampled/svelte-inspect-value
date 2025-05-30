@@ -16,6 +16,7 @@ export default ts.config(
     rules: {
       'no-console': ['warn', { allow: ['warn', 'error'] }],
       'svelte/no-inner-declarations': 'off',
+      'svelte/no-inspect': 'warn',
       '@typescript-eslint/no-unused-vars': [
         'error',
         {
