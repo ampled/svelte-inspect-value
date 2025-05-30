@@ -31,7 +31,7 @@
     borderless = false,
   }: Props = $props()
 
-  const focusId = getContext<string>('siv-focus-id')
+  const focusId = getContext<string>(Symbol.for('siv.focus-id'))
   const typingBuffer = getTypingBuffer()
 
   function onclick() {

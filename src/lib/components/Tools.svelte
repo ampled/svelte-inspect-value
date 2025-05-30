@@ -1,16 +1,18 @@
 <script lang="ts">
-  import { getContext, onDestroy } from 'svelte'
+  import { getContext } from 'svelte'
   import { globalInspectState } from '../Panel.svelte'
+  import { getAddDestroyCallbackFn } from '../contexts.js'
   import { globalValues } from '../global.svelte.js'
   import { copyToClipBoard, logToConsole } from '../hello.svelte.js'
   import ClipBoardIcon from '../icons/ClipBoardIcon.svelte'
   import Console from '../icons/Console.svelte'
   import ExpandCollapseIcon from '../icons/ExpandCollapseIcon.svelte'
+  import PanelValueIcon from '../icons/PanelValueIcon.svelte'
   import { useOptions } from '../options.svelte.js'
   import { useState, type NodeState } from '../state.svelte.js'
   import type { TypeViewProps } from '../types.js'
   import { isPromise, stringifyPath, wait } from '../util.js'
-  import NodeActionButton from './NodeActionButton.svelte'
+  import { buildSearchIndex } from '../util/search.js'
   import NodeIconButton from './NodeIconButton.svelte'
 
   type Props = Partial<TypeViewProps<unknown, string>> & { collapsed?: boolean }
@@ -19,11 +21,12 @@
 
   let copied = $state(false)
 
+  const SIV_DEBUG = getContext<true | undefined>(Symbol.for('SIV.DEBUG'))
   const fixed = getContext(Symbol.for('siv.fixed'))
+  const addOnDestroyCallback = getAddDestroyCallbackFn()
   let options = useOptions()
   let { onCopy, canCopy, onLog, borderless, showTools } = $derived(options.value)
   let inspectState = useState()
-  let addedToPanel = $state(false)
   let stringifiedPath = $derived(stringifyPath(path))
   let level = $derived(path.length)
   let settingCollapse = $state<false | 'collapsing' | 'expanding'>(false)
@@ -156,39 +159,63 @@
   }
 
   let treeAction = $derived(getTreeAction(nodeState))
+  let panelValueAction = $derived.by(() => {
+    if (globalInspectState.mounted.size && !fixed) {
+      if (globalValues.has(stringifiedPath)) {
+        return {
+          add: false,
+          hint: 'remove from panel',
+          action: () => {
+            globalValues.delete(stringifiedPath)
+          },
+        }
+      } else {
+        return {
+          add: true,
+          hint: 'add to panel',
+          action: () => {
+            globalValues.set(stringifiedPath, {
+              get value() {
+                return value
+              },
+              note: { title: 'Added manually' },
+            })
+            addOnDestroyCallback(() => {
+              globalValues.delete(stringifiedPath)
+            })
+          },
+        }
+      }
+    }
+    return undefined
+  })
 
-  function setAsPanelValue() {
-    addedToPanel = true
-    globalValues.set(stringifiedPath, {
-      get value() {
-        return value
-      },
-      note: { title: 'Added manually' },
+  function debugNode() {
+    const { log } = console
+    log({
+      globalInspectState,
+      indexed: buildSearchIndex({ value, options: options.value }),
     })
   }
-
-  onDestroy(() => {
-    if (addedToPanel) globalValues.delete(stringifiedPath)
-  })
 </script>
 
 {#if showTools}
   <div class="tools" class:borderless>
-    {#if !fixed && !globalValues.has(stringifiedPath) && globalInspectState.mounted.length}
-      <NodeActionButton title="add to panel" onclick={setAsPanelValue}>+</NodeActionButton>
+    {#if SIV_DEBUG}
+      <NodeIconButton onclick={debugNode}>?</NodeIconButton>
     {/if}
-    {#if globalValues.has(stringifiedPath)}
-      <NodeActionButton
-        title="remove from panel"
-        onclick={() => globalValues.delete(stringifiedPath)}>-</NodeActionButton
-      >
+    {#if panelValueAction}
+      <NodeIconButton title={panelValueAction.hint} onclick={panelValueAction.action}>
+        <PanelValueIcon add={panelValueAction.add} />
+      </NodeIconButton>
     {/if}
+
     {#if treeAction}
       <NodeIconButton
         disabled={settingCollapse !== false}
         title={treeAction.hint}
         aria-label={treeAction.hint}
-        onclick={() => treeAction.action()}
+        onclick={treeAction.action}
       >
         <ExpandCollapseIcon expand={treeAction.expand} setting={settingCollapse} />
       </NodeIconButton>

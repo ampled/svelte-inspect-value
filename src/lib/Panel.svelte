@@ -1,6 +1,6 @@
 <script module lang="ts">
   export let globalInspectState = $state({
-    mounted: [] as string[],
+    mounted: new SvelteSet<string>(),
   })
 </script>
 
@@ -30,6 +30,7 @@
   import type { PanelProps, PositionProp, XPos, YPos } from './types.js'
   import { getAllProperties, initialize, sortProps } from './util.js'
   import Wrapper from './Wrapper.svelte'
+  import { SvelteSet } from 'svelte/reactivity'
 
   let {
     // base props
@@ -146,10 +147,12 @@
   })
 
   $effect(() => {
-    if (!hideGlobalValues && shouldRender) untrack(() => globalInspectState.mounted.push(id))
+    if (!hideGlobalValues && shouldRender) {
+      untrack(() => globalInspectState.mounted.add(id))
+    }
 
     return () => {
-      globalInspectState.mounted = globalInspectState.mounted.filter((i) => i !== id)
+      globalInspectState.mounted.delete(id)
     }
   })
 

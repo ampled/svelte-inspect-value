@@ -3,13 +3,13 @@
  Wrapper for different variants of Inspect
 -->
 <script lang="ts">
-  import { getContext, setContext, type Snippet } from 'svelte'
+  import { getContext, onDestroy, setContext, type Snippet } from 'svelte'
   import type { SvelteHTMLElements } from 'svelte/elements'
   import { fly, slide } from 'svelte/transition'
   import NodeActionButton from './components/NodeActionButton.svelte'
   import NodeIconButton from './components/NodeIconButton.svelte'
   import { createTypingBufferContext } from './typingbuffer.svelte.js'
-  import { setSearchContext } from './contexts.js'
+  import { setAddDestroyCallback, setSearchContext } from './contexts.js'
   import Caret from './icons/Caret.svelte'
   import { useState } from './state.svelte.js'
   import * as i from './icons/index.js'
@@ -45,6 +45,7 @@
   const inFixed = getContext(Symbol.for('siv.fixed'))
   const collapseState = useState()
   const options = useOptions()
+  const destroyCallbacks: (() => void)[] = []
 
   let { search } = $derived(options.value)
   let collapsed = $state(false)
@@ -63,7 +64,16 @@
     terms,
   }))
 
-  setContext('siv-focus-id', id)
+  setContext(Symbol.for('siv.focus-id'), id)
+  setAddDestroyCallback((cb) => {
+    destroyCallbacks.push(cb)
+  })
+
+  onDestroy(() => {
+    for (const callback of destroyCallbacks) {
+      callback()
+    }
+  })
 
   let lastFocusedEle = $state<HTMLElement | null>()
   function onKeyDown(event: KeyboardEvent & { currentTarget: EventTarget & Window }) {
