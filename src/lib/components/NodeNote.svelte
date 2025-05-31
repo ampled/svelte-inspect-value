@@ -15,19 +15,18 @@
 
 <style>
   span {
-    font-family: var(--inspect-font);
-    font-size: 0.8em;
-    height: 1.5em;
-    line-height: 1.5em;
-    color: var(--_note-color);
-    background-color: var(--_background-color);
-    outline: 1px solid var(--_note-color);
-    padding-inline: 0.5em;
-    cursor: help;
-    border-radius: 2px;
     transition:
       color 150ms ease-in-out,
       background-color 150ms ease-in out;
-    transform-origin: bottom center;
+    cursor: help;
+    outline: 1px solid var(--_note-color);
+    border-radius: 2px;
+    background-color: var(--_background-color);
+    padding-inline: 0.5em;
+    height: 1.5em;
+    color: var(--_note-color);
+    font-size: 0.8em;
+    line-height: 1.5em;
+    font-family: var(--inspect-font);
   }
 </style>

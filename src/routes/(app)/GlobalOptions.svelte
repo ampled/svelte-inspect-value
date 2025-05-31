@@ -36,6 +36,8 @@
 
   <ToggleButton bind:checked={options.embedMedia}>embed media</ToggleButton>
 
+  <ToggleButton bind:checked={options.parseJson}>parse json</ToggleButton>
+
   <label>
     store
     <select bind:value={options.stores} name="stores">
@@ -44,7 +46,6 @@
       <option value={false}>off</option>
     </select>
   </label>
-  <ToggleButton bind:checked={options.parseJson}>parse json</ToggleButton>
 
   <label>
     elementview
@@ -94,40 +95,54 @@
       name="preview-entries"
     />
   </label>
+
+  <label>
+    search
+    <select bind:value={options.search} name="search">
+      <option value={false}>off</option>
+      <option>highlight</option>
+      <option>filter</option>
+      <option>filter-strict</option>
+    </select>
+  </label>
+
+  {#if options.search}
+    <ToggleButton bind:checked={options.highlightMatches}>highlight</ToggleButton>
+  {/if}
 </div>
 
 <style>
   .options {
-    position: relative;
-    width: 100%;
-    max-width: 500px;
-    font-size: 10px;
     display: flex;
-    overflow: visible;
+    position: relative;
     flex-wrap: wrap;
-    align-items: flex-end;
     justify-content: flex-start;
-    background-color: var(--_background-color);
-    color: var(--_text-color);
+    align-items: flex-end;
     gap: 1.245em;
-    border-radius: 8px;
-    padding: 1em;
     z-index: 10;
-    border: 1px solid var(--_border-color);
     transition: all 100ms linear;
     margin-top: 1em;
+    border: 1px solid var(--_border-color);
+    border-radius: 8px;
+    background-color: var(--_background-color);
+    padding: 1em;
+    width: 100%;
+    max-width: 500px;
+    overflow: visible;
+    color: var(--_text-color);
+    font-size: 10px;
   }
 
   .options-title {
-    font-family: monospace;
     position: absolute;
-    text-align: center;
     top: -0.75em;
+    border: 1px solid var(--_border-color);
+    border-radius: 8px;
+    background-color: var(--_background-color);
     /* left: 1em; */
     padding-inline: 1ch;
-    background-color: var(--_background-color);
-    border-radius: 8px;
-    border: 1px solid var(--_border-color);
+    font-family: monospace;
+    text-align: center;
   }
 
   label:has(input:checked) {
@@ -149,9 +164,9 @@
   }
 
   label {
-    white-space: nowrap;
     flex-shrink: 0;
-    font-family: monospace;
     font-size: 10px;
+    font-family: monospace;
+    white-space: nowrap;
   }
 </style>

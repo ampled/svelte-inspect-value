@@ -40,6 +40,40 @@ export function createState(init: CollapseState, onChange?: (value: CollapseStat
         console.error(e)
       }
     },
+    setCollapseStartsWith: (keyOrPath: string | PropertyKey[], newValues: NodeState) => {
+      try {
+        const key = ensureStringPath(keyOrPath)
+        let changed = false
+        if (init) {
+          Object.entries(init).forEach(([k]) => {
+            if (k.startsWith(key) || k === key) {
+              init[key] = { ...init[key], ...newValues }
+              changed = true
+            } else {
+              init[key] = newValues
+            }
+          })
+        }
+        if (changed && init) {
+          emitChanged()
+        }
+      } catch (e) {
+        console.error(e)
+      }
+    },
+    setCollapseWhere: (test: (path: string) => boolean, newValues: NodeState) => {
+      try {
+        if (init) {
+          Object.entries(init).forEach(([p]) => {
+            if (test(p)) {
+              init[p] = { ...init[p], ...newValues }
+            }
+          })
+        }
+      } catch {
+        //
+      }
+    },
     getCollapse(keyOrPath: string | PropertyKey[]) {
       const key = ensureStringPath(keyOrPath)
       return init?.[key]
@@ -86,10 +120,4 @@ export type StateContext = ReturnType<typeof createState>
 
 export function useState(): StateContext {
   return getContext<StateContext>(STATE_CONTEXT_KEY)
-}
-
-export function useNodeState(keyOrPath: () => string | PropertyKey[]) {
-  const ctx = useState()
-  const key = ensureStringPath(keyOrPath())
-  return () => ctx.value?.[key]
 }

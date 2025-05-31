@@ -20,10 +20,10 @@
 
 <style>
   .image {
-    height: 100px;
     width: 100px;
-    resize: both;
+    height: 100px;
     overflow: scroll;
+    resize: both;
   }
 
   img {

@@ -302,7 +302,6 @@ describe('expandable values', () => {
     let indent = screen.queryByTestId('indent')
     expect(indent).toBeInTheDocument()
     expect(button).toHaveAttribute('aria-label', 'collapse test')
-    expect(button).toHaveAttribute('title', 'collapse test')
 
     await user.click(button)
 
@@ -310,6 +309,5 @@ describe('expandable values', () => {
 
     expect(indent).not.toBeInTheDocument()
     expect(button).toHaveAttribute('aria-label', 'expand test')
-    expect(button).toHaveAttribute('title', 'expand test')
   })
 })

@@ -27,14 +27,14 @@
 
 <style>
   .color {
-    height: 1.4em;
-    line-height: 1.4;
+    margin-inline: 0.25em;
     outline: 1px solid var(--_border-color);
     border-radius: 2px;
-    margin-inline: 0.25em;
     padding-inline: 1ch;
-    font-size: 10px;
     min-width: 56px;
+    height: 1.4em;
+    font-size: 10px;
+    line-height: 1.4;
     text-align: center;
 
     .text {

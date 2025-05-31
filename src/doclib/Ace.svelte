@@ -78,12 +78,12 @@
 <style>
   .wrapper {
     position: relative;
+    border: 1px solid var(--docs-border-color);
+    border-radius: 8px;
+    background-color: #1e2c3e;
     padding: 0.5em;
     width: 100%;
-    background-color: #1e2c3e;
-    border-radius: 8px;
     overflow: hidden;
-    border: 1px solid var(--docs-border-color);
   }
 
   .wrapper:focus-within {
@@ -95,17 +95,15 @@
   }
 
   .ace {
-    height: auto;
-    /* max-height: max-content; */
     width: 100%;
-    /* max-width: max-content; */
+    height: auto;
   }
 
   span {
     position: absolute;
     top: 0;
     right: 0;
-    font-family: monospace;
     font-size: 10px;
+    font-family: monospace;
   }
 </style>

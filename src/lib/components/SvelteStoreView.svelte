@@ -2,7 +2,7 @@
   import { type Readable, type Writable } from 'svelte/store'
   import { useOptions } from '../options.svelte.js'
   import type { TypeViewProps } from '../types.js'
-  import { getAllProperties, type ValueType } from '../util.js'
+  import { getAllProperties, isValidStore, type ValueType } from '../util.js'
   import Expandable from './Expandable.svelte'
   import GetterSetter from './GetterSetter.svelte'
   import Node from './Node.svelte'
@@ -30,23 +30,7 @@
   let valueType = $derived(namedConstructor ? (namedConstructor as ValueType) : storeType)
   let keys = $derived([valueKey, ...getAllProperties(value)])
 
-  let validStore = $derived.by(() => {
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const subscriber = value.subscribe(() => void 0) as any
-      if (typeof subscriber === 'function') {
-        subscriber()
-        return true
-      } else if (typeof subscriber === 'object' && typeof subscriber.unsubscribe === 'function') {
-        subscriber.unsubscribe()
-        return true
-      } else {
-        return false
-      }
-    } catch {
-      return false
-    }
-  })
+  let validStore = $derived(isValidStore(value))
 </script>
 
 {#if validStore}
@@ -96,7 +80,7 @@
     note={{
       title: 'invalid store',
       description:
-        'subscribe function did not return a valid subscriber.\nreverted to default object view.',
+        'Subscribe function did not return a valid subscriber.\nreverted to default object view.',
     }}
     {value}
     {key}

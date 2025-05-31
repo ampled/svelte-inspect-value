@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { stringifyOrToString } from './util.js'
 
 export function logToConsole(path: PropertyKey[] = [], value: unknown, type: string | undefined) {

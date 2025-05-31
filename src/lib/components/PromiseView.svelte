@@ -95,7 +95,6 @@
 
 <style>
   span.value {
-    font-size: 0.857em;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -113,7 +112,7 @@
   }
 
   .bracket {
-    font-weight: bold;
     color: var(--_promise-bracket-color);
+    font-weight: bold;
   }
 </style>

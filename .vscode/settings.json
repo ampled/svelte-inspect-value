@@ -1,9 +1,16 @@
 {
   "typescript.tsdk": "node_modules/typescript/lib",
-  "editor.codeActionsOnSave": {
-    "source.organizeImports": "explicit"
-  },
+  // "editor.codeActionsOnSave": {
+  //   "source.organizeImports": "explicit"
+  // },
   "search.exclude": {
     "**/dist": true
+  },
+  "github.copilot.enable": {
+    "*": false,
+    "plaintext": false,
+    "markdown": false,
+    "scminput": false,
+    "typescript": false
   }
 }

@@ -59,9 +59,9 @@
 
 <style>
   :global code.value.html.hl {
+    border-radius: 4px;
     background-color: transparent;
     padding-inline: 0.5em;
-    border-radius: 4px;
 
     .tag {
       color: var(--_text-color);

@@ -21,8 +21,6 @@
   const modules = links.filter((l) => l.href.includes('modules'))
 </script>
 
-<!-- <Inspect values={{ page, fns, types }} /> -->
-
 <ul style="display: none">
   <li>
     Modules
@@ -69,10 +67,10 @@
 
 <style>
   ul {
-    background-color: var(--bg);
-    font-family: monospace;
     border-radius: 8px;
+    background-color: var(--bg);
     font-size: 12px;
+    font-family: monospace;
 
     a {
       text-decoration: none;

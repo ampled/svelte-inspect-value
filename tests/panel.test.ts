@@ -12,7 +12,5 @@ describe('inspect panel', () => {
     })
 
     expect(rendered.result.component).toBeDefined()
-
-    rendered.result.debug()
   })
 })

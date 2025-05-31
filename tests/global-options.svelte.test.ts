@@ -1,4 +1,4 @@
-import { GLOBAL_OPTIONS_CONTEXT } from '$lib/options.svelte.js'
+import { GLOBAL_OPTIONS_CONTEXT } from '../src/lib/options.svelte.js'
 import { act, cleanup, screen } from '@testing-library/svelte'
 import { afterAll, describe, expect, test } from 'vitest'
 import { renderInspect } from './util/index.js'

@@ -23,11 +23,11 @@
 
 <style>
   table {
+    border: 1px solid var(--docs-border-color);
+    border-collapse: collapse;
+    font-size: 14px;
     font-family: monospace;
     text-align: left;
-    border-collapse: collapse;
-    border: 1px solid var(--docs-border-color);
-    font-size: 14px;
   }
 
   td,

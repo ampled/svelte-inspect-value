@@ -22,9 +22,12 @@
     let next = 1
     while (true) {
       await new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(undefined)
-        }, 1000)
+        setTimeout(
+          () => {
+            resolve(undefined)
+          },
+          Math.ceil(Math.random() * 1000)
+        )
       })
       yield current
       ;[current, next] = [next, current + next]

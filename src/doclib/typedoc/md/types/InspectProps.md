@@ -8,7 +8,7 @@ title:
 
 ```ts
 type InspectProps = {
-  heading: string | Snippet<[]>;
+  heading: string | HeadingSnippet;
   name: string;
   value: unknown;
   values: unknown;
@@ -22,7 +22,7 @@ Props for `Inspect`
 ### heading?
 
 ```ts
-heading: string | Snippet<[]>;
+heading: string | HeadingSnippet;
 ```
 
 A `string` or `Snippet` that will be rendered as a small heading with a collapse-button for the component.

@@ -27,7 +27,7 @@
 {#if Boolean(renderIf)}
   <Wrapper class={['borderless']} style="max-width: 2em; min-width: 2em;">
     <div style="padding: 2px;">
-      {#if !globalValues.has(key) && globalInspectState.mounted.length}
+      {#if !globalValues.has(key) && globalInspectState.mounted.size}
         <NodeActionButton title="add to panel" onclick={setAsPanelValue}>+</NodeActionButton>
       {/if}
       {#if globalValues.has(key)}

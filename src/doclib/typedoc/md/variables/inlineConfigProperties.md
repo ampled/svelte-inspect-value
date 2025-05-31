@@ -41,6 +41,9 @@ const inlineConfigProperties: {
   NoAnimate: {
      noanimate: true;
   };
+  NoHighlight: {
+     highlightMatches: false;
+  };
   NoLength: {
      showLength: false;
   };
@@ -49,6 +52,9 @@ const inlineConfigProperties: {
   };
   NoQuotes: {
      quotes: "none";
+  };
+  NoSearch: {
+     search: false;
   };
   NoStores: {
      stores: false;
@@ -64,6 +70,15 @@ const inlineConfigProperties: {
   };
   PlainTheme: {
      theme: "plain";
+  };
+  Search: {
+     search: "filter";
+  };
+  SearchHighlight: {
+     search: "highlight";
+  };
+  SearchStrict: {
+     search: "filter-strict";
   };
   ShowLength: {
      showLength: false;
@@ -85,6 +100,9 @@ const inlineConfigProperties: {
   };
   Stores: {
      stores: true;
+  };
+  StoreValues: {
+     stores: "value-only";
   };
 };
 ```
@@ -257,6 +275,22 @@ Disable animations
 readonly noanimate: true = true;
 ```
 
+### NoHighlight
+
+```ts
+readonly NoHighlight: {
+  highlightMatches: false;
+};
+```
+
+Disable highlighting text matching search query
+
+#### NoHighlight.highlightMatches
+
+```ts
+readonly highlightMatches: false = false;
+```
+
 ### NoLength
 
 ```ts
@@ -301,6 +335,22 @@ readonly NoQuotes: {
 
 ```ts
 readonly quotes: "none" = 'none';
+```
+
+### NoSearch
+
+```ts
+readonly NoSearch: {
+  search: false;
+};
+```
+
+Disable search functionality
+
+#### NoSearch.search
+
+```ts
+readonly search: false = false;
 ```
 
 ### NoStores
@@ -379,6 +429,54 @@ readonly PlainTheme: {
 
 ```ts
 readonly theme: "plain" = 'plain';
+```
+
+### Search
+
+```ts
+readonly Search: {
+  search: "filter";
+};
+```
+
+Set search mode to `'filter'`
+
+#### Search.search
+
+```ts
+readonly search: "filter" = 'filter';
+```
+
+### SearchHighlight
+
+```ts
+readonly SearchHighlight: {
+  search: "highlight";
+};
+```
+
+Set search mode to `'highlight'`
+
+#### SearchHighlight.search
+
+```ts
+readonly search: "highlight" = 'highlight';
+```
+
+### SearchStrict
+
+```ts
+readonly SearchStrict: {
+  search: "filter-strict";
+};
+```
+
+Set search mode to `'filter-strict'`
+
+#### SearchStrict.search
+
+```ts
+readonly search: "filter-strict" = 'filter-strict';
 ```
 
 ### ShowLength
@@ -481,10 +579,26 @@ readonly Stores: {
 };
 ```
 
-Enable inspecting Svelte stores / observables
+Enable inspecting Svelte stores / observables. Sets store-mode to `'full'`
 
 #### Stores.stores
 
 ```ts
 readonly stores: true = true;
+```
+
+### StoreValues
+
+```ts
+readonly StoreValues: {
+  stores: "value-only";
+};
+```
+
+Enable inspecting Svelte stores / observables. Sets store-mode to `'value-only'`
+
+#### StoreValues.stores
+
+```ts
+readonly stores: "value-only" = 'value-only';
 ```

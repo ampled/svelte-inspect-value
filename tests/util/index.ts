@@ -30,8 +30,10 @@ export function renderInspect(
 
 export function renderComponent<T extends Component>(...args: Parameters<typeof render<T>>) {
   const result = render(...args)
+  const user = userEvent.setup()
   return {
     result,
+    user,
     [Symbol.dispose]() {
       result.unmount()
     },

@@ -2,16 +2,19 @@
   import { tick } from 'svelte'
   import type { HTMLAttributes } from 'svelte/elements'
   import { slide } from 'svelte/transition'
-  import { getPreviewLevel, useValueCache } from '../contexts.js'
+  import { getPreviewLevel, useSearchContext, useValueCache } from '../contexts.js'
   import { useOptions } from '../options.svelte.js'
   import { InspectError, type TypeViewProps } from '../types.js'
-  import { descriptorPrefix, stringifyPath } from '../util.js'
+  import { descriptorPrefix, nodeActionKeydown, stringifyPath } from '../util.js'
   import Entry from './Entry.svelte'
   import Expandable from './Expandable.svelte'
+  import Input from './Input.svelte'
   import InspectErrorView from './InspectErrorView.svelte'
   import Node from './Node.svelte'
   import NodeActionButton from './NodeActionButton.svelte'
   import Preview from './Preview.svelte'
+  import CloseIcon from '../icons/CloseIcon.svelte'
+  import NodeIconButton from './NodeIconButton.svelte'
 
   type Props = TypeViewProps<unknown, 'get'> & {
     descriptor: PropertyDescriptor
@@ -33,6 +36,7 @@
   const options = useOptions()
   const previewLevel = getPreviewLevel()
   const valueCache = useValueCache()
+  const searchResult = useSearchContext()
   let valueRetrieved = $state(false)
   let getterValue = $state<unknown>()
   let error = $state<InspectError>()
@@ -42,17 +46,18 @@
   let inputValue = $state<unknown>()
   let path = $derived(key != null && prevPath ? [...prevPath, key] : ['root'])
   let keyPrefix = $derived(`${_keyPrefix ?? ''} ${descriptorPrefix(descriptor)}`)
-  let inputElement = $state<HTMLInputElement>()
+  let inputElement = $state<Input>()
   let setButton = $state<ReturnType<typeof NodeActionButton>>()
 
   let stringifiedPath = $derived(stringifyPath(path))
   let hasCachedValue = $derived(valueCache.has(stringifiedPath))
-
   let retrievedValue = $derived(
     valueRetrieved ? getterValue : hasCachedValue ? valueCache.get(stringifiedPath) : undefined
   )
+  let match = $derived(searchResult?.().matchingPaths.includes(stringifiedPath))
 
-  function callGetter() {
+  function callGetter(e: UIEvent) {
+    e.stopPropagation()
     try {
       valueRetrieved = true
       const newGetterValue = descriptor.get?.call(value)
@@ -65,7 +70,8 @@
     }
   }
 
-  function callSetter() {
+  function callSetter(e: UIEvent) {
+    e.stopPropagation()
     if (inputState === 'valid') {
       try {
         descriptor.set?.call(value, inputValue)
@@ -92,6 +98,23 @@
   }
 
   async function onkeyup(event: KeyboardEvent & { currentTarget: EventTarget & HTMLInputElement }) {
+    const value = event.currentTarget.value
+    if (value.length) {
+      try {
+        inputValue = JSON.parse(value)
+        inputState = 'valid'
+      } catch {
+        inputState = 'invalid'
+      }
+    } else {
+      inputState = 'untouched'
+    }
+  }
+
+  async function onkeydown(
+    event: KeyboardEvent & { currentTarget: EventTarget & HTMLInputElement }
+  ) {
+    event.stopPropagation()
     if (event.key === 'Escape') {
       isSetting = false
       inputText = ''
@@ -101,20 +124,22 @@
       return
     }
     if (event.key === 'Enter') {
-      callSetter()
-    } else {
-      const value = event.currentTarget.value
-      if (value.length) {
-        try {
-          inputValue = JSON.parse(value)
-          inputState = 'valid'
-        } catch {
-          inputState = 'invalid'
-        }
-      } else {
-        inputState = 'untouched'
-      }
+      callSetter(event)
     }
+  }
+
+  async function showInput(e: UIEvent) {
+    e.stopPropagation()
+    isSetting = true
+    await tick()
+    inputElement?.focus()
+  }
+
+  async function hideInput(e: UIEvent) {
+    e.stopPropagation()
+    isSetting = false
+    await tick()
+    setButton?.focus()
   }
 </script>
 
@@ -130,48 +155,57 @@
     showLength={false}
     keepPreviewOnExpand
     length={1}
+    {match}
     {...rest}
   >
     {#snippet valuePreview({ showPreview })}
       {#if isSetting}
-        <input
-          bind:this={inputElement}
-          transition:slide={{ axis: 'x', duration: options.transitionDuration }}
+        <Input
           type="text"
-          bind:value={inputText}
           class={inputState}
+          transition={slide}
+          transitionParams={{ axis: 'x', duration: options.transitionDuration }}
+          bind:this={inputElement}
+          bind:value={inputText}
           placeholder="json"
+          style="max-width: 20ch"
+          containerAttrs={{ style: 'max-width: 20ch;' }}
+          {onkeydown}
           {onkeyup}
         />
-        <NodeActionButton title={`set ${key?.toString()}`} onclick={() => callSetter()}>
+        <NodeActionButton
+          title={`set ${key?.toString()}`}
+          onclick={callSetter}
+          onkeydown={nodeActionKeydown(callSetter)}
+          style="padding-right: 0.5em"
+        >
           set
         </NodeActionButton>
-        <NodeActionButton
+        <NodeIconButton
           title={`cancel`}
-          onclick={async () => {
-            isSetting = false
-            await tick()
-            setButton?.focus()
-          }}
-          >x
-        </NodeActionButton>
+          onclick={hideInput}
+          onkeydown={nodeActionKeydown(hideInput)}
+        >
+          <CloseIcon />
+        </NodeIconButton>
       {:else}
         {#if descriptor.set && previewLevel === 0}
           <NodeActionButton
             bind:this={setButton}
             title={`set ${key?.toString()}`}
-            onclick={async () => {
-              isSetting = true
-              await tick()
-              inputElement?.focus()
-            }}
+            onclick={showInput}
+            onkeydown={nodeActionKeydown(showInput)}
           >
             set
           </NodeActionButton>
         {/if}
         {#if descriptor.get}
           {#if previewLevel === 0}
-            <NodeActionButton title={`get ${key?.toString()}`} onclick={callGetter}>
+            <NodeActionButton
+              title={`get ${key?.toString()}`}
+              onclick={callGetter}
+              onkeydown={nodeActionKeydown(callGetter)}
+            >
               get
             </NodeActionButton>
           {/if}
@@ -207,21 +241,3 @@
     <!-- /children -->
   </Expandable>
 {/if}
-
-<style>
-  input {
-    height: 1.4em;
-    background-color: var(--_background-color);
-    color: var(--_text-color);
-    outline: 1px solid var(--_border-color);
-    border-radius: 2px;
-
-    &.valid {
-      outline-color: var(--_button-success-color);
-    }
-
-    &.invalid {
-      outline-color: var(--_error-color);
-    }
-  }
-</style>

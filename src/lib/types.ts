@@ -1,8 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { Component, ComponentProps } from 'svelte'
+import type { Component, ComponentProps, Snippet } from 'svelte'
 import type { HTMLAttributes, SvelteHTMLElements } from 'svelte/elements'
 import type { InspectOptions } from './options.svelte.js'
 import type { ValueType } from './util.js'
+
+export type HeadingSnippet = Snippet<
+  [
+    {
+      /**
+       * Indicates if the `Inspect`-instance is collapsed.
+       *
+       * Use this to show or hide content in your custom header based on the collapse status.
+       */
+      collapsed: boolean
+    },
+  ]
+>
 
 /**
  * Shared props for `Inspect` and `Inspect.Panel`
@@ -36,7 +49,7 @@ export type BaseProps = {
   /**
    * A `string` or `Snippet` that will be rendered as a small heading with a collapse-button for the component.
    */
-  heading?: string | import('svelte').Snippet
+  heading?: string | HeadingSnippet
 }
 
 /**
@@ -178,9 +191,21 @@ export type Note = { title?: string; description?: string }
 export type TypeViewProps<Value = unknown, Type = ValueType> = {
   value: Value
   key?: PropertyKey
+  /**
+   * Prefix for key e.g. "get" or "static"
+   */
   keyPrefix?: string
+  /**
+   * Should key be shown
+   */
   showKey?: boolean
+  /**
+   * Key delimiter
+   */
   keyDelim?: string
+  /**
+   * Style overrides for key
+   */
   keyStyle?: HTMLAttributes<HTMLDivElement>['style']
   /**
    * Path of the node
@@ -201,7 +226,23 @@ export type TypeViewProps<Value = unknown, Type = ValueType> = {
    * Force type indicator visibility for this node
    */
   forceType?: boolean
+  /**
+   * Title / description for node note, e.g. "parsed" for parsed JSON strings
+   */
   note?: Note
+  /**
+   * The node is a search match
+   */
+  match?: boolean
+  /**
+   * Number of child entries / items.
+   * Also determines if expandables can be expanded (needs to be not `undefined`/`null`/`zero`).
+   */
+  length?: number
+  /**
+   * Should the node show it's given length / count
+   */
+  showLength?: boolean
 }
 
 /**
@@ -294,3 +335,11 @@ type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] exte
   : Enumerate<N, [...Acc, Acc['length']]>
 
 export type IntRange<F extends number, T extends number> = Exclude<Enumerate<T>, Enumerate<F>>
+
+export type SecondArgOf<T> = T extends (
+  first: any,
+  second: infer SecondArgument,
+  ...args: any[]
+) => any
+  ? SecondArgument
+  : never

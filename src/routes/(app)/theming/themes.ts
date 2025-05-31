@@ -245,6 +245,25 @@ const beach = {
   '--base0F': '#FFFFFF',
 }
 
+const hacker = {
+  '--base00': '#202221',
+  '--base01': '#071308',
+  '--base02': '#404f47',
+  '--base03': '#577f57',
+  '--base04': '#FFFFFF',
+  '--base05': '#00fa00',
+  '--base06': '#a6ff94',
+  '--base07': '#FFFFFF',
+  '--base08': '#d184f5',
+  '--base09': '#09fa00',
+  '--base0A': '#14ff14',
+  '--base0B': '#09fa00',
+  '--base0C': '#09fa8e',
+  '--base0D': '#00fa8e',
+  '--base0E': '#66cc6d',
+  '--base0F': '#FFFFFF',
+}
+
 export const themes = {
   inspect,
   drak,
@@ -257,6 +276,7 @@ export const themes = {
   brown,
   javascript,
   ron,
+  hacker,
   'uchu-dark': uchu,
   beach,
 } as const

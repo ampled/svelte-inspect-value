@@ -14,8 +14,6 @@
   let group = $state<'simple' | 'full'>('simple')
 </script>
 
-<!-- <svelte:document bind:activeElement /> -->
-
 <div class="flex col">
   <h3 id="html">HTML Elements</h3>
 
@@ -73,19 +71,19 @@
     gap: 1em;
 
     label {
-      gap: 1em;
       display: inline-flex;
       flex-direction: row;
+      gap: 1em;
     }
   }
 
   .demo-div {
-    background-color: cadetblue;
-    transition: all 0.2s ease-in-out;
     display: flex;
     flex-flow: row wrap;
     justify-content: flex-start;
     align-items: flex-start;
+    transition: all 0.2s ease-in-out;
+    background-color: cadetblue;
     height: 150px;
     overflow: auto;
 

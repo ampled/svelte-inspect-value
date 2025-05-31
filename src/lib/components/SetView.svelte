@@ -7,14 +7,14 @@
 
   type Props = TypeViewProps<Set<unknown>>
 
-  let { value, key, type, path }: Props = $props()
+  let { value, key, type, path, ...rest }: Props = $props()
 
   let entries = $derived([...value.entries()].map(([_, v]) => v))
 
   let preview = $derived(entries.slice(0, 3))
 </script>
 
-<Expandable {...{ value, key, type, path }} length={entries.length}>
+<Expandable {...{ value, key, type, path }} length={entries.length} {...rest}>
   {#snippet valuePreview({ showPreview })}
     <Preview list={preview} prefix={'['} postfix={']'} showKey={false} {showPreview} />
   {/snippet}
