@@ -21,8 +21,8 @@ export class TypingBuffer {
         focusBySearch(this.typingBuffer, this.scopeId)
       }, 100)
     }
-    clearTimeout(this.clearBufferTimeout)
-    this.clearBufferTimeout = setTimeout(() => {
+    window.clearTimeout(this.clearBufferTimeout)
+    this.clearBufferTimeout = window.setTimeout(() => {
       this.typingBuffer = ''
     }, 600)
   }
