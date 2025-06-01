@@ -18,26 +18,29 @@
   import { wait } from './util.js'
   import ExpandCollapseIcon from './icons/ExpandCollapseIcon.svelte'
   import { clearSearchCache, parseSearchTerms } from './util/search.js'
-  import type { HeadingSnippet } from './types.js'
   import { scope } from './action/focus.svelte.js'
+  import Console from './icons/Console.svelte'
 
   type Props = {
     showExpandCollapse?: boolean
+
+    onlog?: () => void
     oninspectvaluechange?: () => void
     onhandleclick?: () => void
     headingExtra?: Snippet
-    heading?: string | HeadingSnippet
+    heading?: string | Snippet<[boolean]> | boolean
     children: Snippet
   } & SvelteHTMLElements['div']
 
   let {
-    children,
-    class: classValue,
+    onlog,
     oninspectvaluechange,
-    heading,
     showExpandCollapse = false,
     headingExtra,
     onhandleclick,
+    heading,
+    children,
+    class: classValue,
     ...rest
   }: Props = $props()
 
@@ -168,7 +171,7 @@
             {heading}
           </span>
         {:else if typeof heading === 'function'}
-          {@render heading({ collapsed })}
+          {@render heading(collapsed)}
         {/if}
       </button>
       <div class="heading-extra">
@@ -187,6 +190,9 @@
             disabled={settingCollapse !== false}
           >
             <ExpandCollapseIcon expand={!hasExpandedTopLevel} setting={settingCollapse} />
+          </NodeIconButton>
+          <NodeIconButton onclick={onlog}>
+            <Console />
           </NodeIconButton>
         {/if}
         {@render headingExtra?.()}
