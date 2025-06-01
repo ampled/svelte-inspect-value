@@ -53,7 +53,7 @@
     let interval: number | undefined
     let val = writable(initialValue, () => {
       if (browser) {
-        interval = setInterval(() => {
+        interval = window.setInterval(() => {
           val.update((n) => n + 1)
         }, 500)
       }
@@ -430,11 +430,11 @@
   let seeFlashing = $state(false)
 
   $effect(() => {
-    const interval = setInterval(() => {
+    const interval = window.setInterval(() => {
       if (seeFlashing) allTypes.number++
     }, 2000)
 
-    return () => clearInterval(interval)
+    return () => window.clearInterval(interval)
   })
 
   const globalOptions = getContext<Partial<InspectOptions> | (() => Partial<InspectOptions>)>(
@@ -451,7 +451,7 @@
 </script>
 
 <Inspect name="allTypes" values={allTypes} search={allTypesSearch} {...props} expandLevel={0}>
-  {#snippet heading({ collapsed })}
+  {#snippet heading(collapsed)}
     DEMO
     {#if !collapsed}
       <!-- svelte-ignore a11y_click_events_have_key_events -->

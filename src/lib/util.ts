@@ -311,7 +311,7 @@ export function clamp(value: number, min: number, max: number) {
 
 export const wait = (duration: number = 25) =>
   new Promise<void>((resolve) => {
-    setTimeout(() => {
+    window.setTimeout(() => {
       resolve()
     }, duration)
   })
