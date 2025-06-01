@@ -21,7 +21,7 @@
 
   let copied = $state(false)
 
-  const SIV_DEBUG = getContext<true | undefined>(Symbol.for('SIV.DEBUG'))
+  const SIV_DEBUG = getContext<(() => boolean) | undefined>(Symbol.for('SIV.DEBUG'))
   const fixed = getContext(Symbol.for('siv.fixed'))
   const addOnDestroyCallback = getAddDestroyCallbackFn()
   let options = useOptions()
@@ -160,7 +160,7 @@
 
   let treeAction = $derived(getTreeAction(nodeState))
   let panelValueAction = $derived.by(() => {
-    if (globalInspectState.mounted.size && !fixed) {
+    if (globalInspectState.mounted.size) {
       if (globalValues.has(stringifiedPath)) {
         return {
           add: false,
@@ -169,7 +169,7 @@
             globalValues.delete(stringifiedPath)
           },
         }
-      } else {
+      } else if (!fixed) {
         return {
           add: true,
           hint: 'add to panel',
@@ -201,7 +201,7 @@
 
 {#if showTools}
   <div class="tools" class:borderless>
-    {#if SIV_DEBUG}
+    {#if SIV_DEBUG?.()}
       <NodeIconButton onclick={debugNode}>?</NodeIconButton>
     {/if}
     {#if panelValueAction}

@@ -27,9 +27,13 @@
 
 <Expandable length={1} showLength={false} {type} {key} {path} {value} {...rest} keepPreviewOnExpand>
   {#snippet valuePreview()}
-    <span data-testid="value" class="value regexp" title={value.toString()}>
-      <Highlight value={value.toString()} field="value"></Highlight>
-    </span>
+    <Highlight
+      data-testid="value"
+      class="value regexp"
+      title={value.toString()}
+      value={value.toString()}
+      field="value"
+    />
   {/snippet}
   <PropertyList {keys} {value} {type}>
     {#snippet item({ key, descriptor })}

@@ -10,10 +10,10 @@
   import GlobalOptions from './GlobalOptions.svelte'
   import DocSearch from '$doclib/DocSearch.svelte'
 
-  let drawerOpen = $state(true)
-  let showDevItems = true
+  let navPanelOpen = $state(true)
+  let renderDevOnlyStuff = $state(false)
 
-  setContext(Symbol.for('SIV.DEBUG'), true)
+  setContext(Symbol.for('SIV.DEBUG'), () => renderDevOnlyStuff)
 
   const { children, data }: { children: Snippet; data: LayoutData } = $props()
 
@@ -60,7 +60,6 @@
         },
       ],
     },
-
     {
       title: 'Types',
       expandable: true,
@@ -104,6 +103,11 @@
         { href: '/testing/search', title: 'Search', devonly: true },
       ],
     },
+    {
+      href: '/releases',
+      title: 'Releases',
+      devonly: true,
+    },
   ]
 
   let options = $state<Partial<InspectOptions>>({
@@ -126,15 +130,15 @@
     stores: 'full',
     search: false,
     highlightMatches: true,
+    heading: false,
   })
 
-  let renderDevOnlyPanel = $state(false)
   function onkeydown(event: KeyboardEvent & { currentTarget: EventTarget & Window }) {
     if (event.key === 'æ') {
       options.renderIf = !options.renderIf
     }
     if (event.key === 'ø') {
-      renderDevOnlyPanel = !renderDevOnlyPanel
+      renderDevOnlyStuff = !renderDevOnlyStuff
     }
   }
 
@@ -152,7 +156,7 @@
 
 {#snippet entry(route: Route)}
   {@const active = page.url.pathname.includes(route.href ?? route.title.toLowerCase())}
-  {#if !route.devonly || (route.devonly && DEV && showDevItems)}
+  {#if !route.devonly || (route.devonly && DEV && renderDevOnlyStuff)}
     {#if route.expandable}
       <li>
         <ExpandRoute>
@@ -192,7 +196,7 @@
 <InspectOptionsProvider {options}>
   <Inspect.Panel
     style="max-width: 230px; min-width: 230px; max-height: 100vh;"
-    bind:open={drawerOpen}
+    bind:open={navPanelOpen}
     align="left full"
     hideGlobalValues
     openOnHover
@@ -227,6 +231,12 @@
               src="https://img.shields.io/github/stars/ampled/svelte-inspect-value?style=social"
             />
           </a>
+          <a href="https://ko-fi.com/eirikk" title="support further development">
+            <img
+              alt="kofi"
+              src="https://shields.io/badge/ko--fi-000000?logo=ko-fi&style=for-the-badgeKo-fi"
+            />
+          </a>
         </div>
       </div>
     </div>
@@ -235,7 +245,7 @@
     heading="+layout.svelte"
     appearance="solid"
     theme="stereo"
-    renderIf={DEV && renderDevOnlyPanel}
+    renderIf={DEV && renderDevOnlyStuff}
     {wiggleOnUpdate}
     values={{ options, page: { ...page } }}
   />
@@ -245,7 +255,7 @@
       <Inspect value={error} />
       <button onclick={reset}>reset</button>
     {/snippet}
-    <main class:drawer-open={drawerOpen}>
+    <main class:drawer-open={navPanelOpen}>
       <header>
         <a href="/" class="title">
           <h1 aria-label="Svelte Inspect Value" class="header-lib-title">

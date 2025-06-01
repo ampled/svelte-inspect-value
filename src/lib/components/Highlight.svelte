@@ -10,14 +10,15 @@
 <script lang="ts">
   import { useSearchContext } from '../contexts.js'
   import { useOptions } from '../options.svelte.js'
+  import type { SvelteHTMLElements } from 'svelte/elements'
 
   type Props = {
     value: string
     field?: 'type' | 'path' | 'any' | 'value'
     alsoMatch?: string
-  }
+  } & SvelteHTMLElements['span']
 
-  let { value: text, field = 'any', alsoMatch }: Props = $props()
+  let { value: text, field = 'any', alsoMatch, class: className, ...rest }: Props = $props()
   const searchCtx = useSearchContext()
   const options = useOptions()
   const { query, matchingPaths, terms } = $derived(searchCtx())
@@ -28,7 +29,7 @@
       try {
         return hl(
           text,
-          terms.filter((t) => t.field === field || t.field === 'any')
+          terms.filter((t) => t.value.length > 1 && (t.field === field || t.field === 'any'))
         )
       } catch (e) {
         console.error(e)
@@ -58,7 +59,7 @@
 </script>
 
 {#if highlightMatches && query.length > 1 && chunks.some((c) => c.match)}
-  <span aria-label={text}>
+  <span aria-label={text} class={className} {...rest}>
     {#each chunks as chunk (chunk.start)}
       <span aria-hidden="true" class={['can-match', chunk.match && 'highlight chunk']}>
         {chunk.text}
@@ -71,7 +72,9 @@
       'can-match',
       altMatch === 'partial' && 'highlight alt-soft',
       altMatch === 'full' && 'highlight alt-full',
+      className,
     ]}
+    {...rest}
   >
     {text}
   </span>
