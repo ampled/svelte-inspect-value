@@ -18,7 +18,7 @@ const escapeSvelte = (str) =>
 
 /** @type {import('rehype-autolink-headings').Options} */
 const autoLinkOptions = {
-  behavior: 'wrap',
+  behavior: 'prepend',
   test: ['h1', 'h2', 'h3'],
 }
 

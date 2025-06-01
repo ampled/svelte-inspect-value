@@ -422,16 +422,10 @@ hr {
   h1,
   h2,
   h3 {
-    font-family: monospace;
+    /* font-family: monospace; */
 
     a {
       text-decoration: none;
-    }
-
-    &:has(a) {
-      &::before {
-        content: '# ';
-      }
     }
   }
 }
@@ -454,4 +448,11 @@ kbd {
 
 .DocSearch-Container {
   z-index: 1000000 !important;
+}
+
+span.icon.icon-link {
+  &::before {
+    content: '# ';
+    color: hotpink;
+  }
 }
