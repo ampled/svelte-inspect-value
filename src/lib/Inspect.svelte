@@ -4,6 +4,7 @@
   import CollapseStateProvider from './CollapseStateProvider.svelte'
   import Node from './components/Node.svelte'
   import PropertyList from './components/PropertyList.svelte'
+  import { logToConsole } from './hello.svelte.js'
   import {
     createOptions,
     GLOBAL_OPTIONS_CONTEXT,
@@ -11,7 +12,7 @@
     type InspectOptions,
   } from './options.svelte.js'
   import { type InspectProps } from './types.js'
-  import { getAllProperties, initialize, sortProps } from './util.js'
+  import { getAllProperties, getType, initialize, sortProps } from './util.js'
   import Wrapper from './Wrapper.svelte'
 
   let {
@@ -19,7 +20,6 @@
     values,
     name,
     class: classValue,
-    heading,
     ...props
   }: InspectProps & SvelteHTMLElements['div'] = $props()
 
@@ -38,7 +38,7 @@
 
   let options = createOptions(() => mergedOptions)
 
-  let { theme, noanimate, borderless, onCollapseChange } = $derived(options.value)
+  let { theme, noanimate, borderless, onCollapseChange, onLog, heading } = $derived(options.value)
 
   let shouldRender = $derived(
     typeof options.value.renderIf === 'function'
@@ -65,6 +65,14 @@
     return []
   })
 
+  function log() {
+    if (onLog) {
+      onLog(values, getType(values), ['Inspect#values'])
+    } else {
+      logToConsole(['Inspect#values'], values, getType(values))
+    }
+  }
+
   initialize(options)
 </script>
 
@@ -73,8 +81,9 @@
     <Wrapper
       data-testid="inspect"
       class={[classValue, theme, noanimate && 'noanimate', borderless && 'borderless']}
-      {heading}
       showExpandCollapse={values != null}
+      onlog={log}
+      {heading}
       {...restProps}
     >
       {#if values && keys.length}

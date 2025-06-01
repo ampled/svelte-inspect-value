@@ -7,6 +7,7 @@
 <script lang="ts">
   import { getContext, setContext, untrack } from 'svelte'
   import type { ClassValue } from 'svelte/elements'
+  import { SvelteSet } from 'svelte/reactivity'
   import { resizable, type ResizableDirections } from './action/resizable.svelte.js'
   import CollapseStateProvider from './CollapseStateProvider.svelte'
   import Node from './components/Node.svelte'
@@ -17,7 +18,6 @@
   import { globalValues } from './global.svelte.js'
   import { logToConsole } from './hello.svelte.js'
   import CircleSolid from './icons/CircleSolid.svelte'
-  import Console from './icons/Console.svelte'
   import Fullscreen from './icons/Fullscreen.svelte'
   import FullscreenExit from './icons/FullscreenExit.svelte'
   import OpacityIcon from './icons/OpacityIcon.svelte'
@@ -30,7 +30,6 @@
   import type { PanelProps, PositionProp, XPos, YPos } from './types.js'
   import { getAllProperties, initialize, sortProps } from './util.js'
   import Wrapper from './Wrapper.svelte'
-  import { SvelteSet } from 'svelte/reactivity'
 
   let {
     // base props
@@ -130,7 +129,7 @@
     )
   )
   let options = createOptions(() => mergedOptions)
-  let { theme, noanimate, borderless, heading, onCollapseChange } = $derived(options.value)
+  let { theme, noanimate, borderless, heading, onCollapseChange, onLog } = $derived(options.value)
   let shouldRender = $derived(
     typeof options.value.renderIf === 'function'
       ? Boolean(options.value.renderIf())
@@ -174,6 +173,22 @@
     open = !open
     hovered = false
     onOpenChange?.(open)
+  }
+
+  function log() {
+    if (onLog) {
+      onLog(values, 'values', ['Inspect.Panel#values'])
+    } else {
+      logToConsole(['Inspect.Panel#values'], values, 'values')
+    }
+  }
+
+  function logGlobalValues() {
+    if (onLog) {
+      onLog(globalValues, 'globalValues', ['globalValues'])
+    } else {
+      logToConsole(['Inspect.Panel'], Object.fromEntries(globalValues.entries()), 'globalValues')
+    }
   }
 </script>
 
@@ -281,7 +296,8 @@
           class={wrapperClasses}
           {heading}
           style={hideToolbar && appearance === 'dense' ? 'border-top: none' : ''}
-          showExpandCollapse={values != null && keys.length > 0}
+          showExpandCollapse={values != null}
+          onlog={log}
         >
           {#if values && keys.length}
             <PropertyList value={values} {keys} />
@@ -299,17 +315,11 @@
         values={globalEntries}
         keys={Array.from(globalValues.keys())}
       >
-        <Wrapper class={wrapperClasses} showExpandCollapse>
+        <Wrapper class={wrapperClasses} showExpandCollapse onlog={logGlobalValues}>
           {#snippet heading()}
             global values
           {/snippet}
           {#snippet headingExtra()}
-            <NodeIconButton
-              onclick={() => logToConsole(['global values'], globalValues, 'map')}
-              style="width: 2em; height: 2em"
-            >
-              <Console />
-            </NodeIconButton>
             <NodeActionButton onclick={() => globalValues.clear()}>clear</NodeActionButton>
           {/snippet}
           {#each globalValues as [key, entry] (key)}

@@ -3,6 +3,7 @@
   import CollapseStateProvider from './CollapseStateProvider.svelte'
   import Wrapper from './Wrapper.svelte'
   import PropertyList from './components/PropertyList.svelte'
+  import { logToConsole } from './hello.svelte.js'
   import {
     createOptions,
     GLOBAL_OPTIONS_CONTEXT,
@@ -34,7 +35,7 @@
 
   const options = createOptions(() => mergedOptions)
 
-  let { theme, noanimate, borderless, onCollapseChange } = $derived(options.value)
+  let { theme, noanimate, borderless, onCollapseChange, onLog, heading } = $derived(options.value)
   let { elementAttributes = {} } = $derived(withOptions)
   let { class: classValue } = $derived(elementAttributes)
 
@@ -43,6 +44,14 @@
       ? Boolean(options.value.renderIf())
       : Boolean(options.value.renderIf)
   )
+
+  function log() {
+    if (onLog) {
+      onLog(props, 'props', ['Inspect.Values#props'])
+    } else {
+      logToConsole(['Inspect.Values#props'], props, 'props')
+    }
+  }
 
   initialize(options)
 </script>
@@ -53,6 +62,8 @@
       data-testid="inspect"
       class={[theme, noanimate && 'noanimate', borderless && 'borderless', classValue]}
       showExpandCollapse
+      onlog={log}
+      {heading}
       {...elementAttributes}
     >
       {#if keys.length}
