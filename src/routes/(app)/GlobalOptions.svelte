@@ -6,11 +6,13 @@
 </script>
 
 <div class="options">
-  <div class="options-title">global options</div>
+  <div class="options-title">
+    global options (<a href="/docs/types/InspectOptions" style="text-decoration: none;">docs</a>)
+  </div>
 
-  <label>
+  <label style="flex-basis: 100%; margin-top: 1ch">
     theme
-    <select bind:value={options.theme} name="theme">
+    <select bind:value={options.theme} name="theme" style="width: 100%">
       <option>inspect</option>
       <option>drak</option>
       <option>stereo</option>
@@ -29,6 +31,8 @@
   <ToggleButton bind:checked={options.showPreview}>previews</ToggleButton>
 
   <ToggleButton bind:checked={options.noanimate}>noanimate</ToggleButton>
+
+  <ToggleButton bind:checked={options.heading as boolean}>heading</ToggleButton>
 
   <ToggleButton bind:checked={options.borderless}>borderless</ToggleButton>
 
