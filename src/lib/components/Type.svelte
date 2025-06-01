@@ -77,15 +77,13 @@
 </script>
 
 {#if (type && options.value.showTypes && previewLevel === 0) || required || force}
-  <span data-testid="type" class={['type', type, previewLevel ?? 'preview']} title={type} {...rest}>
-    <Highlight value={display} field="type" alsoMatch={type} />
-  </span>
+  <Highlight
+    value={display}
+    field="type"
+    alsoMatch={type}
+    data-testid="type"
+    class={['type', type, previewLevel ?? 'preview']}
+    title={type}
+    {...rest}
+  />
 {/if}
-
-<style>
-  .type {
-    flex-shrink: 0;
-    transition: color 250ms ease-in-out;
-    font-weight: 900;
-  }
-</style>

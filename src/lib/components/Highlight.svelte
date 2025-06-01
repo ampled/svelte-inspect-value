@@ -93,7 +93,7 @@
 
     &.alt-full {
       background-color: var(--_text-search-highlight-color);
-      color: var(--_background-color);
+      color: var(--_background-color) !important;
     }
   }
 

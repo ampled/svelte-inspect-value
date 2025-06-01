@@ -55,9 +55,7 @@
         {length}
       </span>
       {#if unit}
-        <span class="unit">
-          <Highlight value={unit} field="value" />
-        </span>
+        <Highlight class="unit" value={unit} field="value" />
       {/if}
     {:else}
       <Highlight value="empty" field="value" />
@@ -76,7 +74,7 @@
     font-size: 0.857em;
   }
 
-  .unit {
+  :global(.count .unit) {
     display: var(--unit-display);
   }
 </style>

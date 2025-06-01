@@ -481,7 +481,10 @@
   }
 
   .svelte-inspect-value :global(.type) {
+    flex-shrink: 0;
+    transition: color 250ms ease-in-out;
     color: var(--_object-type-color);
+    font-weight: 900;
     font-size: 0.857em;
 
     &.null,

@@ -67,9 +67,7 @@
     {#if children}
       {@render children()}
     {:else if displayOrValue}
-      <span data-testid="value" {title} class="value {type}">
-        <Highlight value={displayOrValue} />
-      </span>
+      <Highlight data-testid="value" {title} class={['value', type]} value={displayOrValue} />
     {/if}
 
     {#if note && !previewLevel}
