@@ -5,7 +5,13 @@ import memoize, { memoizeClear } from 'memoize'
 import { get, type Readable, type Writable } from 'svelte/store'
 import type { InspectOptions } from '../options.svelte.js'
 import type { List } from '../types.js'
-import { descriptorPrefix, getType, isValidStore, stringify } from '../util.js'
+import {
+  descriptorPrefix,
+  getPropertyDescriptor,
+  getType,
+  isValidStore,
+  stringify,
+} from '../util.js'
 
 type SearchNode = {
   path: string
@@ -424,22 +430,36 @@ const indexers = {
 
     return index
   },
-  regexp({ index, prevPath, value, type }) {
-    index.push({
-      path: stringifyPath(prevPath),
-      tokens: [
-        String(value),
-        'get',
-        'dotAll',
-        'flags',
-        'global',
-        'source',
-        'sticky',
-        'unicode',
-        'unicodeSets',
-        'ignoreCase',
-      ],
-      type,
+  regexp({ index, prevPath, value, type, options, depth = 0, maxDepth }) {
+    const regexp = value as RegExp
+    const keys = [
+      'lastIndex',
+      'dotAll',
+      'flags',
+      'global',
+      'hasIndices',
+      'ignoreCase',
+      'multiline',
+      'source',
+      'sticky',
+      'unicode',
+      'unicodeSets',
+    ] as (keyof RegExp)[]
+
+    addNode(index, prevPath, [String(value)], type)
+
+    keys.forEach((key) => {
+      const descriptor = getPropertyDescriptor(regexp, key)
+      buildSearchIndex({
+        value: regexp[key],
+        descriptor,
+        key,
+        index,
+        options,
+        depth: depth + 1,
+        maxDepth,
+        prevPath,
+      })
     })
 
     return index
