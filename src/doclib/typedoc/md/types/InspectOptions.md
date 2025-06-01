@@ -21,6 +21,8 @@ children:
     - expandPaths
   - - flash-on-update
     - flashOnUpdate
+  - - heading
+    - heading
   - - highlight-matches
     - highlightMatches
   - - noanimate
@@ -75,6 +77,7 @@ type InspectOptions = {
   expandLevel: number;
   expandPaths: string[];
   flashOnUpdate: boolean;
+  heading: boolean | string | Snippet<[boolean]>;
   highlightMatches: boolean;
   noanimate: boolean;
   onCollapseChange: (state: CollapseState) => void | undefined;
@@ -308,6 +311,18 @@ Indicate when a value or child value is updated
 ```ts
 true
 ```
+
+***
+
+### heading
+
+```ts
+heading: boolean | string | Snippet<[boolean]>;
+```
+
+A `string` or `Snippet` that will be rendered as a small heading with a collapse-button for the component.
+
+The snippet parameter indicates if the instance has been collapsed
 
 ***
 

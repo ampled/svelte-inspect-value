@@ -8,7 +8,6 @@ title:
 
 ```ts
 type InspectProps = {
-  heading: string | HeadingSnippet;
   name: string;
   value: unknown;
   values: unknown;
@@ -18,14 +17,6 @@ type InspectProps = {
 Props for `Inspect`
 
 ## Type declaration
-
-### heading?
-
-```ts
-heading: string | HeadingSnippet;
-```
-
-A `string` or `Snippet` that will be rendered as a small heading with a collapse-button for the component.
 
 ### name?
 

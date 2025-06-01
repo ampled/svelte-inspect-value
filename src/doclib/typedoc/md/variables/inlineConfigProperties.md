@@ -35,6 +35,9 @@ const inlineConfigProperties: {
   ExpandAll: {
      expandAll: true;
   };
+  Heading: {
+     heading: true;
+  };
   LightTheme: {
      theme: "light";
   };
@@ -243,6 +246,22 @@ Initially expand all props
 
 ```ts
 readonly expandAll: true = true;
+```
+
+### Heading
+
+```ts
+readonly Heading: {
+  heading: true;
+};
+```
+
+Show heading with search (if enabled) and utility buttons
+
+#### Heading.heading
+
+```ts
+readonly heading: true = true;
 ```
 
 ### LightTheme
