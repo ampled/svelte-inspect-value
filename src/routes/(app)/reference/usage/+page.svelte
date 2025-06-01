@@ -1,10 +1,25 @@
 <script lang="ts">
   import AllTypes from '$doclib/examples/AllTypes.svelte'
+
+  const toc = new Map([
+    ['Keyboard Controls', 'keyboard'],
+    ['- Type to focus', 'type-to-focus'],
+    ['Search and Text Highlight', 'search'],
+    ['- Multiple Terms', 'multiple-terms'],
+    ['- Expanding Matches', 'expanding-matches'],
+  ])
 </script>
 
 {#snippet metaKey()}
   <kbd>⌘</kbd> <span style="font-weight: bolder;">/</span> <kbd>Ctrl</kbd>
 {/snippet}
+
+<div class="toc">
+  {#each toc as [title, id]}
+    <a href={`#${id}`}>{title} </a>
+    <hr />
+  {/each}
+</div>
 
 <h2 id="usage">Usage</h2>
 
@@ -16,7 +31,7 @@
   for installation instructions and code examples.
 </p>
 
-<h3>Keyboard Controls</h3>
+<h3 id="keyboard">Keyboard Controls</h3>
 
 <p>
   Every node/row/line in <code>Inspect</code> is focusable. Using the <kbd>Tab</kbd> key will shift
@@ -102,7 +117,7 @@
     </tr>
   </tbody>
 </table>
-<h3>Type to focus</h3>
+<h3 id="type-to-focus">Type to focus</h3>
 While a node is focused, you can type to focus a certain (visible) node.<br />
 A box will appear showing your query, and a node matching the typed letters will be focused, prioritizing
 keys.
@@ -135,9 +150,8 @@ keys.
 </ul>
 
 <p>
-  Wrapping terms in quotes will require an exact match. With a prefix it would look like <code
-    >value:"1234"</code
-  >
+  Wrapping terms in quotes will require an exact match. With a prefix it would look like
+  <code>value:"1234" </code>
 </p>
 
 <h3 id="multiple-terms">Multiple terms</h3>
