@@ -86,7 +86,3 @@
     {/each}
   </select>
 </label>
-
-<Inspect values={[1, 2, 3]} />
-
-<Inspect.Values {...[1, 2, 3]} />
