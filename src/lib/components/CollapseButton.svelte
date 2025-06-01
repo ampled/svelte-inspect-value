@@ -58,7 +58,9 @@
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    transition: color 250ms ease-in-out;
+    transition-duration: 250ms;
+    transition-property: color, rotate, transform;
+    transition-timing-function: ease-in-out;
     margin: 0;
     border: none;
     padding: 0;
@@ -77,11 +79,6 @@
     }
 
     &:focus {
-      color: var(--_caret-focus-color);
-    }
-
-    &:focus-visible {
-      transform: scale(1.2);
       color: var(--_caret-focus-color);
     }
 

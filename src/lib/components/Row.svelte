@@ -151,6 +151,7 @@
 
   :global .row-target:focus {
     .collapse {
+      transform: scale(1.2);
       color: var(--_caret-focus-color);
     }
 
