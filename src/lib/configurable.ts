@@ -166,6 +166,8 @@ export const inlineConfigProperties = {
   NoSearch: { search: false },
   /** Disable highlighting text matching search query */
   NoHighlight: { highlightMatches: false },
+  /** Show heading with search (if enabled) and utility buttons */
+  Heading: { heading: true },
 } as const satisfies Record<string, Partial<options.InspectOptions>>
 
 export function createConfigurable<T>(

@@ -1,4 +1,4 @@
-import { getContext, setContext } from 'svelte'
+import { getContext, setContext, type Snippet } from 'svelte'
 import type { CollapseState } from './state.svelte.js'
 import type { CustomComponents } from './types.js'
 import * as util from './util.js'
@@ -281,6 +281,12 @@ export type InspectOptions = {
    * @default true
    */
   highlightMatches: boolean
+  /**
+   * A `string` or `Snippet` that will be rendered as a small heading with a collapse-button for the component.
+   *
+   * The snippet parameter indicates if the instance has been collapsed
+   */
+  heading: boolean | string | Snippet<[boolean]>
 }
 
 /**
@@ -318,6 +324,7 @@ export const DEFAULT_OPTIONS: InspectOptions = {
   search: true,
   searchMode: 'or',
   highlightMatches: true,
+  heading: false,
 } as const
 
 export const OPTIONS_KEYS = Object.keys(DEFAULT_OPTIONS) as (keyof InspectOptions)[]

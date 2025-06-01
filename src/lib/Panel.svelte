@@ -37,7 +37,6 @@
     value,
     values,
     name,
-    heading,
     // panel props
     align = $bindable('right full'),
     appearance = $bindable('solid'),
@@ -131,7 +130,7 @@
     )
   )
   let options = createOptions(() => mergedOptions)
-  let { theme, noanimate, borderless, onCollapseChange } = $derived(options.value)
+  let { theme, noanimate, borderless, heading, onCollapseChange } = $derived(options.value)
   let shouldRender = $derived(
     typeof options.value.renderIf === 'function'
       ? Boolean(options.value.renderIf())
