@@ -28,6 +28,7 @@
 </script>
 
 <button
+  class="node-icon-button"
   transition:transition={{ duration: options.transitionDuration, ...transitionParams }}
   bind:this={button}
   class:success
@@ -38,7 +39,12 @@
 </button>
 
 <style>
-  button {
+  :global(.node-icon-button svg) {
+    min-width: 1.5em;
+    min-height: 1.5em;
+  }
+
+  .node-icon-button {
     all: unset;
     transform-origin: bottom center;
     transition:
