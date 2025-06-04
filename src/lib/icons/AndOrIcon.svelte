@@ -2,7 +2,7 @@
   let { mode }: { mode: 'and' | 'or' } = $props()
 </script>
 
-<svg width="600" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+<svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
   <g
     fill="currentColor"
     stroke-width="2.5"
