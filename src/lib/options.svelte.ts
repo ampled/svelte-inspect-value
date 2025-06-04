@@ -321,7 +321,7 @@ export const DEFAULT_OPTIONS: InspectOptions = {
   onLog: undefined,
   onCollapseChange: undefined,
   stores: 'full',
-  search: true,
+  search: false,
   searchMode: 'or',
   highlightMatches: true,
   heading: false,
