@@ -74,10 +74,14 @@ export const flashOnUpdate: Action<
       const newValue = value()
 
       untrack(() => {
-        if (!equal(prevValue, newValue)) {
-          node.dispatchEvent(new CustomEvent('inspectvaluechange', { bubbles: true }))
-          flash(flashStyle())
-          prevValue = newValue
+        try {
+          if (!equal(prevValue, newValue)) {
+            node.dispatchEvent(new CustomEvent('inspectvaluechange', { bubbles: true }))
+            flash(flashStyle())
+            prevValue = newValue
+          }
+        } catch (e) {
+          console.error('something happened:', e)
         }
       })
     }

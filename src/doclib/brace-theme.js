@@ -56,6 +56,9 @@ ace.define(
   .ace-inspect .ace_keyword {\
   color: #ff5c7c\
   }\
+  .ace-inspect .ace_identifier {\
+  color: #fafafa;\
+  }\
   .ace-inspect .ace_constant.ace_language {\
   color: #ff8af4\
   }\
@@ -117,7 +120,7 @@ ace.define(
   color: #50fa7b\
   }\
   .ace-inspect .ace_entity.ace_name.ace_function {\
-  color: #50fa7b\
+  color: #8fff96\
   }\
   .ace-inspect .ace_entity.ace_name.ace_tag {\
   color: #ff5c7c\

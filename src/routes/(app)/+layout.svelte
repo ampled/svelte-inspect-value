@@ -104,6 +104,11 @@
       ],
     },
     {
+      href: '/playground',
+      title: 'Playground',
+      devonly: true,
+    },
+    {
       href: '/releases',
       title: 'Releases',
       devonly: true,

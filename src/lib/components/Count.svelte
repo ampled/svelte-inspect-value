@@ -68,6 +68,7 @@
     display: flex;
     gap: 0.5ch;
     transition: color 250ms ease-in-out;
+    margin-right: 1ch;
     color: var(--_length-color);
     font-style: italic;
     font-weight: bold;

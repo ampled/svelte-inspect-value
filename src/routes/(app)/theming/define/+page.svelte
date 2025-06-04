@@ -225,7 +225,7 @@
   <Inspect value={{ steps, currentStep }} />
 </DevOnly>
 
-<h2>Defining a theme</h2>
+<h2 id="defining-a-theme">Defining a theme</h2>
 
 <p>
   Add your custom theme class to a global css file and import it, then set the theme-class using the
@@ -247,7 +247,7 @@
 {'/>'}
 </pre>
 
-<h2>Extended customization</h2>
+<h2 id="extended-theming">Extended customization</h2>
 
 <p>
   Behind the scenes, the base16 theme is mapped to internal CSS-variables. This mapping can be

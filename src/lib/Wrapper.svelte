@@ -202,8 +202,8 @@
   {#if !collapsed}
     {#if typingBuffer.current.length}
       <div
-        class={['typebuffer', typingBuffer.current.length && 'visible']}
-        transition:fly={{ duration: options.value.noanimate ? 0 : 100, y: -10 }}
+        class="typebuffer"
+        transition:fly={{ duration: options.transitionDuration, y: 40, opacity: 0 }}
       >
         <div style="height: 1em; width: 1em; flex-shrink: 0">
           <i.Search />
@@ -220,7 +220,7 @@
         </div>
       </div>
     {/if}
-    <div class="body" transition:slide={{ duration: options.transitionDuration }}>
+    <div class="body" transition:slide={{ duration: options.transitionDuration * 1.5 }}>
       <svelte:boundary onerror={console.error}>
         {#snippet failed(_, reset)}
           root error (see console) <NodeActionButton onclick={reset}>reset</NodeActionButton>
@@ -315,7 +315,7 @@
       align-items: center;
       gap: 1ch;
       border-bottom: 1px solid var(--_border-color);
-      padding-inline: 0.5em;
+      padding-inline: var(--_padding);
       padding-block: 0.25em;
       min-height: 2em;
       max-height: 2em;
@@ -399,22 +399,23 @@
     .typebuffer {
       display: none;
       position: absolute;
-      top: 2em;
+      bottom: 0;
       left: 50%;
       justify-content: flex-start;
       align-items: center;
       gap: 0.5em;
-      transform: translateX(-50%);
+      transform: translate(-50%, 0);
       z-index: 1;
       border: 1px solid var(--_border-color);
-      border-radius: var(--_border-radius);
+      border-bottom: none;
+      border-radius: var(--_border-radius) var(--_border-radius) 0 0;
       background-color: var(--_background-color);
       padding: 1ch;
       width: 90%;
       max-width: 360px;
       overflow: clip;
       color: var(--_button-color);
-      font-size: 2em;
+      font-size: 1em;
       line-height: 1;
       text-align: left;
 
@@ -440,11 +441,16 @@
 
   .svelte-inspect-value:has(.heading) {
     min-height: 26px;
+
+    .body {
+      padding-top: 0;
+    }
   }
 
   .body {
     /** compact */
     position: relative;
+    transition: padding-top 200ms ease-in-out;
     padding: var(--_padding-compact);
     width: 100%;
     height: 100%;
@@ -454,7 +460,7 @@
     --unit-display: none;
 
     @container (inline-size > 360px) {
-      padding: var(--_padding);
+      padding: var(--_padding-compact);
       --__indent: var(--_indent, 0.75em);
       --line-gap: 0.5em;
       --unit-display: inline-flex;

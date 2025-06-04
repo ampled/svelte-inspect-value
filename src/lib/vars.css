@@ -88,6 +88,6 @@
   --_indent-color: var(--indent-color, var(--base03));
 
   /* body */
-  --_padding: var(--padding, 0.25em);
-  --_padding-compact: var(--padding-compact, 0.25em);
+  --_padding: var(--padding, 0.25em 0);
+  --_padding-compact: var(--padding-compact, 0.25em 0);
 }
