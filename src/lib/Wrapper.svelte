@@ -315,7 +315,7 @@
       align-items: center;
       gap: 1ch;
       border-bottom: 1px solid var(--_border-color);
-      padding-inline: var(--_padding);
+      padding-inline: 0.25em;
       padding-block: 0.25em;
       min-height: 2em;
       max-height: 2em;
