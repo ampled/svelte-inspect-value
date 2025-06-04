@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { setContext, type Component } from 'svelte'
-import type { Readable } from 'svelte/store'
+import type { Readable, Writable } from 'svelte/store'
 import { initValueCache } from './contexts.js'
 import {
   OPTIONS_CONTEXT,
@@ -307,4 +307,38 @@ export function sortProps<T extends Record<PropertyKey, unknown>>(
 
 export function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max)
+}
+
+export const wait = (duration: number = 25) =>
+  new Promise<void>((resolve) => {
+    window.setTimeout(() => {
+      resolve()
+    }, duration)
+  })
+
+export function isValidStore(store: Readable<unknown> | Writable<unknown>) {
+  try {
+    const sub = store.subscribe(() => void 0) as any
+    if (typeof sub === 'function') {
+      sub()
+      return true
+    } else if (typeof sub === 'object' && typeof sub.unsubscribe === 'function') {
+      sub.unsubscribe()
+      return true
+    } else {
+      return false
+    }
+  } catch {
+    return false
+  }
+}
+
+export function nodeActionKeydown<F extends (e: UIEvent) => void | Promise<void>>(fn: F) {
+  return function (this: unknown, event: KeyboardEvent) {
+    if (['Enter', ' '].includes(event.key)) {
+      event.preventDefault()
+      event.stopPropagation()
+      fn.call(this, event)
+    }
+  }
 }

@@ -192,7 +192,10 @@
     title="output theme object to console"
     class="unstyled"
     style="width: 2em; height: 2em;"
-    onclick={() => console.log($state.snapshot(colors))}
+    onclick={() => {
+      // eslint-disable-next-line no-console
+      console.log($state.snapshot(colors))
+    }}
   >
     <Console />
   </button>
@@ -222,7 +225,7 @@
   <Inspect value={{ steps, currentStep }} />
 </DevOnly>
 
-<h2>Defining a theme</h2>
+<h2 id="defining-a-theme">Defining a theme</h2>
 
 <p>
   Add your custom theme class to a global css file and import it, then set the theme-class using the
@@ -244,7 +247,7 @@
 {'/>'}
 </pre>
 
-<h2>Extended customization</h2>
+<h2 id="extended-theming">Extended customization</h2>
 
 <p>
   Behind the scenes, the base16 theme is mapped to internal CSS-variables. This mapping can be
@@ -295,9 +298,9 @@ Result:
 
 <style>
   .row {
-    gap: 0;
     justify-content: center;
     align-items: center;
+    gap: 0;
   }
 
   label {
@@ -329,8 +332,8 @@ Result:
   @media (min-width: 1024px) {
     .colors-and-preview {
       flex-direction: row;
-      gap: 1em;
       justify-content: center;
+      gap: 1em;
       margin-left: 1em;
     }
 
@@ -346,35 +349,35 @@ Result:
   }
 
   .colorpicker {
-    width: 3.5em;
-    height: 2em;
-    overflow: hidden;
     position: relative;
     outline: 1px solid white;
     border-radius: 4px;
+    width: 3.5em;
+    height: 2em;
+    overflow: hidden;
   }
 
   input[type='color'] {
-    aspect-ratio: 1 / 1;
-    height: 50em;
-    width: 40em;
     position: absolute;
     top: -5px;
     left: -5px;
-    border: none;
-    padding: 0;
-    margin: 0;
-    background-color: transparent;
     cursor: pointer;
+    margin: 0;
+    border: none;
+    background-color: transparent;
+    padding: 0;
+    aspect-ratio: 1 / 1;
+    width: 40em;
+    height: 50em;
   }
 
   pre {
-    font-size: 12px;
-    background-color: var(--bg);
-    border-radius: 8px;
     border: 1px solid var(--docs-border-color);
+    border-radius: 8px;
+    background-color: var(--bg);
     padding: 1em;
     overflow-x: auto;
+    font-size: 12px;
 
     .key {
       padding-left: 1em;

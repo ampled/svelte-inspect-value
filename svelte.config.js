@@ -18,7 +18,7 @@ const escapeSvelte = (str) =>
 
 /** @type {import('rehype-autolink-headings').Options} */
 const autoLinkOptions = {
-  behavior: 'wrap',
+  behavior: 'prepend',
   test: ['h1', 'h2', 'h3'],
 }
 
@@ -51,7 +51,7 @@ const config = {
       handleMissingId: 'warn',
     },
   },
-  compilerOptions: { sourcemap: false, runes: true },
+  compilerOptions: { sourcemap: true, runes: true },
   extensions: ['.svelte', '.md', '.svx'],
 }
 

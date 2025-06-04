@@ -1,30 +1,36 @@
 .line {
-  transition: background-position, background-size, color;
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: var(--line-gap, 0.5em);
   transition-duration: 250ms;
+  transition-property: background-position, background-size, color;
   transition-timing-function: ease-in-out;
   background: linear-gradient(35deg, var(--_hover-color) 60%, transparent 80%);
   background-size: 0% 100%;
-  background-origin: border-box;
   background-repeat: no-repeat;
-  position: relative;
-  display: flex;
-  gap: var(--line-gap, 0.5em);
+  background-origin: border-box;
+  padding-left: 0.25em;
   min-height: 1.5em;
   max-height: 1.5em;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  padding-left: 0.25em;
+  overflow: visible;
 
   &:hover:not(.preview) {
-    background-position-x: left;
     background-size: 100% 100%;
+    background-position-x: left;
+  }
+
+  &:focus-within:not(.preview) {
+    background-size: 120% 100%;
+    background-position-x: left;
   }
 }
 
 .line.preview {
-  padding-left: 0;
   margin-left: 0;
+  padding-left: 0;
 }
 
 .line.preview.nokey {
@@ -32,7 +38,54 @@
 }
 
 .indicator-and-key {
+  all: unset;
   display: inline-flex;
+  justify-content: flex-start;
   align-items: center;
   gap: 0.25em;
+  width: 100%;
+
+  &:focus {
+    outline: 0.5px solid var(--_button-color);
+    outline-offset: -1px;
+  }
+
+  &:hover {
+    background-color: transparent;
+  }
+}
+
+:global .line:has(.highlight) {
+  .bullet {
+    .dash {
+      border-radius: 4px;
+      background-color: color-mix(
+        in srgb,
+        var(--_bullet-color),
+        var(--_text-search-highlight-color) 50%
+      );
+      width: 4px;
+      height: 4px;
+    }
+  }
+
+  .collapse {
+    color: color-mix(in srgb, var(--_bullet-color), var(--_text-search-highlight-color) 50%);
+  }
+}
+
+:global .line.match {
+  .bullet {
+    .dash {
+      border-radius: 0px;
+      border-radius: 1px;
+      background-color: var(--_text-search-highlight-color);
+      width: 4px;
+      height: 4px;
+    }
+  }
+
+  .collapse {
+    color: var(--_text-search-highlight-color);
+  }
 }

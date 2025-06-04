@@ -21,6 +21,10 @@ children:
     - expandPaths
   - - flash-on-update
     - flashOnUpdate
+  - - heading
+    - heading
+  - - highlight-matches
+    - highlightMatches
   - - noanimate
     - noanimate
   - - on-collapse-change
@@ -39,6 +43,10 @@ children:
     - quotes
   - - render-if
     - renderIf
+  - - search
+    - search
+  - - search-mode
+    - searchMode
   - - show-length
     - showLength
   - - show-preview
@@ -69,6 +77,8 @@ type InspectOptions = {
   expandLevel: number;
   expandPaths: string[];
   flashOnUpdate: boolean;
+  heading: boolean | string | Snippet<[boolean]>;
+  highlightMatches: boolean;
   noanimate: boolean;
   onCollapseChange: (state: CollapseState) => void | undefined;
   onCopy: (value: unknown, type: string, path: unknown[]) => Promise<boolean | void> | boolean | void
@@ -80,6 +90,8 @@ type InspectOptions = {
   previewEntries: number;
   quotes: "single" | "double" | "none";
   renderIf: unknown;
+  search: boolean | "highlight" | "filter" | "filter-strict";
+  searchMode: "and" | "or";
   showLength: boolean;
   showPreview: boolean;
   showTools: boolean;
@@ -194,9 +206,8 @@ elementView: "simple" | "full";
 
 Determines what properties are shown when inspecting HTML elements
 
-`'simple'` - minimal list of properties including classList, styles, dataset and current scrollPositions
-
-`'full'` - lists all enumerable properties of an element
+- `'simple'` - minimal list of properties including classList, styles, dataset and current scrollPositions
+- `'full'` - lists all enumerable properties of an element
 
 #### Default
 
@@ -294,6 +305,39 @@ flashOnUpdate: boolean;
 ```
 
 Indicate when a value or child value is updated
+
+#### Default
+
+```ts
+true
+```
+
+***
+
+### heading
+
+```ts
+heading: boolean | string | Snippet<[boolean]>;
+```
+
+A `string` or `Snippet` that will be rendered as a small heading with a collapse-button for the component.
+
+The snippet parameter indicates if the instance has been collapsed
+
+***
+
+### highlightMatches
+
+```ts
+highlightMatches: boolean;
+```
+
+When `search` is enabled, highlight matches in keys,
+types and values when typing in the search input box.
+
+#### See
+
+[InspectOptions.search](#search)
 
 #### Default
 
@@ -470,6 +514,47 @@ true
 
 ***
 
+### search
+
+```ts
+search: boolean | "highlight" | "filter" | "filter-strict";
+```
+
+Enable or disable search functionality.
+
+Three modes are available:
+
+- `'filter' | true` - children and siblings of matching nodes will be visible
+- `'filter-strict'` - only matches will be visible
+- `'highlight'` - no nodes will be hidden, but matches will be highlighted
+
+#### Default
+
+```ts
+false
+```
+
+***
+
+### searchMode
+
+```ts
+searchMode: "and" | "or";
+```
+
+Initial multi-term search mode
+
+- `'and'` - nodes must match every term
+- `'or'` - nodes can match one of the terms
+
+#### Default
+
+```ts
+'or'
+```
+
+***
+
 ### showLength
 
 ```ts
@@ -546,9 +631,8 @@ Objects with a `subscribe` method will be inspected as stores and show their sub
 
 Set to `true`, `'value-only'` or `'full'` to enable.
 
-`'full' | true` - render store value as nested value along with other properties on the store object
-
-`'value-only'` - render store value only along with a note indicating the value was retrieved from a store
+- `'full' | true` - render store value as nested value along with other properties on the store object
+- `'value-only'` - render store value only along with a note indicating the value was retrieved from a store
 
 #### Default
 

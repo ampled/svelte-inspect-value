@@ -54,22 +54,25 @@ ace.define(
   border-color: #f8f8f2\
   }\
   .ace-inspect .ace_keyword {\
-  color: #ff79c6\
+  color: #ff5c7c\
+  }\
+  .ace-inspect .ace_identifier {\
+  color: #fafafa;\
   }\
   .ace-inspect .ace_constant.ace_language {\
-  color: #bd93f9\
+  color: #ff8af4\
   }\
   .ace-inspect .ace_constant.ace_numeric {\
   color: #bd93f9\
   }\
   .ace-inspect .ace_constant.ace_character {\
-  color: #bd93f9\
+  color: #ff8af4\
   }\
   .ace-inspect .ace_constant.ace_character.ace_escape {\
-  color: #ff79c6\
+  color: #ff5c7c\
   }\
   .ace-inspect .ace_constant.ace_other {\
-  color: #bd93f9\
+  color: #ff8af4\
   }\
   .ace-inspect .ace_support.ace_function {\
   color: #8be9fd\
@@ -86,7 +89,7 @@ ace.define(
   color: #66d9ef\
   }\
   .ace-inspect .ace_storage {\
-  color: #ff79c6\
+  color: #ff5c7c\
   }\
   .ace-inspect .ace_storage.ace_type {\
   font-style: italic;\
@@ -94,7 +97,7 @@ ace.define(
   }\
   .ace-inspect .ace_invalid {\
   color: #F8F8F0;\
-  background-color: #ff79c6\
+  background-color: #ff5c7c\
   }\
   .ace-inspect .ace_invalid.ace_deprecated {\
   color: #F8F8F0;\
@@ -117,10 +120,10 @@ ace.define(
   color: #50fa7b\
   }\
   .ace-inspect .ace_entity.ace_name.ace_function {\
-  color: #50fa7b\
+  color: #8fff96\
   }\
   .ace-inspect .ace_entity.ace_name.ace_tag {\
-  color: #ff79c6\
+  color: #ff5c7c\
   }\
   '
 

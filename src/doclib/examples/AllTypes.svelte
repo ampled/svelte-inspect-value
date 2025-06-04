@@ -3,10 +3,11 @@
   import Inspect from '$lib/Inspect.svelte'
   import type { InspectProps } from '$lib/types.js'
   import { Observable, interval } from 'rxjs'
-  import { onMount } from 'svelte'
   import { readable, writable } from 'svelte/store'
   import sprite from './media/squirtle.png'
   import audio from './media/squirtle_cry.ogg'
+  import { GLOBAL_OPTIONS_CONTEXT, type InspectOptions } from '$lib/options.svelte.js'
+  import { getContext } from 'svelte'
 
   const props: InspectProps = $props()
 
@@ -52,7 +53,7 @@
     let interval: number | undefined
     let val = writable(initialValue, () => {
       if (browser) {
-        interval = setInterval(() => {
+        interval = window.setInterval(() => {
           val.update((n) => n + 1)
         }, 500)
       }
@@ -85,8 +86,45 @@
   }
 
   const allTypes = $state({
+    lotsOfChildren: [
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+      'a\nb',
+    ],
     stores: {
       a: readable('test'),
+      ab: writable('test'),
       b: writable({ testing: 'haha' }),
       b2: writable({ testing: 'haha' }),
       c: customStore(),
@@ -103,7 +141,7 @@
         audio,
       },
     },
-    number: 0,
+
     bigint: 9007199254740991n,
     bools: [true, false],
     symb: Symbol('abcd'),
@@ -113,6 +151,7 @@
     set: new Set([1, 2, 3]),
     map: new Map<unknown, unknown>([
       [0, 0],
+      ['ya', 'yayaya'],
       [{ id: 123 }, 1],
       [[1, 2, 3], 2],
       [Symbol('key'), 'value'],
@@ -206,6 +245,7 @@
         this.count = value
       },
       get throws() {
+        // eslint-disable-next-line no-console
         console.trace('throwing getter accessed')
         throw 'yeet'
       },
@@ -274,7 +314,7 @@
       ]).entries(),
       fib: fibonacci(),
       stringIterator: 'abdcdefghijklmnopqrstuvwxyzæøå'[Symbol.iterator](),
-      elements: browser ? document.body.childNodes.values() : null,
+      // elements: browser ? document.body.childNodes.values() : null,
       segments,
       string: {
         value: 'test1test2',
@@ -290,6 +330,7 @@
         },
       },
     },
+    number: 0,
     weirdKeys: {
       42: 'numbers are cool',
       punctuation: {
@@ -306,6 +347,7 @@
         '¿': '!',
         '#': '',
         '~': 'tilde',
+        '*': 'asterisk',
       },
       braces: {
         '{': '',
@@ -363,7 +405,7 @@
     arbitraryObjects: {
       notice:
         'objects without a defined specialized view component.\nproperties are enumerated and nested.',
-      navigator: browser ? navigator : null,
+      // navigator: browser ? navigator : null,
       registry: new FinalizationRegistry(() => {}),
     },
     weakSet: new WeakSet([{}, {}, {}]),
@@ -385,17 +427,55 @@
     },
   })
 
-  onMount(() => {
-    allTypes.body = document.body as unknown as null
-  })
+  let seeFlashing = $state(false)
 
   $effect(() => {
-    const interval = setInterval(() => {
-      allTypes.number++
+    const interval = window.setInterval(() => {
+      if (seeFlashing) allTypes.number++
     }, 2000)
 
-    return () => clearInterval(interval)
+    return () => window.clearInterval(interval)
+  })
+
+  const globalOptions = getContext<Partial<InspectOptions> | (() => Partial<InspectOptions>)>(
+    GLOBAL_OPTIONS_CONTEXT
+  )
+
+  const allTypesSearch = $derived.by(() => {
+    const globalOpts = typeof globalOptions === 'function' ? globalOptions() : globalOptions
+    if (globalOpts.search === false) {
+      return 'highlight'
+    }
+    return globalOpts.search
   })
 </script>
 
-<Inspect name="allTypes" value={allTypes} {...props} />
+<Inspect name="allTypes" values={allTypes} search={allTypesSearch} {...props} expandLevel={0}>
+  {#snippet heading(collapsed)}
+    DEMO
+    {#if !collapsed}
+      <!-- svelte-ignore a11y_click_events_have_key_events -->
+      <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+      <label
+        onclick={(e) => {
+          e.stopPropagation()
+        }}
+      >
+        increment number
+        <input type="checkbox" bind:checked={seeFlashing} />
+      </label>
+    {/if}
+  {/snippet}
+</Inspect>
+
+<style>
+  label {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1ch;
+    margin: 0 !important;
+    width: 100%;
+    font-size: 0.8em;
+  }
+</style>

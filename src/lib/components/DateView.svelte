@@ -7,7 +7,7 @@
 
   type Props = TypeViewProps<Date>
 
-  let { value, key, type, path }: Props = $props()
+  let { value, key, type, path, ...rest }: Props = $props()
 
   let entries = $derived(
     Object.entries({
@@ -32,6 +32,7 @@
   length={entries.length}
   keepPreviewOnExpand
   showLength={false}
+  {...rest}
 >
   {#snippet valuePreview({ showPreview })}
     {#if showPreview}

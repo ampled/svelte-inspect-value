@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { HTMLButtonAttributes } from 'svelte/elements'
+  import type { SvelteHTMLElements } from 'svelte/elements'
   import { scale } from 'svelte/transition'
   import Caret from '../icons/Caret.svelte'
   import { useOptions } from '../options.svelte.js'
@@ -11,7 +11,8 @@
     value: unknown
     key?: string | symbol | number
     type?: string
-  } & Omit<HTMLButtonAttributes, 'onchange' | 'value' | 'type'>
+    disabled?: boolean
+  } & SvelteHTMLElements['div']
 
   let { collapsed = $bindable(), onchange, disabled, value, key, type, ...rest }: Props = $props()
 
@@ -23,26 +24,6 @@
     return 90
   })
 
-  function onkeydown(event: KeyboardEvent & { currentTarget: EventTarget & HTMLButtonElement }) {
-    // event.preventDefault()
-    if (onchange) {
-      switch (event.key) {
-        case 'ArrowDown':
-        case 'ArrowRight':
-          event.preventDefault()
-          onchange(false)
-          break
-        case 'ArrowUp':
-        case 'ArrowLeft':
-          event.preventDefault()
-          onchange(true)
-          break
-        default:
-          break
-      }
-    }
-  }
-
   let caret = $state<ReturnType<typeof Caret>>()
 
   export function flash() {
@@ -52,15 +33,11 @@
   let keyOrType = $derived((key ?? type)?.toString())
 </script>
 
-<button
+<div
   data-testid="collapse-button"
-  type="button"
   class="collapse"
   aria-label={`${collapsed ? 'expand' : 'collapse'} ${keyOrType}`}
-  title={`${collapsed ? 'expand' : 'collapse'} ${keyOrType}`}
-  {disabled}
   {...rest}
-  {onkeydown}
 >
   {#if disabled}
     <Bullet />
@@ -73,28 +50,28 @@
       />
     </div>
   {/if}
-</button>
+</div>
 
 <style>
   .collapse {
     all: unset;
-    margin: 0;
-    padding: 0;
-    border: none;
-    all: unset;
-    overflow: visible;
-    cursor: pointer;
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    color: var(--_caret-color);
+    transition-duration: 250ms;
+    transition-property: color, rotate, transform;
+    transition-timing-function: ease-in-out;
+    margin: 0;
+    border: none;
+    padding: 0;
     aspect-ratio: 1 / 1;
     width: 1em;
-    height: 1em;
     min-width: 1em;
     max-width: 1em;
+    height: 1em;
+    overflow: visible;
+    color: var(--_caret-color);
     user-select: none;
-    transition: color 250ms ease-in-out;
 
     &:hover {
       background-color: transparent;
@@ -103,11 +80,6 @@
 
     &:focus {
       color: var(--_caret-focus-color);
-    }
-
-    &:focus-visible {
-      color: var(--_caret-focus-color);
-      transform: scale(1.2);
     }
 
     &:disabled {

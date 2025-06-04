@@ -15,6 +15,7 @@
       this.name = name
     }
 
+    // eslint-disable-next-line no-console
     public greet = () => console.log(`${Greeter.staticProperty} ${this.name}`)
 
     public method() {

@@ -16,7 +16,6 @@
   // })
 
   $effect(() => {
-    console.log('addToPanel from effect')
     const cleanup = addToPanel('nestedc', () => ({ ...deepNest }))
 
     return cleanup

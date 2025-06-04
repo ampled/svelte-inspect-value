@@ -7,7 +7,7 @@
 
   type Props = TypeViewProps<URL>
 
-  let { value = new URL(''), key, type, path }: Props = $props()
+  let { value = new URL(''), key, type, path, ...rest }: Props = $props()
 
   let {
     hash,
@@ -40,7 +40,7 @@
   )
 </script>
 
-<Expandable {...{ value, key, type, path }} length={entries.length} showLength={false}>
+<Expandable {...{ value, key, type, path }} length={entries.length} showLength={false} {...rest}>
   {#snippet valuePreview()}
     <StringValue {type} value={value.toString()} />
   {/snippet}

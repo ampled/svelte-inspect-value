@@ -8,20 +8,20 @@
 
 <style>
   .stack {
-    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
     gap: 1em;
+    width: 100%;
   }
 
   @media (min-width: 1024px) {
     .stack {
       flex-direction: row;
+      flex-wrap: nowrap;
       justify-content: flex-start;
       align-items: flex-start;
-      flex-wrap: nowrap;
     }
   }
 </style>

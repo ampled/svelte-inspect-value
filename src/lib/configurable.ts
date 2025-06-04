@@ -145,8 +145,10 @@ export const inlineConfigProperties = {
   ShowPreview: { showPreview: false },
   /** Enable parsing stringified JSON arrays and Objects */
   ParseJSON: { parseJson: true },
-  /** Enable inspecting Svelte stores / observables */
+  /** Enable inspecting Svelte stores / observables. Sets store-mode to `'full'` */
   Stores: { stores: true },
+  /** Enable inspecting Svelte stores / observables. Sets store-mode to `'value-only'` */
+  StoreValues: { stores: 'value-only' },
   /** Disable inspecting Svelte store / observables */
   NoStores: { stores: false },
   /** Enable embedding images and sounds */
@@ -154,6 +156,18 @@ export const inlineConfigProperties = {
   SingleQuotes: { quotes: 'single' },
   DoubleQuotes: { quotes: 'double' },
   NoQuotes: { quotes: 'none' },
+  /** Set search mode to `'filter'` */
+  Search: { search: 'filter' },
+  /** Set search mode to `'filter-strict'` */
+  SearchStrict: { search: 'filter-strict' },
+  /** Set search mode to `'highlight'` */
+  SearchHighlight: { search: 'highlight' },
+  /** Disable search functionality */
+  NoSearch: { search: false },
+  /** Disable highlighting text matching search query */
+  NoHighlight: { highlightMatches: false },
+  /** Show heading with search (if enabled) and utility buttons */
+  Heading: { heading: true },
 } as const satisfies Record<string, Partial<options.InspectOptions>>
 
 export function createConfigurable<T>(

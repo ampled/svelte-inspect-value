@@ -3,6 +3,7 @@
   import { getPreviewLevel } from '../contexts.js'
   import { useOptions } from '../options.svelte.js'
   import type { ValueType } from '../util.js'
+  import Highlight from './Highlight.svelte'
 
   type Props = {
     type?: ValueType | 'noop' | string
@@ -76,15 +77,13 @@
 </script>
 
 {#if (type && options.value.showTypes && previewLevel === 0) || required || force}
-  <span data-testid="type" class={`type ${type}`} title={type} {...rest}>
-    {display}
-  </span>
+  <Highlight
+    value={display}
+    field="type"
+    alsoMatch={type}
+    data-testid="type"
+    class={['type', type, previewLevel ?? 'preview']}
+    title={type}
+    {...rest}
+  />
 {/if}
-
-<style>
-  .type {
-    transition: color 250ms ease-in-out;
-    font-weight: 900;
-    flex-shrink: 0;
-  }
-</style>
