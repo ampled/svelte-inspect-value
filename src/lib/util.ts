@@ -181,6 +181,29 @@ export function getAllProperties(object: any) {
   ]
 }
 
+export function getAllKeysOf(values: unknown, type = getType(values)) {
+  if (type === 'map' || type === 'set') {
+    const map = values as Map<unknown, unknown> | Set<unknown>
+    return { keys: [...map.keys()], type }
+  }
+  if (type === 'object') {
+    return { keys: getAllProperties(values), type }
+  }
+  if (type === 'array') {
+    const arr = values as Array<unknown>
+    const keys = [
+      ...arr.keys(),
+      getAllProperties(arr).filter((prop) => {
+        if (typeof prop === 'string') {
+          return /\d+/.test(prop) === false && prop !== 'length'
+        }
+        return true
+      }),
+    ]
+    return { keys, type }
+  }
+}
+
 export function getPropertyDescriptor(object: any, prop: PropertyKey) {
   if (!object) {
     return {}

@@ -80,8 +80,8 @@ export const flashOnUpdate: Action<
             flash(flashStyle())
             prevValue = newValue
           }
-        } catch (e) {
-          console.error('something happened:', e)
+        } catch {
+          //
         }
       })
     }
