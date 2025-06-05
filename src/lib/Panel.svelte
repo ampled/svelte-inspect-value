@@ -48,6 +48,7 @@
     zIndex = 1000,
     wiggleOnUpdate = true,
     onOpenChange,
+    onSettingsChange = () => void 0,
     children,
     // inspect options and element attributes
     class: className,
@@ -167,12 +168,23 @@
 
   function onAlignChange(x: XPos, y: YPos) {
     align = `${x} ${y}` as PositionProp
+    settingsChanged()
   }
 
   function onHandleClick() {
     open = !open
     hovered = false
     onOpenChange?.(open)
+    settingsChanged()
+  }
+
+  function toggleOpacity() {
+    opacity = !opacity
+    settingsChanged()
+  }
+
+  function settingsChanged() {
+    onSettingsChange?.({ open, align, opacity, appearance })
   }
 
   function log() {
@@ -237,7 +249,7 @@
       <div class={['toolbar', yPos]}>
         <div class="group">
           {#if !full}
-            <NodeIconButton title="toggle opacity" onclick={() => (opacity = !opacity)}>
+            <NodeIconButton title="toggle opacity" onclick={toggleOpacity}>
               {#if opacity}
                 <OpacityIcon />
               {:else}
@@ -279,7 +291,7 @@
               <option>bottom</option>
               <option disabled={['center', 'full'].includes(xPos)}>full</option>
             </Select>
-            <Select bind:value={appearance} name="appearance">
+            <Select bind:value={appearance} name="appearance" onchange={settingsChanged}>
               <option>solid</option>
               <option>dense</option>
               <option>glassy</option>

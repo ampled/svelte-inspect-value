@@ -96,6 +96,13 @@ export {
   type InspectOptions,
 } from './options.svelte.js'
 export { default as PanelValue } from './PanelValue.svelte'
-export type { CustomComponentProps, CustomComponents, InspectProps, PanelProps } from './types.js'
+export type {
+  CustomComponentProps,
+  CustomComponents,
+  InspectProps,
+  BaseProps,
+  PanelProps,
+  PanelSettings,
+} from './types.js'
 export { addComponent } from './util.js'
 export default Inspect

@@ -70,9 +70,9 @@ export function removeFromPanel(name: PropertyKey) {
  *
  * ```
  *
- * @param name display name of inspected value
- * @param val function returning value to be inspected
- * @param addedBy (optional) label of where value was added from
+ * @param name Display name of inspected value
+ * @param val Function returning value to be inspected
+ * @param addedBy (Optional) label of where value was added from
  * @returns Function that removes added value when called. Returns `true` if value was removed, `false` if value didn't exist
  */
 export function addToPanel(name: PropertyKey, val: () => unknown, addedBy?: string) {

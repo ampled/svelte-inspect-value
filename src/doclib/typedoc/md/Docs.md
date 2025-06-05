@@ -33,6 +33,8 @@ children:
     - InspectValuesOptions
   - - panel-props
     - PanelProps
+  - - panel-settings
+    - PanelSettings
   - - type-view-props
     - TypeViewProps
   - - value-type
@@ -70,6 +72,7 @@ children:
 - [InspectProps](types/InspectProps)
 - [InspectValuesOptions](types/InspectValuesOptions)
 - [PanelProps](types/PanelProps)
+- [PanelSettings](types/PanelSettings)
 - [TypeViewProps](types/TypeViewProps)
 - [ValueType](types/ValueType)
 

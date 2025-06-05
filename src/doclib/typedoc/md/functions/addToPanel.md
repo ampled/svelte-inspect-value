@@ -33,19 +33,19 @@ Can also safely be run inside an $effect that will re-add the value if removed a
 
 `PropertyKey`
 
-display name of inspected value
+Display name of inspected value
 
 ### val
 
 () => `unknown`
 
-function returning value to be inspected
+Function returning value to be inspected
 
 ### addedBy?
 
 `string`
 
-(optional) label of where value was added from
+(Optional) label of where value was added from
 
 ## Returns
 

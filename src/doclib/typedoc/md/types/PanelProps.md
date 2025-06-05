@@ -8,14 +8,11 @@ title:
 
 ```ts
 type PanelProps = {
-  align: PositionProp;
-  appearance: "solid" | "glassy" | "floating" | "dense";
   children: Snippet;
   hideGlobalValues: boolean;
   hideToolbar: boolean;
   onOpenChange: (open: boolean) => void;
-  opacity: boolean;
-  open: boolean;
+  onSettingsChange: (settings: Required<PanelSettings>) => void;
   openOnHover: boolean;
   resize: boolean;
   wiggleOnUpdate: boolean;
@@ -24,62 +21,12 @@ type PanelProps = {
   name: string;
   value: unknown;
   values: unknown;
-} & Partial<InspectOptions> & SvelteHTMLElements["aside"];
+} & PanelSettings & Partial<InspectOptions> & SvelteHTMLElements["aside"];
 ```
 
 Props for `Inspect.Panel`
 
 ## Type declaration
-
-### align?
-
-```ts
-align: PositionProp;
-```
-
-Initial panel position
-
-Format: `'<x-position> <y-position?>'` (y is optional)
-
-x-position can be one of `'left' | 'right' | 'center' | 'full'`
-
-y-position can be one of `'top' | 'bottom' | 'middle' | 'full'`
-
-*Note: if only x-position is given it can only be `'left'` or `'right'`*
-
-**Bindable**
-
-#### Example
-
-```svelte
-<Inspect.Panel align="left">
-<Inspect.Panel align="right middle">
-<Inspect.Panel align="center top">
-```
-
-#### Default
-
-```ts
-'right full'
-```
-
-### appearance?
-
-```ts
-appearance: "solid" | "glassy" | "floating" | "dense";
-```
-
-Sets appearance of panel.
-
-Can be `'solid'|'glassy'|'dense'|'floating'`
-
-**Bindable**
-
-#### Default
-
-```ts
-'solid'
-```
 
 ### children?
 
@@ -141,37 +88,43 @@ Callback for when panel is opened or closed
 undefined
 ```
 
-### opacity?
+### onSettingsChange()?
 
 ```ts
-opacity: boolean;
+onSettingsChange: (settings: Required<PanelSettings>) => void;
 ```
 
-Apply opacity to the panel when not hovered or focused
+Callback for when any panel prop/setting is changed with the panel UI. Can be used for
+persisting settings using `localStorage`
 
-**Bindable**
+Will run when any of the following prop / setting is changed:
+
+- `open`
+- `align`
+- `appearance`
+- `opacity`
+
+#### Parameters
+
+##### settings
+
+`Required` `<` [`PanelSettings`](PanelSettings) `>` 
+
+Current value of settings
+
+#### Returns
+
+`void`
 
 #### Default
 
 ```ts
-false
+undefined
 ```
 
-### open?
+#### See
 
-```ts
-open: boolean;
-```
-
-Initially open panel
-
-**Bindable**
-
-#### Default
-
-```ts
-false
-```
+[PanelSettings](PanelSettings)
 
 ### openOnHover?
 
