@@ -36,7 +36,7 @@ export default [
   ['--padding-compact', '0.25em 0'],
   ['--length-color', '--base03'],
   ['--border-color', '--base03'],
-  ['--border-radius', '16px'],
+  ['--border-radius', '8px'],
   ['--bullet-color', '--base03'],
   ['--comment-color', '--base03'],
   ['--caret-color', '--base03'],

@@ -50,7 +50,7 @@
   const options = useOptions()
   const destroyCallbacks: (() => void)[] = []
 
-  let { search } = $derived(options.value)
+  let { search, animRate } = $derived(options.value)
   let collapsed = $state(false)
   let searchInput = $state('')
   let matchingPaths = $state([])
@@ -151,10 +151,11 @@
 <div
   bind:this={container}
   class={['svelte-inspect-value', inFixed && 'in-fixed', classValue]}
-  {...rest}
-  data-focus-id={id}
   oninspectvaluechange={onNestedValueChange}
+  data-focus-id={id}
   use:scope
+  style:--transition-rate={animRate}
+  {...rest}
 >
   {#if heading || search}
     <div
@@ -164,7 +165,11 @@
     >
       <button class="heading-collapse-button" onclick={() => (collapsed = !collapsed)}>
         <div class="collapse">
-          <Caret style="rotate: {collapsed ? 0 : 90}deg; transition: rotate 250ms ease-in-out" />
+          <Caret
+            style="rotate: {collapsed
+              ? 0
+              : 90}deg; transition: rotate var(--__transition-duration) var(--_back-out)"
+          />
         </div>
         {#if typeof heading === 'string'}
           <span class="heading-text">
@@ -220,7 +225,7 @@
         </div>
       </div>
     {/if}
-    <div class="body" transition:slide={{ duration: options.transitionDuration * 1.5 }}>
+    <div class="body" transition:slide={{ duration: options.transitionDuration }}>
       <svelte:boundary onerror={console.error}>
         {#snippet failed(_, reset)}
           root error (see console) <NodeActionButton onclick={reset}>reset</NodeActionButton>
@@ -265,7 +270,7 @@
   }
 
   .svelte-inspect-value:not(.noanimate) {
-    transition-duration: 250ms;
+    transition-duration: var(--__transition-duration);
     transition-property: color, background-color, border-color, border;
     transition-timing-function: ease-in-out;
   }
@@ -450,7 +455,7 @@
   .body {
     /** compact */
     position: relative;
-    transition: padding-top 200ms ease-in-out;
+    transition: padding-top var(--__transition-duration) ease-in-out;
     padding: var(--_padding-compact);
     width: 100%;
     height: 100%;
@@ -488,7 +493,7 @@
 
   .svelte-inspect-value :global(.type) {
     flex-shrink: 0;
-    transition: color 250ms ease-in-out;
+    transition: color var(--__transition-duration) ease-in-out;
     color: var(--_object-type-color);
     font-weight: 900;
     font-size: 0.857em;
@@ -573,7 +578,7 @@
   }
 
   .svelte-inspect-value :global(.value) {
-    transition: color 250ms linear;
+    transition: color var(--__transition-duration) ease-in-out;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -691,7 +696,7 @@
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    transition: color 250ms ease-in-out;
+    transition: color var(--__transition-duration) ease-in-out;
     cursor: pointer;
     margin: 0;
     border: none;

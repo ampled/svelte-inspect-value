@@ -43,7 +43,19 @@ See the full list of keyboard-shortcuts in the documentation.
 
 While a node is focused, type anything and any visible node with matching text will be focused.
 
+### Animation / transition speed changes
+
+_Suggested by [@braebo](https://github.com/braebo) ([#40](https://github.com/ampled/svelte-inspect-value/issues/40))_
+
+The transition speed for expanding / collapsing nodes was set to 600ms, which was too many milliseconds when a quick google search suggests between 100 and 500ms for interactivity on the web.
+
+The new default speed has been lowered 250ms, but can be increased/decreased with the new option / prop `animRate`. Setting `animRate` to `0.5` will double transition speeds and setting it to `2` will halve them. By default it is set to `1`. This setting controls both Svelte in/out transitions as well as CSS-animations like hover-effects, opening/closing panels, etc.
+
+The new `easing`-prop takes any easing function with the same signature as easings imported from `svelte/easing`. This can be used to control expand/collapse transitions further.
+
 ### Inspect.Panel `onSettingsChange` callback
+
+_Suggested by [@mifopen](https://github.com/mifopen) ([#38](https://github.com/ampled/svelte-inspect-value/issues/38))_
 
 A callback that runs if any Panel-settings are changed using the UI.
 This can be used for persisting Panel-settings.
@@ -63,6 +75,7 @@ This can be used for persisting Panel-settings.
 - **Removed default inline/left/right padding**
   - The CSS-variables `--padding` and `--padding-compact` can be used to restore the original `0.25em` padding if desired
 - New CSS-variable: `--text-search-highlight-color` — sets the background-color for highlighted text and bullet/collapse-button of matching nodes. Set to `var(--base0A)` by default (string color)
+- Removed unique styling for node tool-buttons when `borderless` was active (Just one less thing to maintain)
 
 ---
 

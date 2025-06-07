@@ -1,8 +1,12 @@
 <script lang="ts">
   import { page } from '$app/state'
-  import Inspect, { InspectOptionsProvider, type InspectOptions } from '$lib/index.js'
+  import Inspect, {
+    InspectOptionsProvider,
+    type InspectOptions,
+    type PanelSettings,
+  } from '$lib/index.js'
   import { DEV } from 'esm-env'
-  import { setContext, type Snippet } from 'svelte'
+  import { onMount, setContext, type Snippet } from 'svelte'
   import { slide } from 'svelte/transition'
   import type { LayoutData } from './$types.js'
   import './app.css'
@@ -115,6 +119,30 @@
     },
   ]
 
+  const INSPECT_OPTIONS_DEFAULT: Partial<InspectOptions> = {
+    theme: 'inspect',
+    stringCollapse: 0,
+    showTools: true,
+    showTypes: true,
+    showLength: true,
+    showPreview: true,
+    previewDepth: 1,
+    previewEntries: 3,
+    flashOnUpdate: true,
+    noanimate: false,
+    animRate: 1,
+    quotes: 'single',
+    borderless: false,
+    embedMedia: true,
+    elementView: 'simple',
+    parseJson: false,
+    renderIf: true,
+    stores: 'full',
+    search: false,
+    highlightMatches: true,
+    heading: false,
+  }
+
   let options = $state<Partial<InspectOptions>>({
     theme: 'inspect',
     stringCollapse: 0,
@@ -126,6 +154,7 @@
     previewEntries: 3,
     flashOnUpdate: true,
     noanimate: false,
+    animRate: 1,
     quotes: 'single',
     borderless: false,
     embedMedia: true,
@@ -136,6 +165,23 @@
     search: false,
     highlightMatches: true,
     heading: false,
+  })
+
+  let panelSettings = $state<PanelSettings>({})
+
+  onMount(() => {
+    const stored = localStorage.getItem('siv.panel-settings')
+    if (!stored) {
+      panelSettings = {
+        open: false,
+        appearance: 'solid',
+        opacity: false,
+        align: 'right full',
+      }
+      localStorage.setItem('siv.panel-settings', JSON.stringify(panelSettings))
+    } else {
+      panelSettings = JSON.parse(stored)
+    }
   })
 
   function onkeydown(event: KeyboardEvent & { currentTarget: EventTarget & Window }) {
@@ -219,7 +265,7 @@
       </nav>
 
       <div style="display: flex; flex-direction: column;gap: 1em">
-        <GlobalOptions bind:options />
+        <GlobalOptions bind:options onreset={() => (options = INSPECT_OPTIONS_DEFAULT)} />
 
         <div class="badges">
           <a
@@ -250,9 +296,14 @@
     heading="+layout.svelte"
     appearance="solid"
     theme="stereo"
-    renderIf={DEV && renderDevOnlyStuff}
+    renderIf={DEV && renderDevOnlyStuff && Object.keys(panelSettings).length}
     {wiggleOnUpdate}
     values={{ options, page: { ...page } }}
+    onSettingsChange={(settings) => {
+      panelSettings = settings
+      localStorage.setItem('siv.panel-settings', JSON.stringify(settings))
+    }}
+    {...panelSettings}
   />
 
   <svelte:boundary>

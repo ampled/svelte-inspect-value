@@ -30,6 +30,7 @@
   import type { PanelProps, PositionProp, XPos, YPos } from './types.js'
   import { getAllProperties, initialize, sortProps } from './util.js'
   import Wrapper from './Wrapper.svelte'
+  import { fade } from 'svelte/transition'
 
   let {
     // base props
@@ -130,7 +131,9 @@
     )
   )
   let options = createOptions(() => mergedOptions)
-  let { theme, noanimate, borderless, heading, onCollapseChange, onLog } = $derived(options.value)
+  let { theme, noanimate, animRate, borderless, heading, onCollapseChange, onLog } = $derived(
+    options.value
+  )
   let shouldRender = $derived(
     typeof options.value.renderIf === 'function'
       ? Boolean(options.value.renderIf())
@@ -210,6 +213,7 @@
     onpointerenter={() => (hovered = true)}
     onpointerleave={() => (hovered = false)}
     style:z-index={zIndex}
+    style:--transition-rate={animRate}
     class={[
       'inspect-panel',
       theme,
@@ -223,6 +227,7 @@
       openOnHover && 'hoverable',
     ]}
     use:resizable={() => ({ handles: resizableHandles, enabled: resize })}
+    transition:fade={{ duration: options.transitionDuration }}
     {...restProps}
   >
     <button
@@ -397,6 +402,8 @@
     --border-radius: 8px;
     --handle-offset: 0;
     --inspect-min-width: 100%;
+    --panel-t-dur: var(--__transition-duration);
+    --panel-t-dur-slow: calc(var(--__transition-duration) * 1.6);
     display: flex;
     position: fixed;
     flex-direction: column;
@@ -404,19 +411,19 @@
     gap: 0.5em;
     transform: translateX(var(--translate-x, 0)) translateY(var(--translate-y, 0));
     transition:
-      background-color 250ms ease-in-out,
-      color 250ms ease-in-out,
-      width 400ms ease-in-out,
-      height 400ms ease-in-out,
-      top 400ms ease-in-out,
-      left 400ms ease-in-out,
-      bottom 400ms ease-in-out,
-      right 400ms ease-in-out,
-      opacity 400ms ease-in-out,
-      border 400ms ease-in-out,
-      outline 400ms ease-in-out,
-      outline-color 200ms ease-in-out,
-      transform 400ms ease-in-out;
+      background-color var(--panel-t-dur) ease-in-out,
+      outline-color var(--panel-t-dur) ease-in-out,
+      color var(--panel-t-dur) ease-in-out,
+      width var(--panel-t-dur-slow) ease-in-out,
+      height var(--panel-t-dur-slow) ease-in-out,
+      top var(--panel-t-dur-slow) ease-in-out,
+      left var(--panel-t-dur-slow) ease-in-out,
+      bottom var(--panel-t-dur-slow) ease-in-out,
+      right var(--panel-t-dur-slow) ease-in-out,
+      opacity var(--panel-t-dur-slow) ease-in-out,
+      border var(--panel-t-dur-slow) ease-in-out,
+      outline var(--panel-t-dur-slow) ease-in-out,
+      transform var(--panel-t-dur-slow) ease-in-out;
     box-sizing: border-box;
     container-type: inline-size;
     background-color: transparent;
@@ -436,7 +443,7 @@
       align-items: center;
       z-index: 20;
       transition:
-        all 400ms ease-in-out,
+        all var(--panel-t-dur-slow) ease-in-out,
         background-color 0ms,
         border 0ms;
       cursor: pointer;
@@ -444,7 +451,7 @@
 
       .caret {
         rotate: 180deg;
-        transition: all 400ms ease-in-out 200ms;
+        transition: all var(--__transition-duration) ease-in-out 200ms;
         width: 100%;
         height: 100%;
         color: var(--_button-color);

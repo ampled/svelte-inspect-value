@@ -28,9 +28,9 @@
     user-select: none;
 
     .dash {
-      transition-duration: 250ms;
+      transition-duration: var(--__transition-duration);
       transition-property: width, height, border-radius, background-color, transform;
-      transition-timing-function: ease-in-out;
+      transition-timing-function: var(--_back-out);
       border-radius: 0px;
       background-color: var(--_bullet-color);
       width: 4px;
