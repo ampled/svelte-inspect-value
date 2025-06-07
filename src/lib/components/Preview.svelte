@@ -54,7 +54,12 @@
 
   const previewLevel = getContext<number | undefined>(Symbol.for('siv.preview-level')) ?? startLevel
   const options = useOptions()
-  let { previewEntries, previewDepth, showPreview: optsShowPreview } = $derived(options.value)
+  let {
+    previewEntries,
+    previewDepth,
+    showPreview: optsShowPreview,
+    easing,
+  } = $derived(options.value)
 
   setContext(Symbol.for('siv.preview-level'), (previewLevel ?? 0) + 1)
 
@@ -101,6 +106,7 @@
       transition:slide={{
         axis: 'x',
         duration: options.transitionDuration,
+        easing,
       }}
       {...rest}
     >
@@ -111,8 +117,8 @@
         class="inner"
         transition:fly={{
           y: 20,
-          opacity: 0,
-          duration: options.transitionDuration * 2,
+          duration: options.transitionDuration,
+          easing,
         }}
       >
         {#if keys && value}
@@ -147,12 +153,13 @@
 <!-- At configured previewDepth, stop rendering nested item previews and just render their types -->
 {#snippet valuePreview(value: unknown, key?: PropertyKey)}
   {@const valType = getType(value, options.value.stores)}
+  {@const newPath = path && key ? [...path, key] : undefined}
   {#if alwaysRender(valType) || previewLevel < previewDepth}
     <Node {path} {key} {value} {showKey} {keyDelim} {keyStyle} {usedefaults} />
   {:else}
     <div class="key-type-preview">
       {#if showKey}
-        <Key disabled {path} {key} delim={keyDelim} style={keyStyle} allowUndefined />
+        <Key disabled path={newPath} {key} delim={keyDelim} style={keyStyle} allowUndefined />
       {/if}
       <Type type={valType} force />
     </div>
@@ -173,8 +180,8 @@
 
 <style>
   .comma {
-    margin-left: 0;
     margin-right: 0.5em;
+    margin-left: 0;
     color: var(--_text-color);
   }
 
@@ -183,34 +190,34 @@
   }
 
   .preview {
-    font-size: var(--inspect-font-size);
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: center;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    min-width: 0;
-    color: var(--_text-color);
     transform-origin: bottom right;
+    min-width: 0;
+    overflow: hidden;
+    color: var(--_text-color);
+    font-size: var(--inspect-font-size);
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .inner {
-    min-width: 0;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: center;
-    white-space: nowrap;
+    min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .key-type-preview {
     display: inline-flex;
-    align-items: center;
     justify-content: flex-start;
+    align-items: center;
     gap: 0.25em;
   }
 

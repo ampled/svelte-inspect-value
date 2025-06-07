@@ -9,7 +9,7 @@
   --blue: var(--base0D);
   --orange: var(--base09);
 
-  /* 
+  /** 
     overrideable roles (somewhat accurately mapped to base16 roles) 
     https://github.com/chriskempson/base16/blob/main/styling.md
   */
@@ -18,6 +18,7 @@
 
   --_hover-color: var(--hover-color, var(--base01));
   --_text-selection-background: var(--text-selection-background, var(--base02));
+  --_text-search-highlight-color: var(--text-search-highlight-color, var(--base0A));
   --_length-color: var(--length-color, var(--base03));
   --_bullet-color: var(--bullet-color, var(--base03));
   --_comment-color: var(--comment-color, var(--base03));
@@ -87,6 +88,18 @@
   --_indent-color: var(--indent-color, var(--base03));
 
   /* body */
-  --_padding: var(--padding, 0.25em);
-  --_padding-compact: var(--padding-compact, 0.25em);
+  --_padding: var(--padding, 0.25em 0);
+  --_padding-compact: var(--padding-compact, 0.25em 0);
+
+  /* transitions */
+  --_transition-duration: var(--transition-duration, 250ms);
+  --_transition-rate: var(--transition-rate, 1);
+  --__transition-duration: clamp(
+    0ms,
+    calc(var(--_transition-duration) / var(--_transition-rate)),
+    10000ms
+  );
+
+  /* easing */
+  --_back-out: cubic-bezier(0.18, 0.89, 0.47, 1.55);
 }

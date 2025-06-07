@@ -2,15 +2,22 @@
   import type { InspectOptions } from '$lib/options.svelte.js'
   import ToggleButton from './ToggleButton.svelte'
 
-  let { options = $bindable() }: { options: Partial<InspectOptions> } = $props()
+  let {
+    options = $bindable(),
+    onreset = () => {},
+  }: { options: Partial<InspectOptions>; onreset: () => void } = $props()
 </script>
 
 <div class="options">
-  <div class="options-title">global options</div>
+  <div class="options-title">
+    global options (<a href="/docs/types/InspectOptions" style="text-decoration: none;">docs</a>)
+  </div>
 
-  <label>
+  <button class="reset-button" onclick={onreset}> reset </button>
+
+  <label style="flex-basis: 100%; margin-top: 1ch">
     theme
-    <select bind:value={options.theme} name="theme">
+    <select bind:value={options.theme} name="theme" style="width: 100%">
       <option>inspect</option>
       <option>drak</option>
       <option>stereo</option>
@@ -30,11 +37,28 @@
 
   <ToggleButton bind:checked={options.noanimate}>noanimate</ToggleButton>
 
+  <ToggleButton bind:checked={options.heading as boolean}>heading</ToggleButton>
+
   <ToggleButton bind:checked={options.borderless}>borderless</ToggleButton>
 
   <ToggleButton bind:checked={options.flashOnUpdate}>flash on update</ToggleButton>
 
   <ToggleButton bind:checked={options.embedMedia}>embed media</ToggleButton>
+
+  <ToggleButton bind:checked={options.parseJson}>parse json</ToggleButton>
+
+  <label>
+    anim rate
+    <input
+      type="number"
+      bind:value={options.animRate}
+      min="0.1"
+      max="10"
+      step={0.1}
+      style="width: 5em"
+      name="animation-rate"
+    />
+  </label>
 
   <label>
     store
@@ -44,7 +68,6 @@
       <option value={false}>off</option>
     </select>
   </label>
-  <ToggleButton bind:checked={options.parseJson}>parse json</ToggleButton>
 
   <label>
     elementview
@@ -94,40 +117,78 @@
       name="preview-entries"
     />
   </label>
+
+  <label>
+    search
+    <select bind:value={options.search} name="search">
+      <option value={false}>off</option>
+      <option>highlight</option>
+      <option>filter</option>
+      <option>filter-strict</option>
+    </select>
+  </label>
+
+  {#if options.search}
+    <ToggleButton bind:checked={options.highlightMatches}>highlight</ToggleButton>
+  {/if}
 </div>
 
 <style>
   .options {
+    display: flex;
     position: relative;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-end;
+    gap: 0.75em;
+    z-index: 10;
+    transition: height 0.3s;
+    margin-top: 1em;
+    border: 1px solid var(--_border-color);
+    border-radius: 8px;
+    background-color: var(--_background-color);
+    padding: 1em;
+    padding-top: 2em;
     width: 100%;
     max-width: 500px;
-    font-size: 10px;
-    display: flex;
-    overflow: visible;
-    flex-wrap: wrap;
-    align-items: flex-end;
-    justify-content: flex-start;
-    background-color: var(--_background-color);
+    height: 300px;
+    overflow: auto;
     color: var(--_text-color);
-    gap: 1.245em;
-    border-radius: 8px;
-    padding: 1em;
-    z-index: 10;
-    border: 1px solid var(--_border-color);
-    transition: all 100ms linear;
-    margin-top: 1em;
+    font-size: 10px;
+
+    &:hover,
+    &:focus-within {
+      /* height: auto; */
+      height: calc-size(auto, size);
+    }
   }
 
   .options-title {
-    font-family: monospace;
     position: absolute;
-    text-align: center;
-    top: -0.75em;
-    /* left: 1em; */
-    padding-inline: 1ch;
-    background-color: var(--_background-color);
-    border-radius: 8px;
+    top: 0.75em;
     border: 1px solid var(--_border-color);
+    border-radius: 8px;
+    background-color: var(--_background-color);
+    padding-inline: 1ch;
+    font-family: monospace;
+    text-align: center;
+  }
+
+  .reset-button {
+    all: unset;
+    position: absolute;
+    top: 0.75em;
+    right: 0.5em;
+    border: 1px solid var(--_border-color);
+    border-radius: 8px;
+    background-color: var(--_background-color);
+    padding-inline: 1ch;
+    font-family: monospace;
+    text-align: center;
+  }
+
+  label {
+    text-align: right;
   }
 
   label:has(input:checked) {
@@ -149,9 +210,9 @@
   }
 
   label {
-    white-space: nowrap;
     flex-shrink: 0;
-    font-family: monospace;
     font-size: 10px;
+    font-family: monospace;
+    white-space: nowrap;
   }
 </style>

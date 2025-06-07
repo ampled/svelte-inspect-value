@@ -3,12 +3,16 @@ title:
   - inspect-options
   - InspectOptions
 children:
+  - - anim-rate
+    - animRate
   - - borderless
     - borderless
   - - can-copy
     - canCopy
   - - custom-components
     - customComponents
+  - - easing
+    - easing
   - - element-view
     - elementView
   - - embed-media
@@ -21,6 +25,10 @@ children:
     - expandPaths
   - - flash-on-update
     - flashOnUpdate
+  - - heading
+    - heading
+  - - highlight-matches
+    - highlightMatches
   - - noanimate
     - noanimate
   - - on-collapse-change
@@ -39,6 +47,10 @@ children:
     - quotes
   - - render-if
     - renderIf
+  - - search
+    - search
+  - - search-mode
+    - searchMode
   - - show-length
     - showLength
   - - show-preview
@@ -59,16 +71,20 @@ children:
 
 ```ts
 type InspectOptions = {
+  animRate: number;
   borderless: boolean;
   canCopy: (value: unknown, type: string, path: unknown[]) => boolean
      | undefined;
   customComponents: CustomComponents;
+  easing: (t: number) => number;
   elementView: "simple" | "full";
   embedMedia: boolean;
   expandAll: boolean;
   expandLevel: number;
   expandPaths: string[];
   flashOnUpdate: boolean;
+  heading: boolean | string | Snippet<[boolean]>;
+  highlightMatches: boolean;
   noanimate: boolean;
   onCollapseChange: (state: CollapseState) => void | undefined;
   onCopy: (value: unknown, type: string, path: unknown[]) => Promise<boolean | void> | boolean | void
@@ -80,6 +96,8 @@ type InspectOptions = {
   previewEntries: number;
   quotes: "single" | "double" | "none";
   renderIf: unknown;
+  search: boolean | "highlight" | "filter" | "filter-strict";
+  searchMode: "and" | "or";
   showLength: boolean;
   showPreview: boolean;
   showTools: boolean;
@@ -111,6 +129,26 @@ Props will override any options using the provider methods.
 ```
 
 ## Properties
+
+### animRate
+
+```ts
+animRate: number;
+```
+
+Set transition / animation rates.
+
+`0.5` will double transition durations while `2` will halve durations.
+
+The base duration for transitions is 250ms.
+
+#### Default
+
+```ts
+1
+```
+
+***
 
 ### borderless
 
@@ -186,6 +224,32 @@ Use the helper function [`addComponent`](../functions/addComponent) to get prope
 
 ***
 
+### easing()
+
+```ts
+easing: (t: number) => number;
+```
+
+Easing-function for expand/collapse transitions
+
+#### Parameters
+
+##### t
+
+`number`
+
+#### Returns
+
+`number`
+
+#### Default
+
+```ts
+(t) => Math.pow(t - 1.0, 3.0) * (1.0 - t) + 1.0; // quartOut
+```
+
+***
+
 ### elementView
 
 ```ts
@@ -194,9 +258,8 @@ elementView: "simple" | "full";
 
 Determines what properties are shown when inspecting HTML elements
 
-`'simple'` - minimal list of properties including classList, styles, dataset and current scrollPositions
-
-`'full'` - lists all enumerable properties of an element
+- `'simple'` - minimal list of properties including classList, styles, dataset and current scrollPositions
+- `'full'` - lists all enumerable properties of an element
 
 #### Default
 
@@ -294,6 +357,39 @@ flashOnUpdate: boolean;
 ```
 
 Indicate when a value or child value is updated
+
+#### Default
+
+```ts
+true
+```
+
+***
+
+### heading
+
+```ts
+heading: boolean | string | Snippet<[boolean]>;
+```
+
+A `string` or `Snippet` that will be rendered as a small heading with a collapse-button for the component.
+
+The snippet parameter indicates if the instance has been collapsed
+
+***
+
+### highlightMatches
+
+```ts
+highlightMatches: boolean;
+```
+
+When `search` is enabled, highlight matches in keys,
+types and values when typing in the search input box.
+
+#### See
+
+[InspectOptions.search](#search)
 
 #### Default
 
@@ -470,6 +566,47 @@ true
 
 ***
 
+### search
+
+```ts
+search: boolean | "highlight" | "filter" | "filter-strict";
+```
+
+Enable or disable search functionality.
+
+Three modes are available:
+
+- `'filter' | true` - children and siblings of matching nodes will be visible
+- `'filter-strict'` - only matches will be visible
+- `'highlight'` - no nodes will be hidden, but matches will be highlighted
+
+#### Default
+
+```ts
+false
+```
+
+***
+
+### searchMode
+
+```ts
+searchMode: "and" | "or";
+```
+
+Initial multi-term search mode
+
+- `'and'` - nodes must match every term
+- `'or'` - nodes can match one of the terms
+
+#### Default
+
+```ts
+'or'
+```
+
+***
+
 ### showLength
 
 ```ts
@@ -546,9 +683,8 @@ Objects with a `subscribe` method will be inspected as stores and show their sub
 
 Set to `true`, `'value-only'` or `'full'` to enable.
 
-`'full' | true` - render store value as nested value along with other properties on the store object
-
-`'value-only'` - render store value only along with a note indicating the value was retrieved from a store
+- `'full' | true` - render store value as nested value along with other properties on the store object
+- `'value-only'` - render store value only along with a note indicating the value was retrieved from a store
 
 #### Default
 

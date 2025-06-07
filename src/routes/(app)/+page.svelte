@@ -1,17 +1,87 @@
 <script lang="ts">
-  // import { page } from '$app/stores'
-  import Inspect from '$lib/Inspect.svelte'
+  import Inspect, { type InspectOptions, type InspectProps } from '$lib/index.js'
+  import { untrack } from 'svelte'
+  import { fly } from 'svelte/transition'
 
   let { data } = $props()
+
+  const alwaysPresent: Partial<InspectProps> = {
+    theme: 'inspect',
+    borderless: false,
+  }
+
+  const configurations: Partial<InspectOptions>[] = [
+    {
+      theme: 'inspect',
+    },
+    {
+      theme: 'drak',
+    },
+    {
+      theme: 'stereo',
+    },
+    {
+      theme: 'dark',
+    },
+    {
+      theme: 'dark',
+      borderless: true,
+    },
+    {
+      theme: 'stereo',
+      borderless: true,
+    },
+    {
+      theme: 'drak',
+      borderless: true,
+    },
+    {
+      theme: 'inspect',
+      borderless: true,
+    },
+  ]
+
+  const MAX = configurations.length - 1
+
+  let currentIndex = $state(0)
+  let currentOpts = $derived({ ...alwaysPresent, ...configurations[currentIndex] })
+
+  $effect(() => {
+    let int: number
+    untrack(() => {
+      int = window.setInterval(() => {
+        if (currentIndex === MAX) {
+          currentIndex = 0
+          alwaysPresent.search = true
+        } else {
+          currentIndex += 1
+        }
+      }, 5000)
+    })
+
+    return () => {
+      window.clearInterval(int)
+    }
+  })
+
+  $effect(() => {
+    let timeout: number
+    untrack(() => {
+      timeout = window.setTimeout(() => {
+        alwaysPresent.style = 'rotate: 360deg; transition: rotate 5s linear'
+      }, 600000)
+    })
+    return () => {
+      window.clearTimeout(timeout)
+    }
+  })
 </script>
 
 <div class="center">
   <Inspect
-    showTools
     style="max-width: 640px"
-    name="packageInfo"
-    expandPaths={['packageInfo.installCommands']}
-    value={{
+    heading="packageInfo"
+    values={{
       name: 'svelte-inspect-value',
       installCommands: [
         'copy to clipboard 👉',
@@ -20,16 +90,24 @@
         'bun add svelte-inspect-value',
         'yarn add svelte-inspect-value',
       ],
-      npm: {
-        package: 'https://www.npmjs.com/package/svelte-inspect-value',
-        'dist-tags': data.packageMetaData?.['dist-tags'],
-        versions: data.packageMetaData?.versions,
-      },
+      npm: 'https://www.npmjs.com/package/svelte-inspect-value',
       github: 'https://github.com/ampled/svelte-inspect-value',
       docs: 'https://inspect.eirik.space/',
-      playground: 'https://svelte.dev/playground/956365d6905c44298234ff4d9c60741e?version=5.17.3',
+      playground: 'https://svelte.dev/playground/956365d6905c44298234ff4d9c60741e?version=5',
+      stats: data.stats,
     }}
+    {...currentOpts}
   />
+
+  <div class="theme-display">
+    theme:
+    {#key currentOpts.theme}
+      <div in:fly={{ y: -10, delay: 450 }} out:fly={{ y: 10 }}>
+        {currentOpts.theme}
+        {currentOpts.borderless ? '(borderless)' : ''}
+      </div>
+    {/key}
+  </div>
 </div>
 
 <h2>What it is</h2>
@@ -67,6 +145,19 @@
 <style>
   .center {
     display: flex;
-    justify-content: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .theme-display {
+    display: flex;
+    gap: 1ch;
+    padding: 2ch;
+    width: 100%;
+    max-width: 640px;
+    font-size: 12px;
+    font-family: monospace;
+    text-align: left;
   }
 </style>

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import type { HandleServerError } from '@sveltejs/kit'
 
 export const handleError: HandleServerError = async ({ error }) => {

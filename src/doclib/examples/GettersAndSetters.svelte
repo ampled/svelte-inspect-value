@@ -16,6 +16,7 @@
         return `${this.first} ${this.last}`
       },
       set firstName(value: string) {
+        // eslint-disable-next-line no-console
         console.assert(typeof value === 'string')
         this.first = value
       },

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Copy from '$lib/icons/Copy.svelte'
+  import Copy from '$doclib/icons/Copy.svelte'
   import Inspect from '$lib/Inspect.svelte'
   import { getContext, type Snippet } from 'svelte'
   import type { HTMLAttributes } from 'svelte/elements'
@@ -67,12 +67,12 @@
 <style>
   .code {
     position: relative;
-    border-radius: 8px;
     border: 1px solid var(--docs-border-color);
+    border-radius: 8px;
     background-color: var(--bg-code);
-    font-size: 12px;
-    overflow: hidden;
     padding: 1em;
+    overflow: hidden;
+    font-size: 12px;
 
     :global .shiki {
       border: none;
@@ -91,29 +91,29 @@
   .util {
     /* color: var(--fg); */
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    font-size: 14px;
-    font-family: monospace;
     position: absolute;
     top: 0;
     right: 0;
-    border-radius: 0 8px 0 8px;
-    background-color: var(--bg-lighter);
-    border-left: 1px solid var(--docs-border-color);
-    border-bottom: 1px solid var(--docs-border-color);
-    padding-block: 0.25em;
-    font-size: 12px;
-    padding-inline: 0.5em;
+    flex-direction: row;
+    align-items: center;
     gap: 0.5em;
     z-index: 10;
+    border-bottom: 1px solid var(--docs-border-color);
+    border-left: 1px solid var(--docs-border-color);
+    border-radius: 0 8px 0 8px;
+    background-color: var(--bg-lighter);
+    padding-inline: 0.5em;
+    padding-block: 0.25em;
+    font-size: 14px;
+    font-size: 12px;
+    font-family: monospace;
 
     button {
       transition: all 250ms linear;
       border: none;
+      padding: 0;
       width: 1em;
       height: 1em;
-      padding: 0;
 
       &.copied {
         color: var(--green);

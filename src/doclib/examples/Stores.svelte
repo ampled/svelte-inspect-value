@@ -17,13 +17,13 @@
     let interval: number | undefined
     let val = writable(initialValue, () => {
       if (browser) {
-        interval = setInterval(() => {
+        interval = window.setInterval(() => {
           val.update((n) => n + 1)
         }, 500)
       }
 
       return () => {
-        clearInterval(interval)
+        window.clearInterval(interval)
       }
     })
 

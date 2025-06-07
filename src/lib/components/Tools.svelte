@@ -1,18 +1,19 @@
 <script lang="ts">
-  import { getContext, onDestroy, type Component } from 'svelte'
-  import { blur } from 'svelte/transition'
+  import { getContext } from 'svelte'
   import { globalInspectState } from '../Panel.svelte'
+  import { getAddDestroyCallbackFn } from '../contexts.js'
   import { globalValues } from '../global.svelte.js'
   import { copyToClipBoard, logToConsole } from '../hello.svelte.js'
-  import CollapseChildren from '../icons/CollapseChildren.svelte'
+  import ClipBoardIcon from '../icons/ClipBoardIcon.svelte'
   import Console from '../icons/Console.svelte'
-  import Copy from '../icons/Copy.svelte'
-  import ExpandChildren from '../icons/ExpandChildren.svelte'
+  import ExpandCollapseIcon from '../icons/ExpandCollapseIcon.svelte'
+  import PanelValueIcon from '../icons/PanelValueIcon.svelte'
   import { useOptions } from '../options.svelte.js'
   import { useState, type NodeState } from '../state.svelte.js'
   import type { TypeViewProps } from '../types.js'
-  import { isPromise, stringifyPath } from '../util.js'
-  import NodeActionButton from './NodeActionButton.svelte'
+  import { isPromise, stringifyPath, wait } from '../util.js'
+  import { buildSearchIndex } from '../util/search.js'
+  import NodeIconButton from './NodeIconButton.svelte'
 
   type Props = Partial<TypeViewProps<unknown, string>> & { collapsed?: boolean }
 
@@ -20,13 +21,15 @@
 
   let copied = $state(false)
 
+  const SIV_DEBUG = getContext<(() => boolean) | undefined>(Symbol.for('SIV.DEBUG'))
   const fixed = getContext(Symbol.for('siv.fixed'))
+  const addOnDestroyCallback = getAddDestroyCallbackFn()
   let options = useOptions()
-  let { onCopy, canCopy, onLog, borderless, showTools } = $derived(options.value)
+  let { onCopy, canCopy, onLog, showTools } = $derived(options.value)
   let inspectState = useState()
-  let addedToPanel = $state(false)
   let stringifiedPath = $derived(stringifyPath(path))
   let level = $derived(path.length)
+  let settingCollapse = $state<false | 'collapsing' | 'expanding'>(false)
 
   let showCopyButton = $derived.by(() => {
     if (onCopy) {
@@ -41,12 +44,13 @@
 
   let nodeState = $derived(inspectState.value[stringifyPath(path)])
 
-  let hasExpandedChildren = $derived.by(() => {
-    const children = Object.entries(inspectState.value).filter(
+  let childNodes = $derived(
+    Object.entries(inspectState.value).filter(
       ([k]) => k.startsWith(stringifiedPath) && k.split('.').length === level + 1
     )
-    return children.some(([, v]) => !v.collapsed)
-  })
+  )
+  let hasExpandedChildren = $derived(childNodes.some(([, state]) => !state.collapsed))
+  let hasChildren = $derived(childNodes.length > 0)
 
   let copyTimeout = $state<number>()
   function onCopySuccess() {
@@ -97,158 +101,175 @@
 
   type CollapseAction = {
     hint: string
-    action: (level: number, path: PropertyKey[]) => void
-    icon: Component
+    action: () => void | Promise<void>
+    expand: boolean
   }
 
   let collapseAction: CollapseAction = {
     hint: 'collapse children',
-    action: (level, path) => inspectState.collapseChildren(level, path),
-    icon: CollapseChildren,
+    action: async () => {
+      settingCollapse = 'collapsing'
+      for (const [path, state] of childNodes.toReversed()) {
+        if (!state.collapsed) {
+          inspectState.setCollapse(path, { collapsed: true })
+          await wait()
+        }
+      }
+      settingCollapse = false
+    },
+    expand: false,
   }
 
   let expandAction: CollapseAction = {
     hint: 'expand children',
-    action: (level: number, path) => inspectState.expandChildren(level, path),
-    icon: ExpandChildren,
+    action: async () => {
+      settingCollapse = 'expanding'
+      for (const [path, state] of childNodes) {
+        if (state.collapsed) {
+          inspectState.setCollapse(path, { collapsed: false })
+          await wait()
+        }
+      }
+      settingCollapse = false
+    },
+    expand: true,
+  }
+
+  let expandSelfAndChildrenAction: CollapseAction = {
+    hint: 'expand node and children',
+    action: async () => {
+      inspectState.setCollapse(stringifiedPath, { collapsed: false })
+      expandAction.action()
+    },
+    expand: true,
   }
 
   function getTreeAction(nodeState: NodeState) {
     if (nodeState) {
       if (nodeState.collapsed) {
-        return expandAction
-      } else if (hasExpandedChildren) {
-        return collapseAction
-      } else {
-        return expandAction
+        return expandSelfAndChildrenAction
+      }
+
+      if (hasChildren) {
+        return hasExpandedChildren ? collapseAction : expandAction
       }
     }
+
     return undefined
   }
 
   let treeAction = $derived(getTreeAction(nodeState))
+  let panelValueAction = $derived.by(() => {
+    if (globalInspectState.mounted.size) {
+      if (globalValues.has(stringifiedPath)) {
+        return {
+          add: false,
+          hint: 'remove from panel',
+          action: () => {
+            globalValues.delete(stringifiedPath)
+          },
+        }
+      } else if (!fixed) {
+        return {
+          add: true,
+          hint: 'add to panel',
+          action: () => {
+            globalValues.set(stringifiedPath, {
+              get value() {
+                return value
+              },
+              note: { title: 'Added manually' },
+            })
+            addOnDestroyCallback(() => {
+              globalValues.delete(stringifiedPath)
+            })
+          },
+        }
+      }
+    }
+    return undefined
+  })
 
-  function setAsPanelValue() {
-    addedToPanel = true
-    globalValues.set(stringifiedPath, {
-      get value() {
-        return value
-      },
-      note: { title: 'Added manually' },
+  function debugNode() {
+    const { log } = console
+    log({
+      globalInspectState,
+      indexed: buildSearchIndex({ value, options: options.value }),
     })
   }
-
-  onDestroy(() => {
-    if (addedToPanel) globalValues.delete(stringifiedPath)
-  })
 </script>
 
 {#if showTools}
-  <div class="tools" class:borderless>
-    {#if !fixed && !globalValues.has(stringifiedPath) && globalInspectState.mounted.length}
-      <NodeActionButton title="add to panel" onclick={setAsPanelValue}>+</NodeActionButton>
+  <div class="tools">
+    {#if SIV_DEBUG?.()}
+      <NodeIconButton onclick={debugNode}>?</NodeIconButton>
     {/if}
-    {#if globalValues.has(stringifiedPath)}
-      <NodeActionButton
-        title="remove from panel"
-        onclick={() => globalValues.delete(stringifiedPath)}>-</NodeActionButton
-      >
+    {#if panelValueAction}
+      <NodeIconButton title={panelValueAction.hint} onclick={panelValueAction.action}>
+        <PanelValueIcon add={panelValueAction.add} />
+      </NodeIconButton>
     {/if}
+
     {#if treeAction}
-      <button
-        transition:blur={{ duration: options.transitionDuration }}
-        type="button"
+      <NodeIconButton
+        disabled={settingCollapse !== false}
         title={treeAction.hint}
         aria-label={treeAction.hint}
-        onclick={() => treeAction.action(level, path)}
+        onclick={treeAction.action}
       >
-        <treeAction.icon />
-      </button>
+        <ExpandCollapseIcon expand={treeAction.expand} setting={settingCollapse} />
+      </NodeIconButton>
     {/if}
-    <button
+    <NodeIconButton
       type="button"
       title="log value to console"
       aria-label="log value to console"
       onclick={() => log()}
+      style="font-size: 1em;width: 1.5em; height: 1.5em;"
     >
       <Console />
-    </button>
+    </NodeIconButton>
     {#if showCopyButton}
-      <button
+      <NodeIconButton
         type="button"
         title="copy value to clipboard"
         aria-label="copy value to clipboard"
         onclick={() => copy()}
-        class:copied
+        success={copied}
       >
-        <Copy />
-      </button>
+        <ClipBoardIcon {copied} />
+      </NodeIconButton>
     {/if}
   </div>
 {/if}
 
 <style>
-  :global(.line:hover) .tools,
-  :global(.line:focus-within) .tools,
-  :global(.title-bar:hover) .tools,
-  :global(.title-bar:focus-within) .tools {
-    opacity: 1;
-    display: flex;
-    transition: opacity 250ms ease-in-out allow-discrete;
-  }
-
   .tools {
-    transition: opacity 250ms ease-in-out allow-discrete;
-    background-color: var(--_tools-background-color);
-    border-left: 1px solid var(--_tools-border-color);
-    backdrop-filter: blur(1px);
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    padding-inline: 0.5em;
     display: flex;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    flex-wrap: nowrap;
     justify-content: center;
     align-items: center;
     gap: 0.25em;
     opacity: 0;
-    max-height: 1.5em;
     z-index: calc(var(--index) + 1);
-    flex-wrap: nowrap;
+    backdrop-filter: blur(1px);
+    transition: opacity var(--__transition-duration) ease-in-out allow-discrete;
+    border-left: 1px solid var(--_tools-border-color);
+    background-color: var(--_tools-background-color);
+    padding-inline: 0.5em;
+    max-height: 1.5em;
     overflow: clip;
-
-    button {
-      all: unset;
-      padding: 2px;
-      margin: 0;
-      border: none;
-      height: 1.5em;
-      min-height: 1.5em;
-      width: 1.5em;
-      min-width: 1.5em;
-      color: var(--_button-color);
-      cursor: pointer;
-
-      :global(svg) {
-        transition: color 100 ease-in-out;
-      }
-
-      &.copied {
-        color: var(--_button-success-color) !important;
-      }
-
-      &:hover,
-      &:focus-visible {
-        background-color: transparent;
-        color: var(--_text-color);
-      }
-    }
+    font-size: 1em;
   }
 
-  .tools.borderless {
-    position: relative;
-    transition-property: opacity !important;
-    background-color: var(--_tools-background-color-borderless);
-    border-left: 0;
+  :global(.line:hover) .tools,
+  :global(.line:focus-within) .tools {
+    display: flex;
+    opacity: 1;
+    transition: opacity var(--__transition-duration) ease-in-out allow-discrete;
   }
 </style>

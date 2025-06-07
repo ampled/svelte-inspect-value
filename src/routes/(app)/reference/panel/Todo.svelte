@@ -83,7 +83,11 @@
   open
   zIndex={999}
 >
-  <p>👈 try resizing the panel!</p>
+  <p
+    style="background-color: var(--_background-color); padding: 0.5em; border-radius: var(--_border-radius); border: 1px solid var(--_border-color);"
+  >
+    👈 try resizing the panel!
+  </p>
 </Inspect.Panel>
 <div class="board">
   <input
@@ -119,42 +123,42 @@
 
 <style>
   .new-todo {
-    font-size: 1.4em;
-    width: 100%;
     margin: 2em 0 1em 0;
+    width: 100%;
+    font-size: 1.4em;
   }
 
   .board {
-    max-width: 36em;
     margin: 0 3em;
+    max-width: 36em;
   }
 
   .left,
   .right {
     float: left;
-    width: 50%;
-    padding: 0 1em 0 0;
     box-sizing: border-box;
+    padding: 0 1em 0 0;
+    width: 50%;
   }
 
   h2 {
-    font-size: 2em;
     font-weight: 200;
+    font-size: 2em;
     user-select: none;
   }
 
   label {
+    display: block;
     top: 0;
     left: 0;
-    display: block;
-    font-size: 1em;
-    line-height: 1;
-    padding: 0.5em;
     margin: 0 auto 0.5em auto;
     border-radius: 2px;
     background-color: #eee;
-    user-select: none;
+    padding: 0.5em;
     color: black;
+    font-size: 1em;
+    line-height: 1;
+    user-select: none;
   }
 
   input {
@@ -167,15 +171,15 @@
 
   button {
     float: right;
-    height: 1em;
-    box-sizing: border-box;
-    padding: 0 0.5em;
-    line-height: 1;
-    background-color: transparent;
-    border: none;
-    color: rgb(170, 30, 30);
     opacity: 0;
     transition: opacity 0.2s;
+    box-sizing: border-box;
+    border: none;
+    background-color: transparent;
+    padding: 0 0.5em;
+    height: 1em;
+    color: rgb(170, 30, 30);
+    line-height: 1;
   }
 
   label:hover button {

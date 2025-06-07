@@ -19,6 +19,7 @@ export type {
   InspectProps,
   InspectValuesOptions,
   PanelProps,
+  PanelSettings,
   TypeViewProps,
 } from './types.js'
 export { addComponent, type ValueType } from './util.js'

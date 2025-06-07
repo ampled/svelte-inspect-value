@@ -1,6 +1,5 @@
 <script lang="ts">
   import { setContext, type ComponentProps } from 'svelte'
-  // import Shiki from '../Shiki.svelte'
   import Code from '../Code.svelte'
 
   type Props = {
@@ -30,11 +29,11 @@
 
 <style>
   button {
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-    border-bottom: none;
-    background-color: var(--base00);
     z-index: 9999;
+    border-bottom: none;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    background-color: var(--base00);
   }
 
   button.active {
@@ -43,8 +42,7 @@
   }
 
   .tabs {
-    /* background-color: rgba(0 0 0 / 0.1); */
-    font-size: 14px;
     width: 100%;
+    font-size: 14px;
   }
 </style>

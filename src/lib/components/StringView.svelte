@@ -4,6 +4,7 @@
   import type { TypeViewProps } from '../types.js'
   import { stringify } from '../util.js'
   import Expandable from './Expandable.svelte'
+  import Highlight from './Highlight.svelte'
   import Node from './Node.svelte'
   import OneLineView from './OneLineView.svelte'
   import StringValue from './StringValue.svelte'
@@ -73,7 +74,7 @@
         <audio controls src={value}></audio>
       </div>
     {:else if isMultiLine}
-      <pre class="value string multi" title={value}>{value}</pre>
+      <pre class="value string multi" title={value}><Highlight {value} fields={['value']} /></pre>
     {/if}
   </Expandable>
 {:else}
@@ -98,10 +99,10 @@
   }
 
   .image {
-    height: 100px;
     width: 100px;
-    resize: both;
+    height: 100px;
     overflow: scroll;
+    resize: both;
   }
 
   img {

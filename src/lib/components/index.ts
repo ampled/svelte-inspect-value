@@ -20,6 +20,7 @@ import SvelteStoreView from './SvelteStoreView.svelte'
 import TypedArrayView from './TypedArrayView.svelte'
 import UrlSearchParamsView from './URLSearchParamsView.svelte'
 import UrlView from './URLView.svelte'
+import MapEntryView from './MapEntryView.svelte'
 
 type ViewComponent<T> = Component<TypeViewProps<T>>
 
@@ -67,6 +68,7 @@ const components = {
   date: [DateView],
   error: [ErrorView],
   map: [MapView],
+  mapentry: [MapEntryView],
   set: [SetView],
   url: [UrlView],
   urlsearchparams: [UrlSearchParamsView],

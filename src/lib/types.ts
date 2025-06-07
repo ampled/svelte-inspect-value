@@ -33,10 +33,6 @@ export type BaseProps = {
    * @see {@linkcode InspectOptions.expandPaths}
    */
   name?: string
-  /**
-   * A `string` or `Snippet` that will be rendered as a small heading with a collapse-button for the component.
-   */
-  heading?: string | import('svelte').Snippet
 }
 
 /**
@@ -66,11 +62,9 @@ export type PositionProp<X extends XPos = XPos, Y extends YPos = YPos> =
   | ('left' | 'right')
 
 /**
- * Props for `Inspect.Panel`
- *
- * @see {@link InspectOptions}
+ * Props / settings that can be changed within the `Inspect.Panel` UI.
  */
-export type PanelProps = {
+export type PanelSettings = {
   /**
    * Initial panel position
    *
@@ -101,14 +95,6 @@ export type PanelProps = {
    */
   open?: boolean
   /**
-   * Panel should open on hover.
-   *
-   * Enabling this will leave part of the panel visible for easier reach.
-   *
-   * @default false
-   */
-  openOnHover?: boolean
-  /**
    * Sets appearance of panel.
    *
    * Can be `'solid'|'glassy'|'dense'|'floating'`
@@ -117,6 +103,30 @@ export type PanelProps = {
    * @default 'solid'
    */
   appearance?: PanelAppearance
+  /**
+   *
+   * Apply opacity to the panel when not hovered or focused
+   *
+   * **Bindable**
+   * @default false
+   */
+  opacity?: boolean
+}
+
+/**
+ * Props for `Inspect.Panel`
+ *
+ * @see {@link InspectOptions}
+ */
+export type PanelProps = {
+  /**
+   * Panel should open on hover.
+   *
+   * Enabling this will leave part of the panel visible for easier reach.
+   *
+   * @default false
+   */
+  openOnHover?: boolean
   /**
    * Don't render Panel toolbar with controls for setting position, opacity and appearance
    *
@@ -135,14 +145,6 @@ export type PanelProps = {
    * @default true
    */
   resize?: boolean
-  /**
-   *
-   * Apply opacity to the panel when not hovered or focused
-   *
-   * **Bindable**
-   * @default false
-   */
-  opacity?: boolean
   /**
    * Extra elements to be added at the bottom of the panel
    */
@@ -166,7 +168,23 @@ export type PanelProps = {
    * @default undefined
    */
   onOpenChange?: (open: boolean) => void
+  /**
+   * Callback for when any panel prop/setting is changed with the panel UI. Can be used for
+   * persisting settings using `localStorage`
+   *
+   * Will run when any of the following prop / setting is changed:
+   *
+   * - `open`
+   * - `align`
+   * - `appearance`
+   * - `opacity`
+   * @param {Required<PanelSettings>} settings Current value of settings
+   * @default undefined
+   * @see {@link PanelSettings}
+   */
+  onSettingsChange?: (settings: Required<PanelSettings>) => void
 } & BaseProps &
+  PanelSettings &
   Partial<InspectOptions> &
   SvelteHTMLElements['aside']
 
@@ -178,9 +196,21 @@ export type Note = { title?: string; description?: string }
 export type TypeViewProps<Value = unknown, Type = ValueType> = {
   value: Value
   key?: PropertyKey
+  /**
+   * Prefix for key e.g. "get" or "static"
+   */
   keyPrefix?: string
+  /**
+   * Should key be shown
+   */
   showKey?: boolean
+  /**
+   * Key delimiter
+   */
   keyDelim?: string
+  /**
+   * Style overrides for key
+   */
   keyStyle?: HTMLAttributes<HTMLDivElement>['style']
   /**
    * Path of the node
@@ -201,7 +231,23 @@ export type TypeViewProps<Value = unknown, Type = ValueType> = {
    * Force type indicator visibility for this node
    */
   forceType?: boolean
+  /**
+   * Title / description for node note, e.g. "parsed" for parsed JSON strings
+   */
   note?: Note
+  /**
+   * The node is a search match
+   */
+  match?: boolean
+  /**
+   * Number of child entries / items.
+   * Also determines if expandables can be expanded (needs to be not `undefined`/`null`/`zero`).
+   */
+  length?: number
+  /**
+   * Should the node show it's given length / count
+   */
+  showLength?: boolean
 }
 
 /**
@@ -209,16 +255,14 @@ export type TypeViewProps<Value = unknown, Type = ValueType> = {
  *
  * Includes `elementAttributes` for setting HTML-attributes on the element without using props.
  */
-export type InspectValuesOptions = () => Partial<
-  InspectOptions & {
-    /**
-     * HTML-attributes (like `class` and `style`) that will be applied to the `Inspect.Values`-element.
-     *
-     * Will be overwritten, not merged if a child-variation defined with `withOptions` defines this object.
-     */
-    elementAttributes?: SvelteHTMLElements['div']
-  }
->
+export type InspectValuesOptions = () => Partial<InspectOptions> & {
+  /**
+   * HTML-attributes (like `class` and `style`) that will be applied to the `Inspect.Values`-element.
+   *
+   * Will be overwritten, not merged if a child-variation defined with `withOptions` defines this object.
+   */
+  elementAttributes?: SvelteHTMLElements['div']
+}
 
 export type CustomComponentPropsTransformFn<TComponent extends Component<any>> = (
   props: ComponentProps<TComponent>
@@ -294,3 +338,11 @@ type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] exte
   : Enumerate<N, [...Acc, Acc['length']]>
 
 export type IntRange<F extends number, T extends number> = Exclude<Enumerate<T>, Enumerate<F>>
+
+export type SecondArgOf<T> = T extends (
+  first: any,
+  second: infer SecondArgument,
+  ...args: any[]
+) => any
+  ? SecondArgument
+  : never

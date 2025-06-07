@@ -1,7 +1,24 @@
 <script lang="ts">
-  import type { HTMLButtonAttributes } from 'svelte/elements'
+  import { useOptions } from '../options.svelte.js'
+  import type { Snippet } from 'svelte'
+  import type { SvelteHTMLElements } from 'svelte/elements'
+  import { slide, type SlideParams } from 'svelte/transition'
 
-  let { children, onclick, ...rest }: HTMLButtonAttributes = $props()
+  type Props = {
+    children: Snippet
+    success?: boolean
+    transition?: typeof slide
+    transitionParams?: SlideParams
+  } & SvelteHTMLElements['button']
+
+  const options = useOptions()
+  let {
+    children,
+    success = false,
+    transition = slide,
+    transitionParams = { axis: 'x', duration: options.transitionDuration },
+    ...rest
+  }: Props = $props()
 
   let button = $state<HTMLButtonElement>()
 
@@ -10,35 +27,53 @@
   }
 </script>
 
-<button bind:this={button} type="button" {onclick} {...rest}>
+<button
+  class="node-icon-button"
+  transition:transition={{ duration: options.transitionDuration, ...transitionParams }}
+  bind:this={button}
+  class:success
+  type="button"
+  {...rest}
+>
   {@render children?.()}
 </button>
 
 <style>
-  button {
-    all: unset;
-    font-family: var(--inspect-font);
-    font-size: 0.8em;
-    height: 1.5em;
-    width: 1.5em;
+  :global(.node-icon-button svg) {
     min-width: 1.5em;
-    line-height: 1.5em;
-    color: var(--_button-color);
-    cursor: pointer;
+    min-height: 1.5em;
+  }
+
+  .node-icon-button {
+    all: unset;
+    transform-origin: bottom center;
     transition:
       color 250ms ease-in-out,
-      background-color 250ms ease-in-out;
-    transform-origin: bottom center;
+      background-color 250ms ease-in-out,
+      transform 100ms ease-in-out;
+    cursor: pointer;
+    width: 1.5em;
+    min-width: 1.5em;
+    height: 1.5em;
+    color: var(--_button-color);
+    font-size: 1em;
+    line-height: 1.5em;
+    font-family: var(--inspect-font);
+    text-align: center;
+
+    &.success {
+      color: var(--_button-success-color) !important;
+    }
 
     &:disabled {
       cursor: default;
-      color: var(--border-disabled-color);
+      color: var(--_button-disabled-color) !important;
     }
 
     &:active:not(:disabled) {
-      color: var(--_button-color);
-      background-color: transparent;
       transform: scaleY(0.85);
+      background-color: transparent;
+      color: var(--_button-color);
     }
 
     &:hover:not(:disabled):not(:active),

@@ -1,33 +1,41 @@
 <script lang="ts">
   import type { Snippet } from 'svelte'
+  import type { SvelteHTMLElements } from 'svelte/elements'
+  import { slide } from 'svelte/transition'
 
   type Props = {
     children?: Snippet
     checked?: boolean
-  }
+  } & SvelteHTMLElements['button']
 
-  let { children, checked = $bindable(false) }: Props = $props()
+  let { children, checked = $bindable(false), ...rest }: Props = $props()
 </script>
 
-<button type="button" class:checked onclick={() => (checked = !checked)}>
+<button
+  transition:slide={{ axis: 'x' }}
+  type="button"
+  class:checked
+  onclick={() => (checked = !checked)}
+  {...rest}
+>
   {@render children?.()}
 </button>
 
 <style>
   button {
     all: unset;
-    outline: 1px solid #b4d455;
     transition: all 200ms ease-in-out;
-    user-select: none;
-    border-radius: 8px;
-    padding: 0.25em;
-    max-height: 1.6em;
-    display: inline-flex;
-    flex-direction: row;
-    font-family: monospace;
     cursor: pointer;
+    outline: 1px solid #b4d455;
+    border-radius: 8px;
+    padding-inline: 0.5em;
+    padding-block: 0.25em;
+    max-height: 1.6em;
     font-size: 10px;
     line-height: 1;
+    font-family: monospace;
+    user-select: none;
+    text-align: center;
     white-space: nowrap;
   }
 

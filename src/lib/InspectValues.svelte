@@ -2,7 +2,8 @@
   import { getContext } from 'svelte'
   import CollapseStateProvider from './CollapseStateProvider.svelte'
   import Wrapper from './Wrapper.svelte'
-  import Node from './components/Node.svelte'
+  import PropertyList from './components/PropertyList.svelte'
+  import { logToConsole } from './hello.svelte.js'
   import {
     createOptions,
     GLOBAL_OPTIONS_CONTEXT,
@@ -10,10 +11,10 @@
     type InspectOptions,
   } from './options.svelte.js'
   import type { InspectValuesOptions } from './types.js'
-  import { initialize } from './util.js'
+  import { getAllProperties, initialize } from './util.js'
 
-  let props: Record<string, unknown> = $props()
-  let values = $derived(Object.entries(props))
+  let props: Record<PropertyKey, unknown> = $props()
+  let keys = $derived(getAllProperties(props))
 
   let withOptionsContext = getContext<InspectValuesOptions | undefined>(
     Symbol.for('siv.with-options')
@@ -34,7 +35,7 @@
 
   const options = createOptions(() => mergedOptions)
 
-  let { theme, noanimate, borderless, onCollapseChange } = $derived(options.value)
+  let { theme, noanimate, borderless, onCollapseChange, onLog, heading } = $derived(options.value)
   let { elementAttributes = {} } = $derived(withOptions)
   let { class: classValue } = $derived(elementAttributes)
 
@@ -44,21 +45,32 @@
       : Boolean(options.value.renderIf)
   )
 
+  function log() {
+    if (onLog) {
+      onLog(props, 'props', ['Inspect.Values#props'])
+    } else {
+      logToConsole(['Inspect.Values#props'], props, 'props')
+    }
+  }
+
   initialize(options)
 </script>
 
 {#if shouldRender}
-  <CollapseStateProvider {onCollapseChange}>
+  <CollapseStateProvider {onCollapseChange} values={props} {keys} name="">
     <Wrapper
       data-testid="inspect"
       class={[theme, noanimate && 'noanimate', borderless && 'borderless', classValue]}
+      showExpandCollapse
+      onlog={log}
+      {heading}
       {...elementAttributes}
     >
-      {#each values as [name, value]}
-        <Node {value} key={name} />
+      {#if keys.length}
+        <PropertyList value={props} {keys} />
       {:else}
         <div style="color: var(--_comment-color); text-align: center">no value</div>
-      {/each}
+      {/if}
     </Wrapper>
   </CollapseStateProvider>
 {/if}

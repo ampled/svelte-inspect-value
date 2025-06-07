@@ -2,6 +2,7 @@
   import type { TypeViewProps } from '../types.js'
   import Expandable from './Expandable.svelte'
   import GetterSetter from './GetterSetter.svelte'
+  import Highlight from './Highlight.svelte'
   import Node from './Node.svelte'
   import PropertyList from './PropertyList.svelte'
 
@@ -26,8 +27,13 @@
 
 <Expandable length={1} showLength={false} {type} {key} {path} {value} {...rest} keepPreviewOnExpand>
   {#snippet valuePreview()}
-    <span data-testid="value" class="value regexp" title={value.toString()}>{value.toString()}</span
-    >
+    <Highlight
+      data-testid="value"
+      class="value regexp"
+      title={value.toString()}
+      value={value.toString()}
+      fields={['value']}
+    />
   {/snippet}
   <PropertyList {keys} {value} {type}>
     {#snippet item({ key, descriptor })}
