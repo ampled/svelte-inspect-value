@@ -79,7 +79,7 @@
 {#if (type && options.value.showTypes && previewLevel === 0) || required || force}
   <Highlight
     value={display}
-    field="type"
+    fields={['type']}
     alsoMatch={type}
     data-testid="type"
     class={['type', type, previewLevel ?? 'preview']}

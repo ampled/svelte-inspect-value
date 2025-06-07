@@ -144,6 +144,9 @@ keys.
     / <code>date</code>
   </li>
   <li>
+    <code>key:</code> to search within a values key
+  </li>
+  <li>
     <code>path:</code> to search within the path to a value, e.g.
     <code>people.3.contact.email</code>
   </li>

@@ -74,7 +74,7 @@
         <audio controls src={value}></audio>
       </div>
     {:else if isMultiLine}
-      <pre class="value string multi" title={value}><Highlight {value} field="value" /></pre>
+      <pre class="value string multi" title={value}><Highlight {value} fields={['value']} /></pre>
     {/if}
   </Expandable>
 {:else}

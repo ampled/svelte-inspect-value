@@ -32,7 +32,7 @@
       class="value regexp"
       title={value.toString()}
       value={value.toString()}
-      field="value"
+      fields={['value']}
     />
   {/snippet}
   <PropertyList {keys} {value} {type}>

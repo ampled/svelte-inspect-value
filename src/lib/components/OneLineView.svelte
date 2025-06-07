@@ -67,7 +67,13 @@
     {#if children}
       {@render children()}
     {:else if displayOrValue}
-      <Highlight data-testid="value" {title} class={['value', type]} value={displayOrValue} />
+      <Highlight
+        data-testid="value"
+        {title}
+        class={['value', type]}
+        value={displayOrValue}
+        fields={['value']}
+      />
     {/if}
 
     {#if note && !previewLevel}

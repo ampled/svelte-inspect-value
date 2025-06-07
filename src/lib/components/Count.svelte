@@ -55,10 +55,10 @@
         {length}
       </span>
       {#if unit}
-        <Highlight class="unit" value={unit} field="value" />
+        <Highlight class="unit" value={unit} fields={['value']} />
       {/if}
     {:else}
-      <Highlight value="empty" field="value" />
+      <Highlight value="empty" fields={['value']} />
     {/if}
   </div>
 {/if}

@@ -40,7 +40,7 @@
   target={isUrlOrPath ? '_blank' : null}
   rel={isUrlOrPath ? 'noreferrer' : null}
 >
-  <Highlight value={stringified} field="value" alsoMatch={value} />{#if isUrlOrPath}
+  <Highlight value={stringified} fields={['value']} alsoMatch={value} />{#if isUrlOrPath}
     <span class="value url">
       <LinkIcon />
     </span>

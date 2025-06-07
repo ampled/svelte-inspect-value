@@ -15,6 +15,7 @@ import {
 
 type SearchNode = {
   path: string
+  key: string
   tokens?: string[]
   type: string
 }
@@ -62,6 +63,7 @@ const typedArrays = [
 function addNode(index: SearchIndex, path: unknown[], tokens: string[] | undefined, type: string) {
   index.push({
     path: stringifyPath(path),
+    key: String(path[path.length - 1]),
     tokens,
     type,
   })
@@ -268,11 +270,7 @@ const indexers = {
     return index
   },
   iterator: ({ prevPath, index, type }) => {
-    index.push({
-      path: stringifyPath(prevPath),
-      tokens: ['next'],
-      type,
-    })
+    addNode(index, prevPath, [], type)
     return index
   },
   date: ({ value, prevPath, index, visited }) => {
@@ -389,11 +387,7 @@ const indexers = {
   urlsearchparams: ({ value, prevPath, index, type }) => {
     const params = value as URLSearchParams
     if (params.size > 0) {
-      index.push({
-        path: stringifyPath(prevPath),
-        tokens: [params.toString(), params.size ? 'entries' : 'empty'],
-        type,
-      })
+      addNode(index, prevPath, [params.toString(), params.size ? 'entries' : 'empty'], type)
     }
     return index
   },
@@ -543,18 +537,6 @@ export function clearSearchCache() {
   memoizeClear(build_search_index)
 }
 
-export function _searchStructuredIndex(
-  index: SearchNode[],
-  searchString: string,
-  searchKeys = false
-): string[] {
-  if (!searchString.trim()) return []
-
-  const terms = parseSearchTerms(searchString)
-
-  return index.filter((node) => matchesNode(node, terms, searchKeys)).map((node) => node.path)
-}
-
 export function searchStructuredIndex(
   index: SearchNode[],
   searchString: string,
@@ -571,7 +553,7 @@ export function searchStructuredIndex(
 }
 
 export type SearchTerm = {
-  field: 'value' | 'path' | 'type' | 'any'
+  field: 'value' | 'path' | 'key' | 'type' | 'any'
   value: string
   exact: boolean
 }
@@ -591,7 +573,7 @@ export function parseSearchTerms(input: string, lowercase = true): SearchTerm[] 
     const exact = !!quoted
 
     terms.push({
-      field: ['value', 'path', 'type'].includes(field) ? field : 'any',
+      field: ['value', 'path', 'type', 'key'].includes(field) ? field : 'any',
       value: lowercase ? value.toLowerCase() : value,
       exact,
     })
@@ -600,81 +582,30 @@ export function parseSearchTerms(input: string, lowercase = true): SearchTerm[] 
   return terms
 }
 
-function matchesNode(node: SearchNode, terms: SearchTerm[], searchKeys: boolean): boolean {
-  const tokens = node.tokens?.map((t) => t.toLowerCase()) ?? []
-  const path = node.path.toLowerCase()
-  const type = node.type.toLowerCase()
-
-  return terms.every(({ field, value, exact }) => {
-    const matchToken = (t: string) => (exact ? t === value : t.includes(value))
-
-    switch (field) {
-      case 'value':
-        return tokens.some(matchToken)
-
-      case 'path':
-        return [path, path.split('.').at(-1)].some(() => matchToken(path))
-
-      case 'type':
-        return matchToken(type)
-
-      case 'any':
-        return (
-          tokens.some(matchToken) ||
-          (searchKeys && [path, path.split('.').at(-1)].some((p) => matchToken(p ?? ''))) ||
-          matchToken(type)
-        )
-    }
-  })
-}
-
-function _matchTerms(
-  node: SearchNode,
-  terms: SearchTerm[],
-  searchKeys: boolean,
-  mode: 'and' | 'or'
-): boolean {
-  const tokens = node.tokens?.map((t) => t.toLowerCase()) ?? []
-  const path = node.path.toLowerCase()
-  const type = node.type.toLowerCase()
-
-  const matchesTerm = ({ field, value, exact }: SearchTerm): boolean => {
-    const match = (token: string) => (exact ? token === value : token.includes(value))
-
-    const tokenMatch = (field === 'value' || field === 'any') && tokens.some(match)
-    const pathMatch = (field === 'path' || field === 'any' || searchKeys) && match(path)
-    const typeMatch = (field === 'type' || field === 'any') && match(type)
-
-    return tokenMatch || pathMatch || typeMatch
-  }
-
-  return mode === 'and' ? terms.every(matchesTerm) : terms.some(matchesTerm)
-}
-
 function matchTerm(node: SearchNode, term: SearchTerm) {
   const tokens = node.tokens?.map((t) => t.toLowerCase()) ?? []
   const path = node.path.toLowerCase()
   const type = node.type.toLowerCase()
+  const key = node.key.toLowerCase()
 
   const { field, exact, value } = term
   const matchToken = (t: string) => (exact ? t === value : t.includes(value.toLowerCase()))
 
   switch (field) {
-    case 'value':
-      return tokens.some(matchToken)
-
-    case 'path':
-      return [path, path.split('.').at(-1)].some(() => matchToken(path))
-
-    case 'type':
-      return matchToken(type)
-
     case 'any':
       return (
         tokens.some(matchToken) ||
         [path, path.split('.').at(-1)].some((p) => matchToken(p ?? '')) ||
         matchToken(type)
       )
+    case 'key':
+      return matchToken(key)
+    case 'type':
+      return matchToken(type)
+    case 'value':
+      return tokens.some(matchToken)
+    case 'path':
+      return [path, path.split('.').at(-1)].some(() => matchToken(path))
   }
 }
 

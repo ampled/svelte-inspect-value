@@ -1,14 +1,14 @@
 <script lang="ts">
-  import { useOptions } from '../options.svelte.js'
-  import { useState } from '../state.svelte.js'
   import { getContext, onDestroy } from 'svelte'
   import type { SvelteHTMLElements } from 'svelte/elements'
+  import AndOrIcon from '../icons/AndOrIcon.svelte'
   import * as icons from '../icons/index.js'
+  import { useOptions } from '../options.svelte.js'
+  import { useState } from '../state.svelte.js'
+  import { wait } from '../util.js'
   import { getAncestorPaths, searchStructuredIndex, type SearchIndex } from '../util/search.js'
   import Input from './Input.svelte'
   import NodeIconButton from './NodeIconButton.svelte'
-  import { wait } from '../util.js'
-  import AndOrIcon from '../icons/AndOrIcon.svelte'
 
   type Props = {
     query: string

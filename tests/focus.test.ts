@@ -32,15 +32,23 @@ describe('focus features', () => {
         noanimate: true,
       },
     })
-    const { user, result } = rendered
+    const {
+      user,
+      result,
+      result: {
+        container: {
+          ownerDocument: { activeElement },
+        },
+      },
+    } = rendered
 
     const sitLine = result.getByText('sit')
     await user.click(sitLine)
     await user.keyboard('{ArrowUp}')
-    expect(result.container.ownerDocument.activeElement).toHaveTextContent('dolor')
+    expect(activeElement).toHaveTextContent('dolor')
     await user.keyboard('{ArrowUp}{ArrowUp}')
-    expect(result.container.ownerDocument.activeElement).toHaveTextContent('lorem')
+    expect(activeElement).toHaveTextContent('lorem')
     await user.keyboard('{ArrowUp}') // it loops from top to end
-    expect(result.container.ownerDocument.activeElement).toHaveTextContent('sit')
+    expect(activeElement).toHaveTextContent('sit')
   })
 })

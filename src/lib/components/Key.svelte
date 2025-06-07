@@ -82,7 +82,7 @@
             {:else}
               <Highlight
                 value={display?.toString() ?? ''}
-                field="path"
+                fields={['key', 'path']}
                 alsoMatch={stringifyPath(path)}
               />
             {/if}

@@ -1,6 +1,6 @@
 <script module lang="ts">
-  import { highlightText } from '../util/highlight-text.js'
   import memoize from 'memoize'
+  import { highlightText } from '../util/highlight-text.js'
 
   const hl = memoize(highlightText, {
     cacheKey: ([text, terms]) => text + terms.map((term) => term.value).join(''),
@@ -8,17 +8,17 @@
 </script>
 
 <script lang="ts">
+  import type { SvelteHTMLElements } from 'svelte/elements'
   import { useSearchContext } from '../contexts.js'
   import { useOptions } from '../options.svelte.js'
-  import type { SvelteHTMLElements } from 'svelte/elements'
 
   type Props = {
     value: string
-    field?: 'type' | 'path' | 'any' | 'value'
+    fields?: ('type' | 'path' | 'key' | 'any' | 'value')[]
     alsoMatch?: string
   } & SvelteHTMLElements['span']
 
-  let { value: text, field = 'any', alsoMatch, class: className, ...rest }: Props = $props()
+  let { value: text, fields = ['any'], alsoMatch, class: className, ...rest }: Props = $props()
   const searchCtx = useSearchContext()
   const options = useOptions()
   const { query, matchingPaths, terms } = $derived(searchCtx())
@@ -29,7 +29,9 @@
       try {
         return hl(
           text,
-          terms.filter((t) => t.value.length > 1 && (t.field === field || t.field === 'any'))
+          terms.filter(
+            (term) => term.value.length > 1 && (fields.includes(term.field) || term.field === 'any')
+          )
         )
       } catch (e) {
         console.error(e)
@@ -44,7 +46,7 @@
     if (matchingPaths.length > 0) return false
 
     if (highlightMatches && search && term && alsoMatch != null && term.value.length > 1) {
-      if (term.field !== 'any' && field != null && term.field !== field) return false
+      if (term.field !== 'any' && fields.length && !fields.includes(term.field)) return false
       const fullMatch = alsoMatch.toLowerCase() === term.value.toLowerCase()
 
       if (term.exact) {

@@ -36,5 +36,10 @@ describe('search', () => {
     expect(searchResult).toHaveLength(1)
     expect(searchResult[0]).toBeDefined()
     expect(searchResult[0]).toBe('test.0')
+
+    searchResult = searchStructuredIndex(index, 'key:0')
+    expect(searchResult).toHaveLength(1)
+    expect(searchResult[0]).toBeDefined()
+    expect(searchResult[0]).toBe('test.0')
   })
 })
