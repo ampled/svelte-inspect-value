@@ -5,7 +5,7 @@
   justify-content: flex-start;
   align-items: center;
   gap: var(--line-gap, 0.5em);
-  transition-duration: 250ms;
+  transition-duration: var(--__transition-duration);
   transition-property: background-position, background-size, color;
   transition-timing-function: ease-in-out;
   background: linear-gradient(35deg, var(--_hover-color) 60%, transparent 80%);
@@ -13,6 +13,8 @@
   background-repeat: no-repeat;
   background-origin: border-box;
   padding-left: 0.25em;
+  width: 100%;
+  max-width: 100%;
   min-height: 1.5em;
   max-height: 1.5em;
   overflow: visible;

@@ -50,7 +50,13 @@
   const inspectState = useState()
   const previewLevel = getPreviewLevel()
   const isKey = getIsKey()
-  let { expandAll, expandPaths, showLength: optsShowLength, borderless } = $derived(options.value)
+  let {
+    expandAll,
+    expandPaths,
+    showLength: optsShowLength,
+    borderless,
+    easing,
+  } = $derived(options.value)
   let expandingDisabled = $derived(length === 0 || previewLevel > 0)
   let stringifiedPath = $derived(stringifyPath(path))
   let collapseState = $derived(inspectState.value[stringifiedPath])
@@ -162,7 +168,7 @@
 
 {#if children && shouldRenderChildren}
   <div
-    transition:slideXY={{ duration: options.transitionDuration * 3 }}
+    transition:slideXY={{ duration: options.transitionDuration, easing }}
     oninspectvaluechange={() => buttonComponent?.flash()}
     role="list"
     data-testid="indent"
@@ -178,7 +184,7 @@
 
   .indent {
     position: relative;
-    transition-duration: 200ms;
+    transition-duration: var(--__transition-duration);
     transition-property: margin-left, border-color;
     margin-left: var(--__indent);
     border-left: 1px solid var(--_indent-color);

@@ -67,7 +67,7 @@
   .count {
     display: flex;
     gap: 0.5ch;
-    transition: color 250ms ease-in-out;
+    transition: color var(--__transition-duration) ease-in-out;
     margin-right: 1ch;
     color: var(--_length-color);
     font-style: italic;

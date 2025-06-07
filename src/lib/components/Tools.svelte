@@ -25,7 +25,7 @@
   const fixed = getContext(Symbol.for('siv.fixed'))
   const addOnDestroyCallback = getAddDestroyCallbackFn()
   let options = useOptions()
-  let { onCopy, canCopy, onLog, borderless, showTools } = $derived(options.value)
+  let { onCopy, canCopy, onLog, showTools } = $derived(options.value)
   let inspectState = useState()
   let stringifiedPath = $derived(stringifyPath(path))
   let level = $derived(path.length)
@@ -200,7 +200,7 @@
 </script>
 
 {#if showTools}
-  <div class="tools" class:borderless>
+  <div class="tools">
     {#if SIV_DEBUG?.()}
       <NodeIconButton onclick={debugNode}>?</NodeIconButton>
     {/if}
@@ -244,15 +244,6 @@
 {/if}
 
 <style>
-  :global(.line:hover) .tools,
-  :global(.line:focus-within) .tools,
-  :global(.title-bar:hover) .tools,
-  :global(.title-bar:focus-within) .tools {
-    display: flex;
-    opacity: 1;
-    transition: opacity 250ms ease-in-out allow-discrete;
-  }
-
   .tools {
     display: flex;
     position: absolute;
@@ -266,7 +257,7 @@
     opacity: 0;
     z-index: calc(var(--index) + 1);
     backdrop-filter: blur(1px);
-    transition: opacity 250ms ease-in-out allow-discrete;
+    transition: opacity var(--__transition-duration) ease-in-out allow-discrete;
     border-left: 1px solid var(--_tools-border-color);
     background-color: var(--_tools-background-color);
     padding-inline: 0.5em;
@@ -275,10 +266,10 @@
     font-size: 1em;
   }
 
-  .tools.borderless {
-    position: relative;
-    transition-property: opacity !important;
-    border-left: 0;
-    background-color: var(--_tools-background-color-borderless);
+  :global(.line:hover) .tools,
+  :global(.line:focus-within) .tools {
+    display: flex;
+    opacity: 1;
+    transition: opacity var(--__transition-duration) ease-in-out allow-discrete;
   }
 </style>

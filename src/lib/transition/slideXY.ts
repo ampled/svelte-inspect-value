@@ -1,9 +1,9 @@
-import { cubicOut } from 'svelte/easing'
+import { quartOut } from 'svelte/easing'
 import type { SlideParams, TransitionConfig } from 'svelte/transition'
 
 export function slideXY(
   node: Element,
-  { delay = 0, duration = 400, easing = cubicOut }: SlideParams = {}
+  { delay = 0, duration = 400, easing = quartOut }: SlideParams = {}
 ): TransitionConfig {
   const style = getComputedStyle(node)
 

@@ -54,7 +54,12 @@
 
   const previewLevel = getContext<number | undefined>(Symbol.for('siv.preview-level')) ?? startLevel
   const options = useOptions()
-  let { previewEntries, previewDepth, showPreview: optsShowPreview } = $derived(options.value)
+  let {
+    previewEntries,
+    previewDepth,
+    showPreview: optsShowPreview,
+    easing,
+  } = $derived(options.value)
 
   setContext(Symbol.for('siv.preview-level'), (previewLevel ?? 0) + 1)
 
@@ -101,6 +106,7 @@
       transition:slide={{
         axis: 'x',
         duration: options.transitionDuration,
+        easing,
       }}
       {...rest}
     >
@@ -111,8 +117,8 @@
         class="inner"
         transition:fly={{
           y: 20,
-          opacity: 0,
-          duration: options.transitionDuration * 2,
+          duration: options.transitionDuration,
+          easing,
         }}
       >
         {#if keys && value}

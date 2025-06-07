@@ -83,7 +83,9 @@
   open
   zIndex={999}
 >
-  <p style="background-color: var(--_background-color); padding: 0.5em;">
+  <p
+    style="background-color: var(--_background-color); padding: 0.5em; border-radius: var(--_border-radius); border: 1px solid var(--_border-color);"
+  >
     👈 try resizing the panel!
   </p>
 </Inspect.Panel>

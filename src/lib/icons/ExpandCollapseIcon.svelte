@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { backOut, sineIn } from 'svelte/easing'
+  import { backIn, backOut } from 'svelte/easing'
   import { useOptions } from '../options.svelte.js'
   import rotate from '../transition/rotate.js'
 
@@ -22,16 +22,14 @@
         style="transform-box: fill-box"
         transform-origin="center"
         in:rotate={{
-          rotation: 360 - 90,
-          opacity: 1,
+          rotation: 360,
           duration: options.transitionDuration * 3,
           easing: backOut,
         }}
         out:rotate={{
-          rotation: 360 + 90,
-          opacity: 1,
+          rotation: 360,
           duration: options.transitionDuration * 3,
-          easing: sineIn,
+          easing: backIn,
         }}
       />
     {/if}
@@ -83,18 +81,18 @@
 
   .minus {
     rotate: 0deg;
-    animation-duration: 450ms;
+    animation-duration: calc(var(--__transition-duration) * 1.8);
     animation-timing-function: linear;
   }
 
   .expanding {
-    animation-delay: 600ms;
+    animation-delay: calc(var(--__transition-duration) * 3);
     animation-iteration-count: infinite;
     animation-name: spin;
   }
 
   .collapsing {
-    animation-delay: 200ms;
+    /* animation-delay: calc(var(--__transition-duration) * 0.8); */
     animation-iteration-count: infinite;
     animation-direction: reverse;
     animation-name: spin;

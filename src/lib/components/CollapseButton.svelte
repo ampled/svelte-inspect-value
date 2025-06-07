@@ -46,7 +46,9 @@
       <Caret
         bind:this={caret}
         {value}
-        style="rotate:{rotation}deg; transition: rotate 125ms ease-in-out; width: 100%; height: 100%;"
+        style="rotate:{rotation}deg;
+        transition: rotate var(--__transition-duration) var(--_back-out);
+        width: 100%; height: 100%;"
       />
     </div>
   {/if}
@@ -58,9 +60,9 @@
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    transition-duration: 250ms;
+    transition-duration: var(--__transition-duration);
     transition-property: color, rotate, transform;
-    transition-timing-function: ease-in-out;
+    transition-timing-function: var(--_back-out);
     margin: 0;
     border: none;
     padding: 0;

@@ -98,10 +98,9 @@
   }
 
   .can-match {
-    transition:
-      text-decoration-color 200ms ease-in-out,
-      background-color 200ms ease-in-out,
-      color 200ms ease-in-out;
+    transition-duration: var(--__transition-duration);
+    transition-property: text-decoration-color, background-color, color;
+    transition-timing-function: ease-in-out;
     border-radius: 2px;
     background-color: transparent;
     text-decoration: underline;

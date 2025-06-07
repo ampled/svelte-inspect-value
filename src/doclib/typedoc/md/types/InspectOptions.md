@@ -3,12 +3,16 @@ title:
   - inspect-options
   - InspectOptions
 children:
+  - - anim-rate
+    - animRate
   - - borderless
     - borderless
   - - can-copy
     - canCopy
   - - custom-components
     - customComponents
+  - - easing
+    - easing
   - - element-view
     - elementView
   - - embed-media
@@ -67,10 +71,12 @@ children:
 
 ```ts
 type InspectOptions = {
+  animRate: number;
   borderless: boolean;
   canCopy: (value: unknown, type: string, path: unknown[]) => boolean
      | undefined;
   customComponents: CustomComponents;
+  easing: (t: number) => number;
   elementView: "simple" | "full";
   embedMedia: boolean;
   expandAll: boolean;
@@ -123,6 +129,26 @@ Props will override any options using the provider methods.
 ```
 
 ## Properties
+
+### animRate
+
+```ts
+animRate: number;
+```
+
+Set transition / animation rates.
+
+`0.5` will double transition durations while `2` will halve durations.
+
+The base duration for transitions is 250ms.
+
+#### Default
+
+```ts
+1
+```
+
+***
 
 ### borderless
 
@@ -194,6 +220,32 @@ Use the helper function [`addComponent`](../functions/addComponent) to get prope
 
 ```ts
 {}
+```
+
+***
+
+### easing()
+
+```ts
+easing: (t: number) => number;
+```
+
+Easing-function for expand/collapse transitions
+
+#### Parameters
+
+##### t
+
+`number`
+
+#### Returns
+
+`number`
+
+#### Default
+
+```ts
+(t) => Math.pow(t - 1.0, 3.0) * (1.0 - t) + 1.0; // quartOut
 ```
 
 ***

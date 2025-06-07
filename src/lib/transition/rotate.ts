@@ -22,7 +22,7 @@ export interface RotateParams {
 
 export function rotate(
   node: Element,
-  { delay = 0, duration = 250, easing = sineInOut, rotation = 180, opacity = 0 }: RotateParams = {}
+  { delay = 0, duration = 250, easing = sineInOut, rotation = 180, opacity = 1 }: RotateParams = {}
 ): TransitionConfig {
   const style = getComputedStyle(node)
   const target_opacity = +style.opacity

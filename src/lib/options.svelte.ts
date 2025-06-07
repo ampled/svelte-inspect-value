@@ -2,6 +2,7 @@ import { getContext, setContext, type Snippet } from 'svelte'
 import type { CollapseState } from './state.svelte.js'
 import type { CustomComponents } from './types.js'
 import * as util from './util.js'
+import { quartOut } from 'svelte/easing'
 
 export const OPTIONS_CONTEXT: symbol = Symbol('inspect-options')
 /**
@@ -117,6 +118,22 @@ export type InspectOptions = {
    * @default false
    */
   noanimate: boolean
+  /**
+   * Set transition / animation rates
+   *
+   * `0.5` will double transition durations while `2` will halve durations.
+   *
+   * The base duration for transitions is 250ms.
+   *
+   * @default 1
+   */
+  animRate: number
+  /**
+   * Easing-function for expand/collapse transitions
+   *
+   * @default (t) => Math.pow(t - 1.0, 3.0) * (1.0 - t) + 1.0; // quartOut
+   */
+  easing: (t: number) => number
   /**
    * Render no borders or background
    *
@@ -297,6 +314,8 @@ export type InspectOptionsProps = Partial<InspectOptions>
 
 export const DEFAULT_OPTIONS: InspectOptions = {
   noanimate: false,
+  animRate: 1,
+  easing: quartOut,
   quotes: 'single',
   showTypes: true,
   showPreview: true,
@@ -342,7 +361,10 @@ export function mergeOptions(
 }
 
 export function createOptions(options: () => InspectOptions) {
-  const transitionDuration = $derived(options().noanimate ? 0 : 200)
+  const animationRate = $derived(util.clamp(options().animRate, 0.001, 10))
+  const transitionDuration = $derived(
+    options().noanimate ? 0 : util.clamp(250 / animationRate, 0, 30_000)
+  )
   // this could be Infinity but let's set a cap just to be sure
   const expandLevel = $derived(
     util.clamp(options().expandAll ? 30 : (options().expandLevel ?? 1), 0, 30)
