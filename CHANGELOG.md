@@ -6,6 +6,8 @@ This update largely focuses on improving user-interactions of the `Inspect`-comp
 
 ### Search / Filter
 
+_Suggested by [@cycle4passion](https://github.com/cycle4passion) ([#29](https://github.com/ampled/svelte-inspect-value/issues/29))_
+
 If the option / prop `search` is set to `'highlight'`, `true | 'filter'` or `'filter-strict'`, a search bar will be visible in the heading of the Inspect-component. This feature is disabled by default for now.
 
 Typing a query and hitting the enter key (or clicking the magnifying glass) performs a deep indexed search of inspected values, and depending on the value of the `search` option will display search results in one of three ways:
