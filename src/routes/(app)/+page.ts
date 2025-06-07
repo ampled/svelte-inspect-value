@@ -7,7 +7,7 @@ export const load = (async ({ fetch }) => {
     .then((res) => res.json())
     .then((res) => res.downloads as number)
 
-  const githubStars = fetch('http://api.github.com/repos/ampled/svelte-inspect-value')
+  const githubStars = fetch('https://api.github.com/repos/ampled/svelte-inspect-value')
     .then((res) => res.json())
     .then((data) => data.stargazers_count as number)
 
