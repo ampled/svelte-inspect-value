@@ -16,7 +16,7 @@ Typing a query and hitting the enter key (or clicking the magnifying glass) perf
 - `'filter' | true` — non-matching value-nodes will be hidden, except for their siblings and parents
 - `'filter-strict'` — only matching value-nodes and parent nodes will be displayed
 
-By default, a query can match paths, types and the value itself. You can narrow/expand searches with multiple terms, and/or-mode and field-prefixes like `path:`, `type:` and `value:`.
+By default, a query can match paths, types and the value itself. You can narrow/expand searches with multiple terms, and/or-mode and field-prefixes like `path:`, `key:`, `type:` and `value:`.
 
 Look for all the details on how the search-functionality works in the [documentation](https://inspect.eirik.space) (look for the "usage"-page.)
 
