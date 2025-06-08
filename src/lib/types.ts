@@ -188,10 +188,19 @@ export type PanelProps = {
   Partial<InspectOptions> &
   SvelteHTMLElements['aside']
 
+type MaybePromise<T> = Promise<T> | T
+
 /**
  * @inline
  */
 export type Note = { title?: string; description?: string }
+
+export type NodeAction<T = unknown> = {
+  title: string
+  icon: Component
+  shouldShow: (value: T, key: PropertyKey) => MaybePromise<boolean | undefined>
+  action: (value: T, key: PropertyKey) => MaybePromise<void>
+}
 
 export type TypeViewProps<Value = unknown, Type = ValueType> = {
   value: Value
@@ -248,6 +257,13 @@ export type TypeViewProps<Value = unknown, Type = ValueType> = {
    * Should the node show it's given length / count
    */
   showLength?: boolean
+  /** Extra actions for a node or child-nodes */
+  actions?: NodeAction<any>[]
+  onedit?: <T>(
+    key: PropertyKey,
+    value: T,
+    newValue: { key: PropertyKey; value: unknown; type: unknown }
+  ) => void
 }
 
 /**

@@ -8,7 +8,7 @@
 
   type Props = TypeViewProps<RegExp>
 
-  let { value, key = undefined, type, path, ...rest }: Props = $props()
+  let { value, key, type, path, ...rest }: Props = $props()
 
   let keys = [
     'lastIndex',

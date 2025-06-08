@@ -9,8 +9,12 @@
   import HtmlView from './HTMLView.svelte'
   import { getComponent, getDefaultComponent } from './index.js'
   import InspectErrorView from './InspectErrorView.svelte'
+  import EditNode from './EditNode.svelte'
 
-  type Props = TypeViewProps<unknown> & { usedefaults?: boolean; forceView?: string }
+  type Props = TypeViewProps<unknown> & {
+    usedefaults?: boolean
+    forceView?: string
+  }
 
   let {
     value = undefined,
@@ -19,11 +23,13 @@
     path: prevPath = [],
     usedefaults = false,
     forceView,
+    onedit,
     ...rest
   }: Props = $props()
 
   const options = useOptions()
   const previewLevel = getPreviewLevel()
+  let editMode = $state(false)
   let type: ValueType = $derived(forceView ? forceView : getType(value, options.value.stores))
 
   // FIXME: this is so messy
@@ -101,9 +107,29 @@
 
     return true
   })
+
+  setContext(
+    'siv.edit',
+    onedit
+      ? () => {
+          editMode = !editMode
+        }
+      : undefined
+  )
 </script>
 
-{#if visible}
+{#if editMode}
+  <EditNode
+    {value}
+    {key}
+    {type}
+    onedit={(...args) => {
+      onedit?.(...args)
+      editMode = false
+    }}
+    oncancel={() => (editMode = false)}
+  />
+{:else if visible}
   <svelte:boundary
     onerror={(e) =>
       console.error(new Error(`Caught in Node.svelte. Key: ${String(key)}`, { cause: e }))}

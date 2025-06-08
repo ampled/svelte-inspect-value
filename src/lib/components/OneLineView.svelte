@@ -30,6 +30,7 @@
     note,
     match,
     children,
+    actions,
     ...rest
   }: Props = $props()
 
@@ -85,7 +86,7 @@
   </Row>
 
   {#if !isKey && !previewLevel}
-    <Tools {value} {path} {type}></Tools>
+    <Tools {value} {path} {type} {key} {actions} />
   {/if}
 </div>
 

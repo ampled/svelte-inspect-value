@@ -1,10 +1,11 @@
 <script lang="ts" generics="T, Key = T extends Map<infer K, unknown> ? K : (keyof T | PropertyKey)">
   import type { Snippet } from 'svelte'
   import { getPropertyDescriptor, type ValueType } from '../util.js'
-  import Entry from './Entry.svelte'
   import GetterSetter from './GetterSetter.svelte'
   import Node from './Node.svelte'
   import NodeActionButton from './NodeActionButton.svelte'
+  import { slide } from 'svelte/transition'
+  import { useOptions } from '$lib/options.svelte.js'
 
   type PreviewProps = {
     value: T
@@ -24,6 +25,7 @@
 
   let { value, keys = [], item, path }: PreviewProps = $props()
 
+  const options = useOptions()
   const paging = 50
   let max = $state(paging)
 
@@ -32,7 +34,11 @@
 
 {#each slicedKeys as key, index (key)}
   {@const descriptor = getPropertyDescriptor(value, key as PropertyKey)}
-  <Entry i={index}>
+  <div
+    class="entry"
+    style="--i: {index}"
+    transition:slide={{ duration: options.transitionDuration }}
+  >
     {#if item}
       {@render item({
         key,
@@ -44,7 +50,7 @@
     {:else}
       <Node value={value?.[key as keyof typeof value]} key={key as keyof typeof value} {path} />
     {/if}
-  </Entry>
+  </div>
 {/each}
 {#if slicedKeys.length < keys.length}
   <NodeActionButton

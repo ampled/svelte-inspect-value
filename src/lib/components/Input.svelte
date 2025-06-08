@@ -36,7 +36,7 @@
 
 <div
   class="siv-input"
-  transition:transition={{ ...transitionParams, duration: options.transitionDuration }}
+  transition:transition={{ duration: options.transitionDuration, ...transitionParams }}
   {...containerAttrs}
 >
   <input

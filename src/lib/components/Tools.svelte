@@ -14,10 +14,12 @@
   import { isPromise, stringifyPath, wait } from '../util.js'
   import { buildSearchIndex } from '../util/search.js'
   import NodeIconButton from './NodeIconButton.svelte'
+  import NodeActionButton from './NodeActionButton.svelte'
+  import EditIcon from '$lib/icons/EditIcon.svelte'
 
   type Props = Partial<TypeViewProps<unknown, string>> & { collapsed?: boolean }
 
-  let { value, type, path = [] }: Props = $props()
+  let { value, type, path = [], key = '', actions = [] }: Props = $props()
 
   let copied = $state(false)
 
@@ -194,15 +196,29 @@
     const { log } = console
     log({
       globalInspectState,
-      indexed: buildSearchIndex({ value, options: options.value }),
+      indexed: buildSearchIndex({ value, options: options.value, prevPath: [path], key }),
     })
   }
+
+  const setEditMode = getContext<(() => void) | undefined>('siv.edit')
 </script>
 
 {#if showTools}
   <div class="tools">
     {#if SIV_DEBUG?.()}
       <NodeIconButton onclick={debugNode}>?</NodeIconButton>
+    {/if}
+    {#each actions as nodeAction}
+      {#if nodeAction.shouldShow(value, key)}
+        <NodeIconButton onclick={() => nodeAction.action(value, key)} title={nodeAction.title}>
+          <nodeAction.icon />
+        </NodeIconButton>
+      {/if}
+    {/each}
+    {#if setEditMode}
+      <NodeIconButton onclick={setEditMode}>
+        <EditIcon />
+      </NodeIconButton>
     {/if}
     {#if panelValueAction}
       <NodeIconButton title={panelValueAction.hint} onclick={panelValueAction.action}>
