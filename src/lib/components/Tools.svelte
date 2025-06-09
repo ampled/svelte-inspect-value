@@ -14,7 +14,7 @@
 
   type Props = Partial<TypeViewProps<unknown, string>> & { collapsed?: boolean }
 
-  let { value, type, path = [] }: Props = $props()
+  let { value, type = '', path = [] }: Props = $props()
 
   let copied = $state(false)
 
@@ -34,9 +34,17 @@
       return true
     }
 
-    return ['array', 'object', 'number', 'string', 'undefined', 'null', 'date', 'boolean'].includes(
-      type ?? ''
-    )
+    return [
+      'array',
+      'object',
+      'number',
+      'bigint',
+      'string',
+      'undefined',
+      'null',
+      'date',
+      'boolean',
+    ].includes(type ?? '')
   })
 
   let nodeState = $derived(inspectState.value[stringifyPath(path)])
@@ -79,7 +87,7 @@
       runCustomCopy()
     } else {
       try {
-        await copyToClipBoard(value)
+        await copyToClipBoard(value, type)
         onCopySuccess()
       } catch (e) {
         console.error(e)
