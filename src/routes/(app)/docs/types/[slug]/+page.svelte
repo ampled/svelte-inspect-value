@@ -1,8 +1,15 @@
 <script lang="ts">
+  import { createPageTitle } from '$doclib/util.js'
   import type { PageData } from './$types.js'
 
   let { data }: { data: PageData } = $props()
+
+  const title = $derived(data.meta?.title?.[1])
 </script>
+
+<svelte:head>
+  <title>{createPageTitle(title ? `type ${title}` : 'Type')}</title>
+</svelte:head>
 
 {#if data.meta.children}
   <div class="toc">

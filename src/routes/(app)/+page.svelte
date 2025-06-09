@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { createPageTitle } from '$doclib/util.js'
   import Inspect, { type InspectOptions, type InspectProps } from '$lib/index.js'
   import { untrack } from 'svelte'
   import { fly } from 'svelte/transition'
@@ -76,6 +77,10 @@
     }
   })
 </script>
+
+<svelte:head>
+  <title>{createPageTitle('Home')}</title>
+</svelte:head>
 
 <div class="center">
   <Inspect

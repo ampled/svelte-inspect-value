@@ -1,3 +1,60 @@
+<script lang="ts">
+  import AllTypes from '$doclib/examples/AllTypes.svelte'
+  import { createPageTitle } from '$doclib/util.js'
+  import { fade } from 'svelte/transition'
+
+  const themes = {
+    inspect: 'The default, original color scheme designed for this library',
+    drak: 'Based on the famous dracula color scheme',
+    stereo: 'Based on the great monokai color scheme',
+    dark: `Because light hurts your eyes`,
+    light: 'Is it bright in here?',
+    plain: 'Uses the current font-color and color-mixing to create a dynamic color scheme',
+  }
+  const builtIns = Object.keys(themes) as (keyof typeof themes)[]
+  let currentIndex = $state(0)
+  let currentTheme = $derived(builtIns[currentIndex])
+
+  function setCurrentIndex(dir: number) {
+    currentIndex += dir
+    if (currentIndex === -1) {
+      currentIndex = builtIns.length - 1
+    } else if (currentIndex === builtIns.length) {
+      currentIndex = 0
+    }
+  }
+</script>
+
+<svelte:head>
+  <title>{createPageTitle('Theming')}</title>
+</svelte:head>
+
+<h1>Themes</h1>
+
+<div class="flex justify-center align-center">
+  <button onclick={() => setCurrentIndex(-1)}> &LeftArrow; </button>
+
+  <div class="flex col" style="max-width: 480px">
+    <AllTypes
+      seeFlashing
+      style="max-width: 480px;"
+      theme={currentTheme}
+      heading={false}
+      search={false}
+    />
+    {#key currentIndex}
+      <div in:fade style="font-size: 0.8em">
+        <b style="text-transform: capitalize;">{currentTheme}</b>
+        <p>
+          {themes[currentTheme]}
+        </p>
+      </div>
+    {/key}
+  </div>
+
+  <button onclick={() => setCurrentIndex(1)}> &RightArrow; </button>
+</div>
+
 <h2>Base16</h2>
 
 <p>

@@ -5,6 +5,7 @@
   import MinimalExample from '$doclib/examples/MinimalExample.svelte'
   import minimalcode from '$doclib/examples/minimalexample.txt?raw'
   import MultiCode from '$doclib/examples/MultiCode.svelte'
+  import { createPageTitle } from '$doclib/util.js'
   import Inspect from '$lib/index.js'
   import { SvelteMap } from 'svelte/reactivity'
 
@@ -20,6 +21,10 @@
   ])
 </script>
 
+<svelte:head>
+  <title>{createPageTitle('Getting Started')}</title>
+</svelte:head>
+
 <div class="toc">
   {#each toc as [title, id]}
     <a href={`#${id}`}>{title} </a>
@@ -27,7 +32,7 @@
   {/each}
 </div>
 
-<h2>Getting Started</h2>
+<h2 id="getting-started">Getting Started</h2>
 
 <p>
   Install <code>{packageName}</code> with your favorite package manager.<br />

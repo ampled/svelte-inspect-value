@@ -5,12 +5,17 @@
   import configuredCode from '$doclib/examples/configured.txt?raw'
   import inlineconfigcode from '$doclib/examples/inlineconfig.txt?raw'
   import valuesCode from '$doclib/examples/inspectvalueexample.txt?raw'
+  import { createPageTitle } from '$doclib/util.js'
 
   const toc = new Map([
     ['Configuring', 'configuring'],
     ['Chainable inline configuration', 'chainable'],
   ])
 </script>
+
+<svelte:head>
+  <title>{createPageTitle('Inspect.Values')}</title>
+</svelte:head>
 
 <div class="toc">
   {#each toc as [title, id]}

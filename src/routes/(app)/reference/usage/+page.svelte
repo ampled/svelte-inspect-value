@@ -1,5 +1,6 @@
 <script lang="ts">
   import AllTypes from '$doclib/examples/AllTypes.svelte'
+  import { createPageTitle } from '$doclib/util.js'
 
   const toc = new Map([
     ['Keyboard Controls', 'keyboard'],
@@ -9,6 +10,10 @@
     ['- Expanding Matches', 'expanding-matches'],
   ])
 </script>
+
+<svelte:head>
+  <title>{createPageTitle('Usage')}</title>
+</svelte:head>
 
 {#snippet metaKey()}
   <kbd>⌘</kbd> <span style="font-weight: bolder;">/</span> <kbd>Ctrl</kbd>

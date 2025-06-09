@@ -9,7 +9,8 @@
   import { GLOBAL_OPTIONS_CONTEXT, type InspectOptions } from '$lib/options.svelte.js'
   import { getContext } from 'svelte'
 
-  const props: InspectProps = $props()
+  let { seeFlashing = $bindable(false), ...props }: InspectProps & { seeFlashing?: boolean } =
+    $props()
 
   class Greeter {
     static staticProperty = 'hi'
@@ -427,8 +428,6 @@
       // navigator: browser ? navigator : null,
       registry: new FinalizationRegistry(() => {}),
     },
-    weakSet: new WeakSet([{}, {}, {}]),
-    weakMap: new WeakMap([[{}, 1]]),
     empties: {
       object: {},
       array: [],
@@ -445,8 +444,6 @@
       subclass: StringSubclass,
     },
   })
-
-  let seeFlashing = $state(false)
 
   $effect(() => {
     const interval = window.setInterval(() => {
@@ -469,23 +466,30 @@
   })
 </script>
 
-<Inspect name="allTypes" values={allTypes} search={allTypesSearch} {...props} expandLevel={0}>
-  {#snippet heading(collapsed)}
-    DEMO
-    {#if !collapsed}
-      <!-- svelte-ignore a11y_click_events_have_key_events -->
-      <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-      <label
-        onclick={(e) => {
-          e.stopPropagation()
-        }}
-      >
-        increment number
-        <input type="checkbox" bind:checked={seeFlashing} />
-      </label>
-    {/if}
-  {/snippet}
-</Inspect>
+{#snippet heading(collapsed: boolean)}
+  DEMO
+  {#if !collapsed}
+    <!-- svelte-ignore a11y_click_events_have_key_events -->
+    <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+    <label
+      onclick={(e) => {
+        e.stopPropagation()
+      }}
+    >
+      increment number
+      <input type="checkbox" bind:checked={seeFlashing} />
+    </label>
+  {/if}
+{/snippet}
+
+<Inspect
+  {heading}
+  name="allTypes"
+  values={allTypes}
+  search={allTypesSearch}
+  {...props}
+  expandLevel={0}
+></Inspect>
 
 <style>
   label {

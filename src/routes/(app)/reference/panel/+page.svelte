@@ -1,7 +1,12 @@
 <script lang="ts">
+  import { createPageTitle } from '$doclib/util.js'
   import PanelExample from './PanelExample.svelte'
   import PanelExampleCode from './PanelExampleCode.md'
 </script>
+
+<svelte:head>
+  <title>{createPageTitle('Inspect.Panel')}</title>
+</svelte:head>
 
 <h2 id="panel">Inspect.Panel</h2>
 

@@ -1,6 +1,11 @@
 <script lang="ts">
+  import { createPageTitle } from '$doclib/util.js'
   import vars from './vars-defaults.js'
 </script>
+
+<svelte:head>
+  <title>{createPageTitle('CSS Variables')}</title>
+</svelte:head>
 
 <h2>CSS Variables</h2>
 

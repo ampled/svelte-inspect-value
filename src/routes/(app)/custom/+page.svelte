@@ -1,5 +1,6 @@
 <script lang="ts">
   import MultiCode from '$doclib/examples/MultiCode.svelte'
+  import { createPageTitle } from '$doclib/util.js'
   import { type CustomComponents, Inspect, addComponent } from '$lib/index.js'
   import CustomNumber from './CustomNumber.svelte'
   import customNumberCode from './CustomNumber.txt?raw'
@@ -30,6 +31,10 @@
     ),
   })
 </script>
+
+<svelte:head>
+  <title>{createPageTitle('Custom Components')}</title>
+</svelte:head>
 
 <h2>Custom Components <sup>beta</sup></h2>
 

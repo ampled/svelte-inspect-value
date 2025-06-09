@@ -12,6 +12,7 @@
   import Promises from '$doclib/examples/Promises.svelte'
   import Stores from '$doclib/examples/Stores.svelte'
   import Urls from '$doclib/examples/Urls.svelte'
+  import { createPageTitle } from '$doclib/util.js'
   import { PanelValue } from '$lib/index.js'
   import { setContext } from 'svelte'
   import { SvelteMap } from 'svelte/reactivity'
@@ -24,6 +25,10 @@
 
   setContext('toc', toc)
 </script>
+
+<svelte:head>
+  <title>{createPageTitle('Examples')}</title>
+</svelte:head>
 
 <PanelValue key="toc" value={toc} />
 
