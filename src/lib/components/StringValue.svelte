@@ -8,7 +8,7 @@
  
  -->
 <script lang="ts">
-  import LinkIcon from '../icons/LinkIcon.svelte'
+  import LinkIcon from './icons/LinkIcon.svelte'
   import { useOptions } from '../options.svelte.js'
   import type { TypeViewProps } from '../types.js'
   import { collapseString, stringify } from '../util.js'

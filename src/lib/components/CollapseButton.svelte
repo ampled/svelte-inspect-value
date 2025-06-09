@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { SvelteHTMLElements } from 'svelte/elements'
   import { scale } from 'svelte/transition'
-  import Caret from '../icons/Caret.svelte'
+  import Caret from './icons/Caret.svelte'
   import { useOptions } from '../options.svelte.js'
   import Bullet from './Bullet.svelte'
 

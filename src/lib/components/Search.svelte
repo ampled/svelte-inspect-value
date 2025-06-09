@@ -1,8 +1,7 @@
 <script lang="ts">
   import { getContext, onDestroy } from 'svelte'
   import type { SvelteHTMLElements } from 'svelte/elements'
-  import AndOrIcon from '../icons/AndOrIcon.svelte'
-  import * as icons from '../icons/index.js'
+  import * as icons from './icons/index.js'
   import { useOptions } from '../options.svelte.js'
   import { useState } from '../state.svelte.js'
   import { wait } from '../util.js'
@@ -130,7 +129,7 @@
           }
         }}
       >
-        <AndOrIcon {mode} />
+        <icons.AndOr {mode} />
       </NodeIconButton>
     {/if}
     <NodeIconButton onclick={search} disabled={query.length === 0}>

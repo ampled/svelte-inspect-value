@@ -3,8 +3,8 @@
  Based on https://icon-sets.iconify.design/lucide/sidebar-open/
 -->
 <script lang="ts">
-  import rotate from '../transition/rotate.js'
-  import { useOptions } from '../options.svelte.js'
+  import rotate from '../../transition/rotate.js'
+  import { useOptions } from '../../options.svelte.js'
 
   type Props = {
     add?: boolean

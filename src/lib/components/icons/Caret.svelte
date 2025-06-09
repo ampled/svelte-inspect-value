@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { SVGAttributes } from 'svelte/elements'
-  import { flashOnUpdate, type FlashFn } from '../action/update-flash.svelte.js'
-  import { useOptions } from '../options.svelte.js'
+  import { flashOnUpdate, type FlashFn } from '../../action/update-flash.svelte.js'
+  import { useOptions } from '../../options.svelte.js'
 
   type Props = { value?: unknown } & SVGAttributes<SVGElement>
 

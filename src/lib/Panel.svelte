@@ -17,10 +17,10 @@
   import Select from './components/Select.svelte'
   import { globalValues } from './global.svelte.js'
   import { logToConsole } from './hello.svelte.js'
-  import CircleSolid from './icons/CircleSolid.svelte'
-  import Fullscreen from './icons/Fullscreen.svelte'
-  import FullscreenExit from './icons/FullscreenExit.svelte'
-  import OpacityIcon from './icons/OpacityIcon.svelte'
+  import CircleSolid from './components/icons/CircleSolid.svelte'
+  import Fullscreen from './components/icons/Fullscreen.svelte'
+  import FullscreenExit from './components/icons/FullscreenExit.svelte'
+  import OpacityIcon from './components/icons/OpacityIcon.svelte'
   import {
     createOptions,
     GLOBAL_OPTIONS_CONTEXT,

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { backIn, backOut } from 'svelte/easing'
-  import { useOptions } from '../options.svelte.js'
-  import rotate from '../transition/rotate.js'
+  import { useOptions } from '../../options.svelte.js'
+  import rotate from '../../transition/rotate.js'
 
   const options = useOptions()
 

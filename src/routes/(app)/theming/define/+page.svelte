@@ -1,6 +1,6 @@
 <script lang="ts">
   import DevOnly from '$lib/components/DevOnly.svelte'
-  import Console from '$lib/icons/Console.svelte'
+  import Console from '$lib/components/icons/Console.svelte'
   import Inspect from '$lib/Inspect.svelte'
   import { colord } from 'colord'
   import HueRotate from '../HueRotate.svelte'

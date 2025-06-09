@@ -6,20 +6,17 @@
   import { getContext, onDestroy, setContext, type Snippet } from 'svelte'
   import type { SvelteHTMLElements } from 'svelte/elements'
   import { fly, slide } from 'svelte/transition'
+  import { scope } from './action/focus.svelte.js'
+  import * as i from './components/icons/index.js'
   import NodeActionButton from './components/NodeActionButton.svelte'
   import NodeIconButton from './components/NodeIconButton.svelte'
-  import { createTypingBufferContext } from './typingbuffer.svelte.js'
-  import { setAddDestroyCallback, setSearchContext } from './contexts.js'
-  import Caret from './icons/Caret.svelte'
-  import { useState } from './state.svelte.js'
-  import * as i from './icons/index.js'
-  import { useOptions } from './options.svelte.js'
   import Search from './components/Search.svelte'
+  import { setAddDestroyCallback, setSearchContext } from './contexts.js'
+  import { useOptions } from './options.svelte.js'
+  import { useState } from './state.svelte.js'
+  import { createTypingBufferContext } from './typingbuffer.svelte.js'
   import { wait } from './util.js'
-  import ExpandCollapseIcon from './icons/ExpandCollapseIcon.svelte'
   import { clearSearchCache, parseSearchTerms } from './util/search.js'
-  import { scope } from './action/focus.svelte.js'
-  import Console from './icons/Console.svelte'
 
   type Props = {
     showExpandCollapse?: boolean
@@ -165,7 +162,7 @@
     >
       <button class="heading-collapse-button" onclick={() => (collapsed = !collapsed)}>
         <div class="collapse">
-          <Caret
+          <i.Caret
             style="rotate: {collapsed
               ? 0
               : 90}deg; transition: rotate var(--__transition-duration) var(--_back-out)"
@@ -194,10 +191,10 @@
             onclick={() => setCollapse(hasExpandedTopLevel)}
             disabled={settingCollapse !== false}
           >
-            <ExpandCollapseIcon expand={!hasExpandedTopLevel} setting={settingCollapse} />
+            <i.ExpandCollapse expand={!hasExpandedTopLevel} setting={settingCollapse} />
           </NodeIconButton>
           <NodeIconButton onclick={onlog}>
-            <Console />
+            <i.Console />
           </NodeIconButton>
         {/if}
         {@render headingExtra?.()}
