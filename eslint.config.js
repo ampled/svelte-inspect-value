@@ -16,6 +16,9 @@ export default ts.config(
     rules: {
       'no-console': ['warn', { allow: ['warn', 'error'] }],
       'svelte/no-inner-declarations': 'off',
+      'svelte/no-useless-mustaches': 'off',
+      'svelte/require-store-reactive-access': 'off',
+      'svelte/no-unused-props': 'off',
       'svelte/no-inspect': 'warn',
       '@typescript-eslint/no-unused-vars': [
         'error',
