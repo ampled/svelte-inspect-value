@@ -18,7 +18,7 @@
   {/snippet}
   multiples:
   <ul>
-    {#each entries as [k, v]}
+    {#each entries as [k, v], i (i)}
       <li>{k}: {v}</li>
     {/each}
   </ul>

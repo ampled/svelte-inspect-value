@@ -18,7 +18,7 @@
   <li>
     Types
     <ul>
-      {#each types as { href, title }}
+      {#each types as { href, title } (href)}
         <li class="type">
           <a {href}>{title}</a>
         </li>
@@ -28,7 +28,7 @@
   <li>
     Functions
     <ul>
-      {#each functions as { href, title }}
+      {#each functions as { href, title } (href)}
         <li class="type">
           <a {href}>{title}</a>
         </li>
@@ -38,7 +38,7 @@
   <li>
     Variables
     <ul>
-      {#each variables as { href, title }}
+      {#each variables as { href, title } (href)}
         <li class="type">
           <a {href}>{title}</a>
         </li>

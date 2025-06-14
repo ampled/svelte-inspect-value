@@ -61,7 +61,7 @@
           onchange(sourceValue)
         }}
       >
-        {#each Object.entries(examples) as [name, value]}
+        {#each Object.entries(examples) as [name, value] (name)}
           <option {value}>{name}</option>
         {/each}
       </select>

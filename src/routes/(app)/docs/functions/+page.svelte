@@ -16,7 +16,7 @@
   <li>
     Types
     <ul>
-      {#each types as { href, title }}
+      {#each types as { href, title } (href)}
         <li class="type">
           <a {href}>{title}()</a>
         </li>

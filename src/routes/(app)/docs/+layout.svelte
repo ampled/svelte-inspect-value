@@ -25,7 +25,7 @@
   <li>
     Modules
     <ul>
-      {#each modules as { href, title }}
+      {#each modules as { href, title } (href)}
         <li class="var">
           <a {href}>{title}</a>
         </li>
@@ -35,7 +35,7 @@
   <li>
     Variables
     <ul>
-      {#each vars as { href, title }}
+      {#each vars as { href, title } (href)}
         <li class="var">
           <a {href}>{title}</a>
         </li>
@@ -45,14 +45,14 @@
   <li>
     Types
     <ul>
-      {#each types as { href, title }}
+      {#each types as { href, title } (href)}
         <li class="type">
           <a {href}>{title}</a>
         </li>
       {/each}
     </ul>
   </li>
-  {#each fns as { href, title }}
+  {#each fns as { href, title } (href)}
     <li>
       <a {href}><span class="fn">{title}</span>()</a>
     </li>

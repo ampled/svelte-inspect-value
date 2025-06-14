@@ -25,7 +25,7 @@
   {#snippet valuePreview({ showPreview })}
     <Preview prefix="[" postfix="]" list={preview} showKey={false} {showPreview} />
   {/snippet}
-  {#each value as num, i}
+  {#each value as num, i (i)}
     <Entry {i}>
       <Node key={i} value={num} {path} />
     </Entry>

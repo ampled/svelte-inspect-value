@@ -6,7 +6,7 @@
 
 {#if data.meta.children}
   <div class="toc">
-    {#each data.meta.children as [id, title]}
+    {#each data.meta.children as [id, title] (id)}
       <a href="#{id}">{title}</a>
       <hr />
     {/each}

@@ -217,7 +217,7 @@
           {#snippet subRoutes(expanded)}
             {#if route.children && (expanded || active)}
               <ul transition:slide>
-                {#each route.children as child}
+                {#each route.children as child (child.title)}
                   {@render entry(child)}
                 {/each}
               </ul>
@@ -234,7 +234,7 @@
         {/if}
         {#if route.children}
           <ul>
-            {#each route.children as child}
+            {#each route.children as child (child.title)}
               {@render entry(child)}
             {/each}
           </ul>
@@ -258,7 +258,7 @@
       <nav class="drawer-nav">
         <ul>
           <li><a style="font-size: 32px; line-height: 1" href="/">Home</a></li>
-          {#each routes as route}
+          {#each routes as route (route.title)}
             {@render entry(route)}
           {/each}
         </ul>
@@ -317,9 +317,8 @@
           <h1 aria-label="Svelte Inspect Value" class="header-lib-title">
             Svelte
             <code
-              >{'<'}<span class="inspect">Inspect</span>
-              {'{'}<span class="value">{'value'}</span>{'}'}
-              {'/>'}
+              >&lt;<span class="inspect">Inspect</span>
+              {'{'}<span class="value">value</span>} /&gt;
             </code>
           </h1>
         </a>

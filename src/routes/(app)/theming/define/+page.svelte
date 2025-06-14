@@ -102,7 +102,7 @@
   <label>
     presets
     <select bind:value={selectedPreset}>
-      {#each presets as preset}
+      {#each presets as preset (preset)}
         <option>{preset}</option>
       {/each}
     </select>
@@ -112,7 +112,7 @@
 
 <div class="colors-and-preview">
   <div class="colors">
-    {#each keys as key}
+    {#each keys as key (key)}
       {@const locked = lockedColors.includes(key)}
       <label class="color">
         {key.replaceAll('--base', '')}
