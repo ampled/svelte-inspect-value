@@ -3,7 +3,7 @@ on:
   pull_request:
 
 jobs:
-  PR:
+  test:
     runs-on: ubuntu-latest
 
     permissions:
