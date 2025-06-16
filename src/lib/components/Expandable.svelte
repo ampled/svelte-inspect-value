@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount, type Snippet } from 'svelte'
   import type { HTMLAttributes } from 'svelte/elements'
-  import { scope } from '../action/focus.svelte.js'
+  import { scope } from '../attachments/focus.js'
   import { getIsKey, getPreviewLevel } from '../contexts.js'
   import { useOptions } from '../options.svelte.js'
   import { useState } from '../state.svelte.js'
@@ -45,7 +45,7 @@
     ...rest
   }: Props = $props()
 
-  let buttonComponent = $state<ReturnType<typeof CollapseButton>>()
+  let collapseButton = $state<CollapseButton>()
   const options = useOptions()
   const inspectState = useState()
   const previewLevel = getPreviewLevel()
@@ -107,6 +107,10 @@
       return length != null && length > 0 && !collapsed && !previewLevel
     }
   })
+
+  export function flash() {
+    collapseButton?.flashButton()
+  }
 </script>
 
 <div
@@ -126,7 +130,7 @@
   >
     {#if !previewLevel && !isKey}
       <CollapseButton
-        bind:this={buttonComponent}
+        bind:this={collapseButton}
         {collapsed}
         {value}
         {key}
@@ -169,11 +173,11 @@
 {#if children && shouldRenderChildren}
   <div
     transition:slideXY={{ duration: options.transitionDuration, easing }}
-    oninspectvaluechange={() => buttonComponent?.flash()}
+    oninspectvaluechange={() => collapseButton?.flash()}
     role="list"
     data-testid="indent"
     class={['indent', type, match && 'match']}
-    use:scope={previewLevel === 0}
+    {@attach scope(previewLevel === 0)}
   >
     {@render children()}
   </div>

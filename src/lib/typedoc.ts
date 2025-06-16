@@ -5,6 +5,7 @@ export type {
   inlineConfigProperties,
 } from './configurable.js'
 export type { addToPanel, removeFromPanel } from './global.svelte.js'
+export { inspectElement } from './attachments/inspect-element.js'
 export type { InspectOptions, setGlobalInspectOptions } from './options.svelte.js'
 export type { CollapseState } from './state.svelte.js'
 export type {

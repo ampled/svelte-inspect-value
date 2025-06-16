@@ -1,5 +1,20 @@
 # Changelog
 
+### 0.8.1
+
+#### Changes
+
+- Make collapse-buttons of `Promise` values flash when their state changes
+- Fix: remove unused Icons to remove package size
+- Fix: made `bigint` values "copy to clipboard"-able
+- Fix: Properly forward attachments to root element of `Inspect(.Values)` and `Inspect.Panel`
+  - For `Inspect.Values`, spreading an object with a non-attachment `Symbol` key will still inspect it, e.g. `<Inspect.Values {...{ [Symbol('foo')]: 'hi' }} />`
+  - Since Svelte 5.29, using attachments with `Inspect.Values` will only have inspected the attachments as values.
+- Internal actions have all been ported to attachments
+- Fix / New: Export `inspectElement` attachment (previously unexported action)
+  - Utility for quickly inspecting elements with `Inspect.Panel`
+- Perf: Ensure all Svelte `{#each}`-blocks are keyed across the library
+
 ## 0.8.0 Search, Text Highlighting and Keyboard Controls (June 2025)
 
 This update largely focuses on improving user-interactions of the `Inspect`-component as well as improving its look and feel.

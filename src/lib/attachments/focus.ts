@@ -2,29 +2,34 @@
  * Adapted from https://github.com/trbrc/svelte-inspect
  */
 
-import type { Action } from 'svelte/action'
+import type { Attachment } from 'svelte/attachments'
 
 let serialCounter = 0
 
-export const focusTarget: Action<HTMLElement, boolean | undefined> = (element, enabled = true) => {
-  if (enabled) {
-    // This should probably not be a global serial, but based instead on the scope.
-    element.dataset.focusTarget = (serialCounter++).toString()
+export const focusTarget = (enabled: boolean | undefined): Attachment<HTMLElement> => {
+  return (element) => {
     const focusEventListener = () => {
       setFocus(element)
     }
-    element.addEventListener('focus', focusEventListener)
-    return {
-      destroy() {
-        element.removeEventListener('focus', focusEventListener)
-      },
+
+    if (enabled) {
+      // This should probably not be a global serial, but based instead on the scope.
+      element.dataset.focusTarget = (serialCounter++).toString()
+
+      element.addEventListener('focus', focusEventListener)
+    }
+
+    return () => {
+      element.dataset.focusTarget = undefined
+      element.removeEventListener('focus', focusEventListener)
     }
   }
 }
 
-export const scope: Action<HTMLElement, boolean | undefined> = (element, enabled = true) => {
-  if (enabled) {
-    element.dataset.focusScope = ''
+export const scope = (enabled: boolean): Attachment<HTMLElement> => {
+  return (element) => {
+    if (enabled) element.dataset.focusScope = ''
+    return () => (element.dataset.focusScope = undefined)
   }
 }
 

@@ -11,11 +11,11 @@
   type Props = TypeViewProps<Promise<unknown>>
 
   let { value = Promise.resolve(), key, type, path, ...rest }: Props = $props()
-
   const options = useOptions()
   let status = $state<'pending' | 'fulfilled' | 'rejected'>('pending')
   let result = $state<unknown>(undefined)
   let currentPromise = $state<Promise<unknown>>()
+  let expandable = $state<Expandable>()
 
   let entries = $derived(
     Object.entries({
@@ -27,7 +27,10 @@
   function handleSuccess(res: unknown, promise: Promise<unknown>) {
     if (promise === value) {
       result = res
-      if (status !== 'fulfilled') status = 'fulfilled'
+      if (status !== 'fulfilled') {
+        status = 'fulfilled'
+        expandable?.flash()
+      }
     }
   }
 
@@ -35,6 +38,7 @@
     if (promise === value) {
       result = err
       status = 'rejected'
+      expandable?.flash()
     }
   }
 
@@ -65,16 +69,22 @@
   })
 </script>
 
-<Expandable {...{ value, key, type, path }} length={entries.length} showLength={false} {...rest}>
+<Expandable
+  bind:this={expandable}
+  {...{ value, key, type, path }}
+  length={entries.length}
+  showLength={false}
+  {...rest}
+>
   {#snippet valuePreview({ showPreview })}
     {#key status}
       <span class="value promise {status}" in:fade={{ duration: options.transitionDuration }}>
-        <span class="bracket">{'<'}</span>
+        <span class="bracket">&lt;</span>
         {`${status}`}
         {#if status === 'fulfilled' || status === 'rejected'}
           <Preview
             {showPreview}
-            prefix={':'}
+            prefix=":"
             singleValue={{ value: result }}
             startLevel={0}
             showKey={false}
@@ -82,7 +92,7 @@
             bracketStyle="margin: 0; font-weight: bold"
           />
         {/if}
-        <span class="bracket">{'>'}</span>
+        <span class="bracket">&gt;</span>
       </span>
     {/key}
   {/snippet}

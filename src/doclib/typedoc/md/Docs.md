@@ -47,6 +47,8 @@ children:
     - addToPanel
   - - configured
     - configured
+  - - inspect-element
+    - inspectElement
   - - remove-from-panel
     - removeFromPanel
   - - set-global-inspect-options
@@ -85,5 +87,6 @@ children:
 - [addComponent](functions/addComponent)
 - [addToPanel](functions/addToPanel)
 - [configured](functions/configured)
+- [inspectElement](functions/inspectElement)
 - [removeFromPanel](functions/removeFromPanel)
 - [setGlobalInspectOptions](functions/setGlobalInspectOptions)

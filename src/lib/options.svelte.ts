@@ -365,6 +365,9 @@ export function createOptions(options: () => InspectOptions) {
   const transitionDuration = $derived(
     options().noanimate ? 0 : util.clamp(250 / animationRate, 0, 30_000)
   )
+  const flashDuration = $derived(
+    options().flashOnUpdate ? util.clamp(300 / animationRate, 200, 10_000) : 0
+  )
   // this could be Infinity but let's set a cap just to be sure
   const expandLevel = $derived(
     util.clamp(options().expandAll ? 30 : (options().expandLevel ?? 1), 0, 30)
@@ -376,6 +379,9 @@ export function createOptions(options: () => InspectOptions) {
     },
     get transitionDuration() {
       return transitionDuration
+    },
+    get flashDuration() {
+      return flashDuration
     },
     get expandLevel() {
       return expandLevel
@@ -409,6 +415,15 @@ Set global options like this instead: setGlobalInspectOptions(() => {options val
   }
 
   return setContext(GLOBAL_OPTIONS_CONTEXT, options)
+}
+
+/**
+ * Get global options context
+ */
+export function getGlobalInspectOptions() {
+  return getContext<Partial<InspectOptions> | (() => Partial<InspectOptions>) | undefined>(
+    GLOBAL_OPTIONS_CONTEXT
+  )
 }
 
 export function useOptions(): OptionsContext {

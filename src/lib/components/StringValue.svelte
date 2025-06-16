@@ -14,7 +14,7 @@
   import { collapseString, stringify } from '../util.js'
   import Highlight from './Highlight.svelte'
 
-  type Props = TypeViewProps<string> & { inline?: boolean }
+  type Props = TypeViewProps<string>
 
   let { value, display, type = 'string' }: Props = $props()
   const options = useOptions()

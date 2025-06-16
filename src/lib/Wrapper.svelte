@@ -6,7 +6,7 @@
   import { getContext, onDestroy, setContext, type Snippet } from 'svelte'
   import type { SvelteHTMLElements } from 'svelte/elements'
   import { fly, slide } from 'svelte/transition'
-  import { scope } from './action/focus.svelte.js'
+  import { scope } from './attachments/focus.js'
   import * as i from './components/icons/index.js'
   import NodeActionButton from './components/NodeActionButton.svelte'
   import NodeIconButton from './components/NodeIconButton.svelte'
@@ -20,7 +20,6 @@
 
   type Props = {
     showExpandCollapse?: boolean
-
     onlog?: () => void
     oninspectvaluechange?: () => void
     onhandleclick?: () => void
@@ -150,8 +149,8 @@
   class={['svelte-inspect-value', inFixed && 'in-fixed', classValue]}
   oninspectvaluechange={onNestedValueChange}
   data-focus-id={id}
-  use:scope
   style:--transition-rate={animRate}
+  {@attach scope(true)}
   {...rest}
 >
   {#if heading || search}
@@ -236,7 +235,6 @@
 <style>
   @import './themes.css';
   @import './vars.css';
-  @import './action/resize.css';
 
   @keyframes markback {
     from {
