@@ -6,7 +6,7 @@
 ![inspect screenshot](https://raw.githubusercontent.com/ampled/svelte-inspect-value/refs/heads/main/img.webp)
 
 - [Demo and documentation](https://inspect.eirik.space)
-- [Svelte Playground](https://svelte.dev/playground/956365d6905c44298234ff4d9c60741e?version=5.17.3)
+- [Svelte Playground](https://svelte.dev/playground/956365d6905c44298234ff4d9c60741e?version=5)
 
 ## Description
 
