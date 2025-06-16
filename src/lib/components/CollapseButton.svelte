@@ -26,31 +26,28 @@
     if (collapsed) return 0
     return 90
   })
-  let updateRotation = $state(10)
 
   export function flash() {
     if (childflash) return
-    // updateRotation = Math.random() * 20 * (Math.random() > 0.5 ? 1 : -1)
     childflash = true
     window.setTimeout(() => {
       childflash = false
-    }, options.transitionDuration)
+    }, options.flashDuration)
   }
 
   export function flashButton() {
     if (flashing) return
-    updateRotation = Math.random() * 20 * (Math.random() > 0.5 ? 1 : -1)
     flashing = true
     window.setTimeout(() => {
       flashing = false
-    }, options.transitionDuration)
+    }, options.flashDuration)
   }
 
   let keyOrType = $derived((key ?? type)?.toString())
 </script>
 
 <div
-  style:--rotation={updateRotation + 'deg'}
+  style:--flash-duration={options.flashDuration}
   data-testid="collapse-button"
   class={['collapse', flashing && 'flashing', childflash && 'child-flash']}
   aria-label={`${collapsed ? 'expand' : 'collapse'} ${keyOrType}`}
@@ -71,18 +68,6 @@
 </div>
 
 <style>
-  @keyframes update {
-    30% {
-      rotate: -20deg;
-    }
-    60% {
-      rotate: 25deg;
-    }
-    80% {
-      rotate: -15deg;
-    }
-  }
-
   .collapse {
     display: inline-flex;
     justify-content: center;
@@ -111,11 +96,12 @@
     &.flashing {
       transform: scale(1.2, 1.2);
       filter: drop-shadow(0px 0px 2px var(--_update-flash-color));
-      /* animation: var(--__transition-duration) linear update; */
+      transition-duration: var(--flash-duration);
       color: var(--_update-flash-color);
     }
 
     &.child-flash {
+      transition-duration: var(--flash-duration);
       color: var(--_child-update-flash-color);
     }
   }

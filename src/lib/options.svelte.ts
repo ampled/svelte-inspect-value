@@ -366,7 +366,7 @@ export function createOptions(options: () => InspectOptions) {
     options().noanimate ? 0 : util.clamp(250 / animationRate, 0, 30_000)
   )
   const flashDuration = $derived(
-    options().flashOnUpdate ? util.clamp(300 / animationRate, 200, 10_000) : 0
+    options().flashOnUpdate ? util.clamp(300 / animationRate, 100, 1000) : 0
   )
   // this could be Infinity but let's set a cap just to be sure
   const expandLevel = $derived(
