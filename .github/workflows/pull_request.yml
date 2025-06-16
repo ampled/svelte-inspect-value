@@ -20,5 +20,7 @@ jobs:
           node-version: '20.x'
       - name: 'Install Deps'
         run: npm ci
+      - name: 'Lint'
+        run: npm run lint:ci
       - name: 'Test'
         run: npx vitest --run
