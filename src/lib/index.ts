@@ -89,6 +89,7 @@ export { configured } from './configurable.js'
 export { default as CustomExpandable } from './CustomExpandable.svelte'
 export { default as CustomLine } from './CustomLine.svelte'
 export { addToPanel } from './global.svelte.js'
+export { inspectElement } from './attachments/inspect-element.js'
 export { default as InspectOptionsProvider } from './InspectOptionsProvider.svelte'
 export {
   GLOBAL_OPTIONS_CONTEXT,

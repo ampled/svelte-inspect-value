@@ -314,18 +314,22 @@ export function addComponent<TComponent extends Component<any> = Component<any>>
 export function sortProps<T extends Record<PropertyKey, unknown>>(
   props: T
 ): [Partial<InspectOptions>, Partial<T>] {
-  const out = {} as Partial<InspectOptions>
+  const options = {} as Partial<InspectOptions>
   const restProps = {} as Partial<T>
 
   Object.entries(props).forEach(([key, value]) => {
     if (OPTIONS_KEYS.includes(key as keyof InspectOptions)) {
-      out[key as keyof InspectOptions] = value as any
+      options[key as keyof InspectOptions] = value as any
     } else {
       restProps[key as keyof Partial<T>] = value as any
     }
   })
 
-  return [out, restProps]
+  Object.getOwnPropertySymbols(props).forEach((s) => {
+    restProps[s as keyof Partial<T>] = props[s] as any
+  })
+
+  return [options, restProps]
 }
 
 export function clamp(value: number, min: number, max: number) {

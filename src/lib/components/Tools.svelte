@@ -4,20 +4,17 @@
   import { getAddDestroyCallbackFn } from '../contexts.js'
   import { globalValues } from '../global.svelte.js'
   import { copyToClipBoard, logToConsole } from '../hello.svelte.js'
-  import ClipBoardIcon from '../icons/ClipBoardIcon.svelte'
-  import Console from '../icons/Console.svelte'
-  import ExpandCollapseIcon from '../icons/ExpandCollapseIcon.svelte'
-  import PanelValueIcon from '../icons/PanelValueIcon.svelte'
   import { useOptions } from '../options.svelte.js'
   import { useState, type NodeState } from '../state.svelte.js'
   import type { TypeViewProps } from '../types.js'
   import { isPromise, stringifyPath, wait } from '../util.js'
   import { buildSearchIndex } from '../util/search.js'
   import NodeIconButton from './NodeIconButton.svelte'
+  import * as icons from './icons/index.js'
 
   type Props = Partial<TypeViewProps<unknown, string>> & { collapsed?: boolean }
 
-  let { value, type, path = [] }: Props = $props()
+  let { value, type = '', path = [] }: Props = $props()
 
   let copied = $state(false)
 
@@ -37,9 +34,17 @@
       return true
     }
 
-    return ['array', 'object', 'number', 'string', 'undefined', 'null', 'date', 'boolean'].includes(
-      type ?? ''
-    )
+    return [
+      'array',
+      'object',
+      'number',
+      'bigint',
+      'string',
+      'undefined',
+      'null',
+      'date',
+      'boolean',
+    ].includes(type ?? '')
   })
 
   let nodeState = $derived(inspectState.value[stringifyPath(path)])
@@ -82,7 +87,7 @@
       runCustomCopy()
     } else {
       try {
-        await copyToClipBoard(value)
+        await copyToClipBoard(value, type)
         onCopySuccess()
       } catch (e) {
         console.error(e)
@@ -206,7 +211,7 @@
     {/if}
     {#if panelValueAction}
       <NodeIconButton title={panelValueAction.hint} onclick={panelValueAction.action}>
-        <PanelValueIcon add={panelValueAction.add} />
+        <icons.PanelValue add={panelValueAction.add} />
       </NodeIconButton>
     {/if}
 
@@ -217,7 +222,7 @@
         aria-label={treeAction.hint}
         onclick={treeAction.action}
       >
-        <ExpandCollapseIcon expand={treeAction.expand} setting={settingCollapse} />
+        <icons.ExpandCollapse expand={treeAction.expand} setting={settingCollapse} />
       </NodeIconButton>
     {/if}
     <NodeIconButton
@@ -227,7 +232,7 @@
       onclick={() => log()}
       style="font-size: 1em;width: 1.5em; height: 1.5em;"
     >
-      <Console />
+      <icons.Console />
     </NodeIconButton>
     {#if showCopyButton}
       <NodeIconButton
@@ -237,7 +242,7 @@
         onclick={() => copy()}
         success={copied}
       >
-        <ClipBoardIcon {copied} />
+        <icons.Clipboard {copied} />
       </NodeIconButton>
     {/if}
   </div>

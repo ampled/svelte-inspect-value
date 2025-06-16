@@ -7,7 +7,7 @@
     focusNext,
     focusPrev,
     focusTarget,
-  } from '../action/focus.svelte.js'
+  } from '../attachments/focus.js'
   import { getContext, tick, type Snippet } from 'svelte'
   import { getTypingBuffer } from '../typingbuffer.svelte.js'
 
@@ -120,7 +120,7 @@
   tabindex={previewLevel > 0 ? -1 : 0}
   {onclick}
   {onkeydown}
-  use:focusTarget={isFocusTarget}
+  {@attach focusTarget(isFocusTarget)}
 >
   {@render children()}
 </div>

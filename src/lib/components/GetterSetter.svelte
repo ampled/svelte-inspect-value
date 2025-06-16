@@ -13,7 +13,7 @@
   import Node from './Node.svelte'
   import NodeActionButton from './NodeActionButton.svelte'
   import Preview from './Preview.svelte'
-  import CloseIcon from '../icons/CloseIcon.svelte'
+  import CloseIcon from './icons/CloseIcon.svelte'
   import NodeIconButton from './NodeIconButton.svelte'
 
   type Props = TypeViewProps<unknown, 'get'> & {

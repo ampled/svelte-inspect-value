@@ -26,7 +26,7 @@
 </svelte:head>
 
 <div class="toc">
-  {#each toc as [title, id]}
+  {#each toc as [title, id] (id)}
     <a href={`#${id}`}>{title} </a>
     <hr />
   {/each}

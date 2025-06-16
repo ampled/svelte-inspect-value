@@ -33,14 +33,14 @@
   } & SvelteHTMLElements['div']
 
   let {
+    value,
     list: previewList,
     keyValue: previewKeyValue,
     keys: previewKeys,
+    singleValue,
     path,
-    value,
     prefix,
     postfix,
-    singleValue,
     showKey = true,
     keyDelim = ':',
     keyStyle = '',
@@ -131,11 +131,11 @@
             )}{#if i < keys.length - 1}{@render comma()}{/if}
           {/each}
         {:else if keyValue}
-          {#each keyValue as [key, value], i}
+          {#each keyValue as [key, value], i (key)}
             {@render valuePreview(value, key)}{#if i < keyValue.length - 1}{@render comma()}{/if}
           {/each}
         {:else if list}
-          {#each list as value, i}
+          {#each list as value, i (i)}
             {@render valuePreview(value, i)}{#if i < list.length - 1}{@render comma()}{/if}
           {/each}
         {:else if singleValue}

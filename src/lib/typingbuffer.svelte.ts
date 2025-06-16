@@ -1,5 +1,5 @@
 import { getContext, setContext } from 'svelte'
-import { focusBySearch } from './action/focus.svelte.js'
+import { focusBySearch } from './attachments/focus.js'
 
 /*
  * Adapted from https://github.com/trbrc/svelte-inspect

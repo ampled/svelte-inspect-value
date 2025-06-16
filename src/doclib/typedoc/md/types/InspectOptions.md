@@ -136,7 +136,7 @@ Props will override any options using the provider methods.
 animRate: number;
 ```
 
-Set transition / animation rates.
+Set transition / animation rates
 
 `0.5` will double transition durations while `2` will halve durations.
 

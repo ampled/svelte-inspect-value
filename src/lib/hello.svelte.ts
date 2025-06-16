@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { stringifyOrToString } from './util.js'
+import { stringifyOrToString, type ValueType } from './util.js'
 
 export function logToConsole(path: PropertyKey[] = [], value: unknown, type: string | undefined) {
   const prefix = [
@@ -26,6 +26,11 @@ export function logToConsole(path: PropertyKey[] = [], value: unknown, type: str
   }
 }
 
-export function copyToClipBoard(item: unknown) {
+export function copyToClipBoard(item: unknown, type: ValueType) {
+  if (type === 'bigint') {
+    item = (item as bigint).toString() + 'n'
+    return navigator.clipboard.writeText(item as string)
+  }
+
   return navigator.clipboard.writeText(stringifyOrToString(item))
 }

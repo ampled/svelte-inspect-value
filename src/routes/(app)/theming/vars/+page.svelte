@@ -17,7 +17,7 @@
     </tr>
   </thead>
   <tbody>
-    {#each vars as [v, def]}
+    {#each vars as [v, def], i (i)}
       <tr>
         <td class="varname">{v}</td>
         <td>{def}</td>

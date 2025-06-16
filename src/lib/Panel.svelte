@@ -5,11 +5,16 @@
 </script>
 
 <script lang="ts">
-  import { getContext, setContext, untrack } from 'svelte'
+  import { setContext, untrack } from 'svelte'
   import type { ClassValue } from 'svelte/elements'
   import { SvelteSet } from 'svelte/reactivity'
-  import { resizable, type ResizableDirections } from './action/resizable.svelte.js'
+  import { fade } from 'svelte/transition'
+  import { sizable, type ResizableDirections } from './attachments/resize.svelte.js'
   import CollapseStateProvider from './CollapseStateProvider.svelte'
+  import CircleSolid from './components/icons/CircleSolid.svelte'
+  import Fullscreen from './components/icons/Fullscreen.svelte'
+  import FullscreenExit from './components/icons/FullscreenExit.svelte'
+  import OpacityIcon from './components/icons/OpacityIcon.svelte'
   import Node from './components/Node.svelte'
   import NodeActionButton from './components/NodeActionButton.svelte'
   import NodeIconButton from './components/NodeIconButton.svelte'
@@ -17,20 +22,10 @@
   import Select from './components/Select.svelte'
   import { globalValues } from './global.svelte.js'
   import { logToConsole } from './hello.svelte.js'
-  import CircleSolid from './icons/CircleSolid.svelte'
-  import Fullscreen from './icons/Fullscreen.svelte'
-  import FullscreenExit from './icons/FullscreenExit.svelte'
-  import OpacityIcon from './icons/OpacityIcon.svelte'
-  import {
-    createOptions,
-    GLOBAL_OPTIONS_CONTEXT,
-    mergeOptions,
-    type InspectOptions,
-  } from './options.svelte.js'
+  import { createOptions, getGlobalInspectOptions, mergeOptions } from './options.svelte.js'
   import type { PanelProps, PositionProp, XPos, YPos } from './types.js'
   import { getAllProperties, initialize, sortProps } from './util.js'
   import Wrapper from './Wrapper.svelte'
-  import { fade } from 'svelte/transition'
 
   let {
     // base props
@@ -121,9 +116,7 @@
   })
 
   let [optionsProps, restProps] = $derived(sortProps(rest))
-  let globalOptions = getContext<Partial<InspectOptions> | (() => Partial<InspectOptions>)>(
-    GLOBAL_OPTIONS_CONTEXT
-  )
+  let globalOptions = getGlobalInspectOptions()
   let mergedOptions = $derived(
     mergeOptions(
       { ...optionsProps },
@@ -226,7 +219,7 @@
       shouldBeOpen && 'open',
       openOnHover && 'hoverable',
     ]}
-    use:resizable={() => ({ handles: resizableHandles, enabled: resize })}
+    {@attach sizable(() => ({ handles: resizableHandles, enabled: resize }))}
     transition:fade={{ duration: options.transitionDuration }}
     {...restProps}
   >
@@ -353,7 +346,7 @@
 {/if}
 
 <style>
-  @import './action/resize.css';
+  @import './attachments/resize.css';
   @import './themes.css';
   @import './vars.css';
 

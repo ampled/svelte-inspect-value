@@ -1,16 +1,10 @@
 <script lang="ts">
-  import { getContext } from 'svelte'
   import type { SvelteHTMLElements } from 'svelte/elements'
   import CollapseStateProvider from './CollapseStateProvider.svelte'
   import Node from './components/Node.svelte'
   import PropertyList from './components/PropertyList.svelte'
   import { logToConsole } from './hello.svelte.js'
-  import {
-    createOptions,
-    GLOBAL_OPTIONS_CONTEXT,
-    mergeOptions,
-    type InspectOptions,
-  } from './options.svelte.js'
+  import { createOptions, getGlobalInspectOptions, mergeOptions } from './options.svelte.js'
   import { type InspectProps } from './types.js'
   import { getAllProperties, getType, initialize, sortProps } from './util.js'
   import Wrapper from './Wrapper.svelte'
@@ -25,10 +19,7 @@
 
   let [optionsProps, restProps] = $derived(sortProps(props))
 
-  const globalOptions = getContext<Partial<InspectOptions> | (() => Partial<InspectOptions>)>(
-    GLOBAL_OPTIONS_CONTEXT
-  )
-
+  const globalOptions = getGlobalInspectOptions()
   let mergedOptions = $derived(
     mergeOptions(
       optionsProps,

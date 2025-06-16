@@ -1,6 +1,6 @@
 <script lang="ts">
   import DevOnly from '$lib/components/DevOnly.svelte'
-  import Console from '$lib/icons/Console.svelte'
+  import Console from '$lib/components/icons/Console.svelte'
   import Inspect from '$lib/Inspect.svelte'
   import { colord } from 'colord'
   import HueRotate from '../HueRotate.svelte'
@@ -102,7 +102,7 @@
   <label>
     presets
     <select bind:value={selectedPreset}>
-      {#each presets as preset}
+      {#each presets as preset (preset)}
         <option>{preset}</option>
       {/each}
     </select>
@@ -112,7 +112,7 @@
 
 <div class="colors-and-preview">
   <div class="colors">
-    {#each keys as key}
+    {#each keys as key (key)}
       {@const locked = lockedColors.includes(key)}
       <label class="color">
         {key.replaceAll('--base', '')}

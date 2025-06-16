@@ -86,6 +86,7 @@
       data: Object.fromEntries(Object.entries(element.ele.dataset ?? {})),
       ...current,
       children: value.children,
+      value: (value as HTMLInputElement).value,
     }).filter(([, v]) =>
       isArray(v) ? v.length : isObject(v) ? Object.entries(v).length : v != null
     )
@@ -103,7 +104,7 @@
   {/if}
   <PropertyList keys={entries.map((e) => e[0])} {value}>
     {#snippet item({ key, descriptor })}
-      {#if key === 'children' && (descriptor?.get || descriptor?.set)}
+      {#if (key === 'children' || key === 'value') && (descriptor?.get || descriptor?.set)}
         <GetterSetter {value} {descriptor} {key} {path} />
       {:else}
         <Node value={entries.find((e) => e[0] === key)?.[1]} {key} {path} />

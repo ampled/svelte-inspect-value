@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Caret from '$lib/icons/Caret.svelte'
+  import Caret from '$lib/components/icons/Caret.svelte'
   import type { Snippet } from 'svelte'
 
   type Props = {

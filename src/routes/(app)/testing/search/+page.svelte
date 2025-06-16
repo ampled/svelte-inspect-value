@@ -81,7 +81,7 @@
     bind:value={selectedOption}
     onchange={() => (something = vals[selectedOption as keyof typeof vals])}
   >
-    {#each Object.entries(vals) as [key, value]}
+    {#each Object.entries(vals) as [key, value] (key)}
       <option value={key}>{String(value)}</option>
     {/each}
   </select>

@@ -4,7 +4,7 @@
 <script lang="ts">
   import type { SVGAttributes } from 'svelte/elements'
   import { draw } from 'svelte/transition'
-  import { useOptions } from '../options.svelte.js'
+  import { useOptions } from '../../options.svelte.js'
 
   type Props = {
     copied: boolean

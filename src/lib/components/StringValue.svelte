@@ -8,13 +8,13 @@
  
  -->
 <script lang="ts">
-  import LinkIcon from '../icons/LinkIcon.svelte'
+  import LinkIcon from './icons/LinkIcon.svelte'
   import { useOptions } from '../options.svelte.js'
   import type { TypeViewProps } from '../types.js'
   import { collapseString, stringify } from '../util.js'
   import Highlight from './Highlight.svelte'
 
-  type Props = TypeViewProps<string> & { inline?: boolean }
+  type Props = TypeViewProps<string>
 
   let { value, display, type = 'string' }: Props = $props()
   const options = useOptions()

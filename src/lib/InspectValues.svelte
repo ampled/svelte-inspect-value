@@ -4,17 +4,31 @@
   import Wrapper from './Wrapper.svelte'
   import PropertyList from './components/PropertyList.svelte'
   import { logToConsole } from './hello.svelte.js'
-  import {
-    createOptions,
-    GLOBAL_OPTIONS_CONTEXT,
-    mergeOptions,
-    type InspectOptions,
-  } from './options.svelte.js'
+  import { createOptions, getGlobalInspectOptions, mergeOptions } from './options.svelte.js'
   import type { InspectValuesOptions } from './types.js'
-  import { getAllProperties, initialize } from './util.js'
+  import { initialize } from './util.js'
+  import type { Attachment } from 'svelte/attachments'
 
   let props: Record<PropertyKey, unknown> = $props()
-  let keys = $derived(getAllProperties(props))
+  let valueKeys = $derived.by(() => {
+    const allKeys = Object.keys(props)
+
+    const symbolKeys = Object.getOwnPropertySymbols(props).filter(
+      (s) => s.description !== '@attach'
+    )
+
+    return [...allKeys, ...symbolKeys]
+  })
+  let attachments = $derived.by(() => {
+    const out: Record<symbol, Attachment> = {}
+    const attachmentSymbols = Object.getOwnPropertySymbols(props)
+
+    attachmentSymbols.forEach((s) => {
+      if (s.description === '@attach') out[s] = props[s] as Attachment
+    })
+
+    return out
+  })
 
   let withOptionsContext = getContext<InspectValuesOptions | undefined>(
     Symbol.for('siv.with-options')
@@ -26,9 +40,7 @@
     return {}
   })
 
-  let globalOptions = getContext<Partial<InspectOptions> | (() => Partial<InspectOptions>)>(
-    GLOBAL_OPTIONS_CONTEXT
-  )
+  let globalOptions = getGlobalInspectOptions()
   let mergedOptions = $derived(
     mergeOptions(withOptions, typeof globalOptions === 'function' ? globalOptions() : globalOptions)
   )
@@ -57,7 +69,7 @@
 </script>
 
 {#if shouldRender}
-  <CollapseStateProvider {onCollapseChange} values={props} {keys} name="">
+  <CollapseStateProvider {onCollapseChange} values={props} keys={valueKeys} name="">
     <Wrapper
       data-testid="inspect"
       class={[theme, noanimate && 'noanimate', borderless && 'borderless', classValue]}
@@ -65,9 +77,10 @@
       onlog={log}
       {heading}
       {...elementAttributes}
+      {...attachments}
     >
-      {#if keys.length}
-        <PropertyList value={props} {keys} />
+      {#if valueKeys.length}
+        <PropertyList value={props} keys={valueKeys} />
       {:else}
         <div style="color: var(--_comment-color); text-align: center">no value</div>
       {/if}

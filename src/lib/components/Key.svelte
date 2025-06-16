@@ -72,7 +72,7 @@
         {#if keyTypes.includes(keyType)}
           <span class={['key', keyType, disabled && 'disabled']}>
             {#if keyType === 'quotedstring' && key !== ''}
-              {#each display as string as char}
+              {#each display as string as char, i (i)}
                 {#if char === ' '}
                   <span class="whitespace">&sdot;</span>
                 {:else}
