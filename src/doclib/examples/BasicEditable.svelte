@@ -62,6 +62,7 @@
     it:
     <span style="margin-left: 0.5em;">
       <ToggleButton
+        duration={0}
         bind:checked={() => globalInspectOptions.parseJson, (val) => setOption('parseJson', val)}
       >
         parse json

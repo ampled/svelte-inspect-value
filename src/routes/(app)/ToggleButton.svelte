@@ -6,13 +6,14 @@
   type Props = {
     children?: Snippet
     checked?: boolean
+    duration?: number
   } & SvelteHTMLElements['button']
 
-  let { children, checked = $bindable(false), ...rest }: Props = $props()
+  let { children, duration = 400, checked = $bindable(false), ...rest }: Props = $props()
 </script>
 
 <button
-  transition:slide={{ axis: 'x' }}
+  transition:slide={{ axis: 'x', duration }}
   type="button"
   class:checked
   onclick={() => (checked = !checked)}
