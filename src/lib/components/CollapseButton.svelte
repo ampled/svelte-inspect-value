@@ -56,7 +56,7 @@
   {#if disabled}
     <Bullet />
   {:else}
-    <div in:scale={{ duration: options.transitionDuration }}>
+    <div style="width: 1em; height: 1em" in:scale={{ duration: options.transitionDuration }}>
       <Caret
         style="rotate:{rotation}deg;
         transition: rotate var(--__transition-duration) var(--_back-out);
