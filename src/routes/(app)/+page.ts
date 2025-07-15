@@ -1,5 +1,7 @@
 import type { PageLoad } from './$types.js'
 
+export const prerender = false
+
 export const load = (async ({ fetch }) => {
   const installCount = fetch(
     'https://api.npmjs.org/downloads/point/1970-01-01:2038-01-19/svelte-inspect-value'
