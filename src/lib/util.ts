@@ -47,10 +47,6 @@ export function typeOf(obj: unknown): ValueType {
   return (t.replace(' ', '').toLowerCase() ?? 'undefined') as unknown as ValueType
 }
 
-export function ofType(obj: unknown) {
-  return {}.toString.call(obj)
-}
-
 export function isArray(value: unknown): value is unknown[] {
   return Array.isArray(value)
 }
@@ -179,6 +175,87 @@ export function getAllProperties(object: any) {
       // ...(object['__proto__'] ? ['__proto__'] : []),
     ]),
   ]
+}
+
+interface ClassMemberInfo<T> {
+  properties: (keyof T | symbol)[]
+  methods: (keyof T | symbol)[]
+  getters: (keyof T | symbol)[]
+  setters: (keyof T | symbol)[]
+}
+
+export function enumerateClassInstance<T extends object>(instance: T): ClassMemberInfo<T> {
+  const result = {
+    properties: new Set<keyof T | symbol>(),
+    methods: new Set<keyof T | symbol>(),
+    getters: new Set<keyof T | symbol>(),
+    setters: new Set<keyof T | symbol>(),
+  }
+
+  let current: object | null = instance
+
+  // Walk up the prototype chain
+  while (current && current !== Object.prototype) {
+    const descriptors = Object.getOwnPropertyDescriptors(current)
+
+    // Handle string/number keys
+    for (const [name, descriptor] of Object.entries(descriptors)) {
+      // Skip constructor
+      if (name === 'constructor') continue
+
+      const key = name as keyof T
+
+      if (descriptor.get || descriptor.set) {
+        if (descriptor.get) result.getters.add(key)
+        if (descriptor.set) result.setters.add(key)
+      } else if (typeof descriptor.value === 'function') {
+        result.methods.add(key)
+      } else {
+        result.properties.add(key)
+      }
+    }
+
+    // Handle symbol keys
+    const symbolKeys = Object.getOwnPropertySymbols(current)
+    for (const symbol of symbolKeys) {
+      const descriptor = Object.getOwnPropertyDescriptor(current, symbol)
+      if (!descriptor) continue
+
+      if (descriptor.get || descriptor.set) {
+        if (descriptor.get) result.getters.add(symbol)
+        if (descriptor.set) result.setters.add(symbol)
+      } else if (typeof descriptor.value === 'function') {
+        result.methods.add(symbol)
+      } else {
+        result.properties.add(symbol)
+      }
+    }
+
+    current = Object.getPrototypeOf(current)
+  }
+
+  return {
+    properties: Array.from(result.properties),
+    methods: Array.from(result.methods),
+    getters: Array.from(result.getters),
+    setters: Array.from(result.setters),
+  }
+}
+
+export function consolidateClassMembers<T>(memberInfo: ClassMemberInfo<T>): (keyof T | symbol)[] {
+  const allMembers = new Set<keyof T | symbol>()
+
+  memberInfo.properties.forEach((prop) => allMembers.add(prop))
+  memberInfo.methods.forEach((method) => allMembers.add(method))
+  memberInfo.getters.forEach((getter) => allMembers.add(getter))
+  memberInfo.setters.forEach((setter) => allMembers.add(setter))
+
+  return Array.from(allMembers)
+}
+
+export function enumerateObject<T extends object = object>(value: T): (keyof T | symbol)[] {
+  const members = enumerateClassInstance<T>(value)
+  return consolidateClassMembers<T>(members) as (keyof T | symbol)[]
 }
 
 export function getAllKeysOf(values: unknown, type = getType(values)) {
@@ -360,12 +437,12 @@ export function isValidStore(store: Readable<unknown> | Writable<unknown>) {
   }
 }
 
-export function nodeActionKeydown<F extends (e: UIEvent) => void | Promise<void>>(fn: F) {
+export function nodeActionKeydown<F extends (e: UIEvent) => void | Promise<void>>(fn?: F) {
   return function (this: unknown, event: KeyboardEvent) {
     if (['Enter', ' '].includes(event.key)) {
       event.preventDefault()
       event.stopPropagation()
-      fn.call(this, event)
+      fn?.call(this, event)
     }
   }
 }

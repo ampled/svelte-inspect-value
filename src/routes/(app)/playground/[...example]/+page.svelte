@@ -1,12 +1,29 @@
 <script lang="ts">
+  import { goto } from '$app/navigation'
+  import { page } from '$app/state'
   import Editor from '$doclib/Editor.svelte'
   import Inspect from '$lib/Inspect.svelte'
   import type { InspectProps } from '$lib/types.js'
   import { getType } from '$lib/util.js'
   import examples from './examples.js'
 
-  let original = $state(examples.primitives)
+  type ExampleKey = keyof typeof examples
 
+  const exampleKeys = Object.keys(examples) as string[]
+
+  function isValidExampleKey(str: string): str is ExampleKey {
+    return exampleKeys.includes(str)
+  }
+
+  let urlName: ExampleKey = $derived.by(() => {
+    const slug = page.params.example?.split('-').join(' ')
+    if (isValidExampleKey(slug)) {
+      return slug
+    }
+    return 'primitives'
+  })
+
+  let original = $derived(examples[urlName])
   let demoInputValid = $state(true)
 
   // svelte-ignore state_referenced_locally
@@ -23,7 +40,6 @@
   function reset() {
     sourceValue = original
     onchange(sourceValue)
-
     editor?.editor()?.setValue(original)
   }
 
@@ -44,25 +60,30 @@
 
   let editor = $state<ReturnType<typeof Editor>>()
 
-  onchange(examples.primitives)
+  $effect(() => {
+    onchange(examples[urlName])
+    reset()
+  })
 </script>
 
 <h2>Playground</h2>
 
-<div class="flex col">
+<div class="container">
   <div class="flex row align-end justify-between w-max">
     <button onclick={() => reset()}>reset</button>
     <label>
       examples
       <select
-        bind:value={sourceValue}
-        onchange={() => {
-          original = sourceValue
-          onchange(sourceValue)
+        value={urlName}
+        onchange={(e) => {
+          const value = e.currentTarget.value.split(' ').join('-')
+          goto(`/playground/${value}`)
+          // original = sourceValue
+          // onchange(sourceValue)
         }}
       >
-        {#each Object.entries(examples) as [name, value] (name)}
-          <option {value}>{name}</option>
+        {#each Object.entries(examples) as [name] (name)}
+          <option>{name}</option>
         {/each}
       </select>
     </label>
@@ -75,15 +96,24 @@
       valid={demoInputValid}
       message={error}
     />
-    <Inspect {...props} name="demo" expandLevel={0} heading="playground" />
+    <Inspect {...props} name="demo" expandLevel={1} heading="playground" />
   </div>
 </div>
 
 <style>
+  .container {
+    container-type: inline-size;
+  }
+
   .playground {
     display: flex;
+    flex-direction: column;
     align-items: flex-start;
     gap: 0.5em;
     width: 100%;
+
+    @container (inline-size > 800px) {
+      flex-direction: row;
+    }
   }
 </style>

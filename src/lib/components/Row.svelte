@@ -159,7 +159,6 @@
       border-radius: 4px;
       background-color: var(--_caret-focus-color);
       width: 8px;
-      /* height: 4px; */
     }
   }
 
@@ -171,7 +170,6 @@
     .bullet .dash {
       border-radius: 4px;
       background-color: var(--_caret-hover-color);
-      /* width: 8px; */
       height: 2px;
     }
   }

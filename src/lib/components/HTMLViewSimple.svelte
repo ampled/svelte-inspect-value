@@ -13,7 +13,7 @@
 
   let { value, key = undefined, path, children, ...rest }: Props = $props()
 
-  let element = $state(htmlState(value))
+  let element = htmlState(value)
   let current = $state({
     scrollLeft: 0,
     scrollTop: 0,

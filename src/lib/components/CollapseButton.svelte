@@ -56,7 +56,7 @@
   {#if disabled}
     <Bullet />
   {:else}
-    <div style="width: 1em; height: 1em" in:scale={{ duration: options.transitionDuration }}>
+    <div class="caret-transition" in:scale={{ duration: options.transitionDuration }}>
       <Caret
         style="rotate:{rotation}deg;
         transition: rotate var(--__transition-duration) var(--_back-out);
@@ -103,6 +103,14 @@
     &.child-flash {
       transition-duration: var(--flash-duration);
       color: var(--_child-update-flash-color);
+    }
+
+    .caret-transition {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
     }
   }
 </style>

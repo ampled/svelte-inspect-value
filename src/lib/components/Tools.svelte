@@ -110,8 +110,8 @@
     expand: boolean
   }
 
-  let collapseAction: CollapseAction = {
-    hint: 'collapse children',
+  const collapseAction: CollapseAction = {
+    hint: 'Collapse children',
     action: async () => {
       settingCollapse = 'collapsing'
       for (const [path, state] of childNodes.toReversed()) {
@@ -125,8 +125,8 @@
     expand: false,
   }
 
-  let expandAction: CollapseAction = {
-    hint: 'expand children',
+  const expandAction: CollapseAction = {
+    hint: 'Expand children',
     action: async () => {
       settingCollapse = 'expanding'
       for (const [path, state] of childNodes) {
@@ -226,9 +226,8 @@
       </NodeIconButton>
     {/if}
     <NodeIconButton
-      type="button"
-      title="log value to console"
-      aria-label="log value to console"
+      title="Log value to console"
+      aria-label="Log value to console"
       onclick={() => log()}
       style="font-size: 1em;width: 1.5em; height: 1.5em;"
     >
@@ -236,9 +235,8 @@
     </NodeIconButton>
     {#if showCopyButton}
       <NodeIconButton
-        type="button"
-        title="copy value to clipboard"
-        aria-label="copy value to clipboard"
+        title="Copy value to clipboard"
+        aria-label="Copy value to clipboard"
         onclick={() => copy()}
         success={copied}
       >
