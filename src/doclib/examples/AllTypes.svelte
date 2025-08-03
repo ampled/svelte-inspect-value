@@ -213,8 +213,7 @@
       normalFunction: function (some: string = 'some', thing: string) {
         return some + thing
       },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      asyncOneLiner: async (v: any) => new Promise((r) => setTimeout(() => r(v), v)),
+      asyncOneLiner: async (v: number) => new Promise((r) => setTimeout(() => r(v), v)),
       asyncfn: async function () {
         const boop = await Promise.resolve('boop')
         return boop
@@ -459,10 +458,10 @@
 
   const allTypesSearch = $derived.by(() => {
     const globalOpts = typeof globalOptions === 'function' ? globalOptions() : globalOptions
-    if (globalOpts.search === false) {
+    if (globalOpts?.search === false) {
       return 'highlight'
     }
-    return globalOpts.search
+    return globalOpts?.search ?? undefined
   })
 </script>
 
