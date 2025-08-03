@@ -4,7 +4,6 @@
   import type { TypeViewProps } from '../types.js'
   import Expandable from './Expandable.svelte'
   import FunctionBody from './FunctionBody.svelte'
-  import OneLineView from './OneLineView.svelte'
 
   type Props = TypeViewProps<
     () => unknown,
@@ -31,37 +30,23 @@
   })
 </script>
 
-{#snippet valuePreview({ showPreview }: { showPreview: boolean })}
-  {#if showPreview}
+<Expandable {key} {type} {path} {value} length={isMultiLine ? 1 : 0} showLength={false} {...rest}>
+  {#snippet valuePreview({ showPreview }: { showPreview: boolean })}
     {#if previewLevel}
       <span title={value.name} class="preview value function">{value.name}</span>
-    {:else if BROWSER}
+    {:else if showPreview && isMultiLine && BROWSER}
+      <FunctionBody value={oneLine} inline />
+    {:else if BROWSER && !isMultiLine}
       <FunctionBody value={oneLine} inline />
     {/if}
-  {/if}
-{/snippet}
-
-{#if isMultiLine}
-  <Expandable {key} {type} {path} {value} length={1} showLength={false} {...rest}>
-    {#snippet valuePreview({ showPreview })}
-      {#if showPreview}
-        {#if previewLevel}
-          <span class="preview value function">{value.name}</span>
-        {:else if BROWSER}
-          <FunctionBody value={oneLine} inline />
-        {/if}
-      {/if}
-    {/snippet}
+  {/snippet}
+  {#if isMultiLine}
     <FunctionBody value={value.toString()} />
-  </Expandable>
-{:else}
-  <OneLineView {key} {type} {path} {value} {...rest}>
-    {@render valuePreview({ showPreview: true })}
-  </OneLineView>
-{/if}
+  {/if}
+</Expandable>
 
 <style>
   .preview.value.function {
-    margin-left: 0.5em;
+    margin-left: 0.25em;
   }
 </style>
