@@ -86,10 +86,35 @@ return {
   rejects
 }`
 
+const classInstances = `class Cls {
+  _props;
+  
+  constructor(props) {
+      this._props = props;
+  }
+  
+  logProps() {
+      console.log(this._props);
+  }
+  
+  inc() {
+      this._props.a++;
+  }
+  
+  get props() {
+      return this._props;
+  }
+}
+
+const cls = new Cls({ a: 1, b: 2, c: 4 });
+
+return { cls };`
+
 export default {
   primitives,
   iterators,
   ['getters and setters']: gettersAndSetters,
   ['map and set']: mapAndSet,
+  ['class instances']: classInstances,
   promises,
 }

@@ -428,12 +428,12 @@
     main {
       /* padding-left: 3em; */
       padding-top: 0.5em;
-      padding-right: 3rem;
+      padding-right: 2rem;
       width: 90%;
     }
 
     main.drawer-open {
-      padding-right: 8rem;
+      padding-right: 2rem;
       padding-left: calc(3em + 230px);
       width: 100%;
     }

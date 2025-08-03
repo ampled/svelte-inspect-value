@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { TypeViewProps } from '../types.js'
-  import { getAllProperties, type ValueType } from '../util.js'
+  import { type ValueType, enumerateObject } from '../util.js'
   import Expandable from './Expandable.svelte'
   import GetterSetter from './GetterSetter.svelte'
   import Node from './Node.svelte'
@@ -16,13 +16,9 @@
   )
 
   let objectType = $derived(namedConstructor ? (namedConstructor as ValueType) : type)
+  let properties = $derived(enumerateObject(value) as (symbol | string)[])
   let keys = $derived(
-    [
-      ...getAllProperties(value).filter(
-        (p) => !['constructor', 'prototype'].includes(p.toString())
-      ),
-      namedConstructor ? 'constructor' : undefined,
-    ].filter((v) => v != null)
+    [...properties, namedConstructor ? 'constructor' : undefined].filter((v) => v != null)
   )
 </script>
 
