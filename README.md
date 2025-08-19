@@ -10,7 +10,7 @@
 
 ## Description
 
-A collection of value inspector components in the veins of `svelte-json-tree` and `react-json-view`.
+A collection of value inspector components.
 
 It aims to be a valuable devtool for monitoring state and debugging, but should be usable for presenting data in any situation that calls for it.
 
@@ -95,3 +95,4 @@ See the following pages in the documentation for a full overview of props:
 - Focus management implementation is heavily based on code from [`svelte-inspect`](https://github.com/trbrc/svelte-inspect)
 - The "drak"-theme is based on the [dracula](https://draculatheme.com/) color scheme
 - The "stereo"-theme is based on the [monokai](https://monokai.pro/) color scheme
+- Persistence-logic is borrowed from [runed](https://runed.dev) with some modifications
