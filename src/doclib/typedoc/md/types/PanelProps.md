@@ -2,6 +2,33 @@
 title:
   - panel-props
   - PanelProps
+children:
+  - - children
+    - children
+  - - hide-global-values
+    - hideGlobalValues
+  - - hide-toolbar
+    - hideToolbar
+  - - on-open-change
+    - onOpenChange
+  - - on-settings-change
+    - onSettingsChange
+  - - open-on-hover
+    - openOnHover
+  - - persist
+    - persist
+  - - resize
+    - resize
+  - - wiggle-on-update
+    - wiggleOnUpdate
+  - - z-index
+    - zIndex
+  - - name
+    - name
+  - - value
+    - value
+  - - values
+    - values
 ---
 
 # PanelProps
@@ -12,8 +39,9 @@ type PanelProps = {
   hideGlobalValues: boolean;
   hideToolbar: boolean;
   onOpenChange: (open: boolean) => void;
-  onSettingsChange: (settings: Required<PanelSettings>) => void;
+  onSettingsChange: (settings: PanelSettings) => void;
   openOnHover: boolean;
+  persist: boolean | string | PanelPersistProps;
   resize: boolean;
   wiggleOnUpdate: boolean;
   zIndex: number;
@@ -21,7 +49,7 @@ type PanelProps = {
   name: string;
   value: unknown;
   values: unknown;
-} & PanelSettings & Partial<InspectOptions> & SvelteHTMLElements["aside"];
+} & Partial<PanelSettings> & Partial<InspectOptions> & SvelteHTMLElements["aside"];
 ```
 
 Props for `Inspect.Panel`
@@ -91,11 +119,11 @@ undefined
 ### onSettingsChange()?
 
 ```ts
-onSettingsChange: (settings: Required<PanelSettings>) => void;
+onSettingsChange: (settings: PanelSettings) => void;
 ```
 
 Callback for when any panel prop/setting is changed with the panel UI. Can be used for
-persisting settings using `localStorage`
+customized persisting of settings using `localStorage`
 
 Will run when any of the following prop / setting is changed:
 
@@ -103,12 +131,13 @@ Will run when any of the following prop / setting is changed:
 - `align`
 - `appearance`
 - `opacity`
+- `width` and `height` (if resizing is enabled)
 
 #### Parameters
 
 ##### settings
 
-`Required` `<` [`PanelSettings`](PanelSettings) `>` 
+[`PanelSettings`](PanelSettings)
 
 Current value of settings
 
@@ -135,6 +164,39 @@ openOnHover: boolean;
 Panel should open on hover.
 
 Enabling this will leave part of the panel visible for easier reach.
+
+#### Default
+
+```ts
+false
+```
+
+### persist?
+
+```ts
+persist: boolean | string | PanelPersistProps;
+```
+
+Enable/disable persistence of [`PanelSettings`](PanelSettings) using localStorage or sessionStorage
+when changed through Panel UI, e.g. open/closed state, width, height, appearance, alignment and opacity setting.
+
+When enabled, stored settings will take precedence over passed props.
+
+Pass a configuration object ([PanelPersistProps](PanelPersistProps)), `true` or a string (storage key) to enable.
+
+Passing `true` will enable persistence and using these default options:
+```typescript
+{
+ storage: 'local',
+ key: 'siv.panel',
+ syncTabs: false
+}
+```
+Passing a string will use those defaults but use the passed string as the key
+
+#### See
+
+[PanelPersistProps](PanelPersistProps)
 
 #### Default
 

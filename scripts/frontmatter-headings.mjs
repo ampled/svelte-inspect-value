@@ -14,19 +14,23 @@ export function load(app) {
     MarkdownPageEvent.BEGIN,
     /** @param  {any} page */
     (page) => {
-      /**
-       * @type {string[]}
-       */
       const children = page.model.children?.map((c) => c.name) ?? []
       page.frontmatter.title = [formatDefaultId(page.model.name), page.model.name]
 
       if (children.length) {
         page.frontmatter.children = children.map((c) => [formatDefaultId(c), c])
       }
-      // const children = page.model.children?.map((c) => c.name))
-      // if (page.model)
-      // if (page.model.name)
-      // console.log(page.pageSections.map((a) => a.headings))
+      if (page.model.type && page.model.type.type === 'intersection') {
+        let children = []
+        page.model.type.types.forEach((t) => {
+          if (t.declaration?.children) {
+            children = [...children, ...(t.declaration.children?.map((c) => c.name) ?? [])]
+          }
+          if (children.length) {
+            page.frontmatter.children = children.map((c) => [formatDefaultId(c), c])
+          }
+        })
+      }
       /**
        * Update page.frontmatter object using information from the page model
        *

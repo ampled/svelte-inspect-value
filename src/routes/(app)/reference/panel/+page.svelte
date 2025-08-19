@@ -2,6 +2,7 @@
   import { createPageTitle } from '$doclib/util.js'
   import PanelExample from './PanelExample.svelte'
   import PanelExampleCode from './PanelExampleCode.md'
+  import PanelPersistCode from './PanelPersistCode.md'
 </script>
 
 <svelte:head>
@@ -38,3 +39,22 @@
   Also, if any instances of <code>Inspect</code> / <code>Inspect.Values</code> are used outside of a
   panel, you can add values to the panel from those instances.
 </p>
+
+<h2 id="persistence">Persisting State and Configuration</h2>
+
+<p>
+  Using the <a href="/docs/types/PanelProps#persist"><code>persist</code></a>-prop, the following
+  properties can be persisted using local/session storage:
+</p>
+
+<ul>
+  <li>open/closed state</li>
+  <li>width/height (when resized)</li>
+  <li>position</li>
+  <li>opacity</li>
+  <li>appearance</li>
+</ul>
+
+<h3>Example</h3>
+
+<PanelPersistCode />

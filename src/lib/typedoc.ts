@@ -20,6 +20,7 @@ export type {
   InspectProps,
   InspectValuesOptions,
   PanelProps,
+  PanelPersistProps,
   PanelSettings,
   TypeViewProps,
 } from './types.js'
