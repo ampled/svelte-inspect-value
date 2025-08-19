@@ -7,10 +7,14 @@ children:
     - align
   - - appearance
     - appearance
+  - - height
+    - height
   - - opacity
     - opacity
   - - open
     - open
+  - - width
+    - width
 ---
 
 # PanelSettings
@@ -19,16 +23,26 @@ children:
 type PanelSettings = {
   align: PositionProp;
   appearance: "solid" | "glassy" | "floating" | "dense";
+  height: number;
   opacity: boolean;
   open: boolean;
+  width: number;
 };
 ```
 
 Props / settings that can be changed within the `Inspect.Panel` UI.
 
+These can be persisted using built-in logic with `persist` or
+customized logic using the `onSettingsChange`-callback
+
+## See
+
+ - [PanelProps.persist](PanelProps)
+ - [PanelProps.onSettingsChange](PanelProps)
+
 ## Properties
 
-### align?
+### align
 
 ```ts
 align: PositionProp;
@@ -62,7 +76,7 @@ y-position can be one of `'top' | 'bottom' | 'middle' | 'full'`
 
 ***
 
-### appearance?
+### appearance
 
 ```ts
 appearance: "solid" | "glassy" | "floating" | "dense";
@@ -82,7 +96,27 @@ Can be `'solid'|'glassy'|'dense'|'floating'`
 
 ***
 
-### opacity?
+### height?
+
+```ts
+height: number;
+```
+
+Panel height in pixels
+
+Not used if y-position in `align` is `'full'`
+
+**Bindable**
+
+#### Default
+
+```ts
+undefined
+```
+
+***
+
+### opacity
 
 ```ts
 opacity: boolean;
@@ -100,7 +134,7 @@ false
 
 ***
 
-### open?
+### open
 
 ```ts
 open: boolean;
@@ -114,4 +148,24 @@ Initially open panel
 
 ```ts
 false
+```
+
+***
+
+### width?
+
+```ts
+width: number;
+```
+
+Panel width in pixels.
+
+Not used if x-position in `align` is `'full'`
+
+**Bindable**
+
+#### Default
+
+```ts
+undefined
 ```

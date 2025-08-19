@@ -1,29 +1,57 @@
 <script module lang="ts">
+  import { SvelteSet } from 'svelte/reactivity'
+  import { PersistedState, type PersistedStateOptions } from './util/persisted.svelte.js'
+
   export let globalInspectState = $state({
     mounted: new SvelteSet<string>(),
   })
+
+  const persistDefaults: PersistedStateOptions<PanelSettings> = {
+    key: 'siv.panel',
+    storage: 'local',
+    syncTabs: false,
+  } as const
+
+  function createPersistState(
+    initialValue: PanelSettings,
+    persist: PanelProps['persist'],
+    persistSync: PanelProps['persistSync']
+  ) {
+    let opts: PersistedStateOptions<PanelSettings>
+    if (persist === true) {
+      opts = persistDefaults
+    } else if (typeof persist === 'string') {
+      opts = { ...persistDefaults, key: persist }
+    } else if (typeof persist === 'object') {
+      opts = { ...persistDefaults, ...persist }
+    } else if (persistSync === true) {
+      opts = { ...persistDefaults, syncTabs: true }
+    } else if (typeof persistSync === 'string') {
+      opts = { ...persistDefaults, key: persistSync, syncTabs: true }
+    } else if (typeof persistSync === 'object') {
+      opts = { ...persistDefaults, ...persistSync, syncTabs: true }
+    } else {
+      return undefined
+    }
+    return new PersistedState(initialValue, opts)
+  }
 </script>
 
 <script lang="ts">
+  import { BROWSER } from 'esm-env'
   import { setContext, untrack } from 'svelte'
   import type { ClassValue } from 'svelte/elements'
-  import { SvelteSet } from 'svelte/reactivity'
   import { fade } from 'svelte/transition'
-  import { sizable, type ResizableDirections } from './attachments/resize.svelte.js'
+  import { createResizable, type ResizableDirections } from './attachments/resizable.svelte.js'
   import CollapseStateProvider from './CollapseStateProvider.svelte'
-  import CircleSolid from './components/icons/CircleSolid.svelte'
-  import Fullscreen from './components/icons/Fullscreen.svelte'
-  import FullscreenExit from './components/icons/FullscreenExit.svelte'
-  import OpacityIcon from './components/icons/OpacityIcon.svelte'
   import Node from './components/Node.svelte'
   import NodeActionButton from './components/NodeActionButton.svelte'
-  import NodeIconButton from './components/NodeIconButton.svelte'
   import PropertyList from './components/PropertyList.svelte'
-  import Select from './components/Select.svelte'
   import { globalValues } from './global.svelte.js'
   import { logToConsole } from './hello.svelte.js'
   import { createOptions, getGlobalInspectOptions, mergeOptions } from './options.svelte.js'
-  import type { PanelProps, PositionProp, XPos, YPos } from './types.js'
+  import PanelToolbar from './PanelToolbar.svelte'
+  import type { PanelProps, PanelSettings, PositionProp, XPos, YPos } from './types.js'
   import { getAllProperties, initialize, sortProps } from './util.js'
   import Wrapper from './Wrapper.svelte'
 
@@ -37,6 +65,8 @@
     appearance = $bindable('solid'),
     open = $bindable(false),
     opacity = $bindable(false),
+    width = $bindable(),
+    height = $bindable(),
     hideToolbar = false,
     hideGlobalValues = false,
     resize = true,
@@ -45,6 +75,8 @@
     wiggleOnUpdate = true,
     onOpenChange,
     onSettingsChange = () => void 0,
+    persist = false,
+    persistSync = false,
     children,
     // inspect options and element attributes
     class: className,
@@ -55,7 +87,29 @@
   let full = $state(false)
   let hovered = $state(false)
   let flash = $state(false)
+  let initialized = false
   const handleLabel = $derived(open ? 'close panel' : 'open panel')
+  const persistedSettings = createPersistState(
+    { open, align, opacity, appearance, width, height },
+    persist,
+    persistSync
+  )
+
+  function setSettingsFrom(source: PanelSettings) {
+    align = source.align ?? align
+    open = source.open ?? open
+    appearance = source.appearance ?? appearance
+    opacity = source.opacity ?? opacity
+    width = source.width
+    height = source.height
+  }
+
+  $effect.pre(() => {
+    if ((persist || persistSync) && !initialized && persistedSettings) {
+      setSettingsFrom(persistedSettings.current)
+      initialized = true
+    }
+  })
 
   let globalEntries = $derived.by(() => {
     const entries = [...globalValues.entries()].map(([k, v]) => [k, v.value] as const)
@@ -127,11 +181,14 @@
   let { theme, noanimate, animRate, borderless, heading, onCollapseChange, onLog } = $derived(
     options.value
   )
-  let shouldRender = $derived(
+
+  const renderIfValue = $derived(
     typeof options.value.renderIf === 'function'
       ? Boolean(options.value.renderIf())
       : Boolean(options.value.renderIf)
   )
+
+  let shouldRender = $derived(renderIfValue && (persist ? BROWSER : true))
   let wrapperClasses = $derived<ClassValue>([theme, borderless && 'borderless', className])
 
   $effect(() => {
@@ -180,7 +237,10 @@
   }
 
   function settingsChanged() {
-    onSettingsChange?.({ open, align, opacity, appearance })
+    if (persistedSettings) {
+      persistedSettings.current = { open, appearance, opacity, align, width, height }
+    }
+    onSettingsChange?.({ open, align, opacity, appearance, width, height })
   }
 
   function log() {
@@ -198,6 +258,32 @@
       logToConsole(['Inspect.Panel'], Object.fromEntries(globalValues.entries()), 'globalValues')
     }
   }
+
+  function onResize(
+    newWidth: number | undefined,
+    newHeight: number | undefined,
+    isResizing = true,
+    persist = false
+  ) {
+    width = newWidth
+    height = newHeight
+    resizing = isResizing
+    if (persist) {
+      settingsChanged()
+    }
+  }
+
+  let resizing = $state(false)
+  const resizable = createResizable(
+    () => ({
+      handles: resizableHandles,
+      enabled: resize,
+    }),
+    width,
+    height,
+    (w, h) => onResize(w, h),
+    (w, h) => onResize(w, h, false, true)
+  )
 </script>
 
 {#if shouldRender}
@@ -205,6 +291,8 @@
     {oninspectvaluechange}
     onpointerenter={() => (hovered = true)}
     onpointerleave={() => (hovered = false)}
+    style:width={width ? width + 'px' : width}
+    style:height={height ? height + 'px' : height}
     style:z-index={zIndex}
     style:--transition-rate={animRate}
     class={[
@@ -218,8 +306,9 @@
       flash && wiggleOnUpdate && !hideGlobalValues && 'flash',
       shouldBeOpen && 'open',
       openOnHover && 'hoverable',
+      resizing && 'resizing',
     ]}
-    {@attach sizable(() => ({ handles: resizableHandles, enabled: resize }))}
+    {@attach resizable.attach}
     transition:fade={{ duration: options.transitionDuration }}
     {...restProps}
   >
@@ -244,60 +333,16 @@
       </div>
     </button>
     {#if !hideToolbar}
-      <div class={['toolbar', yPos]}>
-        <div class="group">
-          {#if !full}
-            <NodeIconButton title="toggle opacity" onclick={toggleOpacity}>
-              {#if opacity}
-                <OpacityIcon />
-              {:else}
-                <CircleSolid />
-              {/if}
-            </NodeIconButton>
-          {/if}
-          <NodeIconButton title="toggle full" onclick={() => (full = !full)}>
-            {#if full}
-              <FullscreenExit />
-            {:else}
-              <Fullscreen />
-            {/if}
-          </NodeIconButton>
-        </div>
-
-        {#if !full}
-          <div class="group">
-            <Select
-              prefix="x"
-              name="x-position"
-              value={xPos}
-              onchange={(e) => onAlignChange(e.currentTarget.value as XPos, yPos)}
-            >
-              <option>left</option>
-              <option disabled={['middle', 'full'].includes(yPos)}>center</option>
-              <option>right</option>
-              <option disabled={['middle', 'full'].includes(yPos)}>full</option>
-            </Select>
-
-            <Select
-              prefix="y"
-              name="y-position"
-              value={yPos}
-              onchange={(e) => onAlignChange(xPos, e.currentTarget.value as YPos)}
-            >
-              <option>top</option>
-              <option disabled={['full', 'center'].includes(xPos)}>middle</option>
-              <option>bottom</option>
-              <option disabled={['center', 'full'].includes(xPos)}>full</option>
-            </Select>
-            <Select bind:value={appearance} name="appearance" onchange={settingsChanged}>
-              <option>solid</option>
-              <option>dense</option>
-              <option>glassy</option>
-              <option>floating</option>
-            </Select>
-          </div>
-        {/if}
-      </div>
+      <PanelToolbar
+        {full}
+        {xPos}
+        {yPos}
+        {onAlignChange}
+        {opacity}
+        {toggleOpacity}
+        {settingsChanged}
+        bind:appearance
+      />
     {/if}
 
     {#if value || name || (keys.length && values)}
@@ -413,10 +458,10 @@
       left var(--panel-t-dur-slow) ease-in-out,
       bottom var(--panel-t-dur-slow) ease-in-out,
       right var(--panel-t-dur-slow) ease-in-out,
-      opacity var(--panel-t-dur-slow) ease-in-out,
-      border var(--panel-t-dur-slow) ease-in-out,
-      outline var(--panel-t-dur-slow) ease-in-out,
-      transform var(--panel-t-dur-slow) ease-in-out;
+      opacity var(--panel-t-dur) ease-in-out,
+      border var(--panel-t-dur) ease-in-out,
+      outline var(--panel-t-dur) ease-in-out,
+      transform var(--panel-t-dur) ease-in-out;
     box-sizing: border-box;
     container-type: inline-size;
     background-color: transparent;
@@ -493,7 +538,7 @@
         }
       }
 
-      .toolbar {
+      :global(.toolbar) {
         border: none;
         background-color: transparent;
       }
@@ -515,7 +560,7 @@
       &.borderless {
         background-color: var(--_background-color);
 
-        .toolbar {
+        :global(.toolbar) {
           border: none;
           background-color: transparent;
         }
@@ -760,7 +805,7 @@
         border-top-right-radius: var(--border-radius);
       }
 
-      .toolbar {
+      :global(.toolbar) {
         flex-direction: row-reverse;
       }
     }
@@ -801,44 +846,6 @@
       border-left: none;
       border-radius: 0;
       width: 100%;
-    }
-  }
-
-  .toolbar {
-    display: flex;
-    flex-shrink: 0;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    gap: 0.5em;
-    border: 1px solid var(--_border-color);
-    border-radius: 8px;
-    background-color: var(--_background-color);
-    padding: 0.375em 0.5em;
-    width: 100%;
-    min-height: 2em;
-    overflow: auto;
-
-    .spacer {
-      width: 100%;
-    }
-
-    .group {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      gap: 0.5em;
-    }
-
-    @container (inline-size < 220px) {
-      gap: 0.25;
-
-      .group {
-        justify-content: flex-end;
-        gap: 0.25em;
-        width: 100%;
-      }
     }
   }
 </style>

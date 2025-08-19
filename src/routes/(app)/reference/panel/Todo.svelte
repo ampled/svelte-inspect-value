@@ -75,6 +75,7 @@
 
 <Inspect.Panel
   values={{ todo, done }}
+  persist="siv.doc-todo-example"
   heading="todos"
   expandLevel={0}
   previewEntries={Infinity}

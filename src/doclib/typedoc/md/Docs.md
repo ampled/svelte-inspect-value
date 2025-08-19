@@ -31,6 +31,8 @@ children:
     - InspectProps
   - - inspect-values-options
     - InspectValuesOptions
+  - - panel-persist-props
+    - PanelPersistProps
   - - panel-props
     - PanelProps
   - - panel-settings
@@ -73,6 +75,7 @@ children:
 - [InspectOptions](types/InspectOptions)
 - [InspectProps](types/InspectProps)
 - [InspectValuesOptions](types/InspectValuesOptions)
+- [PanelPersistProps](types/PanelPersistProps)
 - [PanelProps](types/PanelProps)
 - [PanelSettings](types/PanelSettings)
 - [TypeViewProps](types/TypeViewProps)

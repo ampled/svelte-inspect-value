@@ -62,7 +62,35 @@ export type PositionProp<X extends XPos = XPos, Y extends YPos = YPos> =
   | ('left' | 'right')
 
 /**
+ * Options for persisting `Inspect.Panel` state or configuration using the Panel UI.
+ */
+export type PanelPersistProps = {
+  /**
+   * Storage key used with local/session storage
+   *
+   * @default 'siv.panel'
+   */
+  key?: string
+  /**
+   * The storage type to use.
+   * @default 'local'
+   */
+  storage?: 'local' | 'session'
+  /**
+   * Enable or disable syncing the state changes from other tabs.
+   * @default false
+   */
+  syncTabs?: boolean
+}
+
+/**
  * Props / settings that can be changed within the `Inspect.Panel` UI.
+ *
+ * These can be persisted using built-in logic with `persist` or
+ * customized logic using the `onSettingsChange`-callback
+ *
+ * @see {@link PanelProps.persist}
+ * @see {@link PanelProps.onSettingsChange}
  */
 export type PanelSettings = {
   /**
@@ -86,14 +114,14 @@ export type PanelSettings = {
    *
    * @default 'right full'
    */
-  align?: PositionProp
+  align: PositionProp
   /**
    * Initially open panel
    *
    * **Bindable**
    * @default false
    */
-  open?: boolean
+  open: boolean
   /**
    * Sets appearance of panel.
    *
@@ -102,7 +130,7 @@ export type PanelSettings = {
    * **Bindable**
    * @default 'solid'
    */
-  appearance?: PanelAppearance
+  appearance: PanelAppearance
   /**
    *
    * Apply opacity to the panel when not hovered or focused
@@ -110,7 +138,25 @@ export type PanelSettings = {
    * **Bindable**
    * @default false
    */
-  opacity?: boolean
+  opacity: boolean
+  /**
+   * Panel width in pixels.
+   *
+   * Not used if x-position in `align` is `'full'`
+   *
+   * **Bindable**
+   * @default undefined
+   */
+  width?: number | undefined
+  /**
+   * Panel height in pixels
+   *
+   * Not used if y-position in `align` is `'full'`
+   *
+   * **Bindable**
+   * @default undefined
+   */
+  height?: number | undefined
 }
 
 /**
@@ -170,7 +216,7 @@ export type PanelProps = {
   onOpenChange?: (open: boolean) => void
   /**
    * Callback for when any panel prop/setting is changed with the panel UI. Can be used for
-   * persisting settings using `localStorage`
+   * customized persisting of settings using `localStorage`
    *
    * Will run when any of the following prop / setting is changed:
    *
@@ -178,13 +224,46 @@ export type PanelProps = {
    * - `align`
    * - `appearance`
    * - `opacity`
+   * - `width` and `height` (if resizing is enabled)
    * @param {Required<PanelSettings>} settings Current value of settings
    * @default undefined
    * @see {@link PanelSettings}
    */
-  onSettingsChange?: (settings: Required<PanelSettings>) => void
+  onSettingsChange?: (settings: PanelSettings) => void
+  /**
+   * Enable/disable persistence of {@linkcode PanelSettings} using localStorage or sessionStorage
+   * when changed through Panel UI, e.g. open/closed state, width, height, appearance, alignment and opacity setting.
+   *
+   * When enabled, stored settings will take precedence over passed props.
+   *
+   * Pass a configuration object ({@link PanelPersistProps}), `true` or a string (storage key) to enable.
+   *
+   * Passing `true` will enable persistence and using these default options:
+   * ```typescript
+   * {
+   *  storage: 'local',
+   *  key: 'siv.panel',
+   *  syncTabs: false
+   * }
+   * ```
+   * Passing a string will use those defaults but use the passed string as the key
+   *
+   * @default false
+   * @see {@link PanelPersistProps}
+   */
+  persist?: boolean | string | PanelPersistProps
+  /**
+   * Alias for `persist` except tab syncing is always enabled.
+   *
+   * If `persist` is truthy this prop will not have any effect.
+   *
+   * @default false
+   * @see {@link PanelProps.persist}
+   * @see {@link PanelPersistProps.syncTabs}
+   */
+  persistSync?: boolean | string | Omit<PanelPersistProps, 'syncTabs'>
 } & BaseProps &
-  PanelSettings &
+  Partial<PanelSettings> &
   Partial<InspectOptions> &
   SvelteHTMLElements['aside']
 

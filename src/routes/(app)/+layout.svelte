@@ -1,12 +1,8 @@
 <script lang="ts">
   import { page } from '$app/state'
-  import Inspect, {
-    InspectOptionsProvider,
-    type InspectOptions,
-    type PanelSettings,
-  } from '$lib/index.js'
+  import Inspect, { InspectOptionsProvider, type InspectOptions } from '$lib/index.js'
   import { DEV } from 'esm-env'
-  import { onMount, setContext, type Snippet } from 'svelte'
+  import { setContext, type Snippet } from 'svelte'
   import { slide } from 'svelte/transition'
   import type { LayoutData } from './$types.js'
   import './app.css'
@@ -167,23 +163,6 @@
     heading: false,
   })
 
-  let panelSettings = $state<PanelSettings>({})
-
-  onMount(() => {
-    const stored = localStorage.getItem('siv.panel-settings')
-    if (!stored) {
-      panelSettings = {
-        open: false,
-        appearance: 'solid',
-        opacity: false,
-        align: 'right full',
-      }
-      localStorage.setItem('siv.panel-settings', JSON.stringify(panelSettings))
-    } else {
-      panelSettings = JSON.parse(stored)
-    }
-  })
-
   function onkeydown(event: KeyboardEvent & { currentTarget: EventTarget & Window }) {
     if (event.key === 'æ') {
       options.renderIf = !options.renderIf
@@ -248,6 +227,7 @@
   <Inspect.Panel
     style="max-width: 230px; min-width: 230px; max-height: 100vh;"
     bind:open={navPanelOpen}
+    persist="siv.nav-panel"
     align="left full"
     hideGlobalValues
     openOnHover
@@ -294,16 +274,11 @@
   </Inspect.Panel>
   <Inspect.Panel
     heading="+layout.svelte"
-    appearance="solid"
+    persist
     theme="stereo"
-    renderIf={DEV && renderDevOnlyStuff && Object.keys(panelSettings).length}
+    renderIf={DEV && renderDevOnlyStuff}
     {wiggleOnUpdate}
     values={{ options, page: { ...page } }}
-    onSettingsChange={(settings) => {
-      panelSettings = settings
-      localStorage.setItem('siv.panel-settings', JSON.stringify(settings))
-    }}
-    {...panelSettings}
   />
 
   <svelte:boundary>

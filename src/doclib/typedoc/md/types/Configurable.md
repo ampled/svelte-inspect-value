@@ -2,6 +2,35 @@
 title:
   - configurable
   - Configurable
+children:
+  - - config
+    - Config
+  - - expand-0
+    - Expand0
+  - - expand-1
+    - Expand1
+  - - expand-10
+    - Expand10
+  - - expand-2
+    - Expand2
+  - - expand-3
+    - Expand3
+  - - expand-4
+    - Expand4
+  - - expand-5
+    - Expand5
+  - - expand-6
+    - Expand6
+  - - expand-7
+    - Expand7
+  - - expand-8
+    - Expand8
+  - - expand-9
+    - Expand9
+  - - expand-all
+    - ExpandAll
+  - - with-options
+    - withOptions
 ---
 
 # Configurable `<` TComponent `>` 

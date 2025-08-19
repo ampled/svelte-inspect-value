@@ -2,6 +2,13 @@
 title:
   - inspect-props
   - InspectProps
+children:
+  - - name
+    - name
+  - - value
+    - value
+  - - values
+    - values
 ---
 
 # InspectProps

@@ -2,6 +2,9 @@
 title:
   - inline-config
   - InlineConfig
+children:
+  - - ok
+    - Ok
 ---
 
 # InlineConfig `<` T `>` 

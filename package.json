@@ -33,12 +33,15 @@
     "test:ui": "npm run test:unit -- --ui",
     "test": "npm run test:unit -- --run",
     "optimize": "vite optimize --force",
-    "releases": "node --experimental-strip-types ./scripts/compile-releases.ts"
+    "releases": "node --experimental-strip-types ./scripts/compile-releases.ts",
+    "typedoc": "npx typedoc"
   },
   "files": [
     "dist",
     "!dist/**/*.test.*",
-    "!dist/**/*.spec.*"
+    "!dist/**/*.spec.*",
+    "!dist/typedoc.js",
+    "!dist/typedoc.d.ts"
   ],
   "sideEffects": [
     "**/*.css"
