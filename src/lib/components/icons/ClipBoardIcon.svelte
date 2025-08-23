@@ -7,15 +7,15 @@
   import { useOptions } from '../../options.svelte.js'
 
   type Props = {
-    copied: boolean
+    copied?: boolean
   } & SVGAttributes<SVGElement>
 
-  let { copied, ...rest }: Props = $props()
+  let { copied = false }: Props = $props()
 
   const options = useOptions()
 </script>
 
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" {...rest}>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
   <g
     fill="none"
     stroke="currentColor"
@@ -26,7 +26,7 @@
     <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
     <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
     {#if copied}
-      <path d="m9 14l2 2l4-4" transition:draw={{ duration: options.transitionDuration }} />
+      <path d="m9 14l2 2l4-4" transition:draw={{ duration: options?.transitionDuration ?? 0 }} />
     {/if}
   </g>
 </svg>

@@ -1,5 +1,7 @@
 <script lang="ts">
+  import { useOptions } from '$lib/options.svelte.js'
   import type { SvelteHTMLElements } from 'svelte/elements'
+  import { slide } from 'svelte/transition'
 
   type Props = SvelteHTMLElements['select'] & {
     prefix?: string
@@ -15,6 +17,7 @@
     ...rest
   }: Props = $props()
 
+  const options = useOptions()
   let button = $state<HTMLSelectElement>()
 
   export function focus() {
@@ -22,7 +25,12 @@
   }
 </script>
 
-<div class="inspect-select" class:with-prefix={prefix} {...containerAttrs}>
+<div
+  class="inspect-select"
+  class:with-prefix={prefix}
+  transition:slide={{ duration: options.transitionDuration, axis: 'x' }}
+  {...containerAttrs}
+>
   {#if prefix}
     <div class="prefix">{prefix}</div>
   {/if}

@@ -7,22 +7,26 @@
   type VoidCallback = () => void
 
   type ToolbarProps = {
-    full: boolean
+    fullScreen: boolean
     opacity: boolean
-    toggleOpacity: VoidCallback
     xPos: XPos
     yPos: YPos
-    onAlignChange: (xPos: XPos, yPos: YPos) => void
     appearance: PanelAppearance
+    showResetButton: boolean
+    onAlignChange: (xPos: XPos, yPos: YPos) => void
     settingsChanged: VoidCallback
+    toggleOpacity: VoidCallback
+    onReset: VoidCallback
   }
 
   let {
-    full,
+    fullScreen = $bindable(false),
     opacity,
     xPos,
     yPos,
     appearance = $bindable('solid'),
+    showResetButton,
+    onReset,
     toggleOpacity,
     settingsChanged,
     onAlignChange,
@@ -31,7 +35,14 @@
 
 <div class={['toolbar', yPos]}>
   <div class="group">
-    {#if !full}
+    <NodeIconButton title="toggle full" onclick={() => (fullScreen = !fullScreen)}>
+      {#if fullScreen}
+        <icons.FullscreenExit />
+      {:else}
+        <icons.Fullscreen />
+      {/if}
+    </NodeIconButton>
+    {#if !fullScreen}
       <NodeIconButton title="toggle opacity" onclick={toggleOpacity}>
         {#if opacity}
           <icons.Opacity />
@@ -40,20 +51,19 @@
         {/if}
       </NodeIconButton>
     {/if}
-    <NodeIconButton title="toggle full" onclick={() => (full = !full)}>
-      {#if full}
-        <icons.FullscreenExit />
-      {:else}
-        <icons.Fullscreen />
-      {/if}
-    </NodeIconButton>
+    {#if showResetButton}
+      <NodeIconButton title="reset size" onclick={onReset}>
+        <icons.ResetResize />
+      </NodeIconButton>
+    {/if}
   </div>
 
-  {#if !full}
-    <div class="group">
+  <div class="group">
+    {#if !fullScreen}
       <Select
         prefix="x"
         name="x-position"
+        title="Set x-position"
         value={xPos}
         onchange={(e) => onAlignChange(e.currentTarget.value as XPos, yPos)}
       >
@@ -66,6 +76,7 @@
       <Select
         prefix="y"
         name="y-position"
+        title="Set y-position"
         value={yPos}
         onchange={(e) => onAlignChange(xPos, e.currentTarget.value as YPos)}
       >
@@ -74,14 +85,14 @@
         <option>bottom</option>
         <option disabled={['center', 'full'].includes(xPos)}>full</option>
       </Select>
-      <Select bind:value={appearance} name="appearance" onchange={settingsChanged}>
-        <option>solid</option>
-        <option>dense</option>
-        <option>glassy</option>
-        <option>floating</option>
-      </Select>
-    </div>
-  {/if}
+    {/if}
+    <Select bind:value={appearance} name="appearance" onchange={settingsChanged}>
+      <option>solid</option>
+      <option>dense</option>
+      <option>glassy</option>
+      <option>floating</option>
+    </Select>
+  </div>
 </div>
 
 <style>
