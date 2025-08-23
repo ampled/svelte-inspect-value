@@ -1,5 +1,5 @@
 <script lang="ts">
-  let { mode }: { mode: 'and' | 'or' } = $props()
+  let { mode = 'and' }: { mode?: 'and' | 'or' } = $props()
 </script>
 
 <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">

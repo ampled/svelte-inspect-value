@@ -42,7 +42,6 @@
   import { setContext, untrack } from 'svelte'
   import type { ClassValue } from 'svelte/elements'
   import { fade } from 'svelte/transition'
-  import { createResizable, type ResizableDirections } from './attachments/resizable.svelte.js'
   import CollapseStateProvider from './CollapseStateProvider.svelte'
   import Node from './components/Node.svelte'
   import NodeActionButton from './components/NodeActionButton.svelte'
@@ -51,7 +50,8 @@
   import { logToConsole } from './hello.svelte.js'
   import { createOptions, getGlobalInspectOptions, mergeOptions } from './options.svelte.js'
   import PanelToolbar from './PanelToolbar.svelte'
-  import type { PanelProps, PanelSettings, PositionProp, XPos, YPos } from './types.js'
+  import Resize from './Resize.svelte'
+  import type { Direction, PanelProps, PanelSettings, PositionProp, XPos, YPos } from './types.js'
   import { getAllProperties, initialize, sortProps } from './util.js'
   import Wrapper from './Wrapper.svelte'
 
@@ -84,10 +84,21 @@
   }: PanelProps = $props()
 
   const id = $props.id()
-  let full = $state(false)
+  let fullScreen = $state(false)
   let hovered = $state(false)
   let flash = $state(false)
+  let resizing = $state(false)
+  let panelEle = $state<HTMLElement>()
+  let [optionsProps, restProps] = $derived(sortProps(rest))
   let initialized = false
+  let globalOptions = getGlobalInspectOptions()
+  let mergedOptions = $derived(
+    mergeOptions(
+      { ...optionsProps },
+      typeof globalOptions === 'function' ? globalOptions() : globalOptions
+    )
+  )
+  let options = createOptions(() => mergedOptions)
   const handleLabel = $derived(open ? 'close panel' : 'open panel')
   const persistedSettings = createPersistState(
     { open, align, opacity, appearance, width, height },
@@ -100,8 +111,8 @@
     open = source.open ?? open
     appearance = source.appearance ?? appearance
     opacity = source.opacity ?? opacity
-    width = source.width
-    height = source.height
+    width = source.width ?? width
+    height = source.height ?? height
   }
 
   $effect.pre(() => {
@@ -145,10 +156,10 @@
     return []
   })
 
-  let resizableHandles = $derived.by<ResizableDirections[]>(() => {
-    const ret = [] as ResizableDirections[]
+  let resizableHandles = $derived.by(() => {
+    const ret = [] as Direction[]
 
-    if (full) return []
+    if (!resize) return []
 
     if (['bottom', 'middle'].includes(yPos)) {
       ret.push('top')
@@ -169,15 +180,10 @@
     return ret
   })
 
-  let [optionsProps, restProps] = $derived(sortProps(rest))
-  let globalOptions = getGlobalInspectOptions()
-  let mergedOptions = $derived(
-    mergeOptions(
-      { ...optionsProps },
-      typeof globalOptions === 'function' ? globalOptions() : globalOptions
-    )
-  )
-  let options = createOptions(() => mergedOptions)
+  let useWidth = $derived(resizableHandles.includes('left') || resizableHandles.includes('right'))
+  let useHeight = $derived(resizableHandles.includes('top') || resizableHandles.includes('bottom'))
+  let widthPx = $derived(useWidth && width && !fullScreen ? `${width}px` : undefined)
+  let heightPx = $derived(useHeight && height && !fullScreen ? `${height}px` : undefined)
   let { theme, noanimate, animRate, borderless, heading, onCollapseChange, onLog } = $derived(
     options.value
   )
@@ -258,47 +264,22 @@
       logToConsole(['Inspect.Panel'], Object.fromEntries(globalValues.entries()), 'globalValues')
     }
   }
-
-  function onResize(
-    newWidth: number | undefined,
-    newHeight: number | undefined,
-    isResizing = true,
-    persist = false
-  ) {
-    width = newWidth
-    height = newHeight
-    resizing = isResizing
-    if (persist) {
-      settingsChanged()
-    }
-  }
-
-  let resizing = $state(false)
-  const resizable = createResizable(
-    () => ({
-      handles: resizableHandles,
-      enabled: resize,
-    }),
-    width,
-    height,
-    (w, h) => onResize(w, h),
-    (w, h) => onResize(w, h, false, true)
-  )
 </script>
 
 {#if shouldRender}
   <aside
+    bind:this={panelEle}
     {oninspectvaluechange}
     onpointerenter={() => (hovered = true)}
     onpointerleave={() => (hovered = false)}
-    style:width={width ? width + 'px' : width}
-    style:height={height ? height + 'px' : height}
+    style:width={widthPx}
+    style:height={heightPx}
     style:z-index={zIndex}
     style:--transition-rate={animRate}
     class={[
       'inspect-panel',
       theme,
-      full ? 'full' : [xPosClassname, yPosClassname],
+      fullScreen ? 'full' : [xPosClassname, yPosClassname],
       appearance,
       borderless && 'borderless',
       noanimate && 'noanimate',
@@ -308,10 +289,20 @@
       openOnHover && 'hoverable',
       resizing && 'resizing',
     ]}
-    {@attach resizable.attach}
     transition:fade={{ duration: options.transitionDuration }}
     {...restProps}
   >
+    {#if panelEle}
+      <Resize
+        bind:width
+        bind:height
+        bind:resizing
+        handles={resizableHandles}
+        ele={panelEle}
+        enabled={resize}
+        onResize={settingsChanged}
+      />
+    {/if}
     <button
       onclick={onHandleClick}
       class="handle"
@@ -334,17 +325,22 @@
     </button>
     {#if !hideToolbar}
       <PanelToolbar
-        {full}
         {xPos}
         {yPos}
         {onAlignChange}
         {opacity}
         {toggleOpacity}
         {settingsChanged}
+        showResetButton={Boolean(resize && (widthPx || heightPx))}
+        onReset={() => {
+          width = undefined
+          height = undefined
+          settingsChanged()
+        }}
+        bind:fullScreen
         bind:appearance
       />
     {/if}
-
     {#if value || name || (keys.length && values)}
       <CollapseStateProvider {onCollapseChange} {value} {name} {keys} {values}>
         <Wrapper
@@ -380,7 +376,6 @@
           {#each globalValues as [key, entry] (key)}
             <Node note={entry.note} key={key as PropertyKey} value={entry.value} />
           {/each}
-          <!-- <Node value={globalValues.entries()} key="globalVals" /> -->
         </Wrapper>
       </CollapseStateProvider>
     {/if}
@@ -391,7 +386,6 @@
 {/if}
 
 <style>
-  @import './attachments/resize.css';
   @import './themes.css';
   @import './vars.css';
 

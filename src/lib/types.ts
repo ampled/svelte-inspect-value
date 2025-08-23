@@ -49,6 +49,7 @@ export type PanelAppearance = 'solid' | 'glassy' | 'floating' | 'dense'
 
 export type XPos = 'left' | 'right' | 'center' | 'full'
 export type YPos = 'top' | 'bottom' | 'middle' | 'full'
+export type Direction = 'right' | 'left' | 'top' | 'bottom'
 
 /**
  * All possible positions for `Inspect.Panel`
