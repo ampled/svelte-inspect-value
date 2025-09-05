@@ -2,7 +2,7 @@
   import NodeIconButton from './components/NodeIconButton.svelte'
   import Select from './components/Select.svelte'
   import * as icons from './components/icons/index.js'
-  import type { PanelAppearance, XPos, YPos } from './types.js'
+  import type { PanelAppearance, PanelSettings, XPos, YPos } from './types.js'
 
   type VoidCallback = () => void
 
@@ -14,7 +14,7 @@
     appearance: PanelAppearance
     showResetButton: boolean
     onAlignChange: (xPos: XPos, yPos: YPos) => void
-    settingsChanged: VoidCallback
+    settingsChanged: (keys: (keyof PanelSettings)[]) => void
     toggleOpacity: VoidCallback
     onReset: VoidCallback
   }
@@ -86,7 +86,11 @@
         <option disabled={['center', 'full'].includes(xPos)}>full</option>
       </Select>
     {/if}
-    <Select bind:value={appearance} name="appearance" onchange={settingsChanged}>
+    <Select
+      bind:value={appearance}
+      name="appearance"
+      onchange={() => settingsChanged(['appearance'])}
+    >
       <option>solid</option>
       <option>dense</option>
       <option>glassy</option>
