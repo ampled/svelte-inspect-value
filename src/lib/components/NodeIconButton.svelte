@@ -2,7 +2,7 @@
   import { useOptions } from '../options.svelte.js'
   import type { Snippet } from 'svelte'
   import type { SvelteHTMLElements } from 'svelte/elements'
-  import { slide, type SlideParams } from 'svelte/transition'
+  import { slide, type SlideParams } from '../transition/index.js'
 
   type Props = {
     children: Snippet

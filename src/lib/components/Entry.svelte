@@ -1,6 +1,6 @@
 <script lang="ts">
   import { useOptions } from '$lib/options.svelte.js'
-  import { slide } from 'svelte/transition'
+  import { slide } from '../transition/index.js'
 
   let { i = 0, children } = $props()
 

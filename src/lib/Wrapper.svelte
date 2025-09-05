@@ -5,7 +5,6 @@
 <script lang="ts">
   import { getContext, onDestroy, setContext, type Snippet } from 'svelte'
   import type { SvelteHTMLElements } from 'svelte/elements'
-  import { fly, slide } from 'svelte/transition'
   import { scope } from './attachments/focus.js'
   import * as i from './components/icons/index.js'
   import NodeActionButton from './components/NodeActionButton.svelte'
@@ -14,6 +13,7 @@
   import { setAddDestroyCallback, setSearchContext } from './contexts.js'
   import { useOptions } from './options.svelte.js'
   import { useState } from './state.svelte.js'
+  import { fly, slide } from './transition/index.js'
   import { createTypingBufferContext } from './typingbuffer.svelte.js'
   import { wait } from './util.js'
   import { clearSearchCache, parseSearchTerms } from './util/search.js'
@@ -186,7 +186,7 @@
         {/if}
         {#if showExpandCollapse && !collapsed}
           <NodeIconButton
-            title={hasExpandedTopLevel ? 'collapse all' : 'expand all'}
+            title="{hasExpandedTopLevel ? 'collapse' : 'expand'} all"
             onclick={() => setCollapse(hasExpandedTopLevel)}
             disabled={settingCollapse !== false}
           >

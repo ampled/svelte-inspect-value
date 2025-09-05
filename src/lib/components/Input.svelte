@@ -2,7 +2,7 @@
   import { useOptions } from '../options.svelte.js'
   import type { Snippet } from 'svelte'
   import type { SvelteHTMLElements } from 'svelte/elements'
-  import { slide, type FlyParams, type SlideParams } from 'svelte/transition'
+  import { slide, type FlyParams, type SlideParams } from '../transition/index.js'
 
   type Props = {
     busy?: boolean

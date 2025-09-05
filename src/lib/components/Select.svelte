@@ -1,7 +1,7 @@
 <script lang="ts">
   import { useOptions } from '$lib/options.svelte.js'
   import type { SvelteHTMLElements } from 'svelte/elements'
-  import { slide } from 'svelte/transition'
+  import { slide } from '../transition/index.js'
 
   type Props = SvelteHTMLElements['select'] & {
     prefix?: string
