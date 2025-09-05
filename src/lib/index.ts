@@ -79,9 +79,8 @@ export const Inspect = InspectBase as unknown as Component<InspectProps> & {
    */
   Panel: Component<
     PanelProps,
-    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-    {},
-    'align' | 'resize' | 'open' | 'appearance' | 'opacity'
+    object,
+    'align' | 'resize' | 'open' | 'appearance' | 'opacity' | 'width' | 'height'
   >
 }
 
