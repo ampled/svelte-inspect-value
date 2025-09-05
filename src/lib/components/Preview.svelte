@@ -4,7 +4,6 @@
 >
   import { getContext, setContext } from 'svelte'
   import type { HTMLButtonAttributes, SvelteHTMLElements } from 'svelte/elements'
-  import { fly, slide } from 'svelte/transition'
   import { useOptions } from '../options.svelte.js'
   import type { List, TypeViewProps } from '../types.js'
   import { getPropertyDescriptor, getType } from '../util.js'
@@ -13,6 +12,7 @@
   import Node from './Node.svelte'
   import NodeActionButton from './NodeActionButton.svelte'
   import Type from './Type.svelte'
+  import { fly, slide } from '../transition/index.js'
 
   type PreviewProps = {
     prefix?: string

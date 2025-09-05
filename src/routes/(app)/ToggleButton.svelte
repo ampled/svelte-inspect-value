@@ -1,7 +1,7 @@
 <script lang="ts">
+  import { slide } from '$lib/transition/index.js'
   import type { Snippet } from 'svelte'
   import type { SvelteHTMLElements } from 'svelte/elements'
-  import { slide } from 'svelte/transition'
 
   type Props = {
     children?: Snippet

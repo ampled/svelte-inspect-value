@@ -3,15 +3,18 @@
   import Inspect from '$lib/index.js'
   import { page } from '$app/state'
 
-  let resize = $state(false)
+  let width = $state(400)
 
   // const counter = new PersistedState('counter-asdfsg', 0, { syncTabs: false })
 </script>
 
-<label>
-  resize
-  <input type="checkbox" bind:checked={resize} />
-</label>
-
-<Inspect.Panel {resize} persist persistSync={{ key: 'dinglebopi' }} values={{ ...page }} width={520}
+<Inspect.Panel
+  persist="doo-wop"
+  bind:width
+  search
+  onSettingsChange={(_settings, changed) => {
+    // eslint-disable-next-line no-console
+    console.log('settingschanged:', changed)
+  }}
+  values={{ width, ...page }}
 ></Inspect.Panel>

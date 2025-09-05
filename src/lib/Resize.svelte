@@ -8,7 +8,7 @@
     resizing?: boolean
     width: number | undefined
     height: number | undefined
-    onResize: () => void
+    onResize: (dimensions: 'width' | 'height') => void
   }
 
   let {
@@ -60,23 +60,26 @@
 
   function onmouseup(_event: MouseEvent & { currentTarget: EventTarget & Window }) {
     if (!activeDir) return
+    const dimension: 'width' | 'height' = ['left', 'right'].includes(activeDir) ? 'width' : 'height'
     activeDir = undefined
     resizing = false
     initialPos = null
     initialRect = null
-    onResize()
+    onResize(dimension)
   }
 
   function ongrabberdblclick(
     _e: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement },
     handle: Direction
   ) {
+    const dimension: 'width' | 'height' = ['left', 'right'].includes(handle) ? 'width' : 'height'
+
     if (['left', 'right'].includes(handle)) {
       width = undefined
     } else {
       height = undefined
     }
-    onResize()
+    onResize(dimension)
   }
 </script>
 

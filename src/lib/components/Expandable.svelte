@@ -5,7 +5,7 @@
   import { getIsKey, getPreviewLevel } from '../contexts.js'
   import { useOptions } from '../options.svelte.js'
   import { useState } from '../state.svelte.js'
-  import { slideXY } from '../transition/slideXY.js'
+  import { slideXY } from '../transition/index.js'
   import type { TypeViewProps } from '../types.js'
   import { neverExpandInitial, shouldInitiallyExpandNode, stringifyPath } from '../util.js'
   import CollapseButton from './CollapseButton.svelte'

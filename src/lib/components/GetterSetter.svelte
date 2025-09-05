@@ -1,7 +1,7 @@
 <script lang="ts">
   import { tick } from 'svelte'
   import type { HTMLAttributes } from 'svelte/elements'
-  import { slide } from 'svelte/transition'
+  import { slide } from '../transition/index.js'
   import { getPreviewLevel, useSearchContext, useValueCache } from '../contexts.js'
   import { useOptions } from '../options.svelte.js'
   import { InspectError, type TypeViewProps } from '../types.js'
@@ -174,25 +174,21 @@
           {onkeyup}
         />
         <NodeActionButton
-          title={`set ${key?.toString()}`}
+          title="set {key?.toString()}"
           onclick={callSetter}
           onkeydown={nodeActionKeydown(callSetter)}
           style="padding-right: 0.5em"
         >
           set
         </NodeActionButton>
-        <NodeIconButton
-          title={`cancel`}
-          onclick={hideInput}
-          onkeydown={nodeActionKeydown(hideInput)}
-        >
+        <NodeIconButton title="cancel" onclick={hideInput} onkeydown={nodeActionKeydown(hideInput)}>
           <CloseIcon />
         </NodeIconButton>
       {:else}
         {#if descriptor.set && previewLevel === 0}
           <NodeActionButton
             bind:this={setButton}
-            title={`set ${key?.toString()}`}
+            title="set {key?.toString()}"
             onclick={showInput}
             onkeydown={nodeActionKeydown(showInput)}
           >
@@ -202,7 +198,7 @@
         {#if descriptor.get}
           {#if previewLevel === 0}
             <NodeActionButton
-              title={`get ${key?.toString()}`}
+              title="get {key?.toString()}"
               onclick={callGetter}
               onkeydown={nodeActionKeydown(callGetter)}
             >

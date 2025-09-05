@@ -227,10 +227,11 @@ export type PanelProps = {
    * - `opacity`
    * - `width` and `height` (if resizing is enabled)
    * @param {Required<PanelSettings>} settings Current value of settings
+   * @param {(keyof PanelSettings[])} changed Keys of changed settings
    * @default undefined
    * @see {@link PanelSettings}
    */
-  onSettingsChange?: (settings: PanelSettings) => void
+  onSettingsChange?: (settings: PanelSettings, changed: (keyof PanelSettings)[]) => void
   /**
    * Enable/disable persistence of {@linkcode PanelSettings} using localStorage or sessionStorage
    * when changed through Panel UI, e.g. open/closed state, width, height, appearance, alignment and opacity setting.
