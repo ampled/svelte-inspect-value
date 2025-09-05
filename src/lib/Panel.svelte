@@ -113,6 +113,7 @@
     opacity = source.opacity ?? opacity
     width = source.width ?? width
     height = source.height ?? height
+    settingsChanged()
   }
 
   $effect.pre(() => {
@@ -227,26 +228,28 @@
 
   function onAlignChange(x: XPos, y: YPos) {
     align = `${x} ${y}` as PositionProp
-    settingsChanged()
+    settingsChanged(['align'])
   }
 
   function onHandleClick() {
     open = !open
     hovered = false
     onOpenChange?.(open)
-    settingsChanged()
+    settingsChanged(['open'])
   }
 
   function toggleOpacity() {
     opacity = !opacity
-    settingsChanged()
+    settingsChanged(['opacity'])
   }
 
-  function settingsChanged() {
+  function settingsChanged(
+    key: (keyof PanelSettings)[] = ['opacity', 'appearance', 'width', 'height', 'open', 'opacity']
+  ) {
     if (persistedSettings) {
       persistedSettings.current = { open, appearance, opacity, align, width, height }
     }
-    onSettingsChange?.({ open, align, opacity, appearance, width, height })
+    onSettingsChange?.({ open, align, opacity, appearance, width, height }, key)
   }
 
   function log() {
@@ -300,7 +303,7 @@
         handles={resizableHandles}
         ele={panelEle}
         enabled={resize}
-        onResize={settingsChanged}
+        onResize={(key) => settingsChanged([key])}
       />
     {/if}
     <button
@@ -335,7 +338,7 @@
         onReset={() => {
           width = undefined
           height = undefined
-          settingsChanged()
+          settingsChanged(['width', 'height'])
         }}
         bind:fullScreen
         bind:appearance
