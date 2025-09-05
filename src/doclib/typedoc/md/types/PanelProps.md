@@ -17,6 +17,8 @@ children:
     - openOnHover
   - - persist
     - persist
+  - - persist-sync
+    - persistSync
   - - resize
     - resize
   - - wiggle-on-update
@@ -39,9 +41,12 @@ type PanelProps = {
   hideGlobalValues: boolean;
   hideToolbar: boolean;
   onOpenChange: (open: boolean) => void;
-  onSettingsChange: (settings: PanelSettings) => void;
+  onSettingsChange: (settings: PanelSettings, changed: keyof PanelSettings[]) => void;
   openOnHover: boolean;
   persist: boolean | string | PanelPersistProps;
+  persistSync: boolean
+     | string
+     | Omit<PanelPersistProps, "syncTabs">;
   resize: boolean;
   wiggleOnUpdate: boolean;
   zIndex: number;
@@ -119,7 +124,7 @@ undefined
 ### onSettingsChange()?
 
 ```ts
-onSettingsChange: (settings: PanelSettings) => void;
+onSettingsChange: (settings: PanelSettings, changed: keyof PanelSettings[]) => void;
 ```
 
 Callback for when any panel prop/setting is changed with the panel UI. Can be used for
@@ -140,6 +145,12 @@ Will run when any of the following prop / setting is changed:
 [`PanelSettings`](PanelSettings)
 
 Current value of settings
+
+##### changed
+
+keyof [`PanelSettings`](PanelSettings)[]
+
+Keys of changed settings
 
 #### Returns
 
@@ -194,15 +205,39 @@ Passing `true` will enable persistence and using these default options:
 ```
 Passing a string will use those defaults but use the passed string as the key
 
+#### Default
+
+```ts
+false
+```
+
 #### See
 
 [PanelPersistProps](PanelPersistProps)
+
+### persistSync?
+
+```ts
+persistSync: 
+  | boolean
+  | string
+| Omit<PanelPersistProps, "syncTabs">;
+```
+
+Alias for `persist` except tab syncing is always enabled.
+
+If `persist` is truthy this prop will not have any effect.
 
 #### Default
 
 ```ts
 false
 ```
+
+#### See
+
+ - PanelProps.persist
+ - [PanelPersistProps.syncTabs](PanelPersistProps#synctabs)
 
 ### resize?
 
