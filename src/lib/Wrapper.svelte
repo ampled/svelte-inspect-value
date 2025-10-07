@@ -233,8 +233,8 @@
 </div>
 
 <style>
-  @import './themes.css';
   @import './vars.css';
+  @import './themes.css';
 
   @keyframes markback {
     from {

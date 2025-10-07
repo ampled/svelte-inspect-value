@@ -18,7 +18,6 @@
 
   --_hover-color: var(--hover-color, var(--base01));
   --_text-selection-background: var(--text-selection-background, var(--base02));
-  --_text-search-highlight-color: var(--text-search-highlight-color, var(--base0A));
   --_length-color: var(--length-color, var(--base03));
   --_bullet-color: var(--bullet-color, var(--base03));
   --_comment-color: var(--comment-color, var(--base03));
@@ -102,4 +101,14 @@
 
   /* easing */
   --_back-out: cubic-bezier(0.18, 0.89, 0.47, 1.55);
+
+  /** search */
+  --_text-search-highlight-color: var(var(--text-search-highlight-color, var(--base0A)));
+  --_text-search-highlight-fg-color: var(--text-search-highlight-fg-color, var(--base01));
+  --_text-search-highlight-border-top: var(--text-search-highlight-border-top, none);
+  --_text-search-highlight-border-bottom: var(--text-search-highlight-border-bottom, none);
+  --_text-search-highlight-border-left: var(--text-search-highlight-border-left, none);
+  --_text-search-highlight-border-right: var(--text-search-highlight-border-right, none);
+  --_text-search-highlight-outline: var(--text-search-highlight-outline, none);
+  --_text-search-highlight-decoration: var(--text-search-highlight-decoration, none);
 }
