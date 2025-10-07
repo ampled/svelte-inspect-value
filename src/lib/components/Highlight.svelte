@@ -85,8 +85,14 @@
 <style>
   .highlight {
     &.chunk {
+      outline: var(--_text-search-highlight-outline);
+      border-top: var(--_text-search-highlight-border-top);
+      border-right: var(--_text-search-highlight-border-right);
+      border-bottom: var(--_text-search-highlight-border-bottom);
+      border-left: var(--_text-search-highlight-border-left);
       background-color: var(--_text-search-highlight-color);
-      color: var(--_background-color);
+      color: var(--_text-search-highlight-fg-color);
+      text-decoration: var(--_text-search-highlight-decoration);
     }
 
     &.alt-soft {
@@ -94,8 +100,14 @@
     }
 
     &.alt-full {
+      outline: var(--_text-search-highlight-outline);
+      border-top: var(--_text-search-highlight-border-top);
+      border-right: var(--_text-search-highlight-border-right);
+      border-bottom: var(--_text-search-highlight-border-bottom);
+      border-left: var(--_text-search-highlight-border-left);
       background-color: var(--_text-search-highlight-color);
-      color: var(--_background-color) !important;
+      color: var(--_text-search-highlight-fg-color) !important;
+      text-decoration: var(--_text-search-highlight-decoration);
     }
   }
 
