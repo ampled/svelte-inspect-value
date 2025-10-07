@@ -52,6 +52,10 @@
   --base0D: color-mix(in srgb, currentColor, cyan 30%);
   --base0E: color-mix(in srgb, currentColor, rgb(255, 0, 255) 40%);
   --base0F: currentColor;
+  --_text-search-highlight-color: var(--text-search-highlight-color, yellow);
+  --_text-search-highlight-fg-color: var(--text-search-highlight-fg-color, black);
+  --_text-search-highlight-outline: var(--text-search-highlight-outline, 1px solid black);
+  --_text-search-highlight-decoration: var(--text-search-highlight-decoration, underline black);
 }
 
 .stereo {
