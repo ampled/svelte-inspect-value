@@ -103,7 +103,7 @@
   --_back-out: cubic-bezier(0.18, 0.89, 0.47, 1.55);
 
   /** search */
-  --_text-search-highlight-color: var(var(--text-search-highlight-color, var(--base0A)));
+  --_text-search-highlight-color: var(--text-search-highlight-color, var(--base0A));
   --_text-search-highlight-fg-color: var(--text-search-highlight-fg-color, var(--base01));
   --_text-search-highlight-border-top: var(--text-search-highlight-border-top, none);
   --_text-search-highlight-border-bottom: var(--text-search-highlight-border-bottom, none);
