@@ -128,24 +128,21 @@ h4,
 h5,
 h6 {
   font-weight: bold;
+  text-wrap: balance;
   overflow-wrap: break-word;
+}
+
+h3,
+h4,
+h5,
+h6 {
+  margin-top: 1em;
 }
 
 /* 8. Improve line wrapping */
 p {
   max-width: 800px;
   text-wrap: pretty;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  text-wrap: balance;
-  /* margin-top: 1rem; */
-  /* margin-left: 1rem; */
 }
 
 h4 {
@@ -443,6 +440,7 @@ kbd {
   background-color: #eee;
   padding: 2px 4px;
   color: #333;
+  font-style: normal;
   font-weight: 700;
   font-size: 0.85em;
   line-height: 1;
