@@ -25,11 +25,14 @@
     expandable?: true
   }
 
-  let routes: Route[] = [
+  const routes: Route[] = $derived([
     {
-      title: 'Getting Started',
-      href: '/getting-started',
+      title: 'Reference',
       children: [
+        {
+          title: 'Getting Started',
+          href: '/reference/getting-started',
+        },
         {
           href: '/reference/panel',
           title: 'Panel',
@@ -38,18 +41,35 @@
           href: '/reference/values',
           title: 'Values',
         },
-        { href: '/reference/usage', title: 'Usage Guide' },
         {
-          href: '/examples',
+          href: '/reference/examples',
           title: 'Examples',
         },
         { href: '/custom', title: 'Custom components' },
       ],
     },
+
     {
-      href: '/theming',
+      title: 'Usage',
+      children: [
+        {
+          title: 'Hotkeys',
+          href: '/usage/hotkeys',
+        },
+        {
+          title: 'Search',
+          href: '/usage/search',
+        },
+      ],
+    },
+
+    {
       title: 'Theming',
       children: [
+        {
+          title: 'Themes',
+          href: '/theming/themes',
+        },
         {
           href: '/theming/define',
           title: 'Define',
@@ -61,38 +81,76 @@
       ],
     },
     {
-      title: 'Types',
-      expandable: true,
-      href: '/docs/types',
-      children: data.docs
-        .filter((d) => ['types'].includes(d.type ?? '') && !d.title[1].includes('Custom'))
-        .map((d) => ({
-          title: d.title?.[1] ?? '',
-          href: `/docs/${d.type}/${d.title[1]}`,
-        })),
+      title: 'TypeDoc',
+      children: [
+        {
+          title: 'Types',
+          expandable: true,
+          href: '/docs/types',
+          children: data.docs
+            .filter((d) => ['types'].includes(d.type ?? '') && !d.title[1].includes('Custom'))
+            .map((d) => ({
+              title: d.title?.[1] ?? '',
+              href: `/docs/${d.type}/${d.title[1]}`,
+            })),
+        },
+        {
+          title: 'Utility',
+          expandable: true,
+          href: '/docs/functions',
+          children: data.docs
+            .filter((d) => ['functions'].includes(d.type ?? ''))
+            .map((d) => ({
+              title: `${d.title?.[1] ?? ''}()`,
+              href: `/docs/${d.type}/${d.title[1]}`,
+            })),
+        },
+        {
+          title: 'Variables',
+          devonly: true,
+          expandable: true,
+          children: data.docs
+            .filter((d) => ['variables'].includes(d.type ?? ''))
+            .map((d) => ({
+              title: d.title?.[1] ?? '',
+              href: `/docs/${d.type}/${d.title[1]}`,
+            })),
+        },
+      ],
     },
-    {
-      title: 'Utility',
-      expandable: true,
-      href: '/docs/functions',
-      children: data.docs
-        .filter((d) => ['functions'].includes(d.type ?? ''))
-        .map((d) => ({
-          title: `${d.title?.[1] ?? ''}()`,
-          href: `/docs/${d.type}/${d.title[1]}`,
-        })),
-    },
-    {
-      title: 'Variables',
-      devonly: true,
-      expandable: true,
-      children: data.docs
-        .filter((d) => ['variables'].includes(d.type ?? ''))
-        .map((d) => ({
-          title: d.title?.[1] ?? '',
-          href: `/docs/${d.type}/${d.title[1]}`,
-        })),
-    },
+    // {
+    //   title: 'Types',
+    //   expandable: true,
+    //   href: '/docs/types',
+    //   children: data.docs
+    //     .filter((d) => ['types'].includes(d.type ?? '') && !d.title[1].includes('Custom'))
+    //     .map((d) => ({
+    //       title: d.title?.[1] ?? '',
+    //       href: `/docs/${d.type}/${d.title[1]}`,
+    //     })),
+    // },
+    // {
+    //   title: 'Utility',
+    //   expandable: true,
+    //   href: '/docs/functions',
+    //   children: data.docs
+    //     .filter((d) => ['functions'].includes(d.type ?? ''))
+    //     .map((d) => ({
+    //       title: `${d.title?.[1] ?? ''}()`,
+    //       href: `/docs/${d.type}/${d.title[1]}`,
+    //     })),
+    // },
+    // {
+    //   title: 'Variables',
+    //   devonly: true,
+    //   expandable: true,
+    //   children: data.docs
+    //     .filter((d) => ['variables'].includes(d.type ?? ''))
+    //     .map((d) => ({
+    //       title: d.title?.[1] ?? '',
+    //       href: `/docs/${d.type}/${d.title[1]}`,
+    //     })),
+    // },
     {
       href: '/testing',
       title: 'Testing',
@@ -113,7 +171,7 @@
       title: 'Releases',
       devonly: true,
     },
-  ]
+  ])
 
   const INSPECT_OPTIONS_DEFAULT: Partial<InspectOptions> = {
     theme: 'inspect',
@@ -161,6 +219,9 @@
     search: false,
     highlightMatches: true,
     heading: false,
+    hotkeys: true,
+    typeToFocus: true,
+    disableKeynav: false,
   })
 
   function onkeydown(event: KeyboardEvent & { currentTarget: EventTarget & Window }) {

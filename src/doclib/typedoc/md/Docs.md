@@ -25,6 +25,8 @@ children:
     - CustomEntryWithTransform
   - - inline-config
     - InlineConfig
+  - - inspect-hotkeys
+    - InspectHotkeys
   - - inspect-options
     - InspectOptions
   - - inspect-props
@@ -72,6 +74,7 @@ children:
 - [CustomEntryWithPredicate](types/CustomEntryWithPredicate)
 - [CustomEntryWithTransform](types/CustomEntryWithTransform)
 - [InlineConfig](types/InlineConfig)
+- [InspectHotkeys](types/InspectHotkeys)
 - [InspectOptions](types/InspectOptions)
 - [InspectProps](types/InspectProps)
 - [InspectValuesOptions](types/InspectValuesOptions)

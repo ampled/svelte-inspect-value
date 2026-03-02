@@ -48,9 +48,9 @@
   let currentOpts = $derived({ ...alwaysPresent, ...configurations[currentIndex] })
 
   $effect(() => {
-    let int: number
+    let interval: number
     untrack(() => {
-      int = window.setInterval(() => {
+      interval = window.setInterval(() => {
         if (currentIndex === MAX) {
           currentIndex = 0
           alwaysPresent.search = true
@@ -61,7 +61,7 @@
     })
 
     return () => {
-      window.clearInterval(int)
+      window.clearInterval(interval)
     }
   })
 
@@ -127,8 +127,8 @@
 <h2>Features</h2>
 
 <p>
-  The <a href="/examples">examples page</a> is the quickest way to get an overview of what this component
-  can do, but here is a list of its key features:
+  The <a href="/reference/examples">examples</a> page is the quickest way to get an overview of what
+  this component can do, but here is a list of its key features:
 </p>
 
 <ul>
