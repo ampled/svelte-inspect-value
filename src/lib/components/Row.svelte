@@ -1,3 +1,8 @@
+<!--
+  @component Row
+
+  Handles interaction for both expandable and single-line nodes
+-->
 <script lang="ts">
   import {
     enterFocusScope,
@@ -10,6 +15,7 @@
   } from '../attachments/focus.js'
   import { getContext, tick, type Snippet } from 'svelte'
   import { getTypingBuffer } from '../typingbuffer.svelte.js'
+  import { useOptions } from '../options.svelte.js'
 
   type Props = {
     collapsed?: boolean
@@ -33,6 +39,7 @@
 
   const focusId = getContext<string>(Symbol.for('siv.focus-id'))
   const typingBuffer = getTypingBuffer()
+  const options = useOptions()
 
   function onclick() {
     onchange?.(!collapsed)
@@ -40,9 +47,15 @@
 
   function onkeydown(event: KeyboardEvent) {
     let shouldPreventDefault = true
-    if (event.metaKey || event.ctrlKey) {
+    if (event.metaKey || event.ctrlKey || event.altKey) return // no modifier keys
+
+    if (event.key.length === 1 && options.value.typeToFocus) {
+      typingBuffer.type(event.key)
       return
     }
+
+    if (options.value.disableKeynav) return
+
     switch (event.code) {
       case 'Space': {
         onchange?.(!collapsed)
@@ -100,9 +113,6 @@
       }
       default: {
         shouldPreventDefault = false
-        if (event.key.length === 1) {
-          typingBuffer.type(event.key)
-        }
         break
       }
     }
@@ -119,7 +129,7 @@
   aria-disabled={disabled}
   tabindex={previewLevel > 0 ? -1 : 0}
   {onclick}
-  {onkeydown}
+  onkeydown={!options.value.disableKeynav || options.value.typeToFocus ? onkeydown : undefined}
   {@attach focusTarget(isFocusTarget)}
 >
   {@render children()}
