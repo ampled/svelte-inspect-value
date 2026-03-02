@@ -14,6 +14,49 @@ export const OPTIONS_CONTEXT: symbol = Symbol('inspect-options')
 export const GLOBAL_OPTIONS_CONTEXT: symbol = Symbol('inspect-global-options')
 
 /**
+ * Hotkeys configuration using {@link https://github.com/jamiebuilds/tinykeys | tinykeys} syntax.
+ *
+ * Note: The string `'$mod'` means "command" on macOS and "ctrl" on Windows / Linux
+ *
+ * @example
+ * ```svelte
+ * <Inspect hotkeys={{
+ *  expandTop: 'Shift+$mod+ArrowUp', // override
+ *  collapseTop: false // disable
+ *  // search: '' // keeps default if omitted
+ * }} />
+ * ```
+ *
+ * @see {@link InspectOptions.hotkeys}
+ */
+export type InspectHotkeys = {
+  /**
+   * Hotkey for focusing search field if {@linkcode InspectOptions.search | search} is enabled
+   *
+   * @default 'Shift+$mod+F'
+   */
+  search: string | false
+  /**
+   * Hotkey for expanding all top level nodes
+   *
+   * @default '$mod+ArrowRight'
+   */
+  expandTop: string | false
+  /**
+   * Hotkey for collapsing all top level nodes
+   *
+   * @default '$mod+ArrowLeft'
+   */
+  collapseTop: string | false
+}
+
+const DEFAULT_HOTKEYS: InspectHotkeys = {
+  search: 'Shift+$mod+F',
+  expandTop: '$mod+ArrowRight',
+  collapseTop: '$mod+ArrowLeft',
+}
+
+/**
  *
  * Various options to configure the look and feel of components exported by `'svelte-inspect-value'`
  *
@@ -304,6 +347,31 @@ export type InspectOptions = {
    * The snippet parameter indicates if the instance has been collapsed
    */
   heading: boolean | string | Snippet<[boolean]>
+  /**
+   * Configures hotkeys using {@link https://github.com/jamiebuilds/tinykeys | tinykeys} syntax.
+   *
+   * Use an object to override defaults, `true` to use defaults and `false` to disable hotkeys
+   *
+   * @see {@link InspectHotkeys}
+   * @default { search: 'Shift+$mod+F', expandTop: '$mod+ArrowRight', collapseTop: '$mod+ArrowLeft' }
+   * @since 0.11.0
+   */
+  hotkeys: Partial<InspectHotkeys> | false | true
+  /**
+   * Disables using arrow keys, home, end, enter and space to navigate or expand/collapse nodes when
+   * a node is focused.
+   *
+   * @default false
+   * @since 0.11.0
+   */
+  disableKeynav: boolean
+  /**
+   * Enables typing to focus any node with matching text when any node is focused.
+   *
+   * @default true
+   * @since 0.11.0
+   */
+  typeToFocus: boolean
 }
 
 /**
@@ -344,6 +412,9 @@ export const DEFAULT_OPTIONS: InspectOptions = {
   searchMode: 'or',
   highlightMatches: true,
   heading: false,
+  hotkeys: true,
+  disableKeynav: false,
+  typeToFocus: true,
 } as const
 
 export const OPTIONS_KEYS = Object.keys(DEFAULT_OPTIONS) as (keyof InspectOptions)[]
@@ -373,6 +444,13 @@ export function createOptions(options: () => InspectOptions) {
     util.clamp(options().expandAll ? 30 : (options().expandLevel ?? 1), 0, 30)
   )
 
+  const hotkeys = $derived.by(() => {
+    const hotkeysOpts = options().hotkeys
+    if (typeof hotkeysOpts === 'object') return { ...DEFAULT_HOTKEYS, ...hotkeysOpts }
+    if (hotkeysOpts === true) return DEFAULT_HOTKEYS
+    return hotkeysOpts
+  })
+
   return {
     get value() {
       return options()
@@ -385,6 +463,9 @@ export function createOptions(options: () => InspectOptions) {
     },
     get expandLevel() {
       return expandLevel
+    },
+    get hotkeys() {
+      return hotkeys
     },
   }
 }
