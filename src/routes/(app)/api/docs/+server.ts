@@ -23,7 +23,10 @@ async function getPosts() {
       }
     }
     return posts
-  } catch (_err) {
+  } catch (e) {
+    console.error('error in /docs endpoint:')
+    console.error(e)
+
     return []
   }
 
