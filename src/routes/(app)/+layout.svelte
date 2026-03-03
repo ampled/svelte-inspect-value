@@ -46,7 +46,7 @@
             href: '/reference/examples',
             title: 'Examples',
           },
-          { href: '/custom', title: 'Custom components' },
+          { href: '/reference/custom', title: 'Custom components' },
         ],
       },
 
