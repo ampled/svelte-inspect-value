@@ -47,7 +47,7 @@
 
   <ToggleButton bind:checked={options.parseJson}>parse json</ToggleButton>
 
-  <label>
+  <label title="animation rate">
     anim rate
     <input
       type="number"

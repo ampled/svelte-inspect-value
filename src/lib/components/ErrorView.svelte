@@ -11,7 +11,7 @@
   let { value, key, type = 'error', path }: Props = $props()
   let useDefaults = getContext<boolean | undefined>(Symbol.for('siv.use-defaults'))
 
-  let entries: [string, unknown][] = $state(
+  let entries: [string, unknown][] = $derived(
     Object.entries({
       name: value.name,
       message: value.message,

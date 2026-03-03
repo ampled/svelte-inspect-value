@@ -11,6 +11,8 @@ children:
     - canCopy
   - - custom-components
     - customComponents
+  - - disable-keynav
+    - disableKeynav
   - - easing
     - easing
   - - element-view
@@ -29,6 +31,8 @@ children:
     - heading
   - - highlight-matches
     - highlightMatches
+  - - hotkeys
+    - hotkeys
   - - noanimate
     - noanimate
   - - on-collapse-change
@@ -65,6 +69,8 @@ children:
     - stringCollapse
   - - theme
     - theme
+  - - type-to-focus
+    - typeToFocus
 ---
 
 # InspectOptions
@@ -76,6 +82,7 @@ type InspectOptions = {
   canCopy: (value: unknown, type: string, path: unknown[]) => boolean
      | undefined;
   customComponents: CustomComponents;
+  disableKeynav: boolean;
   easing: (t: number) => number;
   elementView: "simple" | "full";
   embedMedia: boolean;
@@ -85,6 +92,7 @@ type InspectOptions = {
   flashOnUpdate: boolean;
   heading: boolean | string | Snippet<[boolean]>;
   highlightMatches: boolean;
+  hotkeys: Partial<InspectHotkeys> | false | true;
   noanimate: boolean;
   onCollapseChange: (state: CollapseState) => void | undefined;
   onCopy: (value: unknown, type: string, path: unknown[]) => Promise<boolean | void> | boolean | void
@@ -106,6 +114,7 @@ type InspectOptions = {
   stringCollapse: number;
   theme: "inspect" | "drak" | "stereo" | "dark" | "light" | "plain"
      | string & { };
+  typeToFocus: boolean;
 };
 ```
 
@@ -221,6 +230,27 @@ Use the helper function [`addComponent`](../functions/addComponent) to get prope
 ```ts
 {}
 ```
+
+***
+
+### disableKeynav
+
+```ts
+disableKeynav: boolean;
+```
+
+Disables using arrow keys, home, end, enter and space to navigate or expand/collapse nodes when
+a node is focused.
+
+#### Default
+
+```ts
+false
+```
+
+#### Since
+
+0.11.0
 
 ***
 
@@ -396,6 +426,32 @@ types and values when typing in the search input box.
 ```ts
 true
 ```
+
+***
+
+### hotkeys
+
+```ts
+hotkeys: Partial<InspectHotkeys> | false | true;
+```
+
+Configures hotkeys using [tinykeys](https://github.com/jamiebuilds/tinykeys) syntax.
+
+Use an object to override defaults, `true` to use defaults and `false` to disable hotkeys
+
+#### See
+
+[InspectHotkeys](InspectHotkeys)
+
+#### Default
+
+```ts
+{ search: 'Shift+$mod+F', expandTop: '$mod+ArrowRight', collapseTop: '$mod+ArrowLeft' }
+```
+
+#### Since
+
+0.11.0
 
 ***
 
@@ -728,3 +784,23 @@ Available themes: `'inspect'|'drak'|'stereo'|'dark'|'light'|'plain'
 ```ts
 'inspect'
 ```
+
+***
+
+### typeToFocus
+
+```ts
+typeToFocus: boolean;
+```
+
+Enables typing to focus any node with matching text when any node is focused.
+
+#### Default
+
+```ts
+true
+```
+
+#### Since
+
+0.11.0

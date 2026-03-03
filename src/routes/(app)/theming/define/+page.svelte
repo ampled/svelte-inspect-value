@@ -3,9 +3,9 @@
   import Console from '$lib/components/icons/Console.svelte'
   import Inspect from '$lib/Inspect.svelte'
   import { colord } from 'colord'
-  import HueRotate from '../HueRotate.svelte'
-  import { themes } from '../themes.js'
-  import Theming from '../Theming.svelte'
+  import HueRotate from './HueRotate.svelte'
+  import { themes } from './themes.js'
+  import Theming from './Theming.svelte'
   import { createPageTitle } from '$doclib/util.js'
 
   let font = $state('monospace')

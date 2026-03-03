@@ -17,7 +17,7 @@
 
   let urlName: ExampleKey = $derived.by(() => {
     const slug = page.params.example?.split('-').join(' ')
-    if (isValidExampleKey(slug)) {
+    if (slug && isValidExampleKey(slug)) {
       return slug
     }
     return 'primitives'

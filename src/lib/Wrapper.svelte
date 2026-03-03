@@ -17,6 +17,7 @@
   import { createTypingBufferContext } from './typingbuffer.svelte.js'
   import { wait } from './util.js'
   import { clearSearchCache, parseSearchTerms } from './util/search.js'
+  import { tinykeys } from './util/hotkeys.js'
 
   type Props = {
     showExpandCollapse?: boolean
@@ -45,15 +46,16 @@
   const collapseState = useState()
   const options = useOptions()
   const destroyCallbacks: (() => void)[] = []
+  const typingBuffer = createTypingBufferContext(id)
 
   let { search, animRate } = $derived(options.value)
   let collapsed = $state(false)
   let searchInput = $state('')
   let matchingPaths = $state([])
   let terms = $derived(search && searchInput.length ? parseSearchTerms(searchInput) : [])
-  const typingBuffer = createTypingBufferContext(id)
-  let container = $state<HTMLDivElement>()
+  let wrapperEle = $state<HTMLDivElement>()
   let searchEle = $state<Search>()
+  let lastFocusedEle = $state<HTMLElement | null>()
   let settingCollapse = $state<false | 'expanding' | 'collapsing'>(false)
 
   setSearchContext(() => ({
@@ -68,35 +70,62 @@
     destroyCallbacks.push(cb)
   })
 
+  function activeElementInWrapper() {
+    return wrapperEle?.contains(document.activeElement)
+  }
+
+  // set up hotkeys
+  $effect(() => {
+    const { hotkeys } = options
+    let unbinds: (() => void)[] = []
+
+    if (hotkeys) {
+      if (hotkeys.expandTop) {
+        unbinds.push(
+          tinykeys(window, {
+            [hotkeys.expandTop]: (event) => {
+              if (!activeElementInWrapper()) return
+              event.preventDefault()
+              setCollapse(false)
+            },
+          })
+        )
+      }
+      if (hotkeys.collapseTop) {
+        unbinds.push(
+          tinykeys(window, {
+            [hotkeys.collapseTop]: (event) => {
+              if (!activeElementInWrapper()) return
+              event.preventDefault()
+              setCollapse(true)
+            },
+          })
+        )
+      }
+      if (hotkeys.search && search) {
+        unbinds.push(
+          tinykeys(window, {
+            [hotkeys.search]: (event) => {
+              if (!activeElementInWrapper()) return
+              event.preventDefault()
+              lastFocusedEle = document.activeElement as HTMLElement
+              searchEle?.focus()
+            },
+          })
+        )
+      }
+    }
+
+    return () => {
+      unbinds.forEach((ub) => ub())
+    }
+  })
+
   onDestroy(() => {
     for (const callback of destroyCallbacks) {
       callback()
     }
   })
-
-  let lastFocusedEle = $state<HTMLElement | null>()
-  function onKeyDown(event: KeyboardEvent & { currentTarget: EventTarget & Window }) {
-    lastFocusedEle = document.activeElement as HTMLElement
-    if (container?.contains(document.activeElement)) {
-      if (event.metaKey || event.ctrlKey) {
-        if (event.key === 'f') {
-          event.preventDefault()
-          event.stopPropagation()
-          if (search) {
-            searchEle?.focus()
-          }
-        } else if (event.key === 'e') {
-          event.preventDefault()
-          event.stopPropagation()
-          setCollapse(false)
-        } else if (event.key === 'c') {
-          event.preventDefault()
-          event.stopPropagation()
-          setCollapse(true)
-        }
-      }
-    }
-  }
 
   function onSearchKeyDown(
     event: KeyboardEvent & { currentTarget: EventTarget & HTMLInputElement }
@@ -118,6 +147,7 @@
     }
     return false
   })
+
   async function setCollapse(collapsed: boolean) {
     if (!settingCollapse) {
       settingCollapse = collapsed ? 'collapsing' : 'expanding'
@@ -142,10 +172,8 @@
   }
 </script>
 
-<svelte:window onkeydown={onKeyDown} />
-
 <div
-  bind:this={container}
+  bind:this={wrapperEle}
   class={['svelte-inspect-value', inFixed && 'in-fixed', classValue]}
   oninspectvaluechange={onNestedValueChange}
   data-focus-id={id}

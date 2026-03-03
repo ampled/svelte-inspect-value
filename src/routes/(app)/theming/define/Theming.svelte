@@ -5,7 +5,7 @@
   import { addComponent } from '$lib/util.js'
   import { onMount } from 'svelte'
   import type { SvelteHTMLElements } from 'svelte/elements'
-  import HexString from '../custom/HexString.svelte'
+  import HexString from '../../reference/custom/HexString.svelte'
   import type { ThemeKeys } from './themes.js'
 
   const props: InspectProps & SvelteHTMLElements['div'] & { colors: Record<ThemeKeys, string> } =

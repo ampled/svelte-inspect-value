@@ -67,12 +67,12 @@
   and
   <code>--base0F</code>
   is currently not used by any default themes, but is still defined and can be used in
-  <a href="/custom">custom components.</a><br />
+  <a href="/reference/custom">custom components.</a><br />
 </p>
 
 <h2>How To</h2>
 
 <p>
-  Visit the <a href="theming/define">theme creator</a> for an overview of how the base16-variables are
+  Visit the <a href="/theming/define">theme creator</a> for an overview of how the base16-variables are
   applied and examples on how to define and use a custom theme.
 </p>
