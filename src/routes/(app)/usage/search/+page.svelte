@@ -3,9 +3,7 @@
   import { createPageTitle } from '$doclib/util.js'
 
   const toc = new Map([
-    ['Keyboard Controls', 'keyboard'],
-    ['- Type to focus', 'type-to-focus'],
-    ['Search and Text Highlight', 'search'],
+    ['Search', 'search'],
     ['- Multiple Terms', 'multiple-terms'],
     ['- Expanding Matches', 'expanding-matches'],
   ])
