@@ -25,153 +25,155 @@
     expandable?: true
   }
 
-  const routes: Route[] = $derived([
-    {
-      title: 'Reference',
-      children: [
-        {
-          title: 'Getting Started',
-          href: '/reference/getting-started',
-        },
-        {
-          href: '/reference/panel',
-          title: 'Panel',
-        },
-        {
-          href: '/reference/values',
-          title: 'Values',
-        },
-        {
-          href: '/reference/examples',
-          title: 'Examples',
-        },
-        { href: '/custom', title: 'Custom components' },
-      ],
-    },
+  const routes: Route[] = $derived(
+    [
+      {
+        title: 'Reference',
+        children: [
+          {
+            title: 'Getting Started',
+            href: '/reference/getting-started',
+          },
+          {
+            href: '/reference/panel',
+            title: 'Panel',
+          },
+          {
+            href: '/reference/values',
+            title: 'Values',
+          },
+          {
+            href: '/reference/examples',
+            title: 'Examples',
+          },
+          { href: '/custom', title: 'Custom components' },
+        ],
+      },
 
-    {
-      title: 'Usage',
-      children: [
-        {
-          title: 'Hotkeys',
-          href: '/usage/hotkeys',
-        },
-        {
-          title: 'Search',
-          href: '/usage/search',
-        },
-      ],
-    },
+      {
+        title: 'Usage',
+        children: [
+          {
+            title: 'Hotkeys',
+            href: '/usage/hotkeys',
+          },
+          {
+            title: 'Search',
+            href: '/usage/search',
+          },
+        ],
+      },
 
-    {
-      title: 'Theming',
-      children: [
-        {
-          title: 'Themes',
-          href: '/theming/themes',
-        },
-        {
-          href: '/theming/define',
-          title: 'Define',
-        },
-        {
-          href: '/theming/vars',
-          title: 'Variables',
-        },
-      ],
-    },
-    {
-      title: 'TypeDoc',
-      children: [
-        {
-          title: 'Types',
-          expandable: true,
-          href: '/docs/types',
-          children: data.docs
-            .filter((d) => ['types'].includes(d.type ?? '') && !d.title[1].includes('Custom'))
-            .map((d) => ({
-              title: d.title?.[1] ?? '',
-              href: `/docs/${d.type}/${d.title[1]}`,
-            })),
-        },
-        {
-          title: 'Utility',
-          expandable: true,
-          href: '/docs/functions',
-          children: data.docs
-            .filter((d) => ['functions'].includes(d.type ?? ''))
-            .map((d) => ({
-              title: `${d.title?.[1] ?? ''}()`,
-              href: `/docs/${d.type}/${d.title[1]}`,
-            })),
-        },
-        {
-          title: 'Variables',
-          devonly: true,
-          expandable: true,
-          children: data.docs
-            .filter((d) => ['variables'].includes(d.type ?? ''))
-            .map((d) => ({
-              title: d.title?.[1] ?? '',
-              href: `/docs/${d.type}/${d.title[1]}`,
-            })),
-        },
-      ],
-    },
-    // {
-    //   title: 'Types',
-    //   expandable: true,
-    //   href: '/docs/types',
-    //   children: data.docs
-    //     .filter((d) => ['types'].includes(d.type ?? '') && !d.title[1].includes('Custom'))
-    //     .map((d) => ({
-    //       title: d.title?.[1] ?? '',
-    //       href: `/docs/${d.type}/${d.title[1]}`,
-    //     })),
-    // },
-    // {
-    //   title: 'Utility',
-    //   expandable: true,
-    //   href: '/docs/functions',
-    //   children: data.docs
-    //     .filter((d) => ['functions'].includes(d.type ?? ''))
-    //     .map((d) => ({
-    //       title: `${d.title?.[1] ?? ''}()`,
-    //       href: `/docs/${d.type}/${d.title[1]}`,
-    //     })),
-    // },
-    // {
-    //   title: 'Variables',
-    //   devonly: true,
-    //   expandable: true,
-    //   children: data.docs
-    //     .filter((d) => ['variables'].includes(d.type ?? ''))
-    //     .map((d) => ({
-    //       title: d.title?.[1] ?? '',
-    //       href: `/docs/${d.type}/${d.title[1]}`,
-    //     })),
-    // },
-    {
-      href: '/testing',
-      title: 'Testing',
-      devonly: true,
-      children: [
-        { href: '/testing/alltypes', title: 'All Types', devonly: true },
-        { href: '/testing/global', title: 'Global', devonly: true },
-        { href: '/testing/search', title: 'Search', devonly: true },
-      ],
-    },
-    {
-      href: '/playground',
-      title: 'Playground',
-      devonly: true,
-    },
-    {
-      href: '/releases',
-      title: 'Releases',
-      devonly: true,
-    },
-  ])
+      {
+        title: 'Theming',
+        children: [
+          {
+            title: 'Themes',
+            href: '/theming/themes',
+          },
+          {
+            href: '/theming/define',
+            title: 'Define',
+          },
+          {
+            href: '/theming/vars',
+            title: 'Variables',
+          },
+        ],
+      },
+      data.docs && {
+        title: 'TypeDoc',
+        children: [
+          {
+            title: 'Types',
+            expandable: true,
+            href: '/docs/types',
+            children: data.docs
+              .filter((d) => ['types'].includes(d.type ?? '') && !d.title[1].includes('Custom'))
+              .map((d) => ({
+                title: d.title?.[1] ?? '',
+                href: `/docs/${d.type}/${d.title[1]}`,
+              })),
+          },
+          {
+            title: 'Utility',
+            expandable: true,
+            href: '/docs/functions',
+            children: data.docs
+              .filter((d) => ['functions'].includes(d.type ?? ''))
+              .map((d) => ({
+                title: `${d.title?.[1] ?? ''}()`,
+                href: `/docs/${d.type}/${d.title[1]}`,
+              })),
+          },
+          {
+            title: 'Variables',
+            devonly: true,
+            expandable: true,
+            children: data.docs
+              .filter((d) => ['variables'].includes(d.type ?? ''))
+              .map((d) => ({
+                title: d.title?.[1] ?? '',
+                href: `/docs/${d.type}/${d.title[1]}`,
+              })),
+          },
+        ],
+      },
+      // {
+      //   title: 'Types',
+      //   expandable: true,
+      //   href: '/docs/types',
+      //   children: data.docs
+      //     .filter((d) => ['types'].includes(d.type ?? '') && !d.title[1].includes('Custom'))
+      //     .map((d) => ({
+      //       title: d.title?.[1] ?? '',
+      //       href: `/docs/${d.type}/${d.title[1]}`,
+      //     })),
+      // },
+      // {
+      //   title: 'Utility',
+      //   expandable: true,
+      //   href: '/docs/functions',
+      //   children: data.docs
+      //     .filter((d) => ['functions'].includes(d.type ?? ''))
+      //     .map((d) => ({
+      //       title: `${d.title?.[1] ?? ''}()`,
+      //       href: `/docs/${d.type}/${d.title[1]}`,
+      //     })),
+      // },
+      // {
+      //   title: 'Variables',
+      //   devonly: true,
+      //   expandable: true,
+      //   children: data.docs
+      //     .filter((d) => ['variables'].includes(d.type ?? ''))
+      //     .map((d) => ({
+      //       title: d.title?.[1] ?? '',
+      //       href: `/docs/${d.type}/${d.title[1]}`,
+      //     })),
+      // },
+      {
+        href: '/testing',
+        title: 'Testing',
+        devonly: true,
+        children: [
+          { href: '/testing/alltypes', title: 'All Types', devonly: true },
+          { href: '/testing/global', title: 'Global', devonly: true },
+          { href: '/testing/search', title: 'Search', devonly: true },
+        ],
+      },
+      {
+        href: '/playground',
+        title: 'Playground',
+        devonly: true,
+      },
+      {
+        href: '/releases',
+        title: 'Releases',
+        devonly: true,
+      },
+    ].filter(Boolean) as Route[]
+  )
 
   const INSPECT_OPTIONS_DEFAULT: Partial<InspectOptions> = {
     theme: 'inspect',
