@@ -1,9 +1,10 @@
 ---
-title: Welcome to Starlight
-description: Get started building your docs site with Starlight.
+title: Home
+tableOfContents: false
+#description: Get started building your docs site with Starlight.
 # template: splash # Remove or comment out this line to display the site sidebar on this page.
 # hero:
-#   tagline: Congrats on setting up a new Starlight project!
+#   tagline: Inspect Values
 #   image:
 #     file: ../../assets/sivastro.webp
 #   actions:
@@ -16,30 +17,24 @@ description: Get started building your docs site with Starlight.
 #       variant: minimal
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
-import Inspect from 'svelte-inspect-value';
+import PackageInfo from '@examples/PackageInfo.svelte';
 
-## Test
+<PackageInfo client:load="svelte" />
 
-<Inspect client:visible value="test" />
+Svelte Inspect Value is a collection of "JSON tree"-like value inspector components.
+The main purpose of the components is to be a developer utility. When developing apps it can be useful to have a "live" preview of state like API data, form values, the state of a promise and so on.
 
-## Next steps
+## Features
 
-<CardGrid stagger>
-	<Card title="Update content" icon="pencil">
-		Edit `src/content/docs/index.mdx` to see this page change.
-	</Card>
-	<Card title="Change page layout" icon="document">
-		Delete `template: splash` in `src/content/docs/index.mdx` to display a
-		sidebar on this page.
-	</Card>
-	<Card title="Add new content" icon="add-document">
-		Add Markdown or MDX files to `src/content/docs` to create new pages.
-	</Card>
-	<Card title="Configure your site" icon="setting">
-		Edit your `sidebar` and other config in `astro.config.mjs`.
-	</Card>
-	<Card title="Read the docs" icon="open-book">
-		Learn more in [the Starlight Docs](https://starlight.astro.build/).
-	</Card>
-</CardGrid>
+The [examples page](/guides/examples) is the quickest way to get an overview of what this component can do, but here is a list of its key features:
+
+- Display arrays & objects in a tree-like view
+- Support for most JavaScript built-ins, including `Set`, `Map`, `Date`, `URL`, `Promise` etc.
+- Inspect current values of svelte stores or Observables
+- Syntax highlighting for functions and html elements (outer selector) using hljs
+- Embed media if string ends with image / audio extension (optional)
+- Customizable colors
+- Configurable with global options utility as alternative to passing props
+- Fixed position panel component
+
+

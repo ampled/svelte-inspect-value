@@ -4,7 +4,11 @@
   "exclude": ["dist"],
   "compilerOptions": {
     "paths": {
-      "svelte-inspect-value": ["../../packages/svelte/src/lib/index.ts"]
+      "svelte-inspect-value": ["../../packages/svelte/src/lib/index.ts"],
+      "@components/*": ["./src/components/*"],
+      "@components": ["./src/components/index.ts"],
+      "@examples/*": ["./src/examples/*"],
+      "@examples": ["./src/examples/index.ts"]
     }
   }
 }

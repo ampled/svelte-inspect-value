@@ -7,14 +7,24 @@
     "start": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "optimize": "vite optimize --force"
   },
   "dependencies": {
-    "@astrojs/starlight": "^0.37.6",
-    "@astrojs/svelte": "^7.2.5",
-    "astro": "^5.6.1",
-    "sharp": "^0.34.2",
-    "svelte": "^5.53.7",
+    "@astrojs/starlight": "^0.38.2",
+    "@astrojs/svelte": "8.0.3",
+    "@fontsource/eb-garamond": "^5.2.7",
+    "astro": "6.0.8",
+    "astro-compress": "^2.4.0",
+    "brace": "^0.11.1",
+    "runed": "^0.37.1",
+    "sharp": "^0.34.5",
+    "starlight-typedoc": "^0.21.5",
+    "svelte": "^5.54.1",
+    "svelte-awesome-color-picker": "^4.1.1",
+    "terser": "^5.46.0",
+    "typedoc": "^0.28.17",
+    "typedoc-plugin-markdown": "^4.10.0",
     "typescript": "^5.9.3"
   }
 }

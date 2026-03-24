@@ -1,0 +1,27 @@
+---
+title: Themes
+description: Built-in themes for Svelte Inspect Value
+tableOfContents: false
+sidebar:
+  order: 1
+# description: A reference page in my new Starlight docs site.
+---
+
+import Themes from '@examples/Themes.svelte'
+
+<Themes client:load="svelte" />
+
+## Base16
+
+Svelte Inspect Value utilizes the base16-framework for theming, meaning a theme can be defined
+with (less than) 16 colors.
+
+If you have favorite [base16](https://github.com/chriskempson/base16)
+color-scheme it will probably work well with `Inspect`.
+
+The variables `--base04` and `--base0F` is currently not used by any default themes,
+but is still defined and can be used in custom components.
+
+## How to
+
+Visit the [theme creator](/theming/define) for an overview of how the base16-variables are applied and examples on how to define and use a custom theme.

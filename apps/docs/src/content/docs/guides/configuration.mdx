@@ -1,0 +1,80 @@
+---
+title: Configuration
+description: How to configure Svelte Inspect Value
+sidebar:
+  order: 3
+---
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+
+The components of this library are very configurable, with over 30 different options.
+
+See the TypeDoc documentation for [`InspectOptions`](/api/type-aliases/inspectoptions/) for a full list of options.
+
+`Inspect` and `Inspect.Values` have the same options, but different ways to apply them. `Inspect.Panel` has the same options as the two others in addition to some additional options exclusive to the component.
+
+## How To
+
+### Global Options
+
+All components can be configured by using the provider component or the function [`setGlobalInspectOptions`](/api/functions/setglobalinspectoptions/).
+
+This sets a Svelte [context](https://svelte.dev/docs/svelte/context), so per definition the configuration is not "global" unless you set it in a root component.
+
+### Props
+
+`Inspect` and `Inspect.Panel` can have configuration passed as props.
+
+If a setting is set using the provider method, the prop value will be used.
+
+### Example
+
+<Tabs>
+  <TabItem label="+layout.svelte">
+    ```svelte
+    <script>
+      import {dev} from '$app/environment'
+      // import {DEV} from 'esm-env' // if not using SvelteKit?
+      import {setGlobalInspectOptions, InspectOptionsProvider} from 'svelte-inspect-value'
+
+      // set and forget
+      setGlobalInspectOptions(() => ({
+        theme: 'drak',
+        stringCollapse: 20,
+        renderIf: dev // conditionally render
+      }))
+
+      // reactive global options
+      // good for - for example - setting up a keybind for toggling "renderIf"
+      let globalConfig = $state({ renderIf: true, theme: 'drak' })
+
+      setGlobalInspectOptions(() => globalConfig)
+
+      let { children } = $props()
+    </script>
+
+    <input type="checkbox" bind:checked={globalConfig.renderIf as boolean} />
+
+    <!-- provider component - alternative to setGlobalInspectOptions function -->
+    <InspectOptionsProvider options={globalConfig}> 
+      <main>
+        {@render children()}
+      </main>
+    </InspectOptionsProvider>
+    ```
+  </TabItem>
+  <TabItem label="+page.svelte">
+    ```svelte
+    <script>
+      import Inspect from 'svelte-inspect-value'
+      let {data} = $props()
+    </script>
+    <!-- Props override "global" options -->
+    <Inspect values={data} theme="light" />
+    ```
+  </TabItem>
+</Tabs>
+
+## Options Overview
+
+This section includes demonstrations of some of the settings available.

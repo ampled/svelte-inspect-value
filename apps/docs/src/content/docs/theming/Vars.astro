@@ -1,0 +1,40 @@
+---
+import vars from './vars-defaults.js'
+---
+
+<table>
+  <thead>
+    <tr>
+      <th>Variable</th>
+      <th>Default</th>
+    </tr>
+  </thead>
+  <tbody>
+    {
+      vars.map(([v, def]) => (
+        <tr>
+          <td class="varname">{v}</td>
+          <td>{def}</td>
+        </tr>
+      ))
+    }
+  </tbody>
+</table>
+
+<style>
+  table {
+    width: 100%;
+  }
+
+  tbody {
+    font-family: monospace;
+  }
+
+  td {
+    width: 100%;
+  }
+
+  .varname {
+    border-right: 1px solid;
+  }
+</style>

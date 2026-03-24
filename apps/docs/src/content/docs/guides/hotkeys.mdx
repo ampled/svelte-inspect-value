@@ -1,0 +1,50 @@
+---
+title: Hotkeys
+description: How to use and configure hotkeys for Svelte Inspect Value
+sidebar:
+  order: 5
+---
+
+import HotkeysTable from '@components/content/HotkeysTable.astro';
+import MetaKey from '@components/content/MetaKey.astro'
+import NavTable from '@components/content/KeyboardNavTable.astro';
+import KeyNavDemo from '@examples/KeyboardNavDemo.svelte';
+
+## Default keyboard shortcuts and configuration
+
+The three following hotkeys are enabled by default. They can be overriden or disabled by setting the [`hotkeys`](/api/type-aliases/inspectoptions/#hotkeys) option.
+
+See [`InspectHotkeys`](/api/type-aliases/inspecthotkeys/) type for how to override.
+
+<HotkeysTable />
+
+:::note
+<MetaKey /> means <kbd>⌘</kbd> on macOS and <kbd>Ctrl</kbd> on Windows / Linux
+:::
+
+## Keyboard navigation
+
+Every node/row/line in `Inspect` is focusable, and can be navigated, expanded or
+collapsed using the following keys. Using <kbd>Tab</kbd> in combination with the following
+keyboard shortcuts, everything should be reachable using only your keyboard.
+
+This can be disabled by setting option / prop [`disableKeyNav`](/api/type-aliases/inspectoptions/#disablekeynav) to `true`.
+
+<NavTable />
+
+## Type to focus
+
+While a node is focused, you can type to focus a certain (visible) node.
+
+A box will appear showing your query, and a node matching the typed letters will be focused, prioritizing keys. This can be disabled by setting the option [`typeToFocus`](/api/type-aliases/inspectoptions/#typetofocus) to `false`.
+
+## Try
+
+Here is an instance of `Inspect`. To get used to keyboard navigation, try the following:
+
+- Use <kbd title="Right Arrow Key">&rightarrow;</kbd> to quickly expand and navigate nested values
+- Hit <kbd>Enter</kbd> on a collapsed node and see what node is focused.
+- Type any visible text to see focus shift to the best matching node.
+- Hit <kbd title="Left Arrow Key">&leftarrow;</kbd> and <kbd title="Right Arrow Key">&rightarrow;</kbd> when the 2nd or 3rd child of a node is focused and see what node is focused.
+
+<KeyNavDemo client:visible />
