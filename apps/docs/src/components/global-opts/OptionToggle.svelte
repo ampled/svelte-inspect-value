@@ -31,11 +31,12 @@
     transition: all 200ms ease-in-out;
     cursor: pointer;
     margin-bottom: 2px;
-    outline: 1px solid #b4d455;
+    outline: 1px solid var(--sl-color-accent-high);
     border-radius: 8px;
     padding-inline: 0.5em;
     padding-block: 0.25em;
     max-height: 1.6em;
+    color: var(--sl-color-white);
     font-size: 10px;
     line-height: 1;
     font-family: monospace;
@@ -45,7 +46,7 @@
   }
 
   button:focus {
-    outline: 1px solid lightblue;
+    outline: 1px solid var(--sl-color-accent-low);
     outline-offset: 2px;
   }
 
@@ -55,7 +56,7 @@
   }
 
   button.checked {
-    background-color: #b4d455;
-    color: black;
+    background-color: var(--sl-color-accent-high);
+    color: var(--sl-color-black);
   }
 </style>

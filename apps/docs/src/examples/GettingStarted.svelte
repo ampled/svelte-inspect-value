@@ -1,8 +1,6 @@
 <script lang="ts">
-  import { Inspect, Values, Panel } from '@components'
+  import { Inspect, Panel } from '@components'
   import _Inspect from 'svelte-inspect-value'
-
-  console.log(Values)
 
   let value = $state({
     id: undefined,

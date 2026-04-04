@@ -7,11 +7,10 @@
   import HexString from './HexString.svelte'
   import type { ThemeKeys } from './themes.js'
 
-  let {
-    style,
-    colors,
-    ...props
-  }: InspectProps & SvelteHTMLElements['div'] & { colors: Record<ThemeKeys, string> } = $props()
+  type Props = InspectProps &
+    SvelteHTMLElements['div'] & { colors: Record<ThemeKeys, string>; panel: boolean; style: string }
+
+  let { panel, style, colors, ...props }: Props = $props()
 
   // $inspect(props)
 
@@ -21,7 +20,6 @@
     numberType: 123,
     booleanType: true,
     error: new Error('i am an error'),
-    nodeNote: '["i was parsed!"]',
     tagNames: null as unknown,
     get keyPrefixes() {
       return class RandomClass {
@@ -51,6 +49,7 @@
   const base0CPreview = {
     objType: {},
     arrType: [],
+    nodeNote: '["i was parsed!"]',
     date: new Date(),
     map: new Map([['#000', '#000']]),
     set: new Set(['#000', '#888', '#fff']),
@@ -118,10 +117,8 @@
   $effect.pre(() => {
     document.body.dataset['attributecolor'] = colors['--base0B']
   })
-</script>
 
-<Inspect
-  customComponents={{
+  let customComponents = {
     string: addComponent(
       HexString,
       () => ({
@@ -129,17 +126,62 @@
       }),
       (props) => props.value.startsWith('#')
     ),
-  }}
-  animRate={1.5}
-  values={theming}
-  showLength={true}
-  showTypes
-  expandLevel={0}
-  heading="theme preview"
-  expandPaths={['base08.1', 'base09', 'base0C.1', 'base0D.1', 'base0E.1']}
-  previewDepth={Infinity}
-  previewEntries={10}
-  {...props}
-  {style}
-  parseJson
-/>
+  }
+
+  let expandPaths = ['base08.1', 'base09', 'base0C.1', 'base0D.1', 'base0E.1']
+</script>
+
+<div class="preview not-content">
+  <div style:display={panel ? 'contents' : 'none'}>
+    <Inspect.Panel
+      theme=""
+      persist="siv.theming-panel"
+      {customComponents}
+      values={theming}
+      showLength={true}
+      showTypes
+      expandLevel={0}
+      heading="theme preview"
+      {expandPaths}
+      previewDepth={Infinity}
+      previewEntries={10}
+      style={style + 'position: absolute;'}
+      open
+      parseJson
+    />
+  </div>
+
+  <div style:display={panel ? 'none' : 'contents'}>
+    <Inspect
+      {customComponents}
+      values={theming}
+      showLength={true}
+      showTypes
+      expandLevel={0}
+      heading="theme preview"
+      {expandPaths}
+      previewDepth={Infinity}
+      previewEntries={10}
+      {...props}
+      {style}
+      parseJson
+    />
+  </div>
+</div>
+
+<style>
+  .preview {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid var(--sl-color-gray-3);
+    border-radius: 8px;
+    background-color: #8b899c;
+    padding: 0.5em;
+    width: 100%;
+    height: 850px;
+    overflow: hidden;
+  }
+</style>

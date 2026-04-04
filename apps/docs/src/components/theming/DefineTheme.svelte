@@ -6,6 +6,7 @@
   import { themes } from './themes.js'
   import Theming from './Theming.svelte'
 
+  let panel = $state(false)
   let font = $state('monospace')
   let fontSize = $state(12)
   let fontSizePx = $derived(fontSize + 'px')
@@ -14,12 +15,7 @@
 
   let keys = $derived(Object.keys(colors) as (keyof typeof colors)[])
 
-  // $inspect('colors', colors)
-
   let style = $derived.by(() => {
-    // $inspect.trace('style')
-    colors
-
     return keys.map((k) => `${k}: ${colors[k]};`).join('') + 'flex-basis: 100%;'
   })
 
@@ -34,8 +30,6 @@
       keys.forEach((k) => {
         colors[k] = themes[selectedPreset][k]
       })
-
-      // colors = { ...themes[selectedPreset] }
     }
   }
 </script>
@@ -58,7 +52,10 @@
       {/each}
     </select>
   </label>
-  <!-- <button onclick={loadPreset}> Load </button> -->
+  <label>
+    Panel
+    <input type="checkbox" bind:checked={panel} />
+  </label>
 </div>
 
 <div class="colors-and-preview">
@@ -67,16 +64,6 @@
       <div class="dark-picker">
         <ColorPicker bind:hex={colors[key]} label={key.replaceAll('--base', '')} dir="rtl" />
       </div>
-      <!-- <label class="color">
-        {key.replaceAll('--base', '')}
-        <input
-          type="color"
-          bind:value={currentColors[key]}
-          onchange={() => saveStep()}
-          defaultValue="#ffffff"
-          disabled={rotated != null || locked}
-        />
-      </label> -->
     {/each}
   </div>
 
@@ -84,6 +71,7 @@
     --indent="{indent}em"
     --inspect-font={font}
     --inspect-font-size={fontSizePx}
+    {panel}
     {colors}
     {style}
   />
@@ -118,7 +106,7 @@
     <input type="number" style="max-width: 6em" bind:value={fontSize} />
   </label>
   <button
-    title="output theme object to console"
+    title="Output theme object to console"
     class="unstyled"
     style="width: 2em; height: 2em;"
     onclick={() => {
@@ -137,6 +125,7 @@
       />
     </svg>
   </button>
+
   <!-- <button disabled={!history.canUndo} onclick={() => history.undo()}>Undo</button>
   <button disabled={!history.canRedo} onclick={() => history.redo()}>Redo</button> -->
 </div>
@@ -253,6 +242,8 @@ Result:
   .colors-and-preview {
     display: flex;
     flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
   }
 
   .colors {
@@ -260,6 +251,10 @@ Result:
     flex-direction: column;
     flex-wrap: wrap;
     justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    background-color: var(--sl-color-gray-5);
+    height: max-content;
   }
 
   /* @media (min-width: 1024px) {
@@ -325,10 +320,10 @@ Result:
   .dark-picker {
     font-family: monospace;
     --cp-bg-color: var(--base01);
-    --cp-border-color: var(--base08);
+    --cp-border-color: var(--base03);
     --cp-text-color: var(--base05);
     --cp-input-color: var(--base02);
-    --cp-button-hover-color: var(--base01);
+    --cp-button-hover-color: var(--base03);
     --picker-z-index: 9999;
   }
 </style>

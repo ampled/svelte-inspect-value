@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Inspect } from '@components'
+  import Inspect from '@components/Inspect.svelte'
   import { globalOpts } from '@components/global-opts/globalopts.svelte.js'
   import type { InspectProps } from 'svelte-inspect-value'
 
@@ -48,7 +48,7 @@
   })
 </script>
 
-<Inspect {...props} {values} search={allTypesSearch} expandLevel={0}>
+<Inspect class="not-content mt" {...props} {values} search={allTypesSearch} expandLevel={0}>
   {#snippet heading(collapsed: boolean)}
     {#if !collapsed}
       <!-- svelte-ignore a11y_click_events_have_key_events -->

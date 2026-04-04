@@ -1,0 +1,19 @@
+<script lang="ts">
+  import Inspect from 'svelte-inspect-value'
+  import GoofyNumber from './GoofyNumber.svelte'
+
+  const value = {
+    oneBillion: 1000000000,
+    oneTwoThreeFourEtc: 1234567890,
+    etc: [Infinity, NaN],
+  }
+</script>
+
+<Inspect
+  {value}
+  name="numbersAndColors"
+  customComponents={{ 
+    // passed as array 
+    number: [GoofyNumber]  
+  }}
+/>

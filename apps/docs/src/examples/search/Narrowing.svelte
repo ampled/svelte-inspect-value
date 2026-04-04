@@ -42,36 +42,49 @@
   })
 </script>
 
-<Inspect
-  bind:this={ins}
-  values={value}
-  expandLevel={0}
-  heading="Narrowing"
-  searchMode="or"
-  {search}
-  {highlightMatches}
-  class="not-content mt"
-/>
+<div class="search-example">
+  <Inspect
+    bind:this={ins}
+    values={value}
+    expandLevel={0}
+    heading="Search Demo"
+    searchMode="or"
+    {search}
+    {highlightMatches}
+    class="not-content"
+    style="margin-top: 0 !important;"
+  />
 
-<div class="not-content">
-  <label>
-    mode
-    <select bind:value={search}>
-      <option>highlight</option>
-      <option>filter</option>
-      <option>filter-strict</option>
-    </select>
-  </label>
-  <label>
-    highlight
-    <input type="checkbox" bind:checked={highlightMatches} />
-  </label>
+  <div class="not-content input-row">
+    <label>
+      Search mode
+      <select bind:value={search}>
+        <option>highlight</option>
+        <option>filter</option>
+        <option>filter-strict</option>
+      </select>
+    </label>
+    <label>
+      Highlight matches
+      <input type="checkbox" bind:checked={highlightMatches} />
+    </label>
+  </div>
 </div>
 
 <style>
-  div {
+  .input-row {
     display: flex;
     gap: 1em;
     font-family: monospace;
+  }
+
+  .search-example {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 8px;
+    background-color: var(--sl-color-gray-6);
+    padding: 0.5rem;
+    height: 555px;
   }
 </style>

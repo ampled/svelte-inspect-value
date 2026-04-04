@@ -29,7 +29,7 @@ type PanelProps = {
 } & Partial<PanelSettings> & Partial<InspectOptions> & SvelteHTMLElements["aside"];
 ```
 
-Defined in: [types.ts:169](https://github.com/ampled/svelte-inspect-value/blob/fde11f7054ba97b804d19e1d32a836de5c902857/packages/svelte/src/lib/types.ts#L169)
+Defined in: [types.ts:169](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/types.ts#L169)
 
 Props for `Inspect.Panel`
 
@@ -38,7 +38,7 @@ Props for `Inspect.Panel`
 ### openOnHover?
 
 ```ts
-optional openOnHover: boolean;
+optional openOnHover?: boolean;
 ```
 
 Panel should open on hover.
@@ -54,7 +54,7 @@ false
 ### hideToolbar?
 
 ```ts
-optional hideToolbar: boolean;
+optional hideToolbar?: boolean;
 ```
 
 Don't render Panel toolbar with controls for setting position, opacity and appearance
@@ -68,7 +68,7 @@ false
 ### hideGlobalValues?
 
 ```ts
-optional hideGlobalValues: boolean;
+optional hideGlobalValues?: boolean;
 ```
 
 Don't display "global" values added with `addToPanel`
@@ -82,7 +82,7 @@ false
 ### resize?
 
 ```ts
-optional resize: boolean;
+optional resize?: boolean;
 ```
 
 Enable resizing
@@ -96,7 +96,7 @@ true
 ### children?
 
 ```ts
-optional children: Snippet;
+optional children?: Snippet;
 ```
 
 Extra elements to be added at the bottom of the panel
@@ -104,7 +104,7 @@ Extra elements to be added at the bottom of the panel
 ### zIndex?
 
 ```ts
-optional zIndex: number;
+optional zIndex?: number;
 ```
 
 Z-index of panel
@@ -118,7 +118,7 @@ Z-index of panel
 ### wiggleOnUpdate?
 
 ```ts
-optional wiggleOnUpdate: boolean;
+optional wiggleOnUpdate?: boolean;
 ```
 
 When closed, wiggle the panel button when an inspected value is updated
@@ -129,10 +129,10 @@ When closed, wiggle the panel button when an inspected value is updated
 true
 ```
 
-### onOpenChange()?
+### onOpenChange?
 
 ```ts
-optional onOpenChange: (open) => void;
+optional onOpenChange?: (open) => void;
 ```
 
 Callback for when panel is opened or closed
@@ -153,10 +153,10 @@ Callback for when panel is opened or closed
 undefined
 ```
 
-### onSettingsChange()?
+### onSettingsChange?
 
 ```ts
-optional onSettingsChange: (settings, changed) => void;
+optional onSettingsChange?: (settings, changed) => void;
 ```
 
 Callback for when any panel prop/setting is changed with the panel UI. Can be used for
@@ -201,7 +201,7 @@ undefined
 ### persist?
 
 ```ts
-optional persist: 
+optional persist?: 
   | boolean
   | string
   | PanelPersistProps;
@@ -237,7 +237,7 @@ false
 ### persistSync?
 
 ```ts
-optional persistSync: 
+optional persistSync?: 
   | boolean
   | string
 | Omit<PanelPersistProps, "syncTabs">;
@@ -263,7 +263,7 @@ false
 ### value?
 
 ```ts
-optional value: unknown;
+optional value?: unknown;
 ```
 
 Any (single) value of any type to be inspected.
@@ -276,7 +276,7 @@ the value will not be inspected
 ### values?
 
 ```ts
-optional values: unknown;
+optional values?: unknown;
 ```
 
 Inspect every enumerable property of a value, object or array-like.
@@ -286,7 +286,7 @@ Allows for multiple root-level nodes, unlike `value`.
 ### name?
 
 ```ts
-optional name: string;
+optional name?: string;
 ```
 
 Name of inspected value. Will be displayed as the "key" of the value.

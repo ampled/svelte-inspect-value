@@ -12,7 +12,7 @@ function addToPanel(
    addedBy?): () => void;
 ```
 
-Defined in: [global.svelte.ts:78](https://github.com/ampled/svelte-inspect-value/blob/fde11f7054ba97b804d19e1d32a836de5c902857/packages/svelte/src/lib/global.svelte.ts#L78)
+Defined in: [global.svelte.ts:78](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/global.svelte.ts#L78)
 
 Register a "global" value to be inspected with `Inspect.Panel`.
 It is recommended to call this during component initialization.
@@ -54,13 +54,7 @@ Function returning value to be inspected
 
 Function that removes added value when called. Returns `true` if value was removed, `false` if value didn't exist
 
-```ts
-(): void;
-```
-
-### Returns
-
-`void`
+() => `void`
 
 ## Example
 

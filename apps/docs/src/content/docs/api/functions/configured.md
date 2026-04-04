@@ -9,7 +9,7 @@ title: "configured"
 function configured(options): Configurable<LegacyComponentType>;
 ```
 
-Defined in: [configurable.ts:263](https://github.com/ampled/svelte-inspect-value/blob/fde11f7054ba97b804d19e1d32a836de5c902857/packages/svelte/src/lib/configurable.ts#L263)
+Defined in: [configurable.ts:263](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/configurable.ts#L263)
 
 Creates a pre-configured Inspect-component that will inspect any value passed to it
 instead of using the `value`-prop.

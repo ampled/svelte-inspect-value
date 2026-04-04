@@ -11,7 +11,7 @@ type InspectValuesOptions = () => Partial<InspectOptions> & {
 };
 ```
 
-Defined in: [types.ts:340](https://github.com/ampled/svelte-inspect-value/blob/fde11f7054ba97b804d19e1d32a836de5c902857/packages/svelte/src/lib/types.ts#L340)
+Defined in: [types.ts:340](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/types.ts#L340)
 
 Options for `Inspect.Values`
 

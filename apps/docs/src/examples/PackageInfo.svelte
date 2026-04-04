@@ -5,6 +5,12 @@
   let data = $state<ReturnType<typeof getData>>()
 
   function getData() {
+    const wait = new Promise((resolve) => {
+      setTimeout(() => {
+        resolve('')
+      }, 3000)
+    })
+
     const installCount = fetch(
       'https://api.npmjs.org/downloads/point/1970-01-01:2038-01-19/svelte-inspect-value'
     )
@@ -15,12 +21,10 @@
       .then((res) => res.json())
       .then((data) => data.stargazers_count as number)
 
-    return {
-      stats: Promise.all([installCount, githubStars]).then(([installCount, githubStars]) => ({
-        installCount,
-        githubStars,
-      })),
-    }
+    return Promise.all([installCount, githubStars, wait]).then(([installCount, githubStars]) => ({
+      installCount,
+      githubStars,
+    }))
   }
 
   onMount(() => {

@@ -1,0 +1,36 @@
+.input-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 1.25em;
+  margin-inline: auto;
+  border-radius: 8px;
+  background-color: var(--sl-color-gray-5);
+  padding-inline: 1em;
+  padding-block: 0.5em;
+  width: fit-content;
+  color: var(--sl-color-white);
+  font-family: monospace;
+
+  & > :not(:last-child) {
+    border-right: 1px solid var(--sl-color-gray-3);
+  }
+
+  label {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.5em;
+    margin: 0 !important;
+    padding-right: 1em;
+    height: 1.5em;
+    font-size: 12px;
+    text-wrap: nowrap;
+  }
+
+  input[type='number'] {
+    max-width: 7ch;
+    height: 1.5em;
+  }
+}

@@ -8,6 +8,9 @@ import compress from 'astro-compress'
 
 // https://astro.build/config
 export default defineConfig({
+  devToolbar: {
+    enabled: false,
+  },
   integrations: [
     starlight({
       title: 'Svelte <Inspect {value} />',
@@ -22,7 +25,10 @@ export default defineConfig({
         light: './src/assets/logolight.svg',
         dark: './src/assets/logodark.svg',
       },
-      social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/withastro/starlight' }],
+      social: [
+        { icon: 'github', label: 'GitHub', href: 'https://github.com/ampled/svelte-inspect-value' },
+        { icon: 'npm', label: 'npm', href: 'https://www.npmjs.com/package/svelte-inspect-value' },
+      ],
       expressiveCode: {
         styleOverrides: {
           codeFontSize: '12px',
@@ -42,7 +48,7 @@ export default defineConfig({
             useCodeBlocks: true,
             sort: ['documents-first'],
           },
-          watch: true,
+          watch: false,
         }),
       ],
       components: {
@@ -76,9 +82,9 @@ export default defineConfig({
     //   },
     // }),
   ],
-  vite: {
-    optimizeDeps: {
-      exclude: ['astro/virtual-modules/prefetch.js'],
-    },
-  },
+  // vite: {
+  //   optimizeDeps: {
+  //     exclude: ['astro/virtual-modules/prefetch.js'],
+  //   },
+  // },
 })

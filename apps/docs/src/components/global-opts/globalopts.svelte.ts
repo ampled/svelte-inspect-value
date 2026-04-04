@@ -4,12 +4,11 @@ import _Inspect, { DEFAULT_OPTIONS, GLOBAL_OPTIONS_CONTEXT } from 'svelte-inspec
 export const globalOpts = $state(DEFAULT_OPTIONS)
 
 export const Inspect = ((...args: any[]) => {
-  console.log('wrapped inspect args', args)
   if (typeof args[1] === 'object') {
     if (typeof args[1]['class'] === 'undefined') {
-      args[1]['class'] = ' not-content mt'
+      args[1]['class'] = 'not-content mt'
     } else if (typeof args[1]['class'] === 'string') {
-      args[1]['class'] += 'not-content mt'
+      args[1]['class'] += ' not-content mt'
     }
   }
   setContext(GLOBAL_OPTIONS_CONTEXT, globalOpts)

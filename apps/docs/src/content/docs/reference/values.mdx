@@ -4,3 +4,81 @@ description: How to use and configure Inspect.Values
 sidebar:
   order: 2
 ---
+import ValuesExampleMinimal from '@examples/values/MinimalExampleValues.svelte';
+import ConfiguredExample from '@examples/values/ConfiguredExample.svelte';
+
+`Inspect.Values` is a version of `Inspect` that will display any prop/value passed to it.
+
+## Example
+
+```svelte
+<script lang="ts">
+  import Inspect from 'svelte-inspect-value'
+
+  let number = $state(1)
+  let isEven = $derived(number % 2 === 0)
+  let doubled = $derived(number * 2)
+</script>
+
+<input type="number" bind:value={number}>
+
+<Inspect.Values {number} {isEven} {doubled}  />
+```
+
+<ValuesExampleMinimal client:load />
+
+
+## Configuring
+
+`Inspect.Values` does not accept any configuration props since any value passed as a
+prop will simply be inspected. If you want to change the behavior of `Inspect.Values`
+you can use [global options](/guides/configuration/#global-options). Using global options is the recommended approach.
+
+There are also utility-methods for pre-configuring the component with `Inspect.Values.withOptions`
+or the [`configured`](/api/functions/configured/)-function. Both are identical.
+
+`Inspect.Values` and configured variants can all have `expandLevel` set by using
+"Expand" properties from 0 to 10 (default 1.)
+
+```svelte
+<script>
+ import Inspect, {configured} from 'svelte-inspect-value'
+ import data from './data.js'
+
+  const InspectVals = Inspect.Values.withOptions(() => ({ expandLevel: 0 }))
+
+  // elementAttributes will be to applied to outermost Inspect div
+  const DarkInspect = configured(() => ({ 
+    theme: 'dark',
+    elementAttributes: { style: 'max-width: 300px' } 
+  }))
+
+  // create another variation that will inherit from the previous one 
+  const DarkBorderless = DarkInspect.withOptions(() => ({ borderless: true }))
+</script>
+
+<InspectVals msg="i have been configured" {data} />
+
+<!-- Override initial expandLevel using ".Expand[1-10]"  -->
+<DarkInspect.Expand0 msg="me too" {data} />
+
+<!-- spread properties of data as individiual values -->
+<DarkBorderless.Expand1 msg="i inherit options from DarkInspect" {...data} />
+```
+
+<ConfiguredExample client:load="svelte" />
+
+## Inline configuration
+
+A final method to configuring `Inspect.Values` that will override global options and
+`withOptions`-variations is "chainable inline configuration":
+
+```svelte
+<script>
+ import Inspect from 'svelte-inspect-value'
+ import data from './data.js'
+</script>
+
+<Inspect.Values.Config.PlainTheme.ParseJSON.Borderless.NoAnimate.Ok {data} />
+<!--            ^ start inline config                            ^ end config
+```

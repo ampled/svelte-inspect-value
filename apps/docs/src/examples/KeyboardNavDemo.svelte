@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Inspect } from '@components'
+  import Inspect from '@components/Inspect.svelte'
   import type { InspectProps } from 'svelte-inspect-value'
 
   let props: InspectProps = $props()

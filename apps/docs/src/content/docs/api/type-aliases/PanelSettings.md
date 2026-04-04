@@ -16,7 +16,7 @@ type PanelSettings = {
 };
 ```
 
-Defined in: [types.ts:96](https://github.com/ampled/svelte-inspect-value/blob/fde11f7054ba97b804d19e1d32a836de5c902857/packages/svelte/src/lib/types.ts#L96)
+Defined in: [types.ts:96](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/types.ts#L96)
 
 Props / settings that can be changed within the `Inspect.Panel` UI.
 
@@ -36,7 +36,7 @@ customized logic using the `onSettingsChange`-callback
 align: PositionProp;
 ```
 
-Defined in: [types.ts:118](https://github.com/ampled/svelte-inspect-value/blob/fde11f7054ba97b804d19e1d32a836de5c902857/packages/svelte/src/lib/types.ts#L118)
+Defined in: [types.ts:118](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/types.ts#L118)
 
 Initial panel position
 
@@ -72,7 +72,7 @@ y-position can be one of `'top' | 'bottom' | 'middle' | 'full'`
 open: boolean;
 ```
 
-Defined in: [types.ts:125](https://github.com/ampled/svelte-inspect-value/blob/fde11f7054ba97b804d19e1d32a836de5c902857/packages/svelte/src/lib/types.ts#L125)
+Defined in: [types.ts:125](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/types.ts#L125)
 
 Initially open panel
 
@@ -92,7 +92,7 @@ false
 appearance: "solid" | "glassy" | "floating" | "dense";
 ```
 
-Defined in: [types.ts:134](https://github.com/ampled/svelte-inspect-value/blob/fde11f7054ba97b804d19e1d32a836de5c902857/packages/svelte/src/lib/types.ts#L134)
+Defined in: [types.ts:134](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/types.ts#L134)
 
 Sets appearance of panel.
 
@@ -114,7 +114,7 @@ Can be `'solid'|'glassy'|'dense'|'floating'`
 opacity: boolean;
 ```
 
-Defined in: [types.ts:142](https://github.com/ampled/svelte-inspect-value/blob/fde11f7054ba97b804d19e1d32a836de5c902857/packages/svelte/src/lib/types.ts#L142)
+Defined in: [types.ts:142](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/types.ts#L142)
 
 Apply opacity to the panel when not hovered or focused
 
@@ -131,10 +131,10 @@ false
 ### width?
 
 ```ts
-optional width: number;
+optional width?: number;
 ```
 
-Defined in: [types.ts:151](https://github.com/ampled/svelte-inspect-value/blob/fde11f7054ba97b804d19e1d32a836de5c902857/packages/svelte/src/lib/types.ts#L151)
+Defined in: [types.ts:151](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/types.ts#L151)
 
 Panel width in pixels.
 
@@ -153,10 +153,10 @@ undefined
 ### height?
 
 ```ts
-optional height: number;
+optional height?: number;
 ```
 
-Defined in: [types.ts:160](https://github.com/ampled/svelte-inspect-value/blob/fde11f7054ba97b804d19e1d32a836de5c902857/packages/svelte/src/lib/types.ts#L160)
+Defined in: [types.ts:160](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/types.ts#L160)
 
 Panel height in pixels
 

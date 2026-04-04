@@ -13,7 +13,7 @@ type InspectHotkeys = {
 };
 ```
 
-Defined in: [options.svelte.ts:32](https://github.com/ampled/svelte-inspect-value/blob/fde11f7054ba97b804d19e1d32a836de5c902857/packages/svelte/src/lib/options.svelte.ts#L32)
+Defined in: [options.svelte.ts:32](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L32)
 
 Hotkeys configuration using [tinykeys](https://github.com/jamiebuilds/tinykeys) syntax.
 
@@ -41,7 +41,7 @@ Note: The string `'$mod'` means "command" on macOS and "ctrl" on Windows / Linux
 search: string | false;
 ```
 
-Defined in: [options.svelte.ts:38](https://github.com/ampled/svelte-inspect-value/blob/fde11f7054ba97b804d19e1d32a836de5c902857/packages/svelte/src/lib/options.svelte.ts#L38)
+Defined in: [options.svelte.ts:38](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L38)
 
 Hotkey for focusing search field if [`search`](/api/type-aliases/inspectoptions/#search) is enabled
 
@@ -59,7 +59,7 @@ Hotkey for focusing search field if [`search`](/api/type-aliases/inspectoptions/
 expandTop: string | false;
 ```
 
-Defined in: [options.svelte.ts:44](https://github.com/ampled/svelte-inspect-value/blob/fde11f7054ba97b804d19e1d32a836de5c902857/packages/svelte/src/lib/options.svelte.ts#L44)
+Defined in: [options.svelte.ts:44](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L44)
 
 Hotkey for expanding all top level nodes
 
@@ -77,7 +77,7 @@ Hotkey for expanding all top level nodes
 collapseTop: string | false;
 ```
 
-Defined in: [options.svelte.ts:50](https://github.com/ampled/svelte-inspect-value/blob/fde11f7054ba97b804d19e1d32a836de5c902857/packages/svelte/src/lib/options.svelte.ts#L50)
+Defined in: [options.svelte.ts:50](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L50)
 
 Hotkey for collapsing all top level nodes
 

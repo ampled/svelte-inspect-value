@@ -21,10 +21,6 @@ title: "svelte-inspect-value"
 - [TypeViewProps](/api/type-aliases/typeviewprops/)
 - [ValueType](/api/type-aliases/valuetype/)
 
-## Variables
-
-- [Inspect](/api/variables/inspect/)
-
 ## Functions
 
 - [configured](/api/functions/configured/)

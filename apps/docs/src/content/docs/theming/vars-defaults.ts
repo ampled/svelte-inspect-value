@@ -59,7 +59,7 @@ export default [
   ['--update-flash-color', '--base06'],
   ['--delimiter-color', '--base08'],
   ['--key-prefix-color', '--base08'],
-  ['--note-color', '--base08'],
+  ['--note-color', '--base0C'],
   ['--button-color', '--base0E'],
   ['--button-disabled-color', '--base03'],
   ['--button-success-color', '--base0B'],

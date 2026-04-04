@@ -9,7 +9,7 @@ title: "inspectElement"
 function inspectElement(name?): Attachment;
 ```
 
-Defined in: [attachments/inspect-element.ts:14](https://github.com/ampled/svelte-inspect-value/blob/fde11f7054ba97b804d19e1d32a836de5c902857/packages/svelte/src/lib/attachments/inspect-element.ts#L14)
+Defined in: [attachments/inspect-element.ts:14](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/attachments/inspect-element.ts#L14)
 
 Inspect an element with `Inspect.Panel`
 

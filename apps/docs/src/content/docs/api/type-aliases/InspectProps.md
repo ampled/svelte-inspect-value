@@ -13,7 +13,7 @@ type InspectProps = {
 } & Partial<InspectOptions> & SvelteHTMLElements["div"];
 ```
 
-Defined in: [types.ts:43](https://github.com/ampled/svelte-inspect-value/blob/fde11f7054ba97b804d19e1d32a836de5c902857/packages/svelte/src/lib/types.ts#L43)
+Defined in: [types.ts:43](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/types.ts#L43)
 
 Props for `Inspect`
 
@@ -22,7 +22,7 @@ Props for `Inspect`
 ### value?
 
 ```ts
-optional value: unknown;
+optional value?: unknown;
 ```
 
 Any (single) value of any type to be inspected.
@@ -35,7 +35,7 @@ the value will not be inspected
 ### values?
 
 ```ts
-optional values: unknown;
+optional values?: unknown;
 ```
 
 Inspect every enumerable property of a value, object or array-like.
@@ -45,7 +45,7 @@ Allows for multiple root-level nodes, unlike `value`.
 ### name?
 
 ```ts
-optional name: string;
+optional name?: string;
 ```
 
 Name of inspected value. Will be displayed as the "key" of the value.
