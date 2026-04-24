@@ -15,7 +15,6 @@
   const options = useOptions()
 
   let {
-    onclick,
     busy,
     disabled,
     value = $bindable(''),

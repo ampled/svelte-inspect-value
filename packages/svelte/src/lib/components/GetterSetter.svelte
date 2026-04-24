@@ -170,6 +170,9 @@
           placeholder="json"
           style="max-width: 20ch"
           containerAttrs={{ style: 'max-width: 20ch;' }}
+          onclick={(e) => {
+            e.stopPropagation()
+          }}
           {onkeydown}
           {onkeyup}
         />
@@ -206,6 +209,7 @@
             </NodeActionButton>
           {/if}
           <Preview
+            {usedefaults}
             showPreview={(hasCachedValue || valueRetrieved) && showPreview}
             singleValue={{ value: retrievedValue }}
             style={previewLevel > 0 ? 'margin-left: -0.5em' : ''}
