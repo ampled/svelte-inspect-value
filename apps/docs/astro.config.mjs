@@ -3,36 +3,61 @@ import { defineConfig } from 'astro/config'
 import starlight from '@astrojs/starlight'
 import starlightTypeDoc, { typeDocSidebarGroup } from 'starlight-typedoc'
 import svelte from '@astrojs/svelte'
+import { ExpressiveCodeTheme } from '@astrojs/starlight/expressive-code'
+import fs from 'node:fs'
+import vercel from '@astrojs/vercel'
 
-import compress from 'astro-compress'
+// expressive code theme
+const jsoncString = fs.readFileSync(new URL(`./inspect-theme.jsonc`, import.meta.url), 'utf-8')
+const myTheme = ExpressiveCodeTheme.fromJSONString(jsoncString)
 
 // https://astro.build/config
 export default defineConfig({
   devToolbar: {
     enabled: false,
   },
+  site: 'https://inspect.eirik.space',
+  vite: {
+    build: {
+      minify: 'terser',
+      terserOptions: {
+        keep_classnames: true,
+        keep_fnames: true,
+        mangle: false,
+      },
+    },
+  },
   integrations: [
     starlight({
       title: 'Svelte <Inspect {value} />',
+      favicon: '/favicon.png',
       customCss: [
-        // Relative path to your custom CSS file
         './src/styles/custom.css',
-        '@fontsource/eb-garamond',
+        '@fontsource/eb-garamond/400.css',
+        '@fontsource/eb-garamond/600.css',
       ],
       logo: {
         alt: 'Svelte Inspect Value',
         replacesTitle: true,
-        light: './src/assets/logolight.svg',
-        dark: './src/assets/logodark.svg',
+        light: './src/assets/svilogolight.png',
+        dark: './src/assets/svilogodark.png',
       },
       social: [
         { icon: 'github', label: 'GitHub', href: 'https://github.com/ampled/svelte-inspect-value' },
         { icon: 'npm', label: 'npm', href: 'https://www.npmjs.com/package/svelte-inspect-value' },
       ],
       expressiveCode: {
+        frames: {
+          extractFileNameFromCode: false,
+        },
         styleOverrides: {
           codeFontSize: '12px',
+          borderRadius: '8px',
         },
+        shiki: {
+          bundledLangs: ['svelte', 'typescript', 'javascript', 'css'],
+        },
+        themes: [myTheme, 'min-light'],
       },
       plugins: [
         // Generate the documentation.
@@ -44,16 +69,18 @@ export default defineConfig({
             label: 'TypeDoc',
           },
           typeDoc: {
+            formatWithPrettier: true,
+            prettierConfigFile: '../../.prettierrc',
+            disableSources: true,
             expandObjects: true,
             useCodeBlocks: true,
-            sort: ['documents-first'],
           },
           watch: false,
         }),
       ],
       components: {
-        Sidebar: './src/components/starlight/Sidebar.astro',
         Head: './src/components/starlight/Head.astro',
+        PageFrame: './src/components/starlight/PageFrame.astro',
       },
       sidebar: [
         {
@@ -67,24 +94,12 @@ export default defineConfig({
         {
           label: 'Theming',
           autogenerate: { directory: 'theming' },
+          collapsed: true,
         },
         typeDocSidebarGroup,
       ],
     }),
     svelte({ extensions: ['.svelte'], compilerOptions: { runes: true } }),
-    // compress({
-    //   JavaScript: {
-    //     terser: {
-    //       compress: true,
-    //       keep_classnames: true,
-    //       keep_fnames: true,
-    //     },
-    //   },
-    // }),
   ],
-  // vite: {
-  //   optimizeDeps: {
-  //     exclude: ['astro/virtual-modules/prefetch.js'],
-  //   },
-  // },
+  adapter: vercel(),
 })

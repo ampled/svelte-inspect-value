@@ -1,7 +1,7 @@
 {
   "name": "inspect-monorepo",
   "private": true,
-  "packageManager": "pnpm@10.30.3",
+  "packageManager": "pnpm@10.33.0",
   "version": "0.0.0",
   "repository": {
     "type": "git",
@@ -10,7 +10,9 @@
   "homepage": "https://inspect.eirik.space",
   "license": "MIT",
   "scripts": {
-    "dev": "pnpm --filter '*' dev",
+    "dev": "pnpm dev:docs && pnpm dev:sv",
+    "dev:sv": "pnpm --filter './packages/*' dev",
+    "dev:docs": "pnpm --filter './apps/*' dev",
     "build": "pnpm --filter '*' build",
     "preview": "pnpm --filter '*' preview",
     "format": "prettier --write .",
@@ -30,7 +32,7 @@
     "prettier-plugin-organize-imports": "^4.3.0",
     "prettier-plugin-svelte": "^3.5.1",
     "svelte-eslint-parser": "^1.6.0",
-    "typescript-eslint": "^8.58.0",
-    "typescript": "^6.0.0"
+    "typescript": "^6.0.0",
+    "typescript-eslint": "^8.58.0"
   }
 }
