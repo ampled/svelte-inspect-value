@@ -28,10 +28,10 @@
   <Wrapper class={['borderless']} style="max-width: 2em; min-width: 2em;">
     <div style="padding: 2px;">
       {#if !globalValues.has(key) && globalInspectState.mounted.size}
-        <NodeActionButton title="add to panel" onclick={setAsPanelValue}>+</NodeActionButton>
+        <NodeActionButton title="Add to panel" onclick={setAsPanelValue}>+</NodeActionButton>
       {/if}
       {#if globalValues.has(key)}
-        <NodeActionButton title="remove from panel" onclick={() => globalValues.delete(key)}
+        <NodeActionButton title="Remove from panel" onclick={() => globalValues.delete(key)}
           >-</NodeActionButton
         >
       {/if}
