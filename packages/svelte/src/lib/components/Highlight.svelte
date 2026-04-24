@@ -63,9 +63,13 @@
 {#if highlightMatches && query.length > 1 && chunks.some((c) => c.match)}
   <span aria-label={text} class={className} {...rest}>
     {#each chunks as chunk (chunk.start)}
-      <span aria-hidden="true" class={['can-match', chunk.match && 'highlight chunk']}>
+      <svelte:element
+        this={chunk.match ? 'mark' : 'span'}
+        aria-hidden="true"
+        class={['can-match', chunk.match && 'highlight chunk']}
+      >
         {chunk.text}
-      </span>
+      </svelte:element>
     {/each}
   </span>
 {:else}
