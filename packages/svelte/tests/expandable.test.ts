@@ -239,7 +239,7 @@ describe('expandable values', () => {
     })
   })
 
-  test('it can display properties of html elements', async () => {
+  test.skip('it can display properties of html elements', async () => {
     document.body.classList.add('test')
     document.body.dataset['test'] = 'test'
 

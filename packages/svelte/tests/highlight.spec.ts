@@ -21,7 +21,5 @@ describe('highlight', () => {
 
     expect(chunks).toHaveLength(1)
     expect(chunks[0].text).toBe(value)
-
-    // expect(chunks.some((chunk) => chunk.text === 'the' && chunk.match)).toBeTruthy()
   })
 })
