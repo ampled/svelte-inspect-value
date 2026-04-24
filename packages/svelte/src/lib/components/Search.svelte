@@ -40,7 +40,12 @@
     }
   }
 
-  async function search() {
+  export function searchWithQuery(queryText: string) {
+    query = queryText
+    search()
+  }
+
+  export function search() {
     if (query.length) {
       if (prevQuery === query && matchingPaths.length > 0 && matchingPaths.length > 0) {
         expandMatchingPaths()
@@ -67,7 +72,7 @@
     }
   }
 
-  async function onSearchKeyDown(
+  function onSearchKeyDown(
     event: KeyboardEvent & { currentTarget: EventTarget & HTMLInputElement }
   ) {
     if (event.key === 'Enter') {

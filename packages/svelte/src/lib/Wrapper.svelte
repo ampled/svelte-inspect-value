@@ -3,7 +3,7 @@
  Wrapper for different variants of Inspect
 -->
 <script lang="ts">
-  import { getContext, onDestroy, setContext, type Snippet } from 'svelte'
+  import { getContext, onDestroy, setContext, untrack, type Snippet } from 'svelte'
   import type { SvelteHTMLElements } from 'svelte/elements'
   import { scope } from './attachments/focus.js'
   import * as i from './components/icons/index.js'
@@ -134,6 +134,11 @@
       lastFocusedEle.focus()
       lastFocusedEle = null
     }
+  }
+
+  export function searchWithQuery(queryText: string) {
+    searchInput = queryText
+    searchEle?.search()
   }
 
   let hasExpandedTopLevel = $derived.by(() => {
@@ -286,10 +291,12 @@
 
   :global .svelte-inspect-value::selection {
     background-color: var(--_text-selection-background);
+    color: var(--_text-color);
   }
 
   :global .svelte-inspect-value ::selection {
     background-color: var(--_text-selection-background);
+    color: var(--_text-color);
   }
 
   .svelte-inspect-value:not(.noanimate) {

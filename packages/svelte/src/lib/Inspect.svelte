@@ -18,6 +18,7 @@
   }: InspectProps & SvelteHTMLElements['div'] = $props()
 
   let [optionsProps, restProps] = $derived(sortProps(props))
+  let wrapper = $state<Wrapper>()
 
   const globalOptions = getGlobalInspectOptions()
   let mergedOptions = $derived(
@@ -36,6 +37,10 @@
       ? Boolean(options.value.renderIf())
       : Boolean(options.value.renderIf)
   )
+
+  export function search(query: string) {
+    wrapper?.searchWithQuery(query)
+  }
 
   let keys = $derived.by(() => {
     if (values) {
@@ -71,6 +76,7 @@
   <CollapseStateProvider {onCollapseChange} {value} {values} {name} {keys}>
     <Wrapper
       data-testid="inspect"
+      bind:this={wrapper}
       class={[classValue, theme, noanimate && 'noanimate', borderless && 'borderless']}
       showExpandCollapse={values != null}
       onlog={log}

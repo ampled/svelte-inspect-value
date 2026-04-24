@@ -19,7 +19,7 @@
 
   let { data } = $props()
 
-  let { codeSamples } = data
+  let { codeSamples } = $derived(data)
 
   const toc = new SvelteMap<string, string>()
 

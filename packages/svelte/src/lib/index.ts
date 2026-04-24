@@ -25,7 +25,12 @@ import type { InspectProps, PanelProps } from './types.js'
  * <Inspect.Panel value={data} />
  * ```
  */
-export const Inspect = InspectBase as unknown as Component<InspectProps> & {
+export const Inspect = InspectBase as unknown as Component<
+  InspectProps,
+  {
+    search: (query: string) => void
+  }
+> & {
   /**
    * Another version of `Inspect` that will inspect any value passed to it instead of using the `value`-prop.
    *
@@ -91,6 +96,7 @@ export { addToPanel } from './global.svelte.js'
 export { inspectElement } from './attachments/inspect-element.js'
 export { default as InspectOptionsProvider } from './InspectOptionsProvider.svelte'
 export {
+  DEFAULT_OPTIONS,
   GLOBAL_OPTIONS_CONTEXT,
   setGlobalInspectOptions,
   type InspectOptions,
