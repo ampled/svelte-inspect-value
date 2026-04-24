@@ -3,9 +3,14 @@ title: Inspect.Panel
 description: How to use and configure Inspect.Panel
 sidebar:
   order: 2
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 2
+globalopts: true
 ---
 
 import PanelExample from '@examples/panel/PanelExample.svelte';
+import PlaygroundLink from '@components/PlaygroundLink.astro';
 
 `Inspect.Panel` is a fixed-position wrapper of `Inspect`.
 
@@ -25,7 +30,6 @@ you can add and remove values from the panel from those instances, using the too
 ## Example
 
 ```svelte
-<!-- App.svelte -->
 <script lang="ts">
   import Inspect, {addtoPanel} from 'svelte-inspect-value'
   import MyTodoApp from './TodoApp.svelte'
@@ -50,9 +54,12 @@ you can add and remove values from the panel from those instances, using the too
 <MyTodoApp bind:todos />
 ```
 
-<PanelExample client:load />
+### Result
 
-`Inspect.Panel` will also render any children passed to it, a nice place to put any extra debugging tools or information.
+<PanelExample client:load />
+<PlaygroundLink href="https://svelte.dev/playground/b63e4e92d8294fb5ad889037f8396fd4?version=5" />
+
+`Inspect.Panel` will also render any children passed to it, a convenient place to put any extra debugging tools or information of your own.
 
 ## Persisting State and Configuration
 

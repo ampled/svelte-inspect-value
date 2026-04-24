@@ -3,7 +3,6 @@
 
   import values from './values'
   import { globalOpts } from '@components/global-opts/globalopts.svelte'
-  import { slide } from 'svelte/transition'
 
   let props = $state<InspectProps>({
     noanimate: false,
@@ -40,7 +39,7 @@
     <input type="checkbox" bind:checked={props.noanimate} />
   </label>
 
-  <label transition:slide={{ axis: 'x' }}>
+  <label>
     Animation Rate
     <input min={0.25} step={0.25} type="number" bind:value={props.animRate} />
   </label>
@@ -50,7 +49,3 @@
     <input type="checkbox" bind:checked={props.flashOnUpdate} />
   </label>
 </div>
-
-<style>
-  @import './input.css';
-</style>

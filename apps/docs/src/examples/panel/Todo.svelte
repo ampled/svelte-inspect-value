@@ -5,6 +5,8 @@
   import { quintOut } from 'svelte/easing'
   import { crossfade } from 'svelte/transition'
 
+  let board: HTMLDivElement
+
   const [send, receive] = crossfade({
     fallback(node) {
       const style = getComputedStyle(node)
@@ -65,15 +67,13 @@
   )
 
   addToPanel('allTodos', () => todos, 'Added manually')
-</script>
 
-<Inspect
-  {...globalOpts}
-  values={{ msg: 'add to panel from here 👉', allTodos: todos }}
-  showLength={false}
-  name="all"
-  style="max-width: 420px"
-/>
+  function requestfullscreen(
+    event: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement }
+  ) {
+    board.requestFullscreen()
+  }
+</script>
 
 <Inspect.Panel
   {...globalOpts}
@@ -94,39 +94,66 @@
     Double-click the edge to reset size.
   </p>
 </Inspect.Panel>
-<div class="board">
-  <input
-    class="new-todo"
-    name="new-todo"
-    placeholder="what needs to be done?"
-    onkeydown={(event) => event.key === 'Enter' && add(event.target)}
+<div id="panel-example" bind:this={board}>
+  <button onclick={requestfullscreen}>fullscreen</button>
+  <div class="board">
+    <input
+      class="new-todo"
+      name="new-todo"
+      placeholder="what needs to be done?"
+      onkeydown={(event) => event.key === 'Enter' && add(event.target)}
+    />
+
+    <div class="left">
+      <h2>todo</h2>
+      {#each todos.filter((t) => !t.done) as todo (todo.id)}
+        <label in:receive={{ key: todo.id }} out:send={{ key: todo.id }} animate:flip>
+          <input name={todo.description} type="checkbox" bind:checked={todo.done} />
+          {todo.description}
+          <button onclick={() => remove(todo)}>x</button>
+          <button onclick={() => addToPanel(`todo.${todo.id}`, () => todo)}>i</button>
+        </label>
+      {/each}
+    </div>
+
+    <div class="right">
+      <h2>done</h2>
+      {#each todos.filter((t) => t.done) as todo (todo.id)}
+        <label in:receive={{ key: todo.id }} out:send={{ key: todo.id }} animate:flip>
+          <input name={todo.description} type="checkbox" bind:checked={todo.done} />
+          {todo.description}
+          <button onclick={() => remove(todo)}>x</button>
+        </label>
+      {/each}
+    </div>
+  </div>
+
+  <Inspect
+    {...globalOpts}
+    values={{ msg: 'add to panel from here 👉', allTodos: todos }}
+    showLength={false}
+    name="all"
+    style="max-width: 420px"
   />
-
-  <div class="left">
-    <h2>todo</h2>
-    {#each todos.filter((t) => !t.done) as todo (todo.id)}
-      <label in:receive={{ key: todo.id }} out:send={{ key: todo.id }} animate:flip>
-        <input name={todo.description} type="checkbox" bind:checked={todo.done} />
-        {todo.description}
-        <button onclick={() => remove(todo)}>x</button>
-        <button onclick={() => addToPanel(`todo.${todo.id}`, () => todo)}>i</button>
-      </label>
-    {/each}
-  </div>
-
-  <div class="right">
-    <h2>done</h2>
-    {#each todos.filter((t) => t.done) as todo (todo.id)}
-      <label in:receive={{ key: todo.id }} out:send={{ key: todo.id }} animate:flip>
-        <input name={todo.description} type="checkbox" bind:checked={todo.done} />
-        {todo.description}
-        <button onclick={() => remove(todo)}>x</button>
-      </label>
-    {/each}
-  </div>
 </div>
 
 <style>
+  #panel-example {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    gap: 1ch;
+    border-radius: 8px;
+    /* background-color: rgb(94, 84, 106); */
+    padding: 2ch;
+    width: 100%;
+    height: 800px;
+    overflow: hidden;
+    color: black;
+    font-size: 12px;
+    font-family: monospace;
+  }
+
   .new-todo {
     margin: 2em 0 1em 0;
     width: 100%;
@@ -135,6 +162,7 @@
 
   .board {
     margin: 0 3em;
+    background-color: rgb(94, 84, 106);
     max-width: 36em;
   }
 
@@ -144,6 +172,19 @@
     box-sizing: border-box;
     padding: 0 1em 0 0;
     width: 50%;
+
+    button {
+      float: right;
+      opacity: 0;
+      transition: opacity 0.2s;
+      box-sizing: border-box;
+      border: none;
+      background-color: transparent;
+      padding: 0 0.5em;
+      height: 1em;
+      color: rgb(170, 30, 30);
+      line-height: 1;
+    }
   }
 
   h2 {
@@ -172,19 +213,6 @@
 
   .right label {
     background-color: rgb(180, 240, 100);
-  }
-
-  button {
-    float: right;
-    opacity: 0;
-    transition: opacity 0.2s;
-    box-sizing: border-box;
-    border: none;
-    background-color: transparent;
-    padding: 0 0.5em;
-    height: 1em;
-    color: rgb(170, 30, 30);
-    line-height: 1;
   }
 
   label:hover button {

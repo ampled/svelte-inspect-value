@@ -39,8 +39,3 @@
     <input type="checkbox" bind:checked={props.showPreview} />
   </label>
 </div>
-
-<!-- svelte-ignore css_unused_selector -->
-<style>
-  @import './input.css';
-</style>

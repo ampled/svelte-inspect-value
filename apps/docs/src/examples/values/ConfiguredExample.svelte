@@ -14,13 +14,13 @@
 
   const InspectVals = Inspect.Values.withOptions(() => ({
     expandLevel: 0,
-    elementAttributes: { class: 'mt' },
+    elementAttributes: { class: 'not-content' },
   }))
 
   // elementAttributes will be to applied to outermost Inspect div
   const DarkInspect = Inspect.Values.withOptions(() => ({
     theme: 'dark',
-    elementAttributes: { style: 'max-width: 300px', class: 'mt' },
+    elementAttributes: { style: 'max-width: 300px', class: 'not-content' },
   }))
 
   // create another variation that will inherit from the previous one
@@ -40,5 +40,9 @@
   div {
     display: flex;
     flex-direction: column;
+    gap: 1rem;
+    border-radius: 8px;
+    background-color: #1e2c3e;
+    padding: 0.5rem;
   }
 </style>

@@ -10,9 +10,7 @@
   type Props = InspectProps &
     SvelteHTMLElements['div'] & { colors: Record<ThemeKeys, string>; panel: boolean; style: string }
 
-  let { panel, style, colors, ...props }: Props = $props()
-
-  // $inspect(props)
+  let { panel, style, colors, borderless, ...props }: Props = $props()
 
   class ClassName {}
 
@@ -135,7 +133,8 @@
   <div style:display={panel ? 'contents' : 'none'}>
     <Inspect.Panel
       theme=""
-      persist="siv.theming-panel"
+      persist={{ storage: 'session', key: 'siv.theming-panel' }}
+      align="full bottom"
       {customComponents}
       values={theming}
       showLength={true}
@@ -148,11 +147,14 @@
       style={style + 'position: absolute;'}
       open
       parseJson
+      {borderless}
+      wiggleOnUpdate={false}
     />
   </div>
 
   <div style:display={panel ? 'none' : 'contents'}>
     <Inspect
+      {...props}
       {customComponents}
       values={theming}
       showLength={true}
@@ -162,9 +164,9 @@
       {expandPaths}
       previewDepth={Infinity}
       previewEntries={10}
-      {...props}
       {style}
       parseJson
+      {borderless}
     />
   </div>
 </div>
@@ -176,9 +178,10 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    transition: background-color 300ms;
     border: 1px solid var(--sl-color-gray-3);
     border-radius: 8px;
-    background-color: #8b899c;
+    background-color: var(--preview-bg);
     padding: 0.5em;
     width: 100%;
     height: 850px;

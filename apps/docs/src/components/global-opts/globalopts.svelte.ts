@@ -1,7 +1,16 @@
 import { setContext } from 'svelte'
+import type { InspectOptions } from 'svelte-inspect-value'
 import _Inspect, { DEFAULT_OPTIONS, GLOBAL_OPTIONS_CONTEXT } from 'svelte-inspect-value'
 
 export const globalOpts = $state(DEFAULT_OPTIONS)
+
+export function setGlobalOpts(opts: Partial<InspectOptions>) {
+  Object.keys(DEFAULT_OPTIONS).forEach((k) => {
+    const key = k as unknown as keyof InspectOptions
+    //@ts-expect-error asdf
+    globalOpts[key] = opts[key]
+  })
+}
 
 export const Inspect = ((...args: any[]) => {
   if (typeof args[1] === 'object') {

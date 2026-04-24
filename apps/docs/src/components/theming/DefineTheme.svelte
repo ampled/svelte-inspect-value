@@ -5,8 +5,23 @@
 
   import { themes } from './themes.js'
   import Theming from './Theming.svelte'
+  import { onMount } from 'svelte'
+
+  let visible = $state(false)
+
+  onMount(() => {
+    let tim = setTimeout(() => {
+      visible = true
+    }, 600)
+
+    return () => {
+      clearTimeout(tim)
+    }
+  })
 
   let panel = $state(false)
+  let backgroundColor = $state('#808080')
+  let borderless = $state(false)
   let font = $state('monospace')
   let fontSize = $state(12)
   let fontSizePx = $derived(fontSize + 'px')
@@ -52,13 +67,36 @@
       {/each}
     </select>
   </label>
+
+  <label>
+    Background
+    <select bind:value={backgroundColor}>
+      <option value="#f2f2f2">bright</option>
+      <option value="#808080">neutral</option>
+      <option value="#111">dark</option>
+    </select>
+  </label>
   <label>
     Panel
     <input type="checkbox" bind:checked={panel} />
   </label>
+  <label>
+    Borderless
+    <input type="checkbox" bind:checked={borderless} />
+  </label>
 </div>
 
-<div class="colors-and-preview">
+<div style:opacity={visible ? '1' : '0'} class="colors-and-preview">
+  <Theming
+    --preview-bg={backgroundColor}
+    --indent="{indent}em"
+    --inspect-font={font}
+    --inspect-font-size={fontSizePx}
+    {borderless}
+    {panel}
+    {colors}
+    {style}
+  />
   <div class="colors not-content">
     {#each keys as key}
       <div class="dark-picker">
@@ -66,15 +104,6 @@
       </div>
     {/each}
   </div>
-
-  <Theming
-    --indent="{indent}em"
-    --inspect-font={font}
-    --inspect-font-size={fontSizePx}
-    {panel}
-    {colors}
-    {style}
-  />
 </div>
 
 <div class="controls">
@@ -232,6 +261,13 @@ Result:
         height: 32px;
       }
     }
+
+    label:has(input[type='checkbox']) {
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+    }
   }
 
   /* label {
@@ -244,6 +280,7 @@ Result:
     flex-direction: row;
     align-items: center;
     gap: 0.5rem;
+    transition: opacity 500ms;
   }
 
   .colors {

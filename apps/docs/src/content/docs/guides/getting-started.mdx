@@ -1,14 +1,14 @@
 ---
 title: Getting Started
 description: How to install and configure Svelte Inspect Value
-tableOfContents: false
 sidebar:
   order: 1
-# description: A reference page in my new Starlight docs site.
+globalopts: true
 ---
 
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 import GettingStarted from '@examples/GettingStarted.svelte';
+import PlaygroundLink from '@components/PlaygroundLink.astro';
 
 ## Install
 
@@ -35,14 +35,14 @@ yarn add svelte-inspect-value
 Importing `Inspect` from `svelte-inspect-value` makes three components available:
 
 - `Inspect`
-  - renders in the flow of your page
-  - inspects single values with the `value` prop, or child values of objects/arrays with the `values` prop 
-  - accepts any configuration prop
+  - Renders in the flow of your page
+  - Inspects single values with the `value` prop, or child values of objects/arrays with the `values` prop 
+  - Accepts any configuration prop
 - `Inspect.Values`
-  - very much like `Inspect`, except any prop passed to it will be inspected
-  - can be configured "inline"
+  - Very much like `Inspect`, except any prop passed to it will be inspected
+  - Can be configured "inline"
 - `Inspect.Panel`
-  - a fixed-position version of `Inspect` that can be resized, positioned and has a few more configuration options
+  - A fixed-position version of `Inspect` that can be resized, positioned and has a few more configuration options
 
 ```svelte
 <script>
@@ -70,3 +70,43 @@ Importing `Inspect` from `svelte-inspect-value` makes three components available
 ```
 
 <GettingStarted client:visible="svelte" />
+
+## Example Setup
+
+Here's a recommended setup for developing with SvelteKit:
+
+- Add `Inspect.Panel` to the root layout.
+- Provide InspectOptions. Set up conditional rendering using environment variables.
+- Inspect the [`page`](https://svelte.dev/docs/kit/$app-state#page) object with the Panel. Data from load functions will always be available.
+
+
+```svelte
+<!-- +layout.svelte -->
+<script lang="ts">
+  import Inspect, {InspectOptionsProvider, type InspectOptions} from 'svelte-inspect-value'
+  import { page } from '$app/state'
+  import { dev } from '$app/environment'
+
+  let { children } = $props()
+
+  let inspectOptions = $state<InspectOptions>({
+    renderIf: dev,
+    expandLevel: 0,
+    // other preferences
+  })
+</script>
+
+<InspectOptionsProvider options={inspectOptions}>
+  <Inspect.Panel values={{
+    // spread to access getters
+    page: { ...page },
+    // or just pass page data
+    pageData: page.data
+  }} />
+
+  <main>
+    {@render children()}
+  </main>
+</InspectOptionsProvider>
+```
+<PlaygroundLink href="https://stackblitz.com/edit/sveltejs-kit-template-default-lgqslsly?file=src%2Froutes%2F%2Blayout.svelte">Stackblitz Demo</PlaygroundLink>

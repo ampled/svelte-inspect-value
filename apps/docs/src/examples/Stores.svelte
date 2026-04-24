@@ -1,7 +1,12 @@
 <script lang="ts">
   import { Inspect } from '@components'
   import { onMount } from 'svelte'
+  import type { InspectOptions } from 'svelte-inspect-value'
   import { readable, writable } from 'svelte/store'
+  import { fromEvent, map, Observable, startWith } from 'rxjs'
+
+  let storesMode = $state<InspectOptions['stores']>('full')
+  let clicksObservable = $state<Observable<unknown>>()
 
   function customStore(initialValue = 0) {
     let interval: number | undefined
@@ -24,13 +29,10 @@
   }
 
   onMount(() => {
-    const st = writable(0)
-
-    let s = st.subscribe(() => {})
-
-    return () => {
-      s()
-    }
+    clicksObservable = fromEvent(document.body, 'click').pipe(
+      startWith(`0 clicks`),
+      map((_, i) => `${i} clicks`)
+    )
   })
 
   const stores = $derived({
@@ -44,4 +46,20 @@
   })
 </script>
 
-<Inspect class="not-content mt" values={stores} expandLevel={0} stores />
+<Inspect
+  class="not-content mt"
+  values={{ ...stores, clicksObservable: clicksObservable }}
+  expandLevel={0}
+  stores={storesMode}
+/>
+
+<div class="input-row">
+  <label>
+    stores mode
+    <select bind:value={storesMode}>
+      <option value={false}>off (false)</option>
+      <option>full</option>
+      <option>value-only</option>
+    </select>
+  </label>
+</div>

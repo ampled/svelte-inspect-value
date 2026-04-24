@@ -1,28 +1,17 @@
 ---
 title: Home
 tableOfContents: false
-#description: Get started building your docs site with Starlight.
-# template: splash # Remove or comment out this line to display the site sidebar on this page.
-# hero:
-#   tagline: Inspect Values
-#   image:
-#     file: ../../assets/sivastro.webp
-#   actions:
-#     - text: Example Guide
-#       link: /guides/example/
-#       icon: right-arrow
-#     - text: Read the Starlight docs
-#       link: https://starlight.astro.build
-#       icon: external
-#       variant: minimal
+banner:
+  content: New documentation! Please report any issues on GitHub.
+globalopts: true
 ---
 
 import PackageInfo from '@examples/PackageInfo.svelte';
 import Title from '@components/Title.astro';
 
-<PackageInfo client:load="svelte" />
-
 <Title /> is a collection of "JSON tree"-like value inspector components.
+
+<PackageInfo client:load="svelte" />
 
 The main purpose of the components is to be a developer utility. When developing apps it can be useful to have a "live" preview of state like API data, form values, the state of a promise and so on.
 

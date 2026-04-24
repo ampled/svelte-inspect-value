@@ -2,17 +2,16 @@
 editUrl: false
 next: false
 prev: false
-title: "addComponent"
+title: 'addComponent'
 ---
 
 ```ts
 function addComponent<TComponent>(
-   component, 
-   transformProps?, 
-predicate?): CustomComponentEntry<TComponent>;
+  component,
+  transformProps?,
+  predicate?
+): CustomComponentEntry<TComponent>
 ```
-
-Defined in: [util.ts:381](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/util.ts#L381)
 
 Helper-function for adding custom components with a props transform function.
 
@@ -22,7 +21,7 @@ The function ensures proper typing for the props parameter of the transform / pr
 
 ### TComponent
 
-`TComponent` *extends* `Component`\<`any`, \{
+`TComponent` _extends_ `Component`\<`any`, \{
 \}, `string`\> = `Component`\<`any`, \{
 \}, `string`\>
 

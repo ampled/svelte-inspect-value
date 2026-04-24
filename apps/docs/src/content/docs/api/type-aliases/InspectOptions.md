@@ -2,53 +2,47 @@
 editUrl: false
 next: false
 prev: false
-title: "InspectOptions"
+title: 'InspectOptions'
 ---
 
 ```ts
 type InspectOptions = {
-  showLength: boolean;
-  showTypes: boolean;
-  showPreview: boolean;
-  previewEntries: number;
-  previewDepth: number;
-  flashOnUpdate: boolean;
-  showTools: boolean;
-  stringCollapse: number;
-  customComponents: CustomComponents;
-  noanimate: boolean;
-  animRate: number;
-  easing: (t) => number;
-  borderless: boolean;
-  quotes: "single" | "double" | "none";
-  theme:   | "inspect" | "drak" | "stereo" | "dark" | "light" | "plain"
-     | string & {
-   };
-  expandAll: boolean;
-  expandLevel: number;
-  expandPaths: string[];
-  embedMedia: boolean;
-  elementView: "simple" | "full";
-  renderIf: unknown;
-  parseJson: boolean;
-  onCopy:   | ((value, type, path) => Promise<boolean | void> | boolean | void)
-     | undefined;
-  canCopy: ((value, type, path) => boolean) | undefined;
-  onLog: ((value, type, path) => void) | undefined;
-  onCollapseChange: ((state) => void) | undefined;
-  stores: boolean | "value-only" | "full";
-  search: boolean | "highlight" | "filter" | "filter-strict";
-  searchMode: "and" | "or";
-  highlightMatches: boolean;
-  heading: boolean | string | Snippet<[boolean]>;
-  hotkeys:   | Partial<InspectHotkeys>
-     | boolean;
-  disableKeynav: boolean;
-  typeToFocus: boolean;
-};
+  animRate: number
+  borderless: boolean
+  canCopy: ((value, type, path) => boolean) | undefined
+  customComponents: CustomComponents
+  disableKeynav: boolean
+  easing: (t) => number
+  elementView: 'simple' | 'full'
+  embedMedia: boolean
+  expandAll: boolean
+  expandLevel: number
+  expandPaths: string[]
+  flashOnUpdate: boolean
+  heading: boolean | string | Snippet<[boolean]>
+  highlightMatches: boolean
+  hotkeys: Partial<InspectHotkeys> | boolean
+  noanimate: boolean
+  onCollapseChange: ((state) => void) | undefined
+  onCopy: ((value, type, path) => Promise<boolean | void> | boolean | void) | undefined
+  onLog: ((value, type, path) => void) | undefined
+  parseJson: boolean
+  previewDepth: number
+  previewEntries: number
+  quotes: 'single' | 'double' | 'none'
+  renderIf: unknown
+  search: boolean | 'highlight' | 'filter' | 'filter-strict'
+  searchMode: 'and' | 'or'
+  showLength: boolean
+  showPreview: boolean
+  showTools: boolean
+  showTypes: boolean
+  stores: boolean | 'value-only' | 'full'
+  stringCollapse: number
+  theme: 'inspect' | 'drak' | 'stereo' | 'dark' | 'light' | 'plain' | (string & {})
+  typeToFocus: boolean
+}
 ```
-
-Defined in: [options.svelte.ts:79](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L79)
 
 Various options to configure the look and feel of components exported by `'svelte-inspect-value'`
 
@@ -60,229 +54,23 @@ Props will override any options using the provider methods.
 
 ```svelte
 <script>
- import Inspect, {InspectOptionsProvider} from 'svelte-inspect-value'
- import data from './data.js'
+  import Inspect, { InspectOptionsProvider } from 'svelte-inspect-value'
+  import data from './data.js'
 </script>
 
 <InspectOptionsProvider options={{ expandLevel: 3, theme: 'light' }}>
-  <Inspect value={data} expandLevel={20} /> <!-- override expandLevel -->
+  <Inspect value={data} expandLevel={20} />
+  <!-- override expandLevel -->
 </InspectOptionsProvider>
 ```
 
 ## Properties
 
-### showLength
-
-```ts
-showLength: boolean;
-```
-
-Defined in: [options.svelte.ts:85](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L85)
-
-Display length of arrays or strings and number of nested entries in objects / maps etc
-
-#### Default
-
-```ts
-true
-```
-
-***
-
-### showTypes
-
-```ts
-showTypes: boolean;
-```
-
-Defined in: [options.svelte.ts:92](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L92)
-
-Display type labels before values e.g. "string" / "number"
-Does not affect class / function / promise
-
-#### Default
-
-```ts
-true
-```
-
-***
-
-### showPreview
-
-```ts
-showPreview: boolean;
-```
-
-Defined in: [options.svelte.ts:98](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L98)
-
-Display preview of nested values
-
-#### Default
-
-```ts
-true
-```
-
-***
-
-### previewEntries
-
-```ts
-previewEntries: number;
-```
-
-Defined in: [options.svelte.ts:104](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L104)
-
-How many entries / items of arrays, objects, maps, sets etc. to preview
-
-#### Default
-
-```ts
-3
-```
-
-***
-
-### previewDepth
-
-```ts
-previewDepth: number;
-```
-
-Defined in: [options.svelte.ts:110](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L110)
-
-How many levels of nested values to preview before "collapsing" nested values to their type only
-
-#### Default
-
-```ts
-1
-```
-
-***
-
-### flashOnUpdate
-
-```ts
-flashOnUpdate: boolean;
-```
-
-Defined in: [options.svelte.ts:116](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L116)
-
-Indicate when a value or child value is updated
-
-#### Default
-
-```ts
-true
-```
-
-***
-
-### showTools
-
-```ts
-showTools: boolean;
-```
-
-Defined in: [options.svelte.ts:122](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L122)
-
-Enable or disable "tool-buttons" that appear on hovering a value.
-
-#### Default
-
-```ts
-true
-```
-
-***
-
-### stringCollapse
-
-```ts
-stringCollapse: number;
-```
-
-Defined in: [options.svelte.ts:128](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L128)
-
-Set a max display length for string values. `0` means display full string
-
-#### Default
-
-```ts
-0
-```
-
-***
-
-### customComponents
-
-```ts
-customComponents: CustomComponents;
-```
-
-Defined in: [options.svelte.ts:157](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L157)
-
-Custom components for displaying types.
-An object with type as keyname and array of component and optional
-prop modification function and predicate determining if custom component should be used.
-
-Use the helper function [`addComponent`](/api/functions/addcomponent/) to get properly typed props for the custom component.
-
-#### Example
-
-```svelte
-<script lang="ts">
- import Inspect, {addComponent} from 'svelte-inspect-value'
- import HexColorDisplay from './HexColorDisplay.svelte'
- import CustomBigIntDisplay from './CustomBigIntDisplay.svelte'
-</script>
-
-<Inspect customComponents={{
-   bigint: [CustomBigIntDisplay],
-   string: addComponent(
-     HexColorDisplay,
-     // transform props or pass extra props
-     (props) => props,
-     // revert to default string component if false
-     (props) => props.value.startsWith('#'))
-}} />
-```
-
-#### Default
-
-```ts
-{}
-```
-
-***
-
-### noanimate
-
-```ts
-noanimate: boolean;
-```
-
-Defined in: [options.svelte.ts:163](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L163)
-
-Disable all animations (both css and Svelte transitions)
-
-#### Default
-
-```ts
-false
-```
-
-***
-
 ### animRate
 
 ```ts
-animRate: number;
+animRate: number
 ```
-
-Defined in: [options.svelte.ts:173](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L173)
 
 Set transition / animation rates
 
@@ -296,15 +84,110 @@ The base duration for transitions is 250ms.
 1
 ```
 
-***
+---
+
+### borderless
+
+```ts
+borderless: boolean
+```
+
+Render no borders or background
+
+#### Default
+
+```ts
+false
+```
+
+---
+
+### canCopy
+
+```ts
+canCopy: ((value, type, path) => boolean) | undefined
+```
+
+Custom predicate that determines if copy-button should be displayed for a value
+
+#### Default
+
+```ts
+undefined
+```
+
+---
+
+### customComponents
+
+```ts
+customComponents: CustomComponents
+```
+
+Custom components for displaying types.
+An object with type as keyname and array of component and optional
+prop modification function and predicate determining if custom component should be used.
+
+Use the helper function [`addComponent`](/api/functions/addcomponent/) to get properly typed props for the custom component.
+
+#### Example
+
+```svelte
+<script lang="ts">
+  import Inspect, { addComponent } from 'svelte-inspect-value'
+  import HexColorDisplay from './HexColorDisplay.svelte'
+  import CustomBigIntDisplay from './CustomBigIntDisplay.svelte'
+</script>
+
+<Inspect
+  customComponents={{
+    bigint: [CustomBigIntDisplay],
+    string: addComponent(
+      HexColorDisplay,
+      // transform props or pass extra props
+      (props) => props,
+      // revert to default string component if false
+      (props) => props.value.startsWith('#')
+    ),
+  }}
+/>
+```
+
+#### Default
+
+```ts
+{
+}
+```
+
+---
+
+### disableKeynav
+
+```ts
+disableKeynav: boolean
+```
+
+Disables using arrow keys, home, end, enter and space to navigate or expand/collapse nodes when
+a node is focused.
+
+#### Default
+
+```ts
+false
+```
+
+#### Since
+
+0.11.0
+
+---
 
 ### easing
 
 ```ts
-easing: (t) => number;
+easing: (t) => number
 ```
-
-Defined in: [options.svelte.ts:179](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L179)
 
 Easing-function for expand/collapse transitions
 
@@ -321,166 +204,16 @@ Easing-function for expand/collapse transitions
 #### Default
 
 ```ts
-(t) => Math.pow(t - 1.0, 3.0) * (1.0 - t) + 1.0; // quartOut
+;(t) => Math.pow(t - 1.0, 3.0) * (1.0 - t) + 1.0 // quartOut
 ```
 
-***
-
-### borderless
-
-```ts
-borderless: boolean;
-```
-
-Defined in: [options.svelte.ts:185](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L185)
-
-Render no borders or background
-
-#### Default
-
-```ts
-false
-```
-
-***
-
-### quotes
-
-```ts
-quotes: "single" | "double" | "none";
-```
-
-Defined in: [options.svelte.ts:191](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L191)
-
-Display string values with double or single quotes
-
-#### Default
-
-```ts
-'single'
-```
-
-***
-
-### theme
-
-```ts
-theme: 
-  | "inspect" | "drak" | "stereo" | "dark" | "light" | "plain"
-  | string & {
-};
-```
-
-Defined in: [options.svelte.ts:199](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L199)
-
-Set color theme class
-
-Available themes: `'inspect'|'drak'|'stereo'|'dark'|'light'|'plain'
-
-#### Default
-
-```ts
-'inspect'
-```
-
-***
-
-### expandAll
-
-```ts
-expandAll: boolean;
-```
-
-Defined in: [options.svelte.ts:205](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L205)
-
-Expand all expandable nodes by default
-
-#### Default
-
-```ts
-false
-```
-
-***
-
-### expandLevel
-
-```ts
-expandLevel: number;
-```
-
-Defined in: [options.svelte.ts:211](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L211)
-
-Default expanded level
-
-#### Default
-
-```ts
-1
-```
-
-***
-
-### expandPaths
-
-```ts
-expandPaths: string[];
-```
-
-Defined in: [options.svelte.ts:232](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L232)
-
-Initially expanded paths
-
-#### Default
-
-```ts
-[]
-```
-
-#### Example
-
-```svelte
-<script>
- import Inspect from 'svelte-inspect-value'
-
- const value = {
-  a: { b: [{ c: '' }], d: 0 }
- }
-</script>
-
-<!-- default name of root expandable is "root" -->
-<Inspect {value} expandPaths={['root.a.b.0']} />
-<!-- if name is set -->
-<Inspect {value} name="obj" expandPaths={['obj.a.b.0']} />
-```
-
-***
-
-### embedMedia
-
-```ts
-embedMedia: boolean;
-```
-
-Defined in: [options.svelte.ts:238](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L238)
-
-Embed images or sounds if a string is a url or path ending with a valid image or sound file extension
-
-#### Default
-
-```ts
-false
-```
-
-***
+---
 
 ### elementView
 
 ```ts
-elementView: "simple" | "full";
+elementView: 'simple' | 'full'
 ```
-
-Defined in: [options.svelte.ts:247](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L247)
 
 Determines what properties are shown when inspecting HTML elements
 
@@ -493,40 +226,15 @@ Determines what properties are shown when inspecting HTML elements
 'simple'
 ```
 
-***
+---
 
-### renderIf
-
-```ts
-renderIf: unknown;
-```
-
-Defined in: [options.svelte.ts:258](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L258)
-
-Render condition for `Inspect`
-
-Function or value. `Inspect` will render if value or return-value is truthy.
-
-Most valuable if set with global options and there are multiple `Inspect` instances,
-otherwise using Svelte `{#if}{/if}` blocks is recommended.
-
-#### Default
+### embedMedia
 
 ```ts
-true
+embedMedia: boolean
 ```
 
-***
-
-### parseJson
-
-```ts
-parseJson: boolean;
-```
-
-Defined in: [options.svelte.ts:264](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L264)
-
-Try parsing strings that start with `'['` or `'{'` and display the parsed value
+Embed images or sounds if a string is a url or path ending with a valid image or sound file extension
 
 #### Default
 
@@ -534,17 +242,189 @@ Try parsing strings that start with `'['` or `'{'` and display the parsed value
 false
 ```
 
-***
+---
+
+### expandAll
+
+```ts
+expandAll: boolean
+```
+
+Expand all expandable nodes by default
+
+#### Default
+
+```ts
+false
+```
+
+---
+
+### expandLevel
+
+```ts
+expandLevel: number
+```
+
+Default expanded level
+
+#### Default
+
+```ts
+1
+```
+
+---
+
+### expandPaths
+
+```ts
+expandPaths: string[];
+```
+
+Initially expanded paths
+
+#### Default
+
+```ts
+;[]
+```
+
+#### Example
+
+```svelte
+<script>
+  import Inspect from 'svelte-inspect-value'
+
+  const value = {
+    a: { b: [{ c: '' }], d: 0 },
+  }
+</script>
+
+<!-- default name of root expandable is "root" -->
+<Inspect {value} expandPaths={['root.a.b.0']} />
+<!-- if name is set -->
+<Inspect {value} name="obj" expandPaths={['obj.a.b.0']} />
+```
+
+---
+
+### flashOnUpdate
+
+```ts
+flashOnUpdate: boolean
+```
+
+Indicate when a value or child value is updated
+
+#### Default
+
+```ts
+true
+```
+
+---
+
+### heading
+
+```ts
+heading: boolean | string | Snippet<[boolean]>
+```
+
+A `string` or `Snippet` that will be rendered as a small heading with a collapse-button for the component.
+
+The snippet parameter indicates if the instance has been collapsed
+
+---
+
+### highlightMatches
+
+```ts
+highlightMatches: boolean
+```
+
+When `search` is enabled, highlight matches in keys,
+types and values when typing in the search input box.
+
+#### See
+
+[InspectOptions.search](/api/type-aliases/inspectoptions/#search)
+
+#### Default
+
+```ts
+true
+```
+
+---
+
+### hotkeys
+
+```ts
+hotkeys:
+  | Partial<InspectHotkeys>
+  | boolean;
+```
+
+Configures hotkeys using [tinykeys](https://github.com/jamiebuilds/tinykeys) syntax.
+
+Use an object to override defaults, `true` to use defaults and `false` to disable hotkeys
+
+#### See
+
+[InspectHotkeys](/api/type-aliases/inspecthotkeys/)
+
+#### Default
+
+```ts
+{ search: 'Shift+$mod+F', expandTop: '$mod+ArrowRight', collapseTop: '$mod+ArrowLeft' }
+```
+
+#### Since
+
+0.11.0
+
+---
+
+### noanimate
+
+```ts
+noanimate: boolean
+```
+
+Disable all animations (both css and Svelte transitions)
+
+#### Default
+
+```ts
+false
+```
+
+---
+
+### onCollapseChange
+
+```ts
+onCollapseChange: ((state) => void) | undefined;
+```
+
+Called whenever a node is collapsed or expanded.
+
+#### Default
+
+```ts
+undefined
+```
+
+---
 
 ### onCopy
 
 ```ts
-onCopy: 
+onCopy:
   | ((value, type, path) => Promise<boolean | void> | boolean | void)
   | undefined;
 ```
-
-Defined in: [options.svelte.ts:276](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L276)
 
 Custom callback run when clicking copy tool-button.
 If this option is set without passing a function to `canCopy`, the
@@ -566,33 +446,13 @@ This overrides the default copy-button behavior.
 undefined
 ```
 
-***
-
-### canCopy
-
-```ts
-canCopy: ((value, type, path) => boolean) | undefined;
-```
-
-Defined in: [options.svelte.ts:288](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L288)
-
-Custom predicate that determines if copy-button should be displayed for a value
-
-#### Default
-
-```ts
-undefined
-```
-
-***
+---
 
 ### onLog
 
 ```ts
 onLog: ((value, type, path) => void) | undefined;
 ```
-
-Defined in: [options.svelte.ts:296](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L296)
 
 Custom callback run when clicking log tool-button.
 
@@ -604,57 +464,98 @@ This overrides the default log-button behavior.
 undefined
 ```
 
-***
+---
 
-### onCollapseChange
+### parseJson
 
 ```ts
-onCollapseChange: ((state) => void) | undefined;
+parseJson: boolean
 ```
 
-Defined in: [options.svelte.ts:302](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L302)
-
-Called whenever a node is collapsed or expanded.
+Try parsing strings that start with `'['` or `'{'` and display the parsed value
 
 #### Default
 
 ```ts
-undefined
+false
 ```
 
-***
+---
 
-### stores
+### previewDepth
 
 ```ts
-stores: boolean | "value-only" | "full";
+previewDepth: number
 ```
 
-Defined in: [options.svelte.ts:314](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L314)
-
-Enable or disable svelte-store inspection.
-Objects with a `subscribe` method will be inspected as stores and show their subscription value.
-
-Set to `true`, `'value-only'` or `'full'` to enable.
-
-- `'full' | true` - render store value as nested value along with other properties on the store object
-- `'value-only'` - render store value only along with a note indicating the value was retrieved from a store
+How many levels of nested values to preview before "collapsing" nested values to their type only
 
 #### Default
 
 ```ts
-'full'
+1
 ```
 
-***
+---
+
+### previewEntries
+
+```ts
+previewEntries: number
+```
+
+How many entries / items of arrays, objects, maps, sets etc. to preview
+
+#### Default
+
+```ts
+3
+```
+
+---
+
+### quotes
+
+```ts
+quotes: 'single' | 'double' | 'none'
+```
+
+Display string values with double or single quotes
+
+#### Default
+
+```ts
+'single'
+```
+
+---
+
+### renderIf
+
+```ts
+renderIf: unknown
+```
+
+Render condition for `Inspect`
+
+Function or value. `Inspect` will render if value or return-value is truthy.
+
+Most valuable if set with global options and there are multiple `Inspect` instances,
+otherwise using Svelte `{#if}{/if}` blocks is recommended.
+
+#### Default
+
+```ts
+true
+```
+
+---
 
 ### search
 
 ```ts
-search: boolean | "highlight" | "filter" | "filter-strict";
+search: boolean | 'highlight' | 'filter' | 'filter-strict'
 ```
-
-Defined in: [options.svelte.ts:326](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L326)
 
 Enable or disable search functionality.
 
@@ -670,15 +571,13 @@ Three modes are available:
 false
 ```
 
-***
+---
 
 ### searchMode
 
 ```ts
-searchMode: "and" | "or";
+searchMode: 'and' | 'or'
 ```
-
-Defined in: [options.svelte.ts:335](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L335)
 
 Initial multi-term search mode
 
@@ -691,22 +590,15 @@ Initial multi-term search mode
 'or'
 ```
 
-***
+---
 
-### highlightMatches
+### showLength
 
 ```ts
-highlightMatches: boolean;
+showLength: boolean
 ```
 
-Defined in: [options.svelte.ts:343](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L343)
-
-When `search` is enabled, highlight matches in keys,
-types and values when typing in the search input box.
-
-#### See
-
-[InspectOptions.search](/api/type-aliases/inspectoptions/#search)
+Display length of arrays or strings and number of nested entries in objects / maps etc
 
 #### Default
 
@@ -714,82 +606,121 @@ types and values when typing in the search input box.
 true
 ```
 
-***
+---
 
-### heading
-
-```ts
-heading: boolean | string | Snippet<[boolean]>;
-```
-
-Defined in: [options.svelte.ts:349](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L349)
-
-A `string` or `Snippet` that will be rendered as a small heading with a collapse-button for the component.
-
-The snippet parameter indicates if the instance has been collapsed
-
-***
-
-### hotkeys
+### showPreview
 
 ```ts
-hotkeys: 
-  | Partial<InspectHotkeys>
-  | boolean;
+showPreview: boolean
 ```
 
-Defined in: [options.svelte.ts:359](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L359)
-
-Configures hotkeys using [tinykeys](https://github.com/jamiebuilds/tinykeys) syntax.
-
-Use an object to override defaults, `true` to use defaults and `false` to disable hotkeys
-
-#### See
-
-[InspectHotkeys](/api/type-aliases/inspecthotkeys/)
+Display preview of nested values
 
 #### Default
 
 ```ts
-{ search: 'Shift+$mod+F', expandTop: '$mod+ArrowRight', collapseTop: '$mod+ArrowLeft' }
+true
 ```
 
-#### Since
+---
 
-0.11.0
-
-***
-
-### disableKeynav
+### showTools
 
 ```ts
-disableKeynav: boolean;
+showTools: boolean
 ```
 
-Defined in: [options.svelte.ts:367](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L367)
-
-Disables using arrow keys, home, end, enter and space to navigate or expand/collapse nodes when
-a node is focused.
+Enable or disable "tool-buttons" that appear on hovering a value.
 
 #### Default
 
 ```ts
-false
+true
 ```
 
-#### Since
+---
 
-0.11.0
+### showTypes
 
-***
+```ts
+showTypes: boolean
+```
+
+Display type labels before values e.g. "string" / "number"
+Does not affect class / function / promise
+
+#### Default
+
+```ts
+true
+```
+
+---
+
+### stores
+
+```ts
+stores: boolean | 'value-only' | 'full'
+```
+
+Enable or disable svelte-store inspection.
+Objects with a `subscribe` method will be inspected as stores and show their subscription value.
+
+Set to `true`, `'value-only'` or `'full'` to enable.
+
+- `'full' | true` - render store value as nested value along with other properties on the store object
+- `'value-only'` - render store value only along with a note indicating the value was retrieved from a store
+
+#### Default
+
+```ts
+'full'
+```
+
+---
+
+### stringCollapse
+
+```ts
+stringCollapse: number
+```
+
+Set a max display length for string values. `0` means display full string
+
+#### Default
+
+```ts
+0
+```
+
+---
+
+### theme
+
+```ts
+theme:
+  | "inspect" | "drak" | "stereo" | "dark" | "light" | "plain"
+  | string & {
+};
+```
+
+Set color theme class
+
+Available themes: `'inspect'|'drak'|'stereo'|'dark'|'light'|'plain'
+
+#### Default
+
+```ts
+'inspect'
+```
+
+---
 
 ### typeToFocus
 
 ```ts
-typeToFocus: boolean;
+typeToFocus: boolean
 ```
-
-Defined in: [options.svelte.ts:374](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/options.svelte.ts#L374)
 
 Enables typing to focus any node with matching text when any node is focused.
 

@@ -70,8 +70,6 @@
 {/key}
 
 <style>
-  @import './input.css';
-
   input {
     max-width: 4em;
   }

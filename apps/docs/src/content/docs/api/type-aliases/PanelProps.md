@@ -2,48 +2,50 @@
 editUrl: false
 next: false
 prev: false
-title: "PanelProps"
+title: 'PanelProps'
 ---
 
 ```ts
 type PanelProps = {
-  openOnHover?: boolean;
-  hideToolbar?: boolean;
-  hideGlobalValues?: boolean;
-  resize?: boolean;
-  children?: Snippet;
-  zIndex?: number;
-  wiggleOnUpdate?: boolean;
-  onOpenChange?: (open) => void;
-  onSettingsChange?: (settings, changed) => void;
-  persist?:   | boolean
-     | string
-     | PanelPersistProps;
-  persistSync?:   | boolean
-     | string
-     | Omit<PanelPersistProps, "syncTabs">;
+  children?: Snippet
+  hideGlobalValues?: boolean
+  hideToolbar?: boolean
+  onOpenChange?: (open) => void
+  onSettingsChange?: (settings, changed) => void
+  openOnHover?: boolean
+  persist?: boolean | string | PanelPersistProps
+  persistSync?: boolean | string | Omit<PanelPersistProps, 'syncTabs'>
+  resize?: boolean
+  wiggleOnUpdate?: boolean
+  zIndex?: number
 } & {
-  value?: unknown;
-  values?: unknown;
-  name?: string;
-} & Partial<PanelSettings> & Partial<InspectOptions> & SvelteHTMLElements["aside"];
+  name?: string
+  value?: unknown
+  values?: unknown
+} & Partial<PanelSettings> &
+  Partial<InspectOptions> &
+  SvelteHTMLElements['aside']
 ```
-
-Defined in: [types.ts:169](https://github.com/ampled/svelte-inspect-value/blob/a664368256ae28327133822f006affa7fd114308/packages/svelte/src/lib/types.ts#L169)
 
 Props for `Inspect.Panel`
 
 ## Type Declaration
 
-### openOnHover?
+### children?
 
 ```ts
-optional openOnHover?: boolean;
+optional children?: Snippet;
 ```
 
-Panel should open on hover.
+Extra elements to be added at the bottom of the panel
 
-Enabling this will leave part of the panel visible for easier reach.
+### hideGlobalValues?
+
+```ts
+optional hideGlobalValues?: boolean;
+```
+
+Don't display "global" values added with `addToPanel`
 
 #### Default
 
@@ -63,70 +65,6 @@ Don't render Panel toolbar with controls for setting position, opacity and appea
 
 ```ts
 false
-```
-
-### hideGlobalValues?
-
-```ts
-optional hideGlobalValues?: boolean;
-```
-
-Don't display "global" values added with `addToPanel`
-
-#### Default
-
-```ts
-false
-```
-
-### resize?
-
-```ts
-optional resize?: boolean;
-```
-
-Enable resizing
-
-#### Default
-
-```ts
-true
-```
-
-### children?
-
-```ts
-optional children?: Snippet;
-```
-
-Extra elements to be added at the bottom of the panel
-
-### zIndex?
-
-```ts
-optional zIndex?: number;
-```
-
-Z-index of panel
-
-#### Default
-
-```ts
-1000
-```
-
-### wiggleOnUpdate?
-
-```ts
-optional wiggleOnUpdate?: boolean;
-```
-
-When closed, wiggle the panel button when an inspected value is updated
-
-#### Default
-
-```ts
-true
 ```
 
 ### onOpenChange?
@@ -198,10 +136,26 @@ undefined
 
 [PanelSettings](/api/type-aliases/panelsettings/)
 
+### openOnHover?
+
+```ts
+optional openOnHover?: boolean;
+```
+
+Panel should open on hover.
+
+Enabling this will leave part of the panel visible for easier reach.
+
+#### Default
+
+```ts
+false
+```
+
 ### persist?
 
 ```ts
-optional persist?: 
+optional persist?:
   | boolean
   | string
   | PanelPersistProps;
@@ -215,6 +169,7 @@ When enabled, stored settings will take precedence over passed props.
 Pass a configuration object ([PanelPersistProps](/api/type-aliases/panelpersistprops/)), `true` or a string (storage key) to enable.
 
 Passing `true` will enable persistence and using these default options:
+
 ```typescript
 {
  storage: 'local',
@@ -222,6 +177,7 @@ Passing `true` will enable persistence and using these default options:
  syncTabs: false
 }
 ```
+
 Passing a string will use those defaults but use the passed string as the key
 
 #### Default
@@ -237,7 +193,7 @@ false
 ### persistSync?
 
 ```ts
-optional persistSync?: 
+optional persistSync?:
   | boolean
   | string
 | Omit<PanelPersistProps, "syncTabs">;
@@ -255,10 +211,66 @@ false
 
 #### See
 
- - PanelProps.persist
- - [PanelPersistProps.syncTabs](/api/type-aliases/panelpersistprops/#synctabs)
+- PanelProps.persist
+- [PanelPersistProps.syncTabs](/api/type-aliases/panelpersistprops/#synctabs)
+
+### resize?
+
+```ts
+optional resize?: boolean;
+```
+
+Enable resizing
+
+#### Default
+
+```ts
+true
+```
+
+### wiggleOnUpdate?
+
+```ts
+optional wiggleOnUpdate?: boolean;
+```
+
+When closed, wiggle the panel button when an inspected value is updated
+
+#### Default
+
+```ts
+true
+```
+
+### zIndex?
+
+```ts
+optional zIndex?: number;
+```
+
+Z-index of panel
+
+#### Default
+
+```ts
+1000
+```
 
 ## Type Declaration
+
+### name?
+
+```ts
+optional name?: string;
+```
+
+Name of inspected value. Will be displayed as the "key" of the value.
+
+Will not be used if `values` is set
+
+#### See
+
+[`InspectOptions.expandPaths`](/api/type-aliases/inspectoptions/#expandpaths)
 
 ### value?
 
@@ -283,21 +295,7 @@ Inspect every enumerable property of a value, object or array-like.
 
 Allows for multiple root-level nodes, unlike `value`.
 
-### name?
-
-```ts
-optional name?: string;
-```
-
-Name of inspected value. Will be displayed as the "key" of the value.
-
-Will not be used if `values` is set
-
-#### See
-
-[`InspectOptions.expandPaths`](/api/type-aliases/inspectoptions/#expandpaths)
-
 ## See
 
- - [InspectOptions](/api/type-aliases/inspectoptions/)
- - [PanelSettings](/api/type-aliases/panelsettings/)
+- [InspectOptions](/api/type-aliases/inspectoptions/)
+- [PanelSettings](/api/type-aliases/panelsettings/)

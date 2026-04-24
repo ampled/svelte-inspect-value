@@ -3,12 +3,12 @@ title: Custom Components
 description: How to use custom components with Svelte Inspect Value
 sidebar:
   order: 4
-  badge: Beta
 tableOfContents:
   minHeadingLevel: 2
   maxHeadingLevel: 2
 ---
-import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+import { Tabs, TabItem, Code, LinkButton } from '@astrojs/starlight/components';
+import PlaygroundLink from '@components/PlaygroundLink.astro';
 import Title from '@components/Title.astro';
 import { code } from '@examples/custom';
 import CustomExample from '@examples/custom/MinimalExample.svelte';
@@ -17,7 +17,9 @@ import AdvancedExample from '@examples/custom/AdvancedExample.svelte';
 
 <Title /> Custom components makes it possible to override how certain types are displayed.
 
+:::note
 The API for "single line values" is pretty usable while the API for expandable / nested values is unfinished.
+:::
 
 ## How to
 
@@ -61,14 +63,18 @@ Here's a minimal example that defines a custom component for `number` values. It
   </TabItem>
 </Tabs>
 
+
 ### Result
 
 <CustomExample client:load />
-[Svelte Playground](https://svelte.dev/playground/6b169fea1c924407a61476b716212d9a?version=5.55.1)
+<PlaygroundLink href="https://svelte.dev/playground/6b169fea1c924407a61476b716212d9a?version=5" />
+
+
+---
 
 ## Helper Function
 
-Using the helper function [`addComponent`](/api/functions/addcomponent/) will ensure proper typing for the custom components props when using props transform functions and "revert to default" predicates.
+When using TypeScript, the helper function [`addComponent`](/api/functions/addcomponent/) will ensure proper typing for the custom components props when using props transform functions and "revert to default" predicates.
 
 <Tabs>
   <TabItem label="App.svelte">
@@ -82,6 +88,7 @@ Using the helper function [`addComponent`](/api/functions/addcomponent/) will en
 ### Result
 
 <AdvancedExample client:visible />
+<PlaygroundLink href="https://svelte.dev/playground/e2e2e4df044c42c3a81ba86e60261a6c?version=5" />
 
 ## Error Handling
 

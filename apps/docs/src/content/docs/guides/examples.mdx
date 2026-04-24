@@ -3,6 +3,7 @@ title: Examples
 sidebar:
   order: 2
 description: Various examples of Svelte Inspect Value features
+globalopts: true
 ---
 
 import * as e from '@examples/index.js'
@@ -12,12 +13,14 @@ import OptionToggle from '@components/global-opts/OptionToggle.svelte'
 
 `Inspect` works well for basic object and array-values aka "JSON".
 
-Actual JSON strings can be parsed by setting the [`parseJson`](/api/type-aliases/inspectoptions/#parsejson) option.
-See it in action by toggling the option on and off:  <OptionToggle client:load="svelte" key="parseJson">parse json</OptionToggle>
+Actual JSON strings can be parsed by setting the [`parseJson`](/api/type-aliases/inspectoptions/#parsejson) option.<br/>
+See it in action by toggling the option on and off: <OptionToggle client:load="svelte" small={true} key="parseJson">parse json</OptionToggle>
 
-<e.BasicEditable client:load />
+<e.BasicEditable client:load="svelte" />
 
 ### Promises
+
+The state and eventual result of promises are displayed.
 
 ```svelte
 <script>
@@ -54,9 +57,9 @@ If the store does not return a valid
 <dfn title="function or object with unsubscribe-function">unsubscriber</dfn> or the subscribe-function
 throws an error the store will be displayed as a regular object using the default object-view.
 
-<e.Stores client:visible />
-
 This can be enabled / disabled with the [`stores`](/api/type-aliases/inspectoptions/#stores) option.
+
+<e.Stores client:visible />
 
 ### Classes
 
@@ -64,7 +67,13 @@ Display "static" properties of classes.
 
 <e.Classes client:visible />
 
-### HTML elements
+### Functions
+
+Function bodies are highlighted with [hljs](https://highlightjs.org/).
+
+<e.Functions client:visible />
+
+### HTML Elements
 
 <e.Elements client:visible />
 
@@ -143,6 +152,10 @@ If a URL-like string ends with an image or sound extension, `Inspect` will embed
 
 _Sprite and audio courtesy of pokeapi.co_
 
-### JS Built-ins
+### Other
+
+Other types with specialized views includes `Error`, `Date`, `RegExp`, `Map` and `Set`.
+
+Default behaviour for any value not recognized by the component is to find the constructor name and list any enumerable values.
 
 <e.BuiltIns client:visible />

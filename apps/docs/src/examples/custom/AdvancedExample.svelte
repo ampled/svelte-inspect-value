@@ -40,8 +40,3 @@
     <input type="checkbox" bind:checked={useDefault} />
   </label>
 </div>
-
-<!-- svelte-ignore css_unused_selector -->
-<style>
-  @import '../config/input.css';
-</style>

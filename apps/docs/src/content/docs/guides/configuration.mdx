@@ -3,11 +3,12 @@ title: Configuration
 description: How to configure Svelte Inspect Value
 sidebar:
   order: 3
+globalopts: true
 ---
 import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
 import * as e from '@examples/config'
 import expandPathsCode from '@examples/config/expandpaths.txt?raw';
-
+import renderIfCode from '@examples/config/renderif.txt?raw';
 import globaloptslayout from '@examples/config/globalopts1.txt?raw';
 import globaloptspage from '@examples/config/globalopts2.txt?raw';
 
@@ -16,23 +17,23 @@ The components of this library are very configurable, with over 30 different opt
 
 See the TypeDoc documentation for [`InspectOptions`](/api/type-aliases/inspectoptions/) for a full list of options.
 
-`Inspect` and `Inspect.Values` have the same options, but different ways to apply them. `Inspect.Panel` has the same options as the two others in addition to some additional options exclusive to the component.
+`Inspect` and `Inspect.Values` have the same options, but different ways to apply them.
 
-## How To
+`Inspect.Panel` has the same options as the two others in addition to some additional options exclusive to the component.
 
-### Global Options
+## Global Options
 
 All components can be configured by using the provider component or the function [`setGlobalInspectOptions`](/api/functions/setglobalinspectoptions/).
 
 This sets a Svelte [context](https://svelte.dev/docs/svelte/context), so per definition the configuration is not "global" unless you set it in a root component.
 
-### Props
+## Props
 
 `Inspect` and `Inspect.Panel` can have configuration passed as props.
 
 If a setting is set using the provider method, the prop value will be used.
 
-### Example
+## Example
 
 <Tabs>
   <TabItem label="+layout.svelte">
@@ -48,7 +49,20 @@ If a setting is set using the provider method, the prop value will be used.
 
 This section includes demonstrations of some of the settings available.
 
-Aside from `theme`, the global options in the navigation sidebar will not affect these examples.
+Aside from `theme` and `borderless`, the global options in the bottom right will not affect these examples.
+
+### Conditional Rendering
+
+A common use case for utility components like this is to only render them during development.
+
+Using [`renderIf`](/api/type-aliases/inspectoptions/#renderif) with a value or function that is or returns a truthy or falsy value, you can use environment flags or other means of toggling `Inspect` renderering on and off.
+
+When developing with SvelteKit, importing `dev` from `$app/environment` is simple.<br/> The package [`esm-env`](https://github.com/benmccann/esm-env) is a good alternative if not using SvelteKit.
+
+<Code code={renderIfCode} lang="svelte" />
+
+<e.RenderIf client:visible />
+
 
 ### Lengths, Types, Previews, Tools
 
@@ -73,18 +87,18 @@ The option [`previewDepth`](/api/type-aliases/inspectoptions/#previewdepth) cont
 
 <e.PreviewSettings client:visible />
 
-### Initial Expand Level / Expand Paths
+### Initial Expand Level / Paths
 
 The option [`expandLevel`](/api/type-aliases/inspectoptions/#expandlevel) sets initial level of expanded nested nodes.
 
 [`expandPaths`](/api/type-aliases/inspectoptions/#expandpaths) takes an array of strings in the form of dot-separated paths of nodes that should be expanded initially.
 
-<details>
-<summary>`expandPaths` example</summary>
+{/* <details>
+<summary>`expandPaths` example</summary> */}
 
 <Code code={expandPathsCode} lang="svelte" />
 
-</details>
+{/* </details> */}
 
 <e.ExpandLevel client:visible />
 
@@ -103,3 +117,4 @@ Animation can be disabled by setting [`noanimate`](/api/type-aliases/inspectopti
 [`flashOnUpdate`](/api/type-aliases/inspectoptions/#flashonupdate) enables / disables expand buttons and list bullets flashing when values are updated.
 
 <e.Animation client:visible />
+

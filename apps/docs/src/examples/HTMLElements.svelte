@@ -34,6 +34,12 @@
       <li>{i}</li>
     {/each}
   </ul>
+
+  <ul class="horiz">
+    {#each { length: 100 }, i (i)}
+      <li>{i}</li>
+    {/each}
+  </ul>
 </div>
 
 <Inspect
@@ -44,23 +50,26 @@
   elementView={group}
 />
 
-<fieldset class="not-content">
-  <legend>Element View</legend>
-  <label>
-    <input type="radio" bind:group value="simple" />
-    <span>simple</span>
-  </label>
-  <label>
-    <input type="radio" bind:group value="full" />
-    <span>full</span>
-  </label>
-</fieldset>
+<div class="input-row">
+  <fieldset class="not-content">
+    <legend>Element View</legend>
+    <label>
+      <input type="radio" bind:group value="simple" />
+      <span>simple</span>
+    </label>
+    <label>
+      <input type="radio" bind:group value="full" />
+      <span>full</span>
+    </label>
+  </fieldset>
+</div>
 
 <style>
   fieldset {
     display: flex;
     gap: 1em;
     width: fit-content;
+    font-family: var(--sl-font-sans);
 
     label {
       display: inline-flex;
@@ -75,10 +84,13 @@
     justify-content: flex-start;
     align-items: flex-start;
     transition: all 0.2s ease-in-out;
+    margin-inline: auto;
     background-color: cadetblue;
     padding: 0.5rem;
     height: 150px;
     overflow: auto;
+    font-family: monospace;
+    text-wrap: nowrap;
 
     input {
       max-width: 50%;
@@ -102,6 +114,14 @@
     &.radius {
       border-radius: 16px;
       color: black;
+    }
+  }
+
+  .horiz {
+    li {
+      display: inline;
+      margin-left: 2ch;
+      list-style-type: none;
     }
   }
 </style>

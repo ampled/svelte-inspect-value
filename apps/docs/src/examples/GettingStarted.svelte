@@ -44,10 +44,10 @@
 
   #panel-hint {
     position: absolute;
-    top: 1em;
+    top: 0.5em;
     right: 2em;
-    padding: 0;
-    padding-right: 1em;
+    padding-inline: 0.25em;
+    padding-block: 0.25em;
   }
 
   code {

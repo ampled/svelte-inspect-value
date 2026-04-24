@@ -1,0 +1,23 @@
+---
+import { LinkButton } from '@astrojs/starlight/components'
+import type { ComponentProps } from 'astro/types'
+
+interface Props extends ComponentProps<typeof LinkButton> {}
+
+const props = Astro.props
+const slots = Astro.slots
+---
+
+<div
+  class="not-content"
+  style="margin-top: 0; display: flex; width: 100%; justify-content: flex-end;"
+>
+  <LinkButton
+    icon="external"
+    style="margin: 0; font-family: var(--sl-font-sans);"
+    variant="minimal"
+    href={props.href}
+  >
+    {Astro.slots.has('default') ? <slot /> : 'Svelte Playground'}
+  </LinkButton>
+</div>

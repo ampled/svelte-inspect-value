@@ -3,9 +3,15 @@ title: Inspect.Values
 description: How to use and configure Inspect.Values
 sidebar:
   order: 2
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 2
+globalopts: false
 ---
 import ValuesExampleMinimal from '@examples/values/MinimalExampleValues.svelte';
 import ConfiguredExample from '@examples/values/ConfiguredExample.svelte';
+import PlaygroundLink from '@components/PlaygroundLink.astro';
+
 
 `Inspect.Values` is a version of `Inspect` that will display any prop/value passed to it.
 
@@ -25,8 +31,10 @@ import ConfiguredExample from '@examples/values/ConfiguredExample.svelte';
 <Inspect.Values {number} {isEven} {doubled}  />
 ```
 
-<ValuesExampleMinimal client:load />
 
+### Result
+
+<ValuesExampleMinimal client:load />
 
 ## Configuring
 
@@ -66,7 +74,10 @@ or the [`configured`](/api/functions/configured/)-function. Both are identical.
 <DarkBorderless.Expand1 msg="i inherit options from DarkInspect" {...data} />
 ```
 
+### Result
+
 <ConfiguredExample client:load="svelte" />
+<PlaygroundLink href="https://svelte.dev/playground/93f168dacc4c4697993d6a2f0c280a08?version=5" />
 
 ## Inline configuration
 

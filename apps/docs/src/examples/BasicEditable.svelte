@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Inspect } from '@components'
-  import Editor from '@components/editor'
+  import Editor from '@components/editor/CodeEditor.svelte'
 
   const original = `{ // edit me!
   id: undefined,
@@ -23,7 +23,7 @@
   function reset() {
     sourceValue = original
     value = evaluate(sourceValue)
-    editor?.editor()?.setValue(original)
+    editor?.setValue(original)
   }
 
   let error = $state<string>()
@@ -49,7 +49,7 @@
 </script>
 
 <div class="editor">
-  <button class="reset-button" onclick={() => reset()} style="float: right;">Reset</button>
+  <button class="reset-button" onclick={() => reset()} style="float: right;">reset</button>
 
   <Editor
     bind:this={editor}
@@ -68,8 +68,9 @@
 
   .reset-button {
     position: absolute;
-    top: 0.5em;
     right: 0.5em;
+    bottom: 0.5em;
     z-index: 10;
+    font-family: monospace;
   }
 </style>
