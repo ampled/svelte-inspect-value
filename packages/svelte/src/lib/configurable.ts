@@ -1,7 +1,3 @@
-/** @import type {TestType} from "./options.svelte.js" */
-/** @import * as opts from "./options.svelte.ts" */
-/** @import * as _opts from "./options.svelte" */
-
 import { setContext, type Component } from 'svelte'
 import ValuesBase from './InspectValues.svelte'
 import * as options from './options.svelte.js'

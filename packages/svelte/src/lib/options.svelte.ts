@@ -226,7 +226,7 @@ export type InspectOptions = {
    * <!-- default name of root expandable is "root" -->
    * <Inspect {value} expandPaths={['root.a.b.0']} />
    * <!-- if name is set -->
-   * <Inspect {value} name="obj" expandPaths={['obj.a.b.0']}
+   * <Inspect {value} name="obj" expandPaths={['obj.a.b.0']} />
    * ```
    */
   expandPaths: string[]
@@ -356,7 +356,7 @@ export type InspectOptions = {
    * @default { search: 'Shift+$mod+F', expandTop: '$mod+ArrowRight', collapseTop: '$mod+ArrowLeft' }
    * @since 0.11.0
    */
-  hotkeys: Partial<InspectHotkeys> | false | true
+  hotkeys: Partial<InspectHotkeys> | boolean
   /**
    * Disables using arrow keys, home, end, enter and space to navigate or expand/collapse nodes when
    * a node is focused.

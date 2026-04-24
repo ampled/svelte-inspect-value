@@ -15,20 +15,20 @@ export type BaseProps = {
    *
    * Will not be inspected if {@linkcode BaseProps.values} is used
    *
-   * If value is `undefined` or `null` without {@linkcode BaseProps.name} being set,
+   * If value is `undefined` or `null` without `name` being set,
    * the value will not be inspected
    */
   value?: unknown
   /**
    * Inspect every enumerable property of a value, object or array-like.
    *
-   * Allows for multiple root-level nodes, unlike {@linkcode BaseProps.value}.
+   * Allows for multiple root-level nodes, unlike `value`.
    */
   values?: unknown
   /**
    * Name of inspected value. Will be displayed as the "key" of the value.
    *
-   * Will not be used if {@linkcode BaseProps.values} is set
+   * Will not be used if `values` is set
    *
    * @see {@linkcode InspectOptions.expandPaths}
    */
@@ -164,6 +164,7 @@ export type PanelSettings = {
  * Props for `Inspect.Panel`
  *
  * @see {@link InspectOptions}
+ * @see {@link PanelSettings}
  */
 export type PanelProps = {
   /**
@@ -345,33 +346,51 @@ export type InspectValuesOptions = () => Partial<InspectOptions> & {
   elementAttributes?: SvelteHTMLElements['div']
 }
 
+/**
+ * @hidden
+ */
 export type CustomComponentPropsTransformFn<TComponent extends Component<any>> = (
   props: ComponentProps<TComponent>
 ) => Partial<ComponentProps<TComponent>>
 
 /**
  * Function returning boolean value. If false, use default component.
+ * @hidden
  */
 export type CustomComponentPredicate<TComponent extends Component<any>> = (
   props: ComponentProps<TComponent>
 ) => boolean
 
+/**
+ * @hidden
+ */
 export type CustomEntryComponentOnly<TComponent extends Component<any>> = [TComponent]
+/**
+ * @hidden
+ */
 export type CustomEntryWithTransform<TComponent extends Component<any>> = [
   TComponent,
   CustomComponentPropsTransformFn<TComponent>,
 ]
+/**
+ * @hidden
+ */
 export type CustomEntryWithPredicate<TComponent extends Component<any>> = [
   TComponent,
   CustomComponentPropsTransformFn<TComponent> | undefined,
   CustomComponentPredicate<TComponent>,
 ]
-
+/**
+ * @hidden
+ */
 export type CustomComponentEntry<TComponent extends Component<any> = Component<any>> =
   | CustomEntryComponentOnly<TComponent>
   | CustomEntryWithTransform<TComponent>
   | CustomEntryWithPredicate<TComponent>
 
+/**
+ * @hidden
+ */
 export type CustomComponents = Record<string, CustomComponentEntry>
 
 export class InspectError extends Error {
@@ -380,7 +399,7 @@ export class InspectError extends Error {
     return this.errorValue
   }
 
-  name = 'InspectError'
+  override name = 'InspectError'
 
   constructor(message: string, value?: unknown, options?: ErrorOptions) {
     super(message, options)

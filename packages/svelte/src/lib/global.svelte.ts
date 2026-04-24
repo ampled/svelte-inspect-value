@@ -33,7 +33,7 @@ export function removeFromPanel(name: PropertyKey) {
  * If called after component initialization (i.e. on click) the returned remove-function should be called when the component is destroyed.
  * If not, value will lose reactivity and may cause weird side-effects or throw errors.
  *
- * Can also safely be run inside an $effect that will re-add the value if removed and it changes.
+ * Can also safely be run inside an `$effect` that will re-add the value if removed and it changes.
  *
  * @example
  * ```svelte
