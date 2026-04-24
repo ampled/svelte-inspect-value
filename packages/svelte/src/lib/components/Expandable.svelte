@@ -90,16 +90,6 @@
     }
   }
 
-  function toggleCollapse() {
-    setCollapse(!collapsed)
-  }
-
-  function ondblclick(event: MouseEvent & { currentTarget: EventTarget | HTMLDivElement }) {
-    if (expandingDisabled) return
-    event.preventDefault()
-    toggleCollapse()
-  }
-
   let shouldRenderChildren = $derived.by(() => {
     if (match && type !== 'string' && type !== 'function') {
       return length != null && length > 0 && !previewLevel
@@ -114,7 +104,6 @@
 </script>
 
 <div
-  {ondblclick}
   data-testid="expandable"
   class={['line', previewLevel && 'preview', !showKey && 'nokey', match && 'match']}
   aria-expanded={!collapsed}
