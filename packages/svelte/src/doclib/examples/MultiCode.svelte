@@ -8,6 +8,7 @@
 
   let { examples }: Props = $props()
 
+  // svelte-ignore state_referenced_locally
   let currentLabel = $state(examples[0].label)
   let currentExample = $derived(examples.find((ex) => ex.label === currentLabel))
 
