@@ -13,6 +13,7 @@
 
   let { value, key = undefined, path, children, ...rest }: Props = $props()
 
+  // svelte-ignore state_referenced_locally TODO
   let element = htmlState(value)
   let current = $state({
     scrollLeft: 0,
