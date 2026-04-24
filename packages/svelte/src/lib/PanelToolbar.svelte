@@ -35,7 +35,7 @@
 
 <div class={['toolbar', yPos]}>
   <div class="group">
-    <NodeIconButton title="toggle full" onclick={() => (fullScreen = !fullScreen)}>
+    <NodeIconButton title="Toggle full view" onclick={() => (fullScreen = !fullScreen)}>
       {#if fullScreen}
         <icons.FullscreenExit />
       {:else}
@@ -43,7 +43,7 @@
       {/if}
     </NodeIconButton>
     {#if !fullScreen}
-      <NodeIconButton title="toggle opacity" onclick={toggleOpacity}>
+      <NodeIconButton title="Toggle opacity" onclick={toggleOpacity}>
         {#if opacity}
           <icons.Opacity />
         {:else}
@@ -52,7 +52,7 @@
       </NodeIconButton>
     {/if}
     {#if showResetButton}
-      <NodeIconButton title="reset size" onclick={onReset}>
+      <NodeIconButton title="Reset size" onclick={onReset}>
         <icons.ResetResize />
       </NodeIconButton>
     {/if}

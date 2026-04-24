@@ -141,7 +141,7 @@
   }
 
   let expandSelfAndChildrenAction: CollapseAction = {
-    hint: 'expand node and children',
+    hint: 'Expand node and children',
     action: async () => {
       inspectState.setCollapse(stringifiedPath, { collapsed: false })
       expandAction.action()
@@ -169,7 +169,7 @@
       if (globalValues.has(stringifiedPath)) {
         return {
           add: false,
-          hint: 'remove from panel',
+          hint: 'Remove from panel',
           action: () => {
             globalValues.delete(stringifiedPath)
           },
@@ -177,7 +177,7 @@
       } else if (!fixed) {
         return {
           add: true,
-          hint: 'add to panel',
+          hint: 'Add to panel',
           action: () => {
             globalValues.set(stringifiedPath, {
               get value() {
@@ -222,7 +222,7 @@
         aria-label={treeAction.hint}
         onclick={treeAction.action}
       >
-        <icons.ExpandCollapse expand={treeAction.expand} setting={settingCollapse} />
+        <icons.ExpandCollapse expand={treeAction?.expand} setting={settingCollapse} />
       </NodeIconButton>
     {/if}
     <NodeIconButton
