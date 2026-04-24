@@ -13,7 +13,7 @@
     flashing = true
     window.setTimeout(() => {
       flashing = false
-    }, options.transitionDuration)
+    }, options.flashDuration)
   }
 </script>
 
