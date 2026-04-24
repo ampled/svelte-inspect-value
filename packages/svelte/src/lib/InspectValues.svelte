@@ -49,7 +49,7 @@
 
   let { theme, noanimate, borderless, onCollapseChange, onLog, heading } = $derived(options.value)
   let { elementAttributes = {} } = $derived(withOptions)
-  let { class: classValue } = $derived(elementAttributes)
+  let { class: classValue, ...attrs } = $derived(elementAttributes)
 
   let shouldRender = $derived(
     typeof options.value.renderIf === 'function'
@@ -76,7 +76,7 @@
       showExpandCollapse
       onlog={log}
       {heading}
-      {...elementAttributes}
+      {...attrs}
       {...attachments}
     >
       {#if valueKeys.length}
