@@ -61,7 +61,7 @@
   --sl-color-white: #fafafa;
   --sl-color-gray-1: #e9eef4;
   --sl-color-gray-2: #d6dde5;
-  --sl-color-gray-3: #707f94;
+  --sl-color-gray-3: #bcc2ca;
   --sl-color-gray-4: #4f5966;
   --sl-color-gray-5: #303945;
   --sl-color-gray-6: #1e2c3e;
@@ -339,5 +339,12 @@ table {
     width: 1em;
     height: 1em;
     content: '';
+  }
+}
+
+ul ul ul {
+  font-family: monospace !important;
+  li a {
+    font-size: 14px !important;
   }
 }
