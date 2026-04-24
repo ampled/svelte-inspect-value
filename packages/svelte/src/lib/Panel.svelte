@@ -198,7 +198,7 @@
   )
 
   let shouldRender = $derived(renderIfValue && (persist ? BROWSER : true))
-  let wrapperClasses = $derived<ClassValue>([theme, borderless && 'borderless', className])
+  let wrapperClasses = $derived<ClassValue>([theme, borderless && 'borderless'])
 
   $effect(() => {
     globalValues.keys()
@@ -293,6 +293,7 @@
       shouldBeOpen && 'open',
       openOnHover && 'hoverable',
       resizing && 'resizing',
+      className,
     ]}
     transition:fade={{ duration: options.transitionDuration }}
     {...restProps}
