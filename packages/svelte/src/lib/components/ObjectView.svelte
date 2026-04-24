@@ -12,7 +12,7 @@
   let { value, key = undefined, type, path, ...rest }: Props = $props()
 
   let namedConstructor = $derived(
-    value?.constructor.name !== 'Object' ? value?.constructor.name : false
+    value?.constructor?.name !== 'Object' ? value?.constructor?.name : false
   )
 
   let objectType = $derived(namedConstructor ? (namedConstructor as ValueType) : type)
