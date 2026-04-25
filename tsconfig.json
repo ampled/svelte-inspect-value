@@ -1,0 +1,11 @@
+{
+  "exclude": ["./node_modules"],
+  "include": [""],
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "target": "esnext",
+    "moduleResolution": "bundler",
+    "module": "esnext",
+    "lib": ["ES2015", "DOM", "DOM.Iterable"]
+  }
+}
