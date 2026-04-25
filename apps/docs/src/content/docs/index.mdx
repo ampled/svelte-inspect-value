@@ -1,0 +1,29 @@
+---
+title: Home
+tableOfContents: false
+banner:
+  content: New documentation! Please report any issues on GitHub.
+globalopts: true
+---
+
+import PackageInfo from '@examples/PackageInfo.svelte';
+import Title from '@components/Title.astro';
+
+<Title /> is a collection of "JSON tree"-like value inspector components.
+
+<PackageInfo client:load="svelte" />
+
+The main purpose of the components is to be a developer utility. When developing apps it can be useful to have a "live" preview of state like API data, form values, the state of a promise and so on.
+
+## Features
+
+The [examples page](/guides/examples) is the quickest way to get an overview of what this component can do, but here is a list of its key features:
+
+- Display arrays & objects in a tree-like view
+- Support for most JavaScript built-ins, including `Set`, `Map`, `Date`, `URL`, `Promise` etc.
+- Inspect current values of svelte stores or Observables
+- Syntax highlighting for functions and html elements (outer selector) using [hljs](https://highlightjs.org/)
+- Embed media if string ends with image / audio extension (optional)
+- Customizable colors
+- Configurable with global options utility as alternative to passing props
+- Fixed position [panel component](/reference/panel/)

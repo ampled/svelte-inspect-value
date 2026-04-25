@@ -1,0 +1,44 @@
+---
+
+---
+
+<span
+  aria-label="Svelte Inspect Value"
+  class="lib-title"
+  transition:name="lib-title"
+  transition:animate="fade"
+>
+  Svelte
+  <span class="mono"
+    >&lt;<span class="inspect">Inspect</span>
+    {'{'}<span class="value">value</span>{'}'} /&gt;
+  </span>
+</span>
+
+<style>
+  .lib-title {
+    color: var(--siv-black) !important;
+    font-weight: bold;
+    font-size: 1.2rem;
+    font-family: 'EB Garamond', serif;
+    text-wrap: nowrap;
+
+    .mono {
+      background: transparent;
+      padding-inline: 0.2rem;
+      font-weight: normal;
+      font-size: 0.85rem;
+      font-family: monospace;
+
+      .inspect {
+        color: var(--siv-red) !important;
+        font-weight: bold;
+      }
+
+      .value {
+        color: var(--siv-blue) !important;
+        font-weight: normal;
+      }
+    }
+  }
+</style>

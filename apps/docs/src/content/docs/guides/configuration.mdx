@@ -1,0 +1,120 @@
+---
+title: Configuration
+description: How to configure Svelte Inspect Value
+sidebar:
+  order: 3
+globalopts: true
+---
+import { Tabs, TabItem, Code } from '@astrojs/starlight/components';
+import * as e from '@examples/config'
+import expandPathsCode from '@examples/config/expandpaths.txt?raw';
+import renderIfCode from '@examples/config/renderif.txt?raw';
+import globaloptslayout from '@examples/config/globalopts1.txt?raw';
+import globaloptspage from '@examples/config/globalopts2.txt?raw';
+
+
+The components of this library are very configurable, with over 30 different options.
+
+See the TypeDoc documentation for [`InspectOptions`](/api/type-aliases/inspectoptions/) for a full list of options.
+
+`Inspect` and `Inspect.Values` have the same options, but different ways to apply them.
+
+`Inspect.Panel` has the same options as the two others in addition to some additional options exclusive to the component.
+
+## Global Options
+
+All components can be configured by using the provider component or the function [`setGlobalInspectOptions`](/api/functions/setglobalinspectoptions/).
+
+This sets a Svelte [context](https://svelte.dev/docs/svelte/context), so per definition the configuration is not "global" unless you set it in a root component.
+
+## Props
+
+`Inspect` and `Inspect.Panel` can have configuration passed as props.
+
+If a setting is set using the provider method, the prop value will be used.
+
+## Example
+
+<Tabs>
+  <TabItem label="+layout.svelte">
+    <Code lang="svelte" code={globaloptslayout} />
+  </TabItem>
+  <TabItem label="+page.svelte">
+    <Code lang="svelte" code={globaloptspage} />
+  </TabItem>
+</Tabs>
+
+---
+## Options Overview
+
+This section includes demonstrations of some of the settings available.
+
+Aside from `theme` and `borderless`, the global options in the bottom right will not affect these examples.
+
+### Conditional Rendering
+
+A common use case for utility components like this is to only render them during development.
+
+Using [`renderIf`](/api/type-aliases/inspectoptions/#renderif) with a value or function that is or returns a truthy or falsy value, you can use environment flags or other means of toggling `Inspect` renderering on and off.
+
+When developing with SvelteKit, importing `dev` from `$app/environment` is simple.<br/> The package [`esm-env`](https://github.com/benmccann/esm-env) is a good alternative if not using SvelteKit.
+
+<Code code={renderIfCode} lang="svelte" />
+
+<e.RenderIf client:visible />
+
+
+### Lengths, Types, Previews, Tools
+
+- [`showLength`](/api/type-aliases/inspectoptions/#showlength) — visibility of array / string length, number of entries in map/set/object
+- [`showTypes`](/api/type-aliases/inspectoptions/#showtypes) — visibility of type display before value.
+- [`showTools`](/api/type-aliases/inspectoptions/#showtools) — visibility of tool buttons when a row is hovered / focused
+- [`showPreview`](/api/type-aliases/inspectoptions/#showpreview) — visibility of nested value previews
+
+<e.Visibility client:visible />
+
+:::note
+Not all types are hidden if `showTypes` is set to `false`.
+
+These include `class`, `function` and `Promise`.
+:::
+
+### Preview Settings
+
+The option [`previewDepth`](/api/type-aliases/inspectoptions/#previewdepth) controls how many levels of nested values will be previewed before stopping and just showing what type of value is at that level. Simple values like strings, numbers and booleans will always be previewed.
+
+[`previewEntries`](/api/type-aliases/inspectoptions/#previewdepth) controls how many entries per level is previewed.
+
+<e.PreviewSettings client:visible />
+
+### Initial Expand Level / Paths
+
+The option [`expandLevel`](/api/type-aliases/inspectoptions/#expandlevel) sets initial level of expanded nested nodes.
+
+[`expandPaths`](/api/type-aliases/inspectoptions/#expandpaths) takes an array of strings in the form of dot-separated paths of nodes that should be expanded initially.
+
+{/* <details>
+<summary>`expandPaths` example</summary> */}
+
+<Code code={expandPathsCode} lang="svelte" />
+
+{/* </details> */}
+
+<e.ExpandLevel client:visible />
+
+:::note
+These two options are for _initial_ expanded nodes, and are not reactive.
+
+For this demonstration, the `Inspect` instance is recreated when one of the options change.
+:::
+
+### Animation Settings
+
+To control animation duration when animation is enabled, set [`animRate`](/api/type-aliases/inspectoptions/#animrate).<br/>The base speed for animations is 250 milliseconds. Setting `animRate` to `0.5` will slow down animations to 500 milliseconds duration, and setting it to `2` will make set animation duration to 125 milliseconds.
+
+Animation can be disabled by setting [`noanimate`](/api/type-aliases/inspectoptions/#noanimate) to `true`.
+
+[`flashOnUpdate`](/api/type-aliases/inspectoptions/#flashonupdate) enables / disables expand buttons and list bullets flashing when values are updated.
+
+<e.Animation client:visible />
+

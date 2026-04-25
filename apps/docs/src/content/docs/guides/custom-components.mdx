@@ -1,0 +1,100 @@
+---
+title: Custom Components
+description: How to use custom components with Svelte Inspect Value
+sidebar:
+  order: 4
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 2
+---
+import { Tabs, TabItem, Code, LinkButton } from '@astrojs/starlight/components';
+import PlaygroundLink from '@components/PlaygroundLink.astro';
+import Title from '@components/Title.astro';
+import { code } from '@examples/custom';
+import CustomExample from '@examples/custom/MinimalExample.svelte';
+import ErrorHandling from '@examples/custom/ErrorHandling.svelte';
+import AdvancedExample from '@examples/custom/AdvancedExample.svelte';
+
+<Title /> Custom components makes it possible to override how certain types are displayed.
+
+:::note
+The API for "single line values" is pretty usable while the API for expandable / nested values is unfinished.
+:::
+
+## How to
+
+Custom components are defined by setting [`customComponents`](/api/type-aliases/inspectoptions/#customcomponents) either as a prop or using [global options](/guides/configuration/#global-options).
+
+The value is an object in this format:
+
+```js
+import {
+  CustomDateComponent, 
+  CustomStringComponent,
+  CustomNumberComponent
+} from './components.js'
+
+const customComponents = {
+  // key is the "type view" component that is to be overriden (lowercase)
+  // value is array with component as first value
+  date: [CustomDateComponent],
+  // custom component entry with optional props transform function
+  string: [CustomStringComponent, (props) => ({ value: props.value.repeat(2) })],
+  // custom component entry with optional props transform function and
+  // optional predicate that will revert to default component if false is returned
+  number: [
+    CustomNumberComponent,
+    (props) => props, 
+    (props) => props.value > 1000
+  ]
+}
+```
+
+## Minimal Example
+
+Here's a minimal example that defines a custom component for `number` values. It simply displays numbers upside down.
+
+<Tabs>
+  <TabItem label="App.svelte">
+    <Code lang="svelte" code={code.minimal} />
+  </TabItem>
+  <TabItem label="GoofyNumber.svelte">
+    <Code lang="svelte" code={code.customNumber} />
+  </TabItem>
+</Tabs>
+
+
+### Result
+
+<CustomExample client:load />
+<PlaygroundLink href="https://svelte.dev/playground/6b169fea1c924407a61476b716212d9a?version=5" />
+
+
+---
+
+## Helper Function
+
+When using TypeScript, the helper function [`addComponent`](/api/functions/addcomponent/) will ensure proper typing for the custom components props when using props transform functions and "revert to default" predicates.
+
+<Tabs>
+  <TabItem label="App.svelte">
+    <Code lang="svelte" code={code.advanced} />
+  </TabItem>
+  <TabItem label="HexString.svelte">
+    <Code lang="svelte" code={code.customString} />
+  </TabItem>
+</Tabs>
+
+### Result
+
+<AdvancedExample client:visible />
+<PlaygroundLink href="https://svelte.dev/playground/e2e2e4df044c42c3a81ba86e60261a6c?version=5" />
+
+## Error Handling
+
+If any component, built-in or custom, should throw an error it will be caught by a boundary on an entry-per-entry basis and render error details.
+
+<ErrorHandling client:visible />
+
+
+The error value display component reverts to using default components to avoid further issues.

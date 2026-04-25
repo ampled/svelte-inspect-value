@@ -1,0 +1,14 @@
+{
+  "extends": "astro/tsconfigs/strict",
+  "include": [".astro/types.d.ts", "**/*"],
+  "exclude": ["dist"],
+  "compilerOptions": {
+    "paths": {
+      "svelte-inspect-value": ["../../packages/svelte/src/lib/index.ts"],
+      "@components/*": ["./src/components/*"],
+      "@components": ["./src/components/index.ts"],
+      "@examples/*": ["./src/examples/*"],
+      "@examples": ["./src/examples/index.ts"]
+    }
+  }
+}

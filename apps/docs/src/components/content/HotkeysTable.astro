@@ -1,0 +1,51 @@
+---
+import MetaKey from './MetaKey.astro'
+---
+
+<table class="not-content">
+  <tbody>
+    <tr>
+      <td>
+        <MetaKey /> + <kbd>&rarr;</kbd>
+      </td>
+      <td> Expand top level nodes </td>
+    </tr>
+    <tr>
+      <td>
+        <MetaKey /> + <kbd>&larr;</kbd>
+      </td>
+      <td> Collapse top level nodes </td>
+    </tr>
+    <tr>
+      <td><kbd>Shift</kbd> + <MetaKey /> + <kbd>F</kbd></td>
+      <td> Focus search field (if enabled) </td>
+    </tr>
+  </tbody>
+</table>
+
+<style>
+  table {
+    border: 1px solid var(--docs-border-color);
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  tbody,
+  tr {
+    width: 100%;
+  }
+
+  td {
+    border: 1px solid var(--docs-border-color);
+    padding: 1ch;
+    width: 100%;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  td:first-of-type {
+    width: fit-content;
+    font-family: monospace;
+    text-align: center;
+  }
+</style>

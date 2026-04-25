@@ -1,0 +1,16 @@
+<script lang="ts">
+  import Inspect, { setGlobalInspectOptions } from 'svelte-inspect-value'
+  import { dev } from '$app/environment'
+
+  // this can be set up to be toggled by a keyboard shortcut
+  let shouldRender = $state(true)
+
+  // setting this by using global options is recommended
+  setGlobalInspectOptions(() => ({
+    renderIf: () => dev && shouldRender,
+    theme: 'dark',
+    borderless: false
+  }))
+</script>
+
+<Inspect values={{ /* ... */ }} />

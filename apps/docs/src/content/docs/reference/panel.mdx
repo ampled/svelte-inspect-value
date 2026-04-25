@@ -1,0 +1,89 @@
+---
+title: Inspect.Panel
+description: How to use and configure Inspect.Panel
+sidebar:
+  order: 2
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 2
+globalopts: true
+---
+
+import PanelExample from '@examples/panel/PanelExample.svelte';
+import PlaygroundLink from '@components/PlaygroundLink.astro';
+
+`Inspect.Panel` is a fixed-position wrapper of `Inspect`.
+
+It can be resized, repositioned, customized and takes all the same props as `Inspect`
+does and a few extra ones.
+
+[`PanelProps`](/api/type-aliases/panelprops/)
+
+## Global Values
+
+In addition to using the `value` or `values`-props, panels can also receive
+"global" values with the utility function [`addToPanel`](/api/functions/addtopanel).
+
+Also, if any instances of `Inspect` or `Inspect.Values` are used outside of a panel,
+you can add and remove values from the panel from those instances, using the tool-button visible when a row is focused or hovered.
+
+## Example
+
+```svelte
+<script lang="ts">
+  import Inspect, {addtoPanel} from 'svelte-inspect-value'
+  import MyTodoApp from './TodoApp.svelte'
+
+  const todos = $state([
+    // ...
+    {
+      id: 3,
+      description: 'feed the turtle'
+      done: true
+    },
+    //...
+  ])
+
+  let todo = $derived(todos.filter((t) => !t.done))
+  let done = $derived(todos.filter((t) => t.done))
+
+  addToPanel('isTurtleFed', () => todos[2].done)
+</script>
+
+<Inspect.Panel values={{ todo, done }} heading="todos" align="right bottom" />
+<MyTodoApp bind:todos />
+```
+
+### Result
+
+<PanelExample client:load />
+<PlaygroundLink href="https://svelte.dev/playground/b63e4e92d8294fb5ad889037f8396fd4?version=5" />
+
+`Inspect.Panel` will also render any children passed to it, a convenient place to put any extra debugging tools or information of your own.
+
+## Persisting State and Configuration
+
+Using the [`persist`](/api/type-aliases/panelprops/#persist)-prop, the following properties can be persisted using local/session storage:
+
+- open/closed state
+- width/height (when resized)
+- position
+- opacity
+- appearance
+
+```svelte
+<script>
+  import Inspect from 'svelte-inspect-value';
+</script>
+
+<!-- Use default persist settings -->
+<Inspect.Panel persist />
+<!-- Use default persist settings with tab syncing enabled -->
+<Inspect.Panel persistSync />
+<!-- Use default persist settings with alternative key -->
+<Inspect.Panel persist="todo-app-panel" />
+<!-- Use default persist settings with tab syncing enabled and alternative key -->
+<Inspect.Panel persistSync="todo-app-panel" />
+<!-- Use custom persist settings -->
+<Inspect.Panel persist={{ key: 'todo-app-panel', storage: 'local', syncTabs: true }} />
+```

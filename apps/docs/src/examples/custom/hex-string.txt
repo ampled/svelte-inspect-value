@@ -1,0 +1,27 @@
+<script lang="ts">
+  import { CustomLine, type CustomComponentProps } from 'svelte-inspect-value'
+
+  type Props = CustomComponentProps<string, 'string', { showString?: boolean }>
+
+  let { value, showString = true, ...rest }: Props = $props()
+
+  let isColor = $derived(value.startsWith('#'))
+</script>
+
+<CustomLine {value} {...rest}>
+  <div class="color" style="background-color: {value};" title={value}>
+    {#if showString}
+      <div class="text">{value}</div>
+    {/if}
+  </div>
+</CustomLine>
+
+<style>
+  .color {
+    width: 3em;
+    height: 1em;
+    border: 1px solid var(--_border-color);
+    border-radius: 2px;
+    margin-inline: 0.25em;
+  }
+</style>

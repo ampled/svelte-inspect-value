@@ -1,0 +1,6 @@
+<script>
+  import Inspect from 'svelte-inspect-value'
+  let {data} = $props()
+</script>
+<!-- Props override "global" options -->
+<Inspect values={data} theme="light" />

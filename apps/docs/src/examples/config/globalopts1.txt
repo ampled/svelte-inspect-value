@@ -1,0 +1,29 @@
+<script>
+  import {dev} from '$app/environment'
+  // import {DEV} from 'esm-env' // if not using SvelteKit?
+  import {setGlobalInspectOptions, InspectOptionsProvider} from 'svelte-inspect-value'
+
+  // set and forget
+  setGlobalInspectOptions(() => ({
+    theme: 'drak',
+    stringCollapse: 20,
+    renderIf: dev // conditionally render
+  }))
+
+  // reactive global options
+  // good for - for example - setting up a keybind for toggling "renderIf"
+  let globalConfig = $state({ renderIf: true, theme: 'drak' })
+
+  setGlobalInspectOptions(() => globalConfig)
+
+  let { children } = $props()
+</script>
+
+<input type="checkbox" bind:checked={globalConfig.renderIf as boolean} />
+
+<!-- provider component - alternative to setGlobalInspectOptions function -->
+<InspectOptionsProvider options={globalConfig}> 
+  <main>
+    {@render children()}
+  </main>
+</InspectOptionsProvider>

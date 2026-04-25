@@ -1,0 +1,58 @@
+---
+title: Search
+description: How to use and configure hotkeys for Svelte Inspect Value
+sidebar:
+  order: 5
+globalopts: true
+---
+
+import Narrowing from '@examples/search/Narrowing.svelte';
+
+If [`search`](/api/type-aliases/inspectoptions/#search) is enabled, a search input will be visible in the header.
+
+Typing a query and hitting enter will index the inspected values, search it and highlight any paths with keys, paths and values that matches the query.
+
+If [`highlightMatches`](/api/type-aliases/inspectoptions/#highlightmatches) is enabled, matching text will be highlighted when you type your query.
+
+Text highlighting also respects prefixes like `path` and `type`.
+
+:::note
+Text highlighting and indexed search works a bit differently. For example, the query `type:undefined type:null` will highlight any visible value with type `undefined` and `null` regardless of search mode, but since a value can't be both `undefined` and `null` at the same time, no values will be a match in `and`-mode. So, even if something is highlighted it might not count as a match.
+:::
+
+### Search Modes
+
+The `search` setting / prop can set three different search modes: 
+
+*  `'filter' | true` - children and siblings of matching nodes will be visible
+*  `'filter-strict'` - only matches will be visible
+*  `'highlight'` - no nodes will be hidden, but matches will be highlighted
+
+### Narrowing
+
+Search results can be narrowed by using multiple terms and the following prefixes:
+
+- `value:` to search the content of the value, e.g. `true` / `'foo'` / `12356n`
+- `type:` to search for values that matches a specific type, e.g. `number` / `boolean` / `date`
+- `key:` to search within a values key
+- `path:` to search within the path to a value, e.g. `people.3.contact.email`
+
+Wrapping terms in quotes will require an exact match. With a prefix it would look like `value:"1234"`.
+
+### Multiple Terms
+
+If multiple terms are entered (separated by space) a mode-selector appears letting you choose between `and` / `or`-mode. The initial mode can be set with the `searchMode`-prop.
+
+For example, querying `type:"string" path:foo` would match all string values and / or values with `'foo'` in their path / key.
+
+<Narrowing client:load="svelte" />
+
+### Expanding Matches
+
+All matching paths will be expanded. To keep highlighted matching paths expanded after clearing
+the search results, hit <kbd>Enter</kbd> again without changing the query.
+
+The <kbd>Esc</kbd>-button will clear the input and search results when the search field is
+focused, and if the search field was focused using the keyboard shortcut, the last focused node
+will be re-focused.
+

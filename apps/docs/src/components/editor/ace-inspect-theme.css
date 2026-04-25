@@ -1,0 +1,181 @@
+.ace-inspect .ace_gutter {
+  background: #282a36;
+  color: rgb(144, 145, 148);
+}
+
+.ace-inspect .ace_print-margin {
+  background: #44475a;
+  width: 1px;
+}
+
+.ace-inspect {
+  --base00: #1e2c3e;
+  --base01: #31455e;
+  --base02: #455468;
+  --base03: #6d819c;
+  --base04: #ffffff;
+  --base05: #dbdbdc;
+  --base06: #fff2c2;
+  --base07: #ffffff;
+  --base08: #ff5c7c;
+  --base09: #ff9f6b;
+  --base0A: #ffd285;
+  --base0B: #8fff96;
+  --base0C: #81eced;
+  --base0D: #81ecee;
+  --base0E: #ff8af5;
+  --base0F: #ffffff;
+  background-color: transparent;
+  color: var(--base05);
+  /* font-family: monospace !important; */
+  -webkit-font-smoothing: subpixel-antialiased !important;
+}
+
+.ace-inspect .ace_cursor {
+  color: var(--base0B);
+}
+
+.ace-inspect .ace_punctuation {
+  color: var(--base05);
+}
+
+.ace-inspect .ace_identifier + .ace_punctuation {
+  color: var(--base08);
+}
+
+.ace-inspect .ace_marker-layer .ace_selection {
+  background: var(--base02);
+}
+
+.ace-inspect.ace_multiselect .ace_selection.ace_start {
+  box-shadow: 0 0 3px 0px #282a36;
+  border-radius: 2px;
+}
+
+.ace-inspect .ace_marker-layer .ace_step {
+  background: rgb(198, 219, 174);
+}
+
+.ace-inspect .ace_marker-layer .ace_bracket {
+  margin: -1px 0 0 -1px;
+  border: 1px solid #a29709;
+}
+
+.ace-inspect .ace_marker-layer .ace_active-line {
+  background: #44475a;
+}
+
+.ace-inspect .ace_gutter-active-line {
+  background-color: #44475a;
+}
+
+.ace-inspect .ace_marker-layer .ace_selected-word {
+  box-shadow: 0px 0px 0px 1px #a29709;
+  border-radius: 3px;
+}
+
+.ace-inspect .ace_fold {
+  border-color: #f8f8f2;
+  background-color: var(--base0B);
+}
+
+.ace-inspect .ace_keyword {
+  color: var(--base0E);
+}
+
+.ace-inspect .ace_constant.ace_language {
+  color: #bd93f9;
+}
+
+.ace-inspect .ace_constant.ace_numeric {
+  color: var(--base0E);
+}
+
+.ace-inspect .ace_constant.ace_character {
+  color: #bd93f9;
+}
+
+.ace-inspect .ace_constant.ace_character.ace_escape {
+  color: var(--base0E);
+}
+
+.ace-inspect .ace_constant.ace_other {
+  color: #bd93f9;
+}
+
+.ace-inspect .ace_support.ace_function {
+  color: var(--base0B);
+}
+
+.ace-inspect .ace_support.ace_constant {
+  color: var(--base0C);
+}
+
+.ace-inspect .ace_support.ace_class {
+  color: var(--base0C);
+  font-style: italic;
+}
+
+.ace-inspect .ace_support.ace_type {
+  color: var(--base0D);
+  font-style: italic;
+}
+
+.ace-inspect .ace_storage {
+  color: var(--base0E);
+}
+
+.ace-inspect .ace_storage.ace_type {
+  color: var(--base0D);
+  font-style: italic;
+}
+
+.ace-inspect .ace_invalid {
+  background-color: var(--base08);
+  color: #f8f8f0;
+}
+
+.ace-inspect .ace_invalid.ace_deprecated {
+  background-color: #bd93f9;
+  color: #f8f8f0;
+}
+
+.ace-inspect .ace_string {
+  color: var(--base0A);
+}
+
+.ace-inspect .ace_comment {
+  color: var(--base03);
+}
+
+.ace-inspect .ace_variable {
+  color: var(--base0D);
+}
+
+.ace-inspect .ace_variable.ace_parameter {
+  color: #ffb86c;
+  font-style: italic;
+}
+
+.ace-inspect .ace_entity.ace_other.ace_attribute-name {
+  color: var(--base0B);
+}
+
+.ace-inspect .ace_entity.ace_name.ace_function {
+  color: var(--base0B);
+}
+
+.ace-inspect .ace_entity.ace_name.ace_tag {
+  color: #ff79c6;
+}
+.ace-inspect .ace_invisible {
+  color: #626680;
+}
+
+.ace-inspect .ace_indent-guide {
+  background: url('../dracula-1.png') right repeat-y;
+}
+
+.ace-inspect .ace_indent-guide-active {
+  background: url('../dracula-2.png') right repeat-y;
+}
