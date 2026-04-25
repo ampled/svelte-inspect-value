@@ -14,11 +14,23 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      
+      - name: 'Install pnpm'
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10  # or whatever version you're using locally
+      
       - name: 'Install Node'
         uses: actions/setup-node@v4
         with:
           node-version: '22.x'
+          cache: 'pnpm'  # Cache pnpm dependencies
+      
       - name: 'Install Deps'
-        run: npm ci
+        run: pnpm install --frozen-lockfile
+      
+      - name: 'Build all'
+        run: pnpm --recursive --filter '!docs' build && pnpm --filter docs build
+      
       - name: 'Test'
-        run: npx vitest --run
+        run: pnpm --filter './packages/*' test

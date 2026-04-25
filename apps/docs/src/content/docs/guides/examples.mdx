@@ -7,14 +7,12 @@ globalopts: true
 ---
 
 import * as e from '@examples/index.js'
-import OptionToggle from '@components/global-opts/OptionToggle.svelte'
 
 ### Basics
 
 `Inspect` works well for basic object and array-values aka "JSON".
 
-Actual JSON strings can be parsed by setting the [`parseJson`](/api/type-aliases/inspectoptions/#parsejson) option.<br/>
-See it in action by toggling the option on and off: <OptionToggle client:load="svelte" small={true} key="parseJson">parse json</OptionToggle>
+Actual JSON strings can be parsed by setting the [`parseJson`](/api/type-aliases/inspectoptions/#parsejson) option.
 
 <e.BasicEditable client:load="svelte" />
 
