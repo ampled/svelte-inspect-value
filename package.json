@@ -14,6 +14,7 @@
     "dev:sv": "pnpm --filter './packages/*' dev",
     "dev:docs": "pnpm --filter './apps/*' dev",
     "build": "pnpm --filter '*' build",
+    "build:docs": "pnpm --filter './apps/*' build",
     "preview": "pnpm --filter '*' preview",
     "format": "prettier --write .",
     "prettiercheck": "prettier --check .",
