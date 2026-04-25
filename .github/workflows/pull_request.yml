@@ -18,7 +18,7 @@ jobs:
       - name: 'Install pnpm'
         uses: pnpm/action-setup@v4
         with:
-          version: 10  # or whatever version you're using locally
+          version: '10.33.2'  # or whatever version you're using locally
       
       - name: 'Install Node'
         uses: actions/setup-node@v4
