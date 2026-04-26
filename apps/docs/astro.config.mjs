@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config'
 import starlight from '@astrojs/starlight'
 import starlightTypeDoc, { typeDocSidebarGroup } from 'starlight-typedoc'
+import starlightChangelogs, { makeChangelogsSidebarLinks } from 'starlight-changelogs'
 import svelte from '@astrojs/svelte'
 import { ExpressiveCodeTheme } from '@astrojs/starlight/expressive-code'
 import fs from 'node:fs'
@@ -60,7 +61,7 @@ export default defineConfig({
         themes: [myTheme, 'min-light'],
       },
       plugins: [
-        // Generate the documentation.
+        starlightChangelogs(),
         starlightTypeDoc({
           entryPoints: ['../../packages/svelte/src/lib/typedoc.ts'],
           tsconfig: '../../packages/svelte/tsconfig.json',
@@ -97,6 +98,7 @@ export default defineConfig({
           collapsed: true,
         },
         typeDocSidebarGroup,
+        ...makeChangelogsSidebarLinks([{ type: 'all', base: 'changelog', label: 'Changelog' }]),
       ],
     }),
     svelte({ extensions: ['.svelte'], compilerOptions: { runes: true } }),
