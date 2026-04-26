@@ -189,8 +189,7 @@
   Behind the scenes, the base16 theme is mapped to internal CSS-variables. This mapping can be
   overriden by setting additional CSS-variables on your custom theme class or passing them to the
   component.<br />
-  See the <a href="/theming/css-vars">full overview</a> of available css-variables than can be
-  passed to
+  See the <a href="/theming/vars">full overview</a> of available css-variables than can be passed to
   <code>Inspect</code>.
 </p>
 

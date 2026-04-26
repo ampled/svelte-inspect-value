@@ -71,6 +71,9 @@ importers:
       sharp:
         specifier: ^0.34.5
         version: 0.34.5
+      starlight-changelogs:
+        specifier: ^0.5.0
+        version: 0.5.0(@astrojs/starlight@0.38.3(astro@6.1.6(@types/node@25.0.3)(@vercel/functions@3.4.3)(lightningcss@1.32.0)(rollup@4.59.0)(terser@5.46.1)(typescript@5.9.3)(yaml@2.8.2)))(astro@6.1.6(@types/node@25.0.3)(@vercel/functions@3.4.3)(lightningcss@1.32.0)(rollup@4.59.0)(terser@5.46.1)(typescript@5.9.3)(yaml@2.8.2))
       starlight-typedoc:
         specifier: ^0.21.5
         version: 0.21.5(@astrojs/starlight@0.38.3(astro@6.1.6(@types/node@25.0.3)(@vercel/functions@3.4.3)(lightningcss@1.32.0)(rollup@4.59.0)(terser@5.46.1)(typescript@5.9.3)(yaml@2.8.2)))(typedoc-plugin-markdown@4.11.0(typedoc@0.28.17(typescript@5.9.3)))(typedoc@0.28.17(typescript@5.9.3))
@@ -327,6 +330,11 @@ packages:
   '@algolia/requester-node-http@5.49.1':
     resolution: {integrity: sha512-zA5bkUOB5PPtTr182DJmajCiizHp0rCJQ0Chf96zNFvkdESKYlDeYA3tQ7r2oyHbu/8DiohAQ5PZ85edctzbXA==}
     engines: {node: '>= 14.0.0'}
+
+  '@ascorbic/loader-utils@1.0.2':
+    resolution: {integrity: sha512-pg43g83gojVtEsAkXfjWuzJhuXneJp4wM/leBftGkCPV3yxKgB92EWA+nWu735BgbBMph3P7DrVqVc3ikt+dJA==}
+    peerDependencies:
+      astro: ^4.14.0 || ^5.0.0-beta.0
 
   '@astrojs/compiler@3.0.1':
     resolution: {integrity: sha512-z97oYbdebO5aoWzuJ/8q5hLK232+17KcLZ7cJ8BCWk6+qNzVxn/gftC0KzMBUTD8WAaBkPpNSQK6PXLnNrZ0CA==}
@@ -4101,6 +4109,12 @@ packages:
   stackback@0.0.2:
     resolution: {integrity: sha512-1XMJE5fQo1jGH6Y/7ebnwPOBEkIEnT4QF32d5R1+VXdXveM0IBMJt8zfaxX1P3QhVwrYe+576+jkANtSS2mBbw==}
 
+  starlight-changelogs@0.5.0:
+    resolution: {integrity: sha512-bqBAHle6N4jApkLz8qlN+k8nmaJUXvYunrJeYWTZats15SeEmsT+1N7KdshODCky2AzLfIBy4Qa2v1YSQNrjxQ==}
+    engines: {node: '>=22.12.0'}
+    peerDependencies:
+      '@astrojs/starlight': '>=0.38.0'
+
   starlight-typedoc@0.21.5:
     resolution: {integrity: sha512-7JGaPHrP+HgX0sYGnafZcPuzMm+3OmHx7kqE0DWTrsuBfoQS02lJ6/PtJF9y0KCDcfsBynyo0G/1ttHcBq5Vww==}
     engines: {node: '>=18.17.1'}
@@ -5008,6 +5022,10 @@ snapshots:
   '@algolia/requester-node-http@5.49.1':
     dependencies:
       '@algolia/client-common': 5.49.1
+
+  '@ascorbic/loader-utils@1.0.2(astro@6.1.6(@types/node@25.0.3)(@vercel/functions@3.4.3)(lightningcss@1.32.0)(rollup@4.59.0)(terser@5.46.1)(typescript@5.9.3)(yaml@2.8.2))':
+    dependencies:
+      astro: 6.1.6(@types/node@25.0.3)(@vercel/functions@3.4.3)(lightningcss@1.32.0)(rollup@4.59.0)(terser@5.46.1)(typescript@5.9.3)(yaml@2.8.2)
 
   '@astrojs/compiler@3.0.1': {}
 
@@ -9416,6 +9434,19 @@ snapshots:
       through2: 2.0.5
 
   stackback@0.0.2: {}
+
+  starlight-changelogs@0.5.0(@astrojs/starlight@0.38.3(astro@6.1.6(@types/node@25.0.3)(@vercel/functions@3.4.3)(lightningcss@1.32.0)(rollup@4.59.0)(terser@5.46.1)(typescript@5.9.3)(yaml@2.8.2)))(astro@6.1.6(@types/node@25.0.3)(@vercel/functions@3.4.3)(lightningcss@1.32.0)(rollup@4.59.0)(terser@5.46.1)(typescript@5.9.3)(yaml@2.8.2)):
+    dependencies:
+      '@ascorbic/loader-utils': 1.0.2(astro@6.1.6(@types/node@25.0.3)(@vercel/functions@3.4.3)(lightningcss@1.32.0)(rollup@4.59.0)(terser@5.46.1)(typescript@5.9.3)(yaml@2.8.2))
+      '@astrojs/starlight': 0.38.3(astro@6.1.6(@types/node@25.0.3)(@vercel/functions@3.4.3)(lightningcss@1.32.0)(rollup@4.59.0)(terser@5.46.1)(typescript@5.9.3)(yaml@2.8.2))
+      github-slugger: 2.0.0
+      mdast-util-from-markdown: 2.0.3
+      mdast-util-to-markdown: 2.1.2
+      mdast-util-to-string: 4.0.0
+      unist-util-visit: 5.1.0
+    transitivePeerDependencies:
+      - astro
+      - supports-color
 
   starlight-typedoc@0.21.5(@astrojs/starlight@0.38.3(astro@6.1.6(@types/node@25.0.3)(@vercel/functions@3.4.3)(lightningcss@1.32.0)(rollup@4.59.0)(terser@5.46.1)(typescript@5.9.3)(yaml@2.8.2)))(typedoc-plugin-markdown@4.11.0(typedoc@0.28.17(typescript@5.9.3)))(typedoc@0.28.17(typescript@5.9.3)):
     dependencies:

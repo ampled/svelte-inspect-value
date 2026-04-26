@@ -1,20 +1,26 @@
 ---
-import vars from './vars-defaults.js'
+import { base16 } from './vars-defaults.js'
 ---
 
 <table>
   <thead>
     <tr>
       <th>Variable</th>
-      <th>Default</th>
+      <th>Role</th>
     </tr>
   </thead>
   <tbody>
     {
-      vars.map(([v, def]) => (
+      base16.map(([v, defs]) => (
         <tr>
           <td class="varname">{v}</td>
-          <td>{def}</td>
+          <td>
+            <ul>
+              {defs.map((d) => (
+                <li>{d}</li>
+              ))}
+            </ul>
+          </td>
         </tr>
       ))
     }
@@ -26,9 +32,15 @@ import vars from './vars-defaults.js'
     width: 100%;
   }
 
-  tbody {
+  tbody,
+  ul,
+  li {
     font-size: 16px;
     font-family: monospace;
+  }
+
+  ul {
+    padding-left: 1em;
   }
 
   td {
@@ -37,6 +49,8 @@ import vars from './vars-defaults.js'
   }
 
   .varname {
+    /* text-align: center; */
+    vertical-align: middle;
     border-right: 1px solid;
   }
 </style>
