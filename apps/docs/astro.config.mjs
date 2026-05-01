@@ -1,12 +1,13 @@
 // @ts-check
-import { defineConfig } from 'astro/config'
 import starlight from '@astrojs/starlight'
-import starlightTypeDoc, { typeDocSidebarGroup } from 'starlight-typedoc'
-import starlightChangelogs, { makeChangelogsSidebarLinks } from 'starlight-changelogs'
-import svelte from '@astrojs/svelte'
 import { ExpressiveCodeTheme } from '@astrojs/starlight/expressive-code'
-import fs from 'node:fs'
+import svelte from '@astrojs/svelte'
 import vercel from '@astrojs/vercel'
+import { defineConfig } from 'astro/config'
+import fs from 'node:fs'
+import starlightChangelogs, { makeChangelogsSidebarLinks } from 'starlight-changelogs'
+import starlightTypeDoc, { typeDocSidebarGroup } from 'starlight-typedoc'
+import starlightDocSearch from '@astrojs/starlight-docsearch'
 
 // expressive code theme
 const jsoncString = fs.readFileSync(new URL(`./inspect-theme.jsonc`, import.meta.url), 'utf-8')
@@ -31,6 +32,7 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'Svelte <Inspect {value} />',
+      titleDelimiter: '-',
       favicon: '/favicon.png',
       customCss: [
         './src/styles/custom.css',
@@ -60,25 +62,6 @@ export default defineConfig({
         },
         themes: [myTheme, 'min-light'],
       },
-      plugins: [
-        starlightChangelogs(),
-        starlightTypeDoc({
-          entryPoints: ['../../packages/svelte/src/lib/typedoc.ts'],
-          tsconfig: '../../packages/svelte/tsconfig.json',
-          sidebar: {
-            collapsed: true,
-            label: 'TypeDoc',
-          },
-          typeDoc: {
-            formatWithPrettier: true,
-            prettierConfigFile: '../../.prettierrc',
-            disableSources: true,
-            expandObjects: true,
-            useCodeBlocks: true,
-          },
-          watch: false,
-        }),
-      ],
       components: {
         Head: './src/components/starlight/Head.astro',
         PageFrame: './src/components/starlight/PageFrame.astro',
@@ -99,6 +82,30 @@ export default defineConfig({
         },
         typeDocSidebarGroup,
         ...makeChangelogsSidebarLinks([{ type: 'all', base: 'changelog', label: 'Changelog' }]),
+      ],
+      plugins: [
+        starlightChangelogs(),
+        starlightTypeDoc({
+          entryPoints: ['../../packages/svelte/src/lib/typedoc.ts'],
+          tsconfig: '../../packages/svelte/tsconfig.json',
+          sidebar: {
+            collapsed: true,
+            label: 'TypeDoc',
+          },
+          typeDoc: {
+            formatWithPrettier: true,
+            prettierConfigFile: '../../.prettierrc',
+            disableSources: true,
+            expandObjects: true,
+            useCodeBlocks: true,
+          },
+          watch: false,
+        }),
+        starlightDocSearch({
+          appId: 'AIGTN0IYT1',
+          apiKey: 'ce7552a342fda13ea0251618e1e6c2ff',
+          indexName: 'inspect-eirik',
+        }),
       ],
     }),
     svelte({ extensions: ['.svelte'], compilerOptions: { runes: true } }),

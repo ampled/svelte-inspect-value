@@ -47,6 +47,9 @@ importers:
       '@astrojs/starlight':
         specifier: ^0.38.3
         version: 0.38.3(astro@6.1.6(@types/node@25.0.3)(@vercel/functions@3.4.3)(lightningcss@1.32.0)(rollup@4.59.0)(terser@5.46.1)(typescript@5.9.3)(yaml@2.8.2))
+      '@astrojs/starlight-docsearch':
+        specifier: ^0.7.0
+        version: 0.7.0(@algolia/client-search@5.49.1)(@astrojs/starlight@0.38.3(astro@6.1.6(@types/node@25.0.3)(@vercel/functions@3.4.3)(lightningcss@1.32.0)(rollup@4.59.0)(terser@5.46.1)(typescript@5.9.3)(yaml@2.8.2)))(search-insights@2.17.3)
       '@astrojs/svelte':
         specifier: 8.0.5
         version: 8.0.5(@types/node@25.0.3)(astro@6.1.6(@types/node@25.0.3)(@vercel/functions@3.4.3)(lightningcss@1.32.0)(rollup@4.59.0)(terser@5.46.1)(typescript@5.9.3)(yaml@2.8.2))(lightningcss@1.32.0)(svelte@5.55.2)(terser@5.46.1)(typescript@5.9.3)(yaml@2.8.2)
@@ -364,6 +367,11 @@ packages:
 
   '@astrojs/sitemap@3.7.1':
     resolution: {integrity: sha512-IzQqdTeskaMX+QDZCzMuJIp8A8C1vgzMBp/NmHNnadepHYNHcxQdGLQZYfkbd2EbRXUfOS+UDIKx8sKg0oWVdw==}
+
+  '@astrojs/starlight-docsearch@0.7.0':
+    resolution: {integrity: sha512-/RwUQE4u61EXNKITvb6PxHBC8FA1xrUaB48+0QWoVomHqCUCMnVRwt69NWScFpQZITY5NZKrgSYOsvpzwZg0Ng==}
+    peerDependencies:
+      '@astrojs/starlight': '>=0.38.0'
 
   '@astrojs/starlight@0.38.3':
     resolution: {integrity: sha512-kDlJPlUDdQFWYmyFM2yUPo66yws7v067AEK+/rQjjoVyqehL3DabuOJuy6UJFFTFyGbHxYcBms/ITEgdW7tphw==}
@@ -5116,6 +5124,18 @@ snapshots:
       sitemap: 9.0.1
       stream-replace-string: 2.0.0
       zod: 4.3.6
+
+  '@astrojs/starlight-docsearch@0.7.0(@algolia/client-search@5.49.1)(@astrojs/starlight@0.38.3(astro@6.1.6(@types/node@25.0.3)(@vercel/functions@3.4.3)(lightningcss@1.32.0)(rollup@4.59.0)(terser@5.46.1)(typescript@5.9.3)(yaml@2.8.2)))(search-insights@2.17.3)':
+    dependencies:
+      '@astrojs/starlight': 0.38.3(astro@6.1.6(@types/node@25.0.3)(@vercel/functions@3.4.3)(lightningcss@1.32.0)(rollup@4.59.0)(terser@5.46.1)(typescript@5.9.3)(yaml@2.8.2))
+      '@docsearch/css': 3.9.0
+      '@docsearch/js': 3.9.0(@algolia/client-search@5.49.1)(search-insights@2.17.3)
+    transitivePeerDependencies:
+      - '@algolia/client-search'
+      - '@types/react'
+      - react
+      - react-dom
+      - search-insights
 
   '@astrojs/starlight@0.38.3(astro@6.1.6(@types/node@25.0.3)(@vercel/functions@3.4.3)(lightningcss@1.32.0)(rollup@4.59.0)(terser@5.46.1)(typescript@5.9.3)(yaml@2.8.2))':
     dependencies:
