@@ -1,0 +1,19 @@
+{
+	"compilerOptions": {
+		"target": "ESNext",
+		"module": "ESNext",
+		"lib": ["ES2022", "DOM", "DOM.Iterable"],
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+		"moduleResolution": "bundler",
+		"allowArbitraryExtensions": true,
+		"jsx": "preserve",
+		"jsxImportSource": "ripple",
+		"noEmit": true,
+		"isolatedModules": true,
+		"plugins": [{ "name": "@tsrx/typescript-plugin" }],
+		"paths": {
+			"@inspect/core": ["../core/lib/index.ts"]
+		}
+	}
+}

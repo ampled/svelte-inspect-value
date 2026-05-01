@@ -1,0 +1,154 @@
+/*
+  base00  #181818  Default Background
+  base01  #282828  Lighter Background (Used for status bars, line number and folding marks)
+  base02  #383838  Selection Background
+  base03  #585858  Comments, Invisibles, Line Highlighting
+  base04  #b8b8b8  Dark Foreground (Used for status bars)
+  base05  #d8d8d8  Default Foreground, Caret, Delimiters, Operators
+  base06  #e8e8e8  Light Foreground (Not often used)
+  base07  #f8f8f8  Light Background (Not often used)
+  base08  #ab4642  Variables, XML Tags, Markup Link Text, Markup Lists, Diff Deleted
+  base09  #dc9656  Integers, Boolean, Constants, XML Attributes, Markup Link Url
+  base0A  #f7ca88  Classes, Markup Bold, Search Text Background
+  base0B  #a1b56c  Strings, Inherited Class, Markup Code, Diff Inserted
+  base0C  #86c1b9  Support, Regular Expressions, Escape Characters, Markup Quotes
+  base0D  #7cafc2  Functions, Methods, Attribute IDs, Headings
+  base0E  #ba8baf  Keywords, Storage, Selector, Markup Italic, Diff Changed
+  base0F  #a16946  Deprecated, Opening/Closing Embedded Language Tags, e.g. <?php ?>
+*/
+.inspect {
+  --base00: #1e2c3e;
+  --base01: #31455e;
+  --base02: #455468;
+  --base03: #6d819c;
+  --base04: #ffffff;
+  --base05: #dbdbdc;
+  --base06: #fff2c2;
+  --base07: #ffffff;
+  --base08: #ff5c7c;
+  --base09: #ff9f6b;
+  --base0A: #ffd285;
+  --base0B: #8fff96;
+  --base0C: #81eced;
+  --base0D: #81ecee;
+  --base0E: #ff8af5;
+  --base0F: #ffffff;
+}
+
+.plain {
+  --base00: color-mix(in srgb, currentColor, transparent 80%);
+  --base01: color-mix(in srgb, currentColor, transparent 80%);
+  --base02: unset;
+  --base03: color-mix(in srgb, currentColor, #909090 40%);
+  --base04: currentColor;
+  --base05: currentColor;
+  --base06: color-mix(in srgb, currentColor, yellow 50%);
+  --base07: currentColor;
+  --base08: color-mix(in srgb, currentColor, red 30%);
+  --base09: color-mix(in srgb, currentColor, orange 30%);
+  --base0A: color-mix(in srgb, currentColor, yellow 30%);
+  --base0B: color-mix(in srgb, currentColor, lightgreen 30%);
+  --base0C: color-mix(in srgb, currentColor, cyan 30%);
+  --base0D: color-mix(in srgb, currentColor, cyan 30%);
+  --base0E: color-mix(in srgb, currentColor, rgb(255, 0, 255) 40%);
+  --base0F: currentColor;
+  --_text-search-highlight-color: var(--text-search-highlight-color, yellow);
+  --_text-search-highlight-fg-color: var(--text-search-highlight-fg-color, black);
+  --_text-search-highlight-outline: var(--text-search-highlight-outline, 1px solid black);
+  --_text-search-highlight-decoration: var(--text-search-highlight-decoration, underline black);
+}
+
+.stereo {
+  --base00: #272822;
+  --base01: #383830;
+  --base02: #49483e;
+  --base03: #75715e;
+  --base04: #a59f85;
+  --base05: #f8f8f2;
+  --base06: #f5f4f1;
+  --base07: #f9f8f5;
+  --base08: #f92672;
+  --base09: #fd971f;
+  --base0A: #f4bf75;
+  --base0B: #a6e22e;
+  --base0C: #a1efe4;
+  --base0D: #66d9ef;
+  --base0E: #ae81ff;
+  --base0F: #cc6633;
+}
+
+.dark {
+  --base00: #181818;
+  --base01: #282828;
+  --base02: #383838;
+  --base03: #585858;
+  --base04: #b8b8b8;
+  --base05: #d8d8d8;
+  --base06: #e8e8e8;
+  --base07: #f8f8f8;
+  --base08: #ab4642;
+  --base09: #dc9656;
+  --base0A: #f7ca88;
+  --base0B: #a1b56c;
+  --base0C: #86c1b9;
+  --base0D: #7cafc2;
+  --base0E: #ba8baf;
+  --base0F: #a16946;
+}
+
+.drak {
+  --base00: #282a36;
+  --base01: #3a3c4e;
+  --base02: #44475a;
+  --base03: #6272a4;
+  --base04: #1c1d26;
+  --base05: #f8f8f2;
+  --base06: #f1f2f8;
+  --base07: #f7f7fb;
+  --base08: #ea51b2;
+  --base09: #ffb86c;
+  --base0A: #f1fa8c;
+  --base0B: #50fa7b;
+  --base0C: #a1efe4;
+  --base0D: #62d6e8;
+  --base0E: #bd93f9;
+  --base0F: #009e45;
+}
+
+.light {
+  --base00: #e8e8e8;
+  --base01: #d8d8d8;
+  --base02: #f8f8f8;
+  --base03: #b8b8b8;
+  --base04: #585858;
+  --base05: #383838;
+  --base06: #282828;
+  --base07: #181818;
+  --base08: #ab4642;
+  --base09: #dc9656;
+  --base0A: #9d5e00;
+  --base0B: #75834e;
+  --base0C: #5f8681;
+  --base0D: #3e9cbe;
+  --base0E: #ba8baf;
+  --base0F: #a16946;
+}
+
+.cotton-candy {
+  --base00: #ca71c6;
+  --base01: #fa71ed;
+  --base02: #f8f8f8;
+  --base03: #e7a6ff;
+  --base04: #fca8ff;
+  --base05: #8732a5;
+  --base06: #282828;
+  --base07: #181818;
+  --base08: #ab4642;
+  --base09: #dc9656;
+  --base0A: #d1c58b;
+  --base0B: #a1b56c;
+  --base0C: #86c1b9;
+  --base0D: #7cafc2;
+  --base0E: #ba8baf;
+  --base0F: #a16946;
+}
