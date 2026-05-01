@@ -1,6 +1,7 @@
 <script lang="ts">
   import { starlightTheme } from './sltheme.svelte.js'
   import { DEFAULT_OPTIONS } from 'svelte-inspect-value'
+  import * as easings from 'svelte/easing'
 
   import { slide } from 'svelte/transition'
   import { globalOpts, setGlobalOpts } from './globalopts.svelte'
@@ -130,7 +131,7 @@
         />
       </label>
 
-      <label title="animation rate" transition:slide={{ axis: 'x' }}>
+      <label title="animation rate">
         anim rate
         <input
           type="number"
@@ -140,6 +141,14 @@
           step={0.1}
           name="animation-rate"
         />
+      </label>
+      <label title="easing">
+        easing
+        <select bind:value={globalOpts.easing}>
+          {#each Object.keys(easings) as easing}
+            <option value={easings[easing as keyof typeof easings]}>{easing}</option>
+          {/each}
+        </select>
       </label>
       <OptionToggle
         key="flashOnUpdate"

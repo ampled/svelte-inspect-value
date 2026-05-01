@@ -27,6 +27,13 @@ export default defineConfig({
         keep_fnames: true,
         mangle: false,
       },
+      rollupOptions: {
+        onwarn(warning, warn) {
+          if (warning.code === 'UNUSED_EXTERNAL_IMPORT') return
+          if (warning.code === 'EVAL') return
+          warn(warning)
+        },
+      },
     },
   },
   integrations: [
@@ -57,9 +64,6 @@ export default defineConfig({
           codeFontSize: '12px',
           borderRadius: '8px',
         },
-        shiki: {
-          bundledLangs: ['svelte', 'typescript', 'javascript', 'css'],
-        },
         themes: [myTheme, 'min-light'],
       },
       components: {
@@ -78,7 +82,7 @@ export default defineConfig({
         {
           label: 'Theming',
           autogenerate: { directory: 'theming' },
-          collapsed: true,
+          collapsed: false,
         },
         typeDocSidebarGroup,
         ...makeChangelogsSidebarLinks([{ type: 'all', base: 'changelog', label: 'Changelog' }]),
