@@ -6,7 +6,7 @@ import vercel from '@astrojs/vercel'
 import { defineConfig } from 'astro/config'
 import fs from 'node:fs'
 import starlightChangelogs, { makeChangelogsSidebarLinks } from 'starlight-changelogs'
-import starlightTypeDoc, { typeDocSidebarGroup } from 'starlight-typedoc'
+// import starlightTypeDoc, { typeDocSidebarGroup } from 'starlight-typedoc'
 import starlightDocSearch from '@astrojs/starlight-docsearch'
 
 // expressive code theme
@@ -84,27 +84,40 @@ export default defineConfig({
           autogenerate: { directory: 'theming' },
           collapsed: false,
         },
-        typeDocSidebarGroup,
+        {
+          label: 'TypeDoc',
+          items: [
+            {
+              label: 'Types',
+              autogenerate: { directory: 'api/type-aliases' },
+            },
+            {
+              label: 'Functions',
+              autogenerate: { directory: 'api/functions' },
+            },
+          ],
+        },
+        // typeDocSidebarGroup,
         ...makeChangelogsSidebarLinks([{ type: 'all', base: 'changelog', label: 'Changelog' }]),
       ],
       plugins: [
         starlightChangelogs(),
-        starlightTypeDoc({
-          entryPoints: ['../../packages/svelte/src/lib/typedoc.ts'],
-          tsconfig: '../../packages/svelte/tsconfig.json',
-          sidebar: {
-            collapsed: true,
-            label: 'TypeDoc',
-          },
-          typeDoc: {
-            formatWithPrettier: true,
-            prettierConfigFile: '../../.prettierrc',
-            disableSources: true,
-            expandObjects: true,
-            useCodeBlocks: true,
-          },
-          watch: false,
-        }),
+        // starlightTypeDoc({
+        //   entryPoints: ['../../packages/svelte/src/lib/typedoc.ts'],
+        //   tsconfig: '../../packages/svelte/tsconfig.json',
+        //   sidebar: {
+        //     collapsed: true,
+        //     label: 'TypeDoc',
+        //   },
+        //   typeDoc: {
+        //     formatWithPrettier: true,
+        //     prettierConfigFile: '../../.prettierrc',
+        //     disableSources: true,
+        //     expandObjects: true,
+        //     useCodeBlocks: true,
+        //   },
+        //   watch: false,
+        // }),
         starlightDocSearch({
           appId: 'AIGTN0IYT1',
           apiKey: 'ce7552a342fda13ea0251618e1e6c2ff',
