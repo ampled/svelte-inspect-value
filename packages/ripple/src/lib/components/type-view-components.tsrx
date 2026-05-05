@@ -2,6 +2,7 @@ import type { TypeViewProps } from '@inspect/core';
 import { OneLineView } from './OneLineView.tsrx';
 import { StringView } from './StringView.tsrx';
 import { type Component, type PropsWithChildrenOptional } from 'ripple';
+import { ObjectView } from './ObjectView.tsrx';
 
 export type ViewComponent<T> = Component<PropsWithChildrenOptional<TypeViewProps<T>>>;
 
@@ -16,6 +17,7 @@ const components = {
 	undefined: [OneLineView],
 	null: [OneLineView],
 	string: [StringView],
+	object: [ObjectView],
 } as ViewComponents;
 
 export function getComponent(type: string): ComponentEntry<any> | undefined {

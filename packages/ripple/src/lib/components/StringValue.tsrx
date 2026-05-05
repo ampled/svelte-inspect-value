@@ -1,7 +1,7 @@
 import { type TypeViewProps, stringify } from '@inspect/core';
 import { track } from 'ripple';
 
-export component StringValue({ value, display, type = 'string' }: TypeViewProps<string>) {
+export component StringValue(&{ value, display, type = 'string' }: TypeViewProps<string>) {
 	let &[displayOrValue] = track(() => display != null ? display : value);
 	let &[isUrlOrPath] = track(
 		() => (type === 'string' || type === 'url') &&
@@ -9,7 +9,7 @@ export component StringValue({ value, display, type = 'string' }: TypeViewProps<
 				value.startsWith('data:')),
 	);
 	let &[ele] = track(() => isUrlOrPath ? 'a' : 'span');
-	let &[stringified] = track(() => stringify(value, 0, 'single'));
+	let &[stringified] = track(() => stringify(displayOrValue, 0, 'single'));
 
 	<@ele
 		class={['stringvalue', 'value', type, isUrlOrPath && 'url-or-path']}

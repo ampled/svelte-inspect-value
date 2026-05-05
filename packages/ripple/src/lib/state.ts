@@ -1,5 +1,5 @@
 import { ensureStringPath } from '@inspect/core';
-import { Tracked, type RippleObject } from 'ripple';
+import { Tracked, type RippleObject, Context } from 'ripple';
 
 /** @inline */
 export type CollapseState = Record<string, boolean>;
@@ -19,6 +19,9 @@ export function createCollapseState(
 		set value(val: CollapseState) {
 			init = val;
 		},
+		get valueAsJson() {
+			return JSON.stringify(init);
+		},
 		setCollapse: (keyOrPath: string | PropertyKey[], collapsed: boolean) => {
 			try {
 				const key = ensureStringPath(keyOrPath);
@@ -34,5 +37,11 @@ export function createCollapseState(
 				console.error(e);
 			}
 		},
+		getCollapse(keyOrPath: string | PropertyKey[]) {
+			const key = ensureStringPath(keyOrPath);
+			return init?.[key];
+		},
 	};
 }
+
+export const collapseStateCtx = new Context<ReturnType<typeof createCollapseState>>();

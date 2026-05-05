@@ -67,6 +67,6 @@ export component Type(&{ type = '', force, ...rest }: Props) {
 	let &[required] = track(() => ALWAYS_VISIBLE_TYPES.includes(type));
 
 	if (type) {
-		<span class={['type', type]}>{type}</span>
+		<span class={['type', type]}>{display}</span>
 	}
 }

@@ -1,12 +1,13 @@
 {
 	"compilerOptions": {
 		"target": "ESNext",
-		"module": "ESNext",
+		"module": "esnext",
 		"lib": ["ES2022", "DOM", "DOM.Iterable"],
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,
 		"moduleResolution": "bundler",
 		"allowArbitraryExtensions": true,
+		"noUncheckedSideEffectImports": false,
 		"jsx": "preserve",
 		"jsxImportSource": "ripple",
 		"noEmit": true,

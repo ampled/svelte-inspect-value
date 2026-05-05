@@ -14,12 +14,9 @@ export component StringView(&{
 }: TypeViewProps<string>) {
 	let &[isMultiline] = track(() => value.includes('\n'));
 
-	effect(() => {
-		console.log('string view:', { value, isMultiline });
-	});
-
 	if (isMultiline) {
 		<Expandable
+			keepPreviewOnExpand
 			valuePreview={component(&{ showPreview }) {
 				if (showPreview) {
 					<StringValue {value} />
@@ -31,7 +28,6 @@ export component StringView(&{
 			{path}
 			{showKey}
 			length={value.length}
-			keepPreviewOnExpand
 			{...rest}
 		>
 			<pre class="value string multi">

@@ -2,7 +2,9 @@ import { type TypeViewProps } from '@inspect/core';
 import { track, type PropsWithChildrenOptional } from 'ripple';
 import { Bullet } from './Bullet.tsrx';
 import { Key } from './Key.tsrx';
+import Count from './Count.tsrx';
 import { Type } from './Type.tsrx';
+import { ctx } from '../context.js';
 
 export component OneLineView(&{
 	value,
@@ -23,9 +25,14 @@ export component OneLineView(&{
 	...rest
 }: PropsWithChildrenOptional<TypeViewProps>) {
 	let &[displayOrValue] = track(() => display != null ? display : value?.toString?.() ?? '');
+	let ctxVal = ctx.get();
+
+	let &[{ showLength: optsShowLength }] = track(() => ctxVal.options.value);
 
 	<div class="line">
-		<Bullet {value} />
+		if (!ctxVal.previewLevel) {
+			<Bullet {value} />
+		}
 		if (showKey) {
 			<Key
 				disabled
@@ -41,6 +48,9 @@ export component OneLineView(&{
 			{children}
 		} else if (displayOrValue) {
 			<span class={['value', type]}>{displayOrValue}</span>
+		}
+		if (typeof length === 'number' && showLength && optsShowLength && !ctxVal.previewLevel) {
+			<Count {length} {type} />
 		}
 	</div>
 

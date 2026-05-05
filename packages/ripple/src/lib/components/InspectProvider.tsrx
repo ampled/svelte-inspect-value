@@ -1,6 +1,6 @@
 import { track, effect, type PropsWithChildren, type Tracked, RippleObject } from 'ripple';
 import { ctx } from '../context.js';
-import { createCollapseState, type CollapseState } from '../state';
+import { createCollapseState, type CollapseState, collapseStateCtx } from '../state';
 import { type InspectOptions } from '@inspect/core';
 
 type Props = PropsWithChildren<{
@@ -9,13 +9,19 @@ type Props = PropsWithChildren<{
 
 export component InspectProvider(&{ options, children }: Props) {
 	const ctxVal = ctx.get();
-	let state = new RippleObject<CollapseState>({});
+	let stateInit = new RippleObject<CollapseState>({});
+	let collapseState = createCollapseState(stateInit);
+	collapseStateCtx.set(collapseState);
 
 	ctxVal.options = options;
-	ctxVal.collapseState = createCollapseState(state);
 
 	effect(() => {
-		console.log('provider options:', options);
+		console.log('provider options:', options.value);
+	});
+
+	effect(() => {
+		console.log('collapse state:');
+		console.log(JSON.stringify(stateInit));
 	});
 
 	{children}

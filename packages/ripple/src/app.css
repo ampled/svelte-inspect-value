@@ -1,0 +1,18 @@
+body,
+html {
+	background-color: #1e2237;
+	color: #fafafa;
+	font-family: monospace;
+}
+
+label {
+	display: flex;
+	gap: 1em;
+	align-items: center;
+}
+
+input,
+select {
+	background-color: black;
+	color: #fafafa;
+}

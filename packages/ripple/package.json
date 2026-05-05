@@ -31,7 +31,8 @@
 	"dependencies": {
 		"@inspect/core": "workspace:*",
 		"ripple": "latest",
-		"ripple-zustand": "^0.2.0"
+		"ripple-zustand": "^0.2.0",
+		"zustand": "^5.0.12"
 	},
 	"packageManager": "pnpm@9.0.0"
 }
