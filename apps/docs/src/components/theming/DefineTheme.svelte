@@ -1,6 +1,8 @@
+<!-- svelte-ignore state_referenced_locally -->
 <script lang="ts">
   // import Console from '$lib/components/icons/Console.svelte'
   import { Inspect } from '@components'
+  import { StateHistory } from 'runed'
   import ColorPicker from 'svelte-awesome-color-picker'
 
   import { themes } from './themes.js'
@@ -19,6 +21,9 @@
     }
   })
 
+  let presets = Object.keys(themes) as (keyof typeof themes)[]
+  let selectedPreset = $state<keyof typeof themes>('inspect')
+  let preset = $state<keyof typeof themes>('inspect')
   let panel = $state(false)
   let backgroundColor = $state('#808080')
   let borderless = $state(false)
@@ -29,23 +34,44 @@
   let colors = $state({ ...themes.inspect })
 
   let keys = $derived(Object.keys(colors) as (keyof typeof colors)[])
+  let pickerOpen = $state<Record<keyof typeof colors, boolean>>(
+    Object.fromEntries(keys.map((k) => [k, false])) as Record<keyof typeof colors, boolean>
+  )
+  let historySrc = $state({
+    colors: { ...themes.inspect },
+  })
+  const history = new StateHistory(
+    () => ({ ...historySrc }),
+    (entry) => {
+      colors = { ...entry.colors }
+      // selectedPreset = entry.selectedPreset
+    }
+  )
 
   let style = $derived.by(() => {
     return keys.map((k) => `${k}: ${colors[k]};`).join('') + 'flex-basis: 100%;'
   })
 
-  let presets = Object.keys(themes) as (keyof typeof themes)[]
-  let selectedPreset = $state<keyof typeof themes>('inspect')
-
-  function onpresetchange(event: Event & { currentTarget: EventTarget & HTMLSelectElement }) {
-    const presetKey = event.currentTarget.value as keyof typeof themes
-    if (presets.includes(presetKey)) {
-      selectedPreset = presetKey
-
-      keys.forEach((k) => {
-        colors[k] = themes[selectedPreset][k]
-      })
+  let wroteToHistoryOnce = false
+  $effect(() => {
+    if (Object.values(pickerOpen).every((v) => v === false)) {
+      if (wroteToHistoryOnce) {
+        historySrc.colors = { ...colors }
+      }
+      wroteToHistoryOnce = true
     }
+  })
+
+  function loadPreset() {
+    applyColors({ ...themes[selectedPreset] })
+  }
+
+  function applyColors(newColors: typeof colors) {
+    colors = Object.fromEntries(
+      keys.map((k) => {
+        return [k, newColors[k]]
+      })
+    ) as typeof colors
   }
 </script>
 
@@ -59,14 +85,17 @@
 </svelte:head>
 
 <div class="controls">
-  <label class="preset-loader">
-    Presets
-    <select value={selectedPreset} onchange={onpresetchange}>
-      {#each presets as preset (preset)}
-        <option>{preset}</option>
-      {/each}
-    </select>
-  </label>
+  <div class="sub-controls">
+    <label class="preset-loader">
+      Presets
+      <select bind:value={selectedPreset}>
+        {#each presets as preset (preset)}
+          <option value={preset}>{preset}</option>
+        {/each}
+      </select>
+    </label>
+    <button onclick={loadPreset}> Load </button>
+  </div>
 
   <label>
     Background
@@ -76,14 +105,16 @@
       <option value="#111">dark</option>
     </select>
   </label>
-  <label>
-    Panel
-    <input type="checkbox" bind:checked={panel} />
-  </label>
-  <label>
-    Borderless
-    <input type="checkbox" bind:checked={borderless} />
-  </label>
+  <div class="sub-controls">
+    <label>
+      Panel
+      <input type="checkbox" bind:checked={panel} />
+    </label>
+    <label>
+      Borderless
+      <input type="checkbox" bind:checked={borderless} />
+    </label>
+  </div>
 </div>
 
 <div style:opacity={visible ? '1' : '0'} class="colors-and-preview">
@@ -100,7 +131,15 @@
   <div class="colors not-content">
     {#each keys as key}
       <div class="dark-picker">
-        <ColorPicker bind:hex={colors[key]} label={key.replaceAll('--base', '')} dir="rtl" />
+        <ColorPicker
+          hex={colors[key]}
+          onInput={(color) => {
+            colors = { ...colors, [key]: color.hex }
+          }}
+          bind:isOpen={pickerOpen[key]}
+          label={key.replaceAll('--base', '')}
+          dir="rtl"
+        />
       </div>
     {/each}
   </div>
@@ -136,7 +175,6 @@
   </label>
   <button
     title="Output theme object to console"
-    class="unstyled"
     style="width: 2em; height: 2em;"
     onclick={() => {
       // eslint-disable-next-line no-console
@@ -155,9 +193,11 @@
     </svg>
   </button>
 
-  <!-- <button disabled={!history.canUndo} onclick={() => history.undo()}>Undo</button>
-  <button disabled={!history.canRedo} onclick={() => history.redo()}>Redo</button> -->
+  <button disabled={!history.canUndo} onclick={() => history.undo()}>Undo</button>
+  <button disabled={!history.canRedo} onclick={() => history.redo()}>Redo</button>
 </div>
+
+<Inspect values={{ style, history: history.log.map((h) => h.snapshot) }} />
 
 <h2 id="defining-a-theme">Defining a theme</h2>
 
@@ -246,11 +286,27 @@ Result:
     align-items: flex-end;
     gap: 0.5em;
     margin-top: 0;
-    width: 100%;
+    margin-inline: auto;
+    border-radius: 8px;
+    background-color: var(--sl-color-gray-5);
+    padding: 0.5em;
+    max-width: fit-content;
+
+    & > :not(:last-child):not(button) {
+      border-right: 1px solid var(--sl-color-gray-3);
+    }
+
+    button {
+      margin-right: 0.5em;
+      height: 2em;
+      font-family: system-ui;
+    }
 
     label {
       display: flex;
       flex-direction: column;
+      margin: 0;
+      padding-right: 0.5em;
       font-size: 12px;
       font-family: monospace;
 
@@ -269,17 +325,23 @@ Result:
     }
   }
 
-  /* label {
+  .sub-controls {
     display: flex;
-    align-items: center;
-  } */
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 0.5em;
+    margin-top: 0;
+  }
 
   .colors-and-preview {
     display: flex;
     flex-direction: row;
+    justify-content: center;
     align-items: center;
     gap: 0.5rem;
     transition: opacity 500ms;
+    margin-block: 0.5em;
   }
 
   .colors {

@@ -3,7 +3,7 @@
  Wrapper for different variants of Inspect
 -->
 <script lang="ts">
-  import { getContext, onDestroy, setContext, untrack, type Snippet } from 'svelte'
+  import { getContext, onDestroy, setContext, type Snippet } from 'svelte'
   import type { SvelteHTMLElements } from 'svelte/elements'
   import { scope } from './attachments/focus.js'
   import * as i from './components/icons/index.js'

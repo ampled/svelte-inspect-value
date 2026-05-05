@@ -3,7 +3,7 @@
   import { onMount } from 'svelte'
   import type { InspectOptions } from 'svelte-inspect-value'
   import { readable, writable } from 'svelte/store'
-  import { fromEvent, map, Observable, startWith } from 'rxjs'
+  import { fromEvent, map, type Observable, startWith } from 'rxjs'
 
   let storesMode = $state<InspectOptions['stores']>('full')
   let clicksObservable = $state<Observable<unknown>>()
