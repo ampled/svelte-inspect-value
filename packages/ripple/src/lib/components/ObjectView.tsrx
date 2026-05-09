@@ -2,20 +2,10 @@ import { enumerateObject, type TypeViewProps, type ValueType } from '@inspect/co
 import { Expandable } from './Expandable.tsrx';
 import { Node } from '../Node.tsrx';
 import Preview from './Preview.tsrx';
-
 import { PropertyList } from './PropertyList.tsrx';
-import { track, effect } from 'ripple';
+import { track } from 'ripple';
 
-export component ObjectView(&{
-	value,
-	key = undefined,
-	type,
-	path,
-	showKey,
-	...rest
-}: TypeViewProps<object>) {
-	console.log('OBJECT:', value);
-
+export component ObjectView(&{ value, key, type, path, showKey, ...rest }: TypeViewProps<object>) {
 	let &[namedConstructor] = track(
 		() => value?.constructor?.name !== 'Object' ? value?.constructor?.name : false,
 	);
@@ -27,25 +17,6 @@ export component ObjectView(&{
 		),
 	);
 
-	effect(() => {
-		console.log('obj view. props:', { value, path, showKey, rest });
-	});
-
-	component valuePreview(&{ showPreview, value }) {
-		console.log('ObjectView valuePreview', { value, path, keys, namedConstructor });
-		try {
-			<Preview prefix="{" postfix="}" {value} {path} {keys} {showPreview} />
-		} catch (e) {
-			<span
-				onClick={() => {
-					console.log('value:', value);
-				}}
-			>
-				{'que?'}
-			</span>
-		}
-	}
-
 	<Expandable
 		type={objectType}
 		length={keys.length}
@@ -53,7 +24,9 @@ export component ObjectView(&{
 		{path}
 		{value}
 		forceType={!!namedConstructor}
-		{valuePreview}
+		valuePreview={component(&{ showPreview, value }) {
+			<Preview prefix="{" postfix="}" {value} {path} {keys} {showPreview} />
+		}}
 		{...rest}
 	>
 		<PropertyList

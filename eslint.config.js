@@ -2,24 +2,15 @@ import js from '@eslint/js'
 import typescriptParser from '@typescript-eslint/parser'
 import prettier from 'eslint-config-prettier'
 import 'eslint-plugin-only-warn'
-import svelte from 'eslint-plugin-svelte'
 import globals from 'globals'
-import svelteParser from 'svelte-eslint-parser'
 import ts from 'typescript-eslint'
-import svelteConfig from './svelte.config.js'
 
 export default ts.config(
   js.configs.recommended,
   ...ts.configs.recommended,
-  ...svelte.configs['flat/recommended'],
   {
     rules: {
       'no-console': ['warn', { allow: ['warn', 'error'] }],
-      'svelte/no-inner-declarations': 'off',
-      'svelte/no-useless-mustaches': 'off',
-      'svelte/require-store-reactive-access': 'off',
-      'svelte/no-unused-props': 'off',
-      'svelte/no-inspect': 'warn',
       '@typescript-eslint/no-unused-vars': [
         'error',
         {
@@ -35,7 +26,6 @@ export default ts.config(
     },
   },
   prettier,
-  ...svelte.configs['flat/prettier'],
   {
     languageOptions: {
       globals: {
@@ -43,20 +33,5 @@ export default ts.config(
         ...globals.node,
       },
     },
-  },
-  {
-    files: ['**/*.svelte', '**/*.svelte.ts'],
-    languageOptions: {
-      parser: svelteParser,
-      parserOptions: {
-        parser: typescriptParser,
-        extraFileExtensions: ['.svelte'],
-        project: './tsconfig.json',
-        svelteConfig,
-      },
-    },
-  },
-  {
-    ignores: ['build/', '.svelte-kit/', 'dist/', '**/*.md'],
   }
 )

@@ -12,7 +12,7 @@ export component Inspect(&{
 	name,
 	class: className,
 	...props
-}: InspectProps & JSX.IntrinsicElements['div']) {
+}: InspectProps & Omit<JSX.IntrinsicElements['div'], 'onCopy'>) {
 	let &[[optionsProps, restProps]] = track(() => sortProps(props));
 	const globalOptions = getGlobalInspectOptions();
 	let &[mergedOptions, trackedOptions] = track(() => mergeOptions(optionsProps, globalOptions));

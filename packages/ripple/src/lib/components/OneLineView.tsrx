@@ -4,7 +4,7 @@ import { Bullet } from './Bullet.tsrx';
 import { Key } from './Key.tsrx';
 import Count from './Count.tsrx';
 import { Type } from './Type.tsrx';
-import { ctx } from '../context.js';
+import { ctx, previewLevelCtx } from '../context.js';
 
 export component OneLineView(&{
 	value,
@@ -26,11 +26,12 @@ export component OneLineView(&{
 }: PropsWithChildrenOptional<TypeViewProps>) {
 	let &[displayOrValue] = track(() => display != null ? display : value?.toString?.() ?? '');
 	let ctxVal = ctx.get();
+	const previewLevel = previewLevelCtx.get();
 
 	let &[{ showLength: optsShowLength }] = track(() => ctxVal.options.value);
 
 	<div class="line">
-		if (!ctxVal.previewLevel) {
+		if (!previewLevel) {
 			<Bullet {value} />
 		}
 		if (showKey) {
@@ -40,16 +41,17 @@ export component OneLineView(&{
 				{path}
 				prefix={keyPrefix}
 				delim={keyDelim}
+				{previewLevel}
 				style={keyStyle as JSX.IntrinsicElements['div']['style']}
 			/>
 		}
-		<Type {type} />
+		<Type {type} force={forceType} {previewLevel} />
 		if (children) {
 			{children}
 		} else if (displayOrValue) {
 			<span class={['value', type]}>{displayOrValue}</span>
 		}
-		if (typeof length === 'number' && showLength && optsShowLength && !ctxVal.previewLevel) {
+		if (typeof length === 'number' && showLength && optsShowLength && !previewLevel) {
 			<Count {length} {type} />
 		}
 	</div>

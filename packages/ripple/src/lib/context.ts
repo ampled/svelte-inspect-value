@@ -2,12 +2,12 @@ import { type InspectOptions } from '@inspect/core';
 import { Context, type Tracked } from 'ripple';
 
 type InspectContext = {
-	previewLevel: number;
 	isKey?: boolean;
 	options?: Tracked<InspectOptions>;
 };
 
 export const ctx = new Context<InspectContext>({} as InspectContext);
+export const previewLevelCtx = new Context(0);
 
 const globalOptionsCtx = new Context<Partial<InspectOptions>>({});
 

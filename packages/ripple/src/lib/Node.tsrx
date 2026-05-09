@@ -27,5 +27,9 @@ export component Node(&{
 	let &[path] = track(() => key != null && prevPath ? [...prevPath, key] : ['root']);
 	let &[stringifiedPath] = track(() => stringifyPath(path));
 
-	<@TrackedTypeComponent {value} {key} {path} {type} {keyDelim} {...rest} />
+	try {
+		<@TrackedTypeComponent {value} {key} {path} {type} {keyDelim} {...rest} />
+	} catch (e) {
+		<span>{'something went wrong'}</span>
+	}
 }

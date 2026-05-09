@@ -8,6 +8,7 @@ type KeyProps = {
 	delim?: string;
 	disabled?: boolean;
 	allowUndefined?: boolean;
+	previewLevel?: number;
 } & JSX.IntrinsicElements['span'];
 
 export component Key(&{
@@ -17,6 +18,7 @@ export component Key(&{
 	prefix,
 	disabled,
 	onclick,
+	previewLevel = 0,
 	...rest
 }: KeyProps) {
 	const keyTypes = ['string', 'number', 'symbol', 'quotedstring'];
@@ -45,7 +47,9 @@ export component Key(&{
 		return key;
 	});
 
-	if (key) {
+	let &[shouldShow] = track(() => key === undefined ? previewLevel > 0 : true);
+
+	if (shouldShow) {
 		<div class="key-and-delimiter">
 			<div class={['key-outer', disabled && 'disabled']}>
 				if (prefix) {

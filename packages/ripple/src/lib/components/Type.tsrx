@@ -4,9 +4,10 @@ import { track } from 'ripple';
 type Props = {
 	type?: ValueType | 'noop' | string;
 	force?: boolean;
+	previewLevel?: number;
 } & JSX.IntrinsicElements['span'];
 
-export component Type(&{ type = '', force, ...rest }: Props) {
+export component Type(&{ type = '', force, previewLevel = 0, ...rest }: Props) {
 	let &[display] = track(() => {
 		switch (type) {
 			case 'number':
@@ -66,7 +67,7 @@ export component Type(&{ type = '', force, ...rest }: Props) {
 
 	let &[required] = track(() => ALWAYS_VISIBLE_TYPES.includes(type));
 
-	if (type) {
-		<span class={['type', type]}>{display}</span>
+	if (type && previewLevel === 0 || required || force) {
+		<span class={['type', type]} {...rest}>{display}</span>
 	}
 }
