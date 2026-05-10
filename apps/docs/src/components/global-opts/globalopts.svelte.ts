@@ -4,6 +4,11 @@ import _Inspect, { DEFAULT_OPTIONS, GLOBAL_OPTIONS_CONTEXT } from 'svelte-inspec
 
 export const globalOpts = $state(DEFAULT_OPTIONS)
 
+export const panelState = $state<{ keepOpen: boolean; ele?: HTMLDivElement }>({
+  keepOpen: false,
+  ele: undefined,
+})
+
 export function setGlobalOpts(opts: Partial<InspectOptions>) {
   Object.keys(DEFAULT_OPTIONS).forEach((k) => {
     const key = k as unknown as keyof InspectOptions

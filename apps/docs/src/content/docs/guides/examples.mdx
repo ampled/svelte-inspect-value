@@ -7,12 +7,13 @@ globalopts: true
 ---
 
 import * as e from '@examples/index.js'
+import ScrollTo from '@components/global-opts/ScrollToButton.svelte';
 
 ### Basics
 
 `Inspect` works well for basic object and array-values aka "JSON".
 
-Actual JSON strings can be parsed by setting the [`parseJson`](/api/type-aliases/inspectoptions/#parsejson) option.
+Actual JSON strings can be parsed by setting the [`parseJson`](/api/type-aliases/inspectoptions/#parsejson) <ScrollTo id="parseJson" client:only="svelte" /> option.
 
 <e.BasicEditable client:load="svelte" />
 

@@ -1,16 +1,40 @@
+<script module lang="ts">
+  import { globalOpts, panelState, setGlobalOpts } from './globalopts.svelte'
+
+  export function scrollTo(id: string) {
+    if (!panelState.ele) return
+    const wasOpen = panelState.keepOpen
+    panelState.keepOpen = true
+    const input = panelState.ele?.querySelector(id) as HTMLInputElement
+    if (!input) return
+    // input.focus()
+    input.classList.add('focused')
+    input.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    setTimeout(() => {
+      input.classList.remove('focused')
+      panelState.keepOpen = wasOpen
+    }, 3000)
+  }
+</script>
+
 <script lang="ts">
   import { starlightTheme } from './sltheme.svelte.js'
   import { DEFAULT_OPTIONS } from 'svelte-inspect-value'
   import * as easings from 'svelte/easing'
 
   import { slide } from 'svelte/transition'
-  import { globalOpts, setGlobalOpts } from './globalopts.svelte'
   import OptionToggle from './OptionToggleCheck.svelte'
   import { onMount } from 'svelte'
 
   let { visible }: { visible: boolean } = $props()
   let currentTheme: 'dark' | 'light' | undefined = undefined
-  let keepOpen = $state(false)
+  let bodyEle = $state<HTMLDivElement>()
+
+  $effect(() => {
+    if (bodyEle) {
+      panelState.ele = bodyEle
+    }
+  })
 
   onMount(() => {
     const doc = document.documentElement
@@ -44,16 +68,17 @@
 
 {#if visible}
   <div
+    id="global-opts"
     transition:slide={{ duration: 300 }}
-    class={['global-options not-content', keepOpen && 'keep-open']}
+    class={['global-options not-content', panelState.keepOpen && 'keep-open']}
   >
     <div class="options-title">
       <div class="tool-buttons">
         <button
           title="Keep Open"
-          class={['tool-button', 'pin-button', keepOpen ? 'keep-open' : '']}
+          class={['tool-button', 'pin-button', panelState.keepOpen ? 'keep-open' : '']}
           onclick={() => {
-            keepOpen = !keepOpen
+            panelState.keepOpen = !panelState.keepOpen
           }}
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
@@ -89,7 +114,7 @@
       <span style="text-align: left; width: 100%; margin-left: 1.5rem;">Global Options</span>
       <a href="/api/type-aliases/inspectoptions" style="text-decoration: none;"> docs </a>
     </div>
-    <div class="go-body">
+    <div class="go-body" id="global-opts-body" bind:this={bodyEle}>
       <label>
         theme
         <select bind:value={globalOpts.theme} name="theme">
@@ -197,7 +222,7 @@
     --title-height: 3rem;
     display: flex;
     position: fixed;
-    right: 4%;
+    right: 2rem;
     bottom: 0;
     flex-direction: column;
     transform: translateY(calc(100% - var(--title-height)));
