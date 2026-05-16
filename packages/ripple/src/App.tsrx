@@ -1,146 +1,174 @@
-import { track, bindValue, bindChecked, RippleObject, type Tracked, effect } from 'ripple'
-import { Inspect } from './lib/Inspect.tsrx'
-import type { InspectOptions } from '@inspect/core'
+import {
+  track,
+  bindValue,
+  bindChecked,
+  RippleObject,
+  RippleMap,
+  type Tracked,
+  effect,
+} from 'ripple';
+import { Inspect } from './lib/Inspect.tsrx';
+import type { InspectOptions } from '@inspect/core';
+import { funcs } from './values.js';
 
 export component App() {
-  let &[count] = track(0)
-  let &[counter] = track({ current: 0 })
-  let &[showDiv, $showDiv] = track(true)
-  let &[visible, $visible] = track(true)
-  let &[theme, themeTracked] = track('inspect')
-  let &[div] = track()
+  // debug.set(true);
+  let &[count] = track(0);
+  let &[counter] = track({ current: 0 });
+  let &[showDiv, $showDiv] = track(true);
+  let &[visible, $visible] = track(true);
+  let &[theme, themeTracked] = track('inspect');
+  let &[div] = track();
   let options = new RippleObject<Partial<InspectOptions>>({
     previewDepth: 1,
     previewEntries: 3,
-  })
+  });
   let values = new RippleObject({
-    symb: Symbol.for('s'),
-    foo: 1,
-    array: [1, 2, 'three', [[4]]],
-    reg: /regexp/,
-    obj: {
-      bing: 'bong',
-      bong: {
-        msg: 'ding',
-      },
-    },
-  })
+    arr: [() => {}],
+    funcs,
+    set: new Set([1, 2, 3, 'four']),
+    map: new Map<any, any>([
+      [1, 1],
+      ['2', 2],
+      ['wee', 'aaa'],
+      [Symbol.for('lol'), 'lol'],
+      [{ oops: 'lol' }, 'gag'],
+      [new Map([[1, 1]]), 'bab'],
+    ]),
+  });
 
   type TransitionParams = {
     visible?: Tracked<boolean>;
     inDOM?: Tracked<boolean>;
-  }
+  };
 
   function transition({ visible, inDOM }: TransitionParams) {
-    let ele = track<HTMLElement | undefined>()
-    let initiallyVisible = false
-    console.log('factory')
+    let ele = track<HTMLElement | undefined>();
+    let initiallyVisible = false;
 
     if (visible.value) {
-      initiallyVisible = true
+      initiallyVisible = true;
     }
 
-    effect(() => {
-      console.log('transition factory effect', {
-        visible: visible.value,
-        inDOM: inDOM.value,
-        ele: ele.value,
-      })
-    })
+    // effect(() => {
+    //   console.log('transition factory effect', {
+    //     visible: visible.value,
+    //     inDOM: inDOM.value,
+    //     ele: ele.value,
+    //   })
+    // })
 
     effect(() => {
       if (visible.value && !initiallyVisible) {
         // transition in?
       } else if (visible.value === false && initiallyVisible) {
         // transition out?
-        inDOM.value = false
+        inDOM.value = false;
       }
-    })
+    });
 
     return {
       attach: (node: HTMLElement) => {
-        console.log('sup')
-        ele.value = node
+        // console.log('sup')
+        ele.value = node;
         // in?
         return () => {
-          console.log('leaving')
+          // console.log('leaving')
           // ele.value = undefined;
           // out?
-        }
+        };
       },
       get ele() {
-        return ele
+        return ele;
       },
-    }
+    };
   }
 
-  const test = transition({ visible: $visible, inDOM: $showDiv })
+  const test = transition({ visible: $visible, inDOM: $showDiv });
 
   function onOptionChange(
     e: Event & { currentTarget: HTMLInputElement },
     option: keyof InspectOptions,
     number = true,
   ) {
-    let value: string | number
+    let value: string | number;
     if (number) {
-      value = e.currentTarget.valueAsNumber
+      value = e.currentTarget.valueAsNumber;
     }
     // @ts-ignore
-    options[option] = value
+    options[option] = value;
   }
 
-  <Inspect {theme} expandLevel={0} values={{ ...values }} {...options} />
+  <div class="flex">
+    <label>
+      {'theme'}
+      <select {ref bindValue(themeTracked)}>
+        <option>{'inspect'}</option>
+        <option>{'drak'}</option>
+        <option>{'stereo'}</option>
+      </select>
+    </label>
+    <label>
+      {'preview depth'}
+      <input
+        type="number"
+        value={options.previewDepth}
+        onInput={(e) => onOptionChange(e as any, 'previewDepth')}
+      />
+    </label>
+    <label>
+      {'preview entries'}
+      <input
+        type="number"
+        value={options.previewEntries}
+        onInput={(e) => onOptionChange(e as any, 'previewEntries')}
+      />
+    </label>
+    <button
+      onClick={() => {
+        counter.current++;
+        count++;
+      }}
+    >
+      {'+'}
+    </button>
+    <button
+      onClick={() => {
+        counter.current--;
+        count--;
+      }}
+    >
+      {'-'}
+    </button>
+  </div>
 
-  <label>
-    {'theme'}
-    <select {ref bindValue(themeTracked)}>
-      <option>{'inspect'}</option>
-      <option>{'drak'}</option>
-      <option>{'stereo'}</option>
-    </select>
-  </label>
-  <label>
-    {'preview depth'}
-    <input
-      type="number"
-      value={options.previewDepth}
-      onInput={(e) => onOptionChange(e as any, 'previewDepth')}
-    />
-  </label>
-  <label>
-    {'preview entries'}
-    <input
-      type="number"
-      value={options.previewEntries}
-      onInput={(e) => onOptionChange(e as any, 'previewEntries')}
-    />
-  </label>
+  <Inspect {theme} values={{ ...values }} {...options} expandLevel={0} />
 
-  <button
-    onClick={() => {
-      counter.current++
-      count++
+  <Inspect
+    {...options}
+    expandLevel={0}
+    values={{
+      symb: Symbol.for('s'),
+      foo: 1,
+      array: [[1], 2, 'three', [[4]]],
+      count,
+      obj: {
+        bing: 'bong',
+        get anObject() {
+          return { a: 1, b: 2, c: 3 };
+        },
+        get bingBong() {
+          return 'bingbong!!';
+        },
+        set bingBong(v) {
+          console.log('setter got val:', v);
+        },
+        get errorGetter() {
+          throw 'aaa';
+        },
+      },
     }}
-  >
-    {'+'}
-  </button>
-  <button
-    onClick={() => {
-      counter.current--
-      count--
-    }}
-  >
-    {'-'}
-  </button>
-
-  <label>
-    {'show'}
-    <input type="checkbox" {ref bindChecked($visible)} />
-  </label>
-
-  if (showDiv) {
-    <div {ref test.attach}>{'hello'}</div>
-  }
+  />
 
   <style>
     .appear {

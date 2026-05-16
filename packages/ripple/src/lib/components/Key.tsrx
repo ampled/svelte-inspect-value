@@ -1,143 +1,160 @@
-import { getType, stringify, type TypeViewProps } from '@inspect/core';
+import { getType, stringify, stringifyPath, type TypeViewProps } from '@inspect/core';
 import { track } from 'ripple';
+import { ctx } from '../context.js';
+import { Node } from '../Node.tsrx';
+import { Type } from './Type.tsrx';
 
 type KeyProps = {
-	prefix?: string;
-	key: TypeViewProps<unknown>['key'] | unknown;
-	path?: TypeViewProps<unknown>['path'];
-	delim?: string;
-	disabled?: boolean;
-	allowUndefined?: boolean;
-	previewLevel?: number;
+  prefix?: string;
+  key: TypeViewProps<unknown>['key'] | unknown;
+  path?: TypeViewProps<unknown>['path'];
+  delim?: string;
+  disabled?: boolean;
+  allowUndefined?: boolean;
+  previewLevel?: number;
 } & JSX.IntrinsicElements['span'];
 
 export component Key(&{
-	key,
-	path = [],
-	delim = ':',
-	prefix,
-	disabled,
-	onclick,
-	previewLevel = 0,
-	...rest
+  key,
+  path = [],
+  delim = ':',
+  prefix,
+  disabled,
+  onclick,
+  previewLevel = 0,
+  ...rest
 }: KeyProps) {
-	const keyTypes = ['string', 'number', 'symbol', 'quotedstring'];
-	const simpleKeys = ['bigint', 'regexp'];
-	const shouldBeQuoted = /[^A-zÀ-ú0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F_$]|[\\[\]`]/;
+  const ctxVal = ctx.get();
+  const &[options] = track(() => ctxVal.options.value);
 
-	let &[keyType] = track(() => {
-		const t = getType(key);
-		if (t === 'string') {
-			if ((key as string).match(shouldBeQuoted) || key === '') {
-				return 'quotedstring';
-			}
-			return t;
-		}
-		return t;
-	});
+  const keyTypes = ['string', 'number', 'symbol', 'quotedstring'];
+  const simpleKeys = ['bigint', 'regexp'];
+  const shouldBeQuoted = /[^A-zÀ-ú0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F_$]|[\\[\]`]/;
+  ctx.set({ ...ctxVal, isKey: true });
 
-	let &[display] = track(() => {
-		if (key != null) {
-			if (keyType === 'quotedstring') {
-				// TODO: use options.quotes
-				return stringify(key, undefined, 'single');
-			}
-			return key.toString();
-		}
-		return key;
-	});
+  let &[keyType] = track(() => {
+    const t = getType(key);
+    if (t === 'string') {
+      if ((key as string).match(shouldBeQuoted) || key === '') {
+        return 'quotedstring';
+      }
+      return t;
+    }
+    return t;
+  });
 
-	let &[shouldShow] = track(() => key === undefined ? previewLevel > 0 : true);
+  let &[display] = track(() => {
+    if (key != null) {
+      if (keyType === 'quotedstring') {
+        // TODO: use options.quotes
+        return stringify(key, undefined, options.quotes);
+      }
+      return key.toString();
+    }
+    return key;
+  });
 
-	if (shouldShow) {
-		<div class="key-and-delimiter">
-			<div class={['key-outer', disabled && 'disabled']}>
-				if (prefix) {
-					<span class="prefix">{prefix}</span>
-				}
-				if (keyTypes.includes(keyType)) {
-					<span class={['key', keyType, disabled && 'disabled']}>
-						if (keyType === 'quotedstring' && key !== '') {
-							<span>{'todo quotedstring'}</span>
-						} else {
-							{display?.toString()}
-						}
-					</span>
-				}
-			</div>
-			if (delim) {
-				<span class="delim">{delim}</span>
-			}
-		</div>
-	}
-	<style>
-		.key-and-delimiter {
-			display: flex;
-		}
+  let &[shouldShow] = track(() => key === undefined ? previewLevel > 0 : true);
 
-		.key-outer {
-			display: flex;
-			flex-direction: row;
-			align-items: center;
-			gap: 0.5em;
-			margin: 0;
-			padding: 0;
+  if (shouldShow) {
+    <div class="key-and-delimiter">
+      <div class={['key-outer', disabled && 'disabled']} title={stringifyPath(path)} {...rest}>
+        if (prefix) {
+          <span class="prefix">{prefix}</span>
+        }
+        if (keyTypes.includes(keyType)) {
+          <span class={['key', keyType, disabled && 'disabled']}>
+            if (keyType === 'quotedstring' && key !== '' && typeof display === 'string') {
+              for (const char of display) {
+                if (char === ' ') {
+                  <span class="whitespace">{html '&sdot'}</span>
+                } else {
+                  {char}
+                }
+              }
+            } else {
+              {display?.toString()}
+            }
+          </span>
+        } else if (simpleKeys.includes(keyType)) {
+          <Node value={key} />
+        } else {
+          <Type type={keyType} force />
+        }
+      </div>
+      if (delim) {
+        <span class="delim">{delim}</span>
+      }
+    </div>
+  }
+  <style>
+    .key-and-delimiter {
+      display: flex;
+    }
 
-			&:focus:not(.disabled),
-			&:hover:not(.disabled) {
-				.key {
-					text-decoration: underline;
-					text-decoration-color: color-mix(in srgb, currentColor, transparent 50%);
-				}
-			}
-		}
+    .key-outer {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 0.5em;
+      margin: 0;
+      padding: 0;
 
-		.whitespace {
-			opacity: var(--_key-whitespace-opacity);
-			color: var(--_key-whitespace-color);
-			user-select: none;
-		}
+      &:focus:not(.disabled),
+      &:hover:not(.disabled) {
+        .key {
+          text-decoration: underline;
+          text-decoration-color: color-mix(in srgb, currentColor, transparent 50%);
+        }
+      }
+    }
 
-		.key {
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			transition:
-				color var(--__transition-duration) ease-in-out,
-				text-decoration-color var(--__transition-duration) ease-in-out;
-			height: 100%;
-			user-select: text;
-			text-decoration: underline;
-			text-decoration-color: transparent;
+    .whitespace {
+      opacity: var(--_key-whitespace-opacity);
+      color: var(--_key-whitespace-color);
+      user-select: none;
+    }
 
-			&.number {
-				color: var(--_number-value-color);
-			}
+    .key {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition:
+        color var(--__transition-duration) ease-in-out,
+        text-decoration-color var(--__transition-duration) ease-in-out;
+      height: 100%;
+      user-select: text;
+      text-decoration: underline;
+      text-decoration-color: transparent;
 
-			&.string {
-				color: var(--_text-color);
-			}
+      &.number {
+        color: var(--_number-value-color);
+      }
 
-			&.symbol {
-				color: var(--_symbol-value-color);
-			}
+      &.string {
+        color: var(--_text-color);
+      }
 
-			&.quotedstring {
-				color: var(--_string-value-color);
-				text-wrap: nowrap;
-				white-space: pre !important;
-				white-space-collapse: preserve-spaces;
-			}
-		}
+      &.symbol {
+        color: var(--_symbol-value-color);
+      }
 
-		.delim {
-			color: var(--_delimiter-color);
-			user-select: text;
-		}
+      &.quotedstring {
+        color: var(--_string-value-color);
+        text-wrap: nowrap;
+        white-space: pre !important;
+        white-space-collapse: preserve-spaces;
+      }
+    }
 
-		.prefix {
-			color: var(--_key-prefix-color);
-			font-weight: 900;
-		}
-	</style>
+    .delim {
+      color: var(--_delimiter-color);
+      user-select: text;
+    }
+
+    .prefix {
+      color: var(--_key-prefix-color);
+      font-weight: 900;
+    }
+  </style>
 }

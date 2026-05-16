@@ -1,10 +1,10 @@
-import { getAllProperties, type TypeViewProps } from '@inspect/core'
-import { Expandable } from './Expandable.tsrx'
-import { Node } from '../Node.tsrx'
-import { PropertyList } from './PropertyList.tsrx'
-import Preview from './Preview.tsrx'
-import { ctx, previewLevelCtx } from '../context.js'
-import { effect, track } from 'ripple'
+import { getAllProperties, type TypeViewProps } from '@inspect/core';
+import { Expandable } from './Expandable.tsrx';
+import { Node } from '../Node.tsrx';
+import { PropertyList } from './PropertyList.tsrx';
+import { Preview } from './Preview.tsrx';
+import { ctx, previewLevelCtx } from '../context.js';
+import { effect, track } from 'ripple';
 
 export component ArrayView(&{
   value: array = [],
@@ -13,18 +13,18 @@ export component ArrayView(&{
   showKey,
   ...rest
 }: TypeViewProps<unknown[]>) {
-  const previewLevel = previewLevelCtx.get()
+  const previewLevel = previewLevelCtx.get();
 
   let &[otherprops] = track(
     () => getAllProperties(array).filter((prop) => {
       if (typeof prop === 'string') {
-        return /\d+/.test(prop) === false && prop !== 'length'
+        return /\d+/.test(prop) === false && prop !== 'length';
       }
-      return true
+      return true;
     }),
-  )
+  );
 
-  let &[keys] = track(() => [...array.keys(), ...otherprops])
+  let &[keys] = track(() => [...array.keys(), ...otherprops]);
 
   <Expandable
     value={array}

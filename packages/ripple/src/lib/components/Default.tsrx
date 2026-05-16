@@ -1,12 +1,12 @@
-import { type TypeViewProps, getAllProperties } from '@inspect/core'
-import { track } from 'ripple'
-import { OneLineView } from './OneLineView.tsrx'
-import { Expandable } from './Expandable.tsrx'
-import Preview from './Preview.tsrx'
-import { PropertyList } from './PropertyList.tsrx'
+import { type TypeViewProps, getAllProperties } from '@inspect/core';
+import { track } from 'ripple';
+import { OneLineView } from './OneLineView.tsrx';
+import { Expandable } from './Expandable.tsrx';
+import { Preview } from './Preview.tsrx';
+import { PropertyList } from './PropertyList.tsrx';
 
 export component Default(&{ value, key, path, ...rest }: TypeViewProps) {
-  let &[keys] = track(() => getAllProperties(value))
+  let &[keys] = track(() => getAllProperties(value));
 
   if (keys.length) {
     <Expandable

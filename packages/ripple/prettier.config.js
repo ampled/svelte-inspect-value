@@ -1,4 +1,4 @@
-import rootconfig from '../../prettier.config.js'
+import rootconfig from '../../prettier.config.js';
 
 /**
  * @see https://prettier.io/docs/configuration
@@ -6,7 +6,8 @@ import rootconfig from '../../prettier.config.js'
  */
 const config = {
   ...rootconfig,
+  semi: true,
   plugins: [...rootconfig.plugins, '@tsrx/prettier-plugin'],
-}
+};
 
-export default config
+export default config;

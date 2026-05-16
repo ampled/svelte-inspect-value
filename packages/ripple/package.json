@@ -30,6 +30,8 @@
 	},
 	"dependencies": {
 		"@inspect/core": "workspace:*",
+		"highlight.js": "^11.11.1",
+		"memoize": "^10.2.0",
 		"ripple": "latest",
 		"ripple-zustand": "^0.2.0",
 		"zustand": "^5.0.12"

@@ -1,9 +1,10 @@
-import { getPropertyDescriptor, getType, type TypeViewProps } from '@inspect/core'
-import { Node } from '../Node.tsrx'
-import { Key } from './Key.tsrx'
-import { Type } from './Type.tsrx'
-import { ctx, previewLevelCtx } from '../context.js'
-import { track, effect } from 'ripple'
+import { getPropertyDescriptor, getType, type TypeViewProps } from '@inspect/core';
+import { Node } from '../Node.tsrx';
+import { Key } from './Key.tsrx';
+import { GetterSetter } from './GetterSetter.tsrx';
+import { Type } from './Type.tsrx';
+import { ctx, previewLevelCtx } from '../context.js';
+import { track, effect } from 'ripple';
 
 type PreviewProps = {
   prefix?: string;
@@ -21,9 +22,9 @@ type PreviewProps = {
   showKey?: boolean;
   bracketStyle?: string;
   usedefaults?: boolean;
-} & JSX.IntrinsicElements['div']
+} & JSX.IntrinsicElements['div'];
 
-export default component(&{
+export component Preview(&{
   value,
   list: previewList,
   keyValue: previewKeyValue,
@@ -42,30 +43,31 @@ export default component(&{
   usedefaults,
   ...rest
 }: PreviewProps) {
-  const ctxVal = ctx.get()
+  const ctxVal = ctx.get();
   let &[{ previewEntries, previewDepth, showPreview: optsShowPreview }] = track(
     () => ctxVal.options.value,
-  )
-  let _previewLevel = previewLevelCtx.get()
+  );
+  let _previewLevel = previewLevelCtx.get();
 
-  let [previewLevel] = track(() => _previewLevel ?? startLevel)
+  let &[previewLevel] = track(() => _previewLevel ?? startLevel);
 
-  previewLevelCtx.set(previewLevel + 1)
+  previewLevelCtx.set(previewLevel + 1);
 
-  let &[list] = track(() => previewList?.slice(0, previewEntries))
-  let &[keyValue] = track(() => previewKeyValue?.slice(0, previewEntries))
-  let &[keys] = track(() => previewKeys?.slice(0, previewEntries))
+  let &[list] = track(() => previewList?.slice(0, previewEntries));
+  let &[keyValue] = track(() => previewKeyValue?.slice(0, previewEntries));
+  let &[keys] = track(() => previewKeys?.slice(0, previewEntries));
+  let childProps = track(() => ({ showKey, keyDelim, keyStyle, usedefaults }));
 
   let &[hasMore] = track(() => {
     if (list && previewList) {
-      return list.length < previewList.length
+      return list.length < previewList.length;
     } else if (keyValue && previewKeyValue) {
-      return keyValue.length < previewKeyValue.length
+      return keyValue.length < previewKeyValue.length;
     } else if (keys && previewKeys) {
-      return keys.length < previewKeys.length
+      return keys.length < previewKeys.length;
     }
-    return false
-  })
+    return false;
+  });
 
   function alwaysRender(type: string) {
     return [
@@ -79,7 +81,7 @@ export default component(&{
       'undefined',
       'null',
       'store',
-    ].includes(type)
+    ].includes(type);
   }
 
   component ValuePreview(&{
@@ -95,12 +97,12 @@ export default component(&{
     previewLevel: number;
     previewDepth: number;
   }) {
-    const valType = getType(value)
+    const valType = getType(value);
     const newPath =
-      path && key ? [...path, key] : undefined
+      path && key ? [...path, key] : undefined;
 
     if (alwaysRender(valType) || previewLevel < previewDepth) {
-      <Node {path} {key} {value} {showKey} {keyDelim} {keyStyle} {usedefaults} />
+      <Node {path} {key} {value} {...childProps.value} />
     } else {
       // At configured previewDepth, stop rendering nested item previews and just render their types
       <div class="key-type-preview">
@@ -132,7 +134,7 @@ export default component(&{
     descriptor?: PropertyDescriptor;
   }) {
     if (descriptor?.get || descriptor?.set) {
-      {'getterSetter'}
+      <GetterSetter {key} {descriptor} {value} {path} />
     } else {
       <ValuePreview value={value?.[key]} {key} {showKey} {previewDepth} {previewLevel} />
     }
@@ -148,7 +150,7 @@ export default component(&{
       <div class="inner">
         if (keys && value) {
           for (const k of keys; index i; key k) {
-            const descriptor = getPropertyDescriptor(value, k)
+            const descriptor = getPropertyDescriptor(value, k);
             <PreviewValue key={k} {value} {descriptor} />
             if (i < keys.length - 1) <span class="comma">{','}</span>
           }
@@ -175,7 +177,6 @@ export default component(&{
           </span>
         }
       </div>
-      <span class={['post', `level-${previewLevel}`]}>{previewLevel}</span>
     </div>
   }
   <style>

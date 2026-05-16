@@ -122,6 +122,12 @@ importers:
       '@inspect/core':
         specifier: workspace:*
         version: link:../core
+      highlight.js:
+        specifier: ^11.11.1
+        version: 11.11.1
+      memoize:
+        specifier: ^10.2.0
+        version: 10.2.0
       ripple:
         specifier: latest
         version: 0.3.33

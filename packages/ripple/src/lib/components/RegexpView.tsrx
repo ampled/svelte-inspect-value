@@ -1,7 +1,8 @@
-import { type TypeViewProps } from '@inspect/core'
-import { Expandable } from './Expandable.tsrx'
-import { Node } from '../Node.tsrx'
-import { PropertyList } from './PropertyList.tsrx'
+import { type TypeViewProps } from '@inspect/core';
+import { Expandable } from './Expandable.tsrx';
+import { Node } from '../Node.tsrx';
+import { PropertyList } from './PropertyList.tsrx';
+import { GetterSetter } from './GetterSetter.tsrx';
 
 const keys = [
   'lastIndex',
@@ -15,7 +16,7 @@ const keys = [
   'sticky',
   'unicode',
   'unicodeSets',
-]
+];
 
 export component RegexpView(&{
   value,
@@ -41,9 +42,9 @@ export component RegexpView(&{
       {keys}
       {value}
       {type}
-      item={component item({ key, descriptor }) {
+      item={component item(&{ key, descriptor, value }) {
         if (descriptor?.get || descriptor?.set) {
-          {'getter setter'}
+          <GetterSetter {value} {descriptor} {key} {path} />
         } else {
           <Node value={value?.[key]} {key} {path} />
         }
