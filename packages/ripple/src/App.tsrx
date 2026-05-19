@@ -6,13 +6,15 @@ import {
   RippleMap,
   type Tracked,
   effect,
+  RippleArray,
 } from 'ripple';
 import { Inspect } from './lib/Inspect.tsrx';
+import { debug } from './lib/context.js';
 import type { InspectOptions } from '@inspect/core';
 import { funcs } from './values.js';
 
 export component App() {
-  // debug.set(true);
+  debug.set(true);
   let &[count] = track(0);
   let &[counter] = track({ current: 0 });
   let &[showDiv, $showDiv] = track(true);
@@ -22,10 +24,17 @@ export component App() {
   let options = new RippleObject<Partial<InspectOptions>>({
     previewDepth: 1,
     previewEntries: 3,
+    onCollapseChange: (s) => console.log('state changed:', JSON.stringify(s)),
   });
+
+  effect(() => {
+    console.log('options:', options);
+  });
+  let pushArr = new RippleArray<number>();
   let values = new RippleObject({
     arr: [() => {}],
     funcs,
+    pushArr,
     set: new Set([1, 2, 3, 'four']),
     map: new Map<any, any>([
       [1, 1],
@@ -128,6 +137,7 @@ export component App() {
       onClick={() => {
         counter.current++;
         count++;
+        pushArr.push(count);
       }}
     >
       {'+'}
@@ -136,37 +146,39 @@ export component App() {
       onClick={() => {
         counter.current--;
         count--;
+        pushArr.push(count);
       }}
     >
       {'-'}
     </button>
   </div>
 
-  <Inspect {theme} values={{ ...values }} {...options} expandLevel={0} />
+  // <Inspect {theme} values={{ ...values }} {...options} expandLevel={0} />
 
   <Inspect
     {...options}
     expandLevel={0}
     values={{
-      symb: Symbol.for('s'),
-      foo: 1,
-      array: [[1], 2, 'three', [[4]]],
-      count,
-      obj: {
-        bing: 'bong',
-        get anObject() {
-          return { a: 1, b: 2, c: 3 };
-        },
-        get bingBong() {
-          return 'bingbong!!';
-        },
-        set bingBong(v) {
-          console.log('setter got val:', v);
-        },
-        get errorGetter() {
-          throw 'aaa';
-        },
-      },
+      // symb: Symbol.for('s'),
+      // foo: 1,
+      array: [1, 2, 3, [4]],
+      // growingArr: new Array(Math.max(count, 0)).fill(undefined).map((g, i) => i),
+      // count,
+      // obj: {
+      //   bing: 'bong',
+      //   get anObject() {
+      //     return { a: 1, b: 2, c: 3 };
+      //   },
+      //   get bingBong() {
+      //     return 'bingbong!!';
+      //   },
+      //   set bingBong(v) {
+      //     console.log('setter got val:', v);
+      //   },
+      //   get errorGetter() {
+      //     return 'eh?';
+      //   },
+      // },
     }}
   />
 

@@ -4,20 +4,14 @@ import {
   shouldInitiallyExpandNode,
   neverExpandInitial,
 } from '@inspect/core';
-import {
-  track,
-  effect,
-  untrack,
-  type PropsWithChildrenOptional,
-  type Component,
-  type Children,
-} from 'ripple';
+import { track, effect, untrack, type PropsWithChildrenOptional, type Component } from 'ripple';
 import { Key } from './Key.tsrx';
 import { NodeButton } from './NodeButton.tsrx';
 import { Type } from './Type.tsrx';
 import { CollapseButton } from './CollapseButton.tsrx';
 import { ctx, previewLevelCtx, debug } from '../context.js';
 import { collapseStateCtx } from '../state.js';
+import { Tools } from './Tools.tsrx';
 import Count from './Count.tsrx';
 
 type Props<T = unknown> = PropsWithChildrenOptional<TypeViewProps<T>> & {
@@ -58,12 +52,12 @@ export component Expandable<T>(&{
   let ctxVal = ctx.get();
   let isDebug = debug.get();
   const previewLevel = previewLevelCtx.get();
+  const inspectState = collapseStateCtx.get();
 
   let &[{ expandLevel, expandAll, expandPaths, showLength: optsShowLength }] = track(
     () => ctxVal.options.value,
   );
 
-  let inspectState = collapseStateCtx.get();
   let &[expandingDisabled] = track(() => length === 0 || previewLevel > 0);
   let &[stringifiedPath] = track(() => stringifyPath(path));
   let &[collapseState] = track(() => inspectState.value[stringifiedPath]);
@@ -83,16 +77,15 @@ export component Expandable<T>(&{
 
   effect(() => {
     untrack(() => {
-      if (previewLevel) {
-        return;
-      }
-
-      const storedState = inspectState.getCollapse(path);
-      if (typeof storedState === 'undefined') {
-        inspectState.setCollapse(
-          path,
-          !shouldInitiallyExpandNode(path, expandLevel, expandAll, expandPaths),
-        );
+      if (!previewLevel) {
+        const storedState = inspectState.getCollapse(path);
+        if (typeof storedState === 'undefined') {
+          console.log('setting collapseState for path:', stringifiedPath);
+          inspectState.setCollapse(
+            path,
+            !shouldInitiallyExpandNode(path, expandLevel, expandAll, expandPaths),
+          );
+        }
       }
     });
   });
@@ -136,23 +129,26 @@ export component Expandable<T>(&{
     } else if (previewSlot) {
       {previewSlot}
     }
-    if (isDebug) {
-      <NodeButton
-        onClick={(e) => {
-          e.stopPropagation();
+    // if (isDebug) {
+    //   <NodeButton
+    //     onClick={(e) => {
+    //       e.stopPropagation();
 
-          console.log('expandable', {
-            stringifiedPath,
-            showKey,
-            previewLevel,
-          });
-        }}
-      >
-        {'d'}
-      </NodeButton>
-    }
+    //       console.log('expandable', {
+    //         stringifiedPath,
+    //         showKey,
+    //         previewLevel,
+    //       });
+    //     }}
+    //   >
+    //     {'d'}
+    //   </NodeButton>
+    // }
     if (typeof length === 'number' && showLength && optsShowLength && !previewLevel) {
       <Count {length} {type} />
+    }
+    if (!previewLevel) {
+      <Tools {value} {path} {collapsed} {type} />
     }
   </div>
 

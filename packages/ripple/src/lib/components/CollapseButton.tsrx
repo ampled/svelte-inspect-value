@@ -1,5 +1,6 @@
-import { track } from 'ripple'
-import { Bullet } from './Bullet.tsrx'
+import { track } from 'ripple';
+import { flash } from '../util/flash.js';
+import { Bullet } from './Bullet.tsrx';
 
 type Props = {
   collapsed?: boolean;
@@ -8,7 +9,7 @@ type Props = {
   key?: string | symbol | number;
   type?: string;
   disabled?: boolean;
-} & JSX.IntrinsicElements['div']
+} & JSX.IntrinsicElements['div'];
 
 export component CollapseButton(&{
   collapsed,
@@ -19,15 +20,23 @@ export component CollapseButton(&{
   type,
   ...rest
 }: Props) {
-  let &[flashing] = track(false)
+  let &[flashing] = track(false);
   let &[rotation] = track(() => {
-    if (collapsed) return 0
-    return 90
-  })
+    if (collapsed) return 0;
+    return 90;
+  });
+
+  function flashButton() {
+    if (flashing) return;
+    flashing = true;
+    window.setTimeout(() => {
+      flashing = false;
+    }, 250);
+  }
 
   <div style={`--flash-duration: 250ms`} class={['collapse', flashing && 'flashing']}>
     if (disabled) {
-      <Bullet />
+      <Bullet {value} />
     } else {
       <div class="caret-transition">
         <svg
@@ -39,6 +48,7 @@ export component CollapseButton(&{
           }}
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 1024 1024"
+          {ref flash(() => value, flashButton, true)}
         >
           <path
             fill="currentColor"

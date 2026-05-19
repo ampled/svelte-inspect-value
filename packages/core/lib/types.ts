@@ -253,7 +253,7 @@ export type InspectOptions = {
    *
    * @default undefined
    */
-  onCollapseChange: ((state: CollapseState) => void) | undefined
+  onCollapseChange: ((state: CollapseState | Record<string, boolean>) => void) | undefined
   /**
    * Enable or disable svelte-store inspection.
    * Objects with a `subscribe` method will be inspected as stores and show their subscription value.

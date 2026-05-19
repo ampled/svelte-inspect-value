@@ -1,10 +1,25 @@
-import { track } from 'ripple'
+import { track } from 'ripple';
+import { ctx } from '../context.js';
+import { flash } from '../util/flash.js';
 
-export component Bullet({ value }: { value?: any }) {
-  let &[flashing] = track(false)
+export component Bullet(&{ value }: { value?: any }) {
+  const ctxVal = ctx.get();
+  let &[flashing] = track(false);
+
+  function flashBullet(): void {
+    if (flashing) return;
+    flashing = true;
+    window.setTimeout(() => {
+      flashing = false;
+    }, 250);
+  }
 
   <div class="bullet" role="presentation">
-    <div class={['dash', flashing && 'flashing']} />
+    <div
+      aria-hidden
+      class={['dash', flashing && 'flashing']}
+      {ref flash(() => value, flashBullet, true)}
+    />
   </div>
 
   <style>

@@ -17,7 +17,7 @@ type Props = PropsWithChildren<{
 export component InspectProvider(&{ options, children }: Props) {
   const ctxVal = ctx.get();
   let stateInit = new RippleObject<CollapseState>({});
-  let collapseState = createCollapseState(stateInit);
+  let collapseState = createCollapseState(stateInit, (s) => options.value.onCollapseChange?.(s));
   collapseStateCtx.set(collapseState);
 
   ctxVal.options = options;
