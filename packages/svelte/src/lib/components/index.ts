@@ -1,5 +1,4 @@
-import type { Component } from 'svelte'
-import type { CustomComponents, TypeViewProps } from '../types.js'
+import type { CustomComponents, TypeViewProps, ViewComponents } from '../types.js'
 import ArrayView from './ArrayView.svelte'
 import ClassView from './ClassView.svelte'
 import DateView from './DateView.svelte'
@@ -21,15 +20,8 @@ import TypedArrayView from './TypedArrayView.svelte'
 import UrlSearchParamsView from './URLSearchParamsView.svelte'
 import UrlView from './URLView.svelte'
 import MapEntryView from './MapEntryView.svelte'
-
-type ViewComponent<T> = Component<TypeViewProps<T>>
-
-export type ComponentEntry<T = unknown> =
-  | [ViewComponent<T>, (props: TypeViewProps<T>) => Partial<TypeViewProps<T>>]
-  | [ViewComponent<T>]
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ViewComponents = Record<string, ComponentEntry<any>>
+import TemporalView from './temporal/TemporalView.svelte'
+import temporal from './temporal/index.js'
 
 const components = {
   symbol: [
@@ -77,6 +69,7 @@ const components = {
   html: [HtmlView],
   promise: [PromiseView],
   typedarray: [TypedArrayView],
+  ...temporal,
 } as ViewComponents
 
 export default components
@@ -96,17 +89,19 @@ const typedArrays = [
 ]
 
 export function getComponent(type: string, custom: CustomComponents) {
+  const _type = type.toLowerCase()
   const comps = { ...components, ...custom }
 
-  if (typedArrays.includes(type)) return comps['typedarray']
-  if (type.includes('iterator')) return comps['arrayiterator']
+  if (typedArrays.includes(_type)) return comps['typedarray']
+  if (_type.includes('iterator')) return comps['arrayiterator']
 
-  return comps[type]
+  return comps[_type]
 }
 
 export function getDefaultComponent(type: string) {
-  if (typedArrays.includes(type)) return components['typedarray']
+  const _type = type.toLowerCase()
+  if (typedArrays.includes(_type)) return components['typedarray']
   if (type.includes('iterator')) return components['arrayiterator']
 
-  return components[type]
+  return components[_type]
 }

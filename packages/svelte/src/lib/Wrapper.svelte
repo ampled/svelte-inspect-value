@@ -664,7 +664,18 @@
     }
 
     &.date {
-      color: var(--_date-type-color);
+      color: var(--_string-value-color);
+    }
+
+    &.temporal\.plaindate,
+    &.temporal\.plaindatetime,
+    &.temporal\.plaintime,
+    &.temporal\.plainmonthday,
+    &.temporal\.plainyearmonth,
+    &.temporal\.zoneddatetime,
+    &.temporal\.instant,
+    &.temporal\.duration {
+      color: var(--_string-value-color);
     }
 
     &.function {

@@ -446,3 +446,12 @@ export type SecondArgOf<T> = T extends (
 ) => any
   ? SecondArgument
   : never
+
+type ViewComponent<T> = Component<TypeViewProps<T>>
+
+export type ComponentEntry<T = unknown> =
+  | [ViewComponent<T>, (props: TypeViewProps<T>) => Partial<TypeViewProps<T>>]
+  | [ViewComponent<T>]
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type ViewComponents = Record<string, ComponentEntry<any>>

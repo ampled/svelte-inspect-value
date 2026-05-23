@@ -44,7 +44,7 @@ export function getType(value: unknown, stores: InspectOptions['stores'] = false
 export function typeOf(obj: unknown): ValueType {
   const t = {}.toString.call(obj).slice(8, -1)
 
-  return (t.replace(' ', '').toLowerCase() ?? 'undefined') as unknown as ValueType
+  return (t.replace(' ', '') ?? 'undefined') as unknown as ValueType
 }
 
 export function isArray(value: unknown): value is unknown[] {
@@ -159,6 +159,25 @@ export function descriptorPrefix(descriptor?: PropertyDescriptor) {
   return [descriptor?.set ? 'set' : undefined, descriptor?.get ? 'get' : undefined]
     .filter(Boolean)
     .join('|')
+}
+
+export function getAllDescriptors<T extends object>(
+  obj: T
+): Record<string, TypedPropertyDescriptor<unknown> & PropertyDescriptor> {
+  const result: Record<string, PropertyDescriptor> = {}
+  let current: object | null = obj
+
+  while (current && current !== Object.prototype) {
+    const descriptors = Object.getOwnPropertyDescriptors(current)
+    for (const key of Object.getOwnPropertyNames(current)) {
+      if (!(key in result)) {
+        result[key] = descriptors[key]
+      }
+    }
+    current = Object.getPrototypeOf(current) as object | null
+  }
+
+  return result
 }
 
 export function getAllProperties(object: any) {

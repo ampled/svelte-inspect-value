@@ -86,6 +86,7 @@ export default defineConfig({
         },
         {
           label: 'TypeDoc',
+          collapsed: true,
           items: [
             {
               label: 'Types',
@@ -99,6 +100,7 @@ export default defineConfig({
         },
         // typeDocSidebarGroup,
         ...makeChangelogsSidebarLinks([{ type: 'all', base: 'changelog', label: 'Changelog' }]),
+        { label: 'Playground', link: '/playground' },
       ],
       plugins: [
         starlightChangelogs(),

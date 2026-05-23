@@ -1,15 +1,39 @@
 <script module lang="ts">
   import ace from 'ace-builds'
+  import jsWorker from 'ace-builds/src-noconflict/worker-javascript.js?url'
+
+  ace.config.set('basePath', '../../../node_modules/ace-builds/src-noconflict')
+  ace.config.setModuleUrl('ace/mode/javascript_worker', jsWorker)
+
   import 'ace-builds/src-noconflict/mode-javascript'
   import { inspectTheme, inspectThemeLight } from './ace-inspect-theme'
+
+  const ACE_DEFAULTS: Partial<ace.Ace.EditorOptions> = {
+    maxLines: 100,
+    minLines: 12,
+    showLineNumbers: false,
+    showFoldWidgets: false,
+    showPrintMargin: false,
+    showGutter: false,
+    highlightActiveLine: false,
+  }
 </script>
 
 <script lang="ts">
-  import { onMount } from 'svelte'
-  import type { AceProps } from './aceprops'
   import { starlightTheme } from '../global-opts/sltheme.svelte.js'
+  import type { SvelteHTMLElements } from 'svelte/elements'
+  import { onMount } from 'svelte'
 
-  let { value, onchange, valid, message }: AceProps = $props()
+  type AceProps = {
+    value: string
+    valid?: boolean
+    onChange?: (value: string) => void
+    message?: string
+    aceOptions?: Partial<ace.Ace.EditorOptions>
+  } & SvelteHTMLElements['div']
+
+  let { value, onChange, valid, message, aceOptions = {}, ...rest }: AceProps = $props()
+  let aceOpts = $derived<Partial<ace.Ace.EditorOptions>>({ ...ACE_DEFAULTS, ...aceOptions })
   let div = $state<HTMLDivElement>()
   let editor = $state<ace.Editor>()
   let ready = $state(false)
@@ -19,22 +43,12 @@
   }
 
   onMount(() => {
-    ace.config.set('basePath', '../../../node_modules/ace-builds/src-noconflict')
-
     if (div) {
       editor = ace.edit(div)
       editor.setTheme(inspectTheme)
       editor.session.setMode('ace/mode/javascript')
       editor.setValue(value, -1)
-      editor.setOptions({
-        maxLines: 100,
-        minLines: 12,
-        showLineNumbers: false,
-        showFoldWidgets: false,
-        showPrintMargin: false,
-        showGutter: false,
-        highlightActiveLine: false,
-      })
+      editor.setOptions(aceOpts)
       editor.container.style.lineHeight = '1.5'
       editor.container.style.fontFamily = 'monospace'
 
@@ -42,8 +56,8 @@
 
       editor.session.on('change', () => {
         const val = editor?.getValue()
-        if (val && onchange) {
-          onchange(val)
+        if (val && onChange) {
+          onChange(val)
         }
       })
 
@@ -70,7 +84,7 @@
   <link rel="stylesheet" href="/ace.css" />
 </svelte:head>
 
-<div class="wrapper not-content" class:valid>
+<div class="wrapper not-content" class:valid {...rest}>
   <div class="ace" class:ready bind:this={div}></div>
   {#if message}
     <span>

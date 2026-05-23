@@ -54,7 +54,7 @@
   <Editor
     bind:this={editor}
     value={sourceValue}
-    {onchange}
+    onChange={onchange}
     valid={demoInputValid}
     message={error}
   />

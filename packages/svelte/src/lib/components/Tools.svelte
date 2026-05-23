@@ -197,6 +197,8 @@
 
   function debugNode() {
     const { log } = console
+    log('### DEBUG ###')
+    log({ value, path, type })
     log({
       globalInspectState,
       indexed: buildSearchIndex({ value, options: options.value }),

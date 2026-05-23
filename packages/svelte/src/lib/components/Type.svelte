@@ -54,6 +54,14 @@
   })
 
   const ALWAYS_VISIBLE_TYPES = [
+    'temporal.plaindate',
+    'temporal.plaindatetime',
+    'temporal.plaintime',
+    'temporal.plainmonthday',
+    'temporal.plainyearmonth',
+    'temporal.duration',
+    'temporal.instant',
+    'temporal.zoneddatetime',
     'undefined',
     'null',
     'class',

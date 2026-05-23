@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { TypeViewProps } from '../types.js'
-  import { getAllProperties } from '../util.js'
+  import { getAllDescriptors, getAllProperties } from '../util.js'
   import Expandable from './Expandable.svelte'
   import GetterSetter from './GetterSetter.svelte'
   import Node from './Node.svelte'
@@ -13,6 +13,10 @@
   let { value, key, path, ...rest }: Props = $props()
 
   let keys = $derived(getAllProperties(value))
+
+  let descriptors = $derived(getAllDescriptors(value))
+
+  $inspect(descriptors)
 </script>
 
 {#if keys.length}
