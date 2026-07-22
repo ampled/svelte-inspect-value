@@ -1,4 +1,4 @@
-import ace from 'ace-builds'
+import type ace from 'ace-builds'
 import cssDark from './ace-inspect-theme.css?raw'
 import cssLight from './ace-inspect-theme-light.css?raw'
 
@@ -12,5 +12,5 @@ export const inspectThemeLight: ace.Ace.Theme = {
   cssClass: 'ace-inspect-light',
   cssText: cssLight,
   padding: 0,
-  isDark: true,
+  isDark: false,
 }

@@ -1,10 +1,10 @@
 .ace-inspect .ace_gutter {
-  background: #282a36;
+  background: var(--base01);
   color: rgb(144, 145, 148);
 }
 
 .ace-inspect .ace_print-margin {
-  background: #44475a;
+  background: var(--base03);
   width: 1px;
 }
 
@@ -39,7 +39,16 @@
   color: var(--base05);
 }
 
-.ace-inspect .ace_identifier + .ace_punctuation {
+.ace-inspect .ace_identifier {
+  color: var(--base05);
+}
+
+.ace-inspect .ace_constant.ace_numeric + .ace_identifier {
+  color: var(--base0E);
+}
+
+.ace-inspect .ace_identifier + .ace_punctuation,
+.ace-inspect .ace_variable + .ace_punctuation {
   color: var(--base08);
 }
 
@@ -58,7 +67,7 @@
 
 .ace-inspect .ace_marker-layer .ace_bracket {
   margin: -1px 0 0 -1px;
-  border: 1px solid #a29709;
+  border: 1px solid var(--base06);
 }
 
 .ace-inspect .ace_marker-layer .ace_active-line {
@@ -66,11 +75,11 @@
 }
 
 .ace-inspect .ace_gutter-active-line {
-  background-color: #44475a;
+  background-color: var(--base02);
 }
 
 .ace-inspect .ace_marker-layer .ace_selected-word {
-  box-shadow: 0px 0px 0px 1px #a29709;
+  box-shadow: 0px 0px 0px 1px var(--base03);
   border-radius: 3px;
 }
 
@@ -87,7 +96,12 @@
   color: #bd93f9;
 }
 
-.ace-inspect .ace_constant.ace_numeric {
+.ace-inspect .ace_variable.ace_language {
+  color: var(--base0C);
+}
+
+.ace-inspect .ace_constant.ace_numeric,
+.ace-inspect .ace_constant.ace_boolean {
   color: var(--base0E);
 }
 
@@ -173,9 +187,9 @@
 }
 
 .ace-inspect .ace_indent-guide {
-  background: url('../dracula-1.png') right repeat-y;
+  background: url('/dracula-1.png') right repeat-y;
 }
 
 .ace-inspect .ace_indent-guide-active {
-  background: url('../dracula-2.png') right repeat-y;
+  background: url('/dracula-2.png') right repeat-y;
 }

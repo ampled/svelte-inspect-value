@@ -5,12 +5,13 @@
   ace.config.set('basePath', '../../../node_modules/ace-builds/src-noconflict')
   ace.config.setModuleUrl('ace/mode/javascript_worker', jsWorker)
 
-  import 'ace-builds/src-noconflict/mode-javascript'
+  import './mode-javascript.js'
   import { inspectTheme, inspectThemeLight } from './ace-inspect-theme'
 
   const ACE_DEFAULTS: Partial<ace.Ace.EditorOptions> = {
     maxLines: 100,
     minLines: 12,
+    tabSize: 2,
     showLineNumbers: false,
     showFoldWidgets: false,
     showPrintMargin: false,
@@ -95,7 +96,6 @@
 
 <style>
   .wrapper {
-    /* all: unset; */
     position: relative;
     box-shadow: 0.1rem 0.1rem 0.2rem #00000028;
     border: 1px solid var(--docs-border-color);
@@ -119,8 +119,9 @@
     opacity: 0;
     transition: opacity 50ms ease-in;
     width: 100%;
-    height: auto;
+    height: 100%;
     min-height: 208px;
+    overflow: hidden;
 
     &.ready {
       opacity: 1;
