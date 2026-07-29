@@ -35,7 +35,7 @@
 
 {#if validStore}
   {#if storeMode === 'full' || storeMode === true}
-    <Expandable type={valueType} length={keys.length} {key} {path} {value} {...rest}>
+    <Expandable type={valueType} length={keys.length} {key} {path} {value} forceType {...rest}>
       {#snippet valuePreview({ showPreview })}
         <Preview
           style="margin-left: -0.5em"
@@ -84,7 +84,7 @@
     }}
     {value}
     {key}
-    type="object"
+    type="Object"
     {path}
     {...rest}
   />
