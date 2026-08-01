@@ -20,7 +20,6 @@ import TypedArrayView from './TypedArrayView.svelte'
 import UrlSearchParamsView from './URLSearchParamsView.svelte'
 import UrlView from './URLView.svelte'
 import MapEntryView from './MapEntryView.svelte'
-import TemporalView from './temporal/TemporalView.svelte'
 import temporal from './temporal/index.js'
 
 const components = {

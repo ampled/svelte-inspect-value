@@ -1,8 +1,5 @@
-<script
-  lang="ts"
-  generics="V extends Temporal.Duration | Temporal.Instant | Temporal.PlainDate | Temporal.ZonedDateTime"
->
-  import type { TypeViewProps } from '../../types.js'
+<script lang="ts" generics="V extends TemporalObject">
+  import type { TemporalObject, TypeViewProps } from '../../types.js'
   import Entry from '../Entry.svelte'
   import Expandable from '../Expandable.svelte'
   import Node from '../Node.svelte'
@@ -27,16 +24,16 @@
   )
 
   let entries = $derived(
-    (
-      [
-        ['string', value.toString()],
-        localeString ? ['localeString', localeString] : null,
-        ...keys.map((key) => [key, value[key]]),
-      ] as [PropertyKey, unknown][]
-    ).filter((v) => v !== null)
+    ([...keys.map((key) => [key, value[key]])] as [PropertyKey, unknown][]).filter(
+      (v) => v !== null
+    )
   )
 
-  // $inspect('temporalview entries:', entries)
+  let stringified = $derived(
+    [['toString', value.toString()], localeString ? ['toLocaleString', localeString] : null].filter(
+      (v) => v != null
+    )
+  )
 </script>
 
 <Expandable
@@ -54,6 +51,18 @@
   {#each entries as [key, value], i (key)}
     <Entry {i}>
       <Node {value} {key} {path} />
+    </Entry>
+  {/each}
+  {#each stringified as [key, value], i (key)}
+    <Entry {i}>
+      <Node
+        keyStyle="--_text-color: var(--_function-name-color); padding-right: 1ch; gap: 0;"
+        keyPostfix="()"
+        keyDelim="=>"
+        {value}
+        {key}
+        {path}
+      />
     </Entry>
   {/each}
 </Expandable>

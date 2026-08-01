@@ -1,5 +1,4 @@
-import type { ViewComponents } from '$lib/types.js'
-
+import type { ViewComponents } from '../../types.js'
 import TemporalView from './TemporalView.svelte'
 
 export default {
