@@ -18,6 +18,7 @@
   import { wait } from './util.js'
   import { clearSearchCache, parseSearchTerms } from './util/search.js'
   import { tinykeys } from './util/hotkeys.js'
+  import TypingBuffer from './TypingBuffer.svelte'
 
   type Props = {
     showExpandCollapse?: boolean
@@ -234,26 +235,7 @@
     </div>
   {/if}
   {#if !collapsed}
-    {#if typingBuffer.current.length}
-      <div
-        class="typebuffer"
-        transition:fly={{ duration: options.transitionDuration, y: 40, opacity: 0 }}
-      >
-        <div style="height: 1em; width: 1em; flex-shrink: 0">
-          <i.Search />
-        </div>
-        <div style="display: flex">
-          {#each typingBuffer.current as c, i (i)}
-            <div
-              style="color: var(--_text-color); width: 1ch;"
-              in:slide={{ axis: 'x', duration: options.transitionDuration }}
-            >
-              {c}
-            </div>
-          {/each}{#key typingBuffer.current}<span class="block">▊</span>{/key}
-        </div>
-      </div>
-    {/if}
+    <TypingBuffer {typingBuffer} />
     <div class="body" transition:slide={{ duration: options.transitionDuration }}>
       <svelte:boundary onerror={console.error}>
         {#snippet failed(_, reset)}
@@ -429,43 +411,6 @@
           border-top: 1px solid var(--_border-color);
         }
       }
-    }
-
-    .typebuffer {
-      display: none;
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      justify-content: flex-start;
-      align-items: center;
-      gap: 0.5em;
-      transform: translate(-50%, 0);
-      z-index: 1;
-      border: 1px solid var(--_border-color);
-      border-bottom: none;
-      border-radius: var(--_border-radius) var(--_border-radius) 0 0;
-      background-color: var(--_background-color);
-      padding: 1ch;
-      width: 90%;
-      max-width: 360px;
-      overflow: clip;
-      color: var(--_button-color);
-      font-size: 1em;
-      line-height: 1;
-      text-align: left;
-
-      .block {
-        transform-origin: center 150%;
-        animation-duration: 250ms;
-        animation-timing-function: ease-in;
-        animation-iteration-count: 1;
-        animation-name: block;
-        line-height: 1;
-      }
-    }
-
-    &:focus-within .typebuffer {
-      display: flex;
     }
   }
 
