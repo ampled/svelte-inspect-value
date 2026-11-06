@@ -1,11 +1,7 @@
 ---
 import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro'
-import AnchorHeading from '@astrojs/starlight/components/AnchorHeading.astro'
 import PlaygroundComponent from './_Playground.svelte'
-import Title from '@components/Title.astro'
 import examples from './examples.js'
-
-type ExampleKey = keyof typeof examples
 
 export const prerender = false
 const { example } = Astro.params as { example: string | undefined }
@@ -13,6 +9,7 @@ let currentExample = examples.primitives
 if (example) {
   currentExample = examples[example.split('-').join(' ') as keyof typeof examples]
 }
+if (!currentExample) return Astro.redirect('/404')
 ---
 
 <StarlightPage

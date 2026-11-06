@@ -11,12 +11,6 @@ export const flash = <T extends Element = HTMLElement | SVGElement>(
   initialized = false
 ): Attachment<T> => {
   return (node) => {
-    function emitChanged(newVal: unknown) {
-      onupdate?.(node)
-      node.dispatchEvent(new CustomEvent('inspectvaluechange', { bubbles: true }))
-      prevValue = newVal
-    }
-
     $effect(() => {
       const newVal = value()
       if (enabled) {
@@ -25,11 +19,15 @@ export const flash = <T extends Element = HTMLElement | SVGElement>(
             // handle temporal comparison error
             // TODO: DIY an equal function or find alternative
             if (!equal(newVal, prevValue)) {
-              emitChanged(newVal)
+              onupdate?.(node)
+              node.dispatchEvent(new CustomEvent('inspectvaluechange', { bubbles: true }))
+              prevValue = newVal
             }
           } catch {
             if (newVal !== prevValue) {
-              emitChanged(newVal)
+              onupdate?.(node)
+              node.dispatchEvent(new CustomEvent('inspectvaluechange', { bubbles: true }))
+              prevValue = newVal
             }
           }
         } else {

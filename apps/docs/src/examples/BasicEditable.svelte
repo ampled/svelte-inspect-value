@@ -19,6 +19,7 @@
   let demoInputValid = $state(true)
   let sourceValue = $state(original)
   let value = $state(evaluate(original))
+  let parseJson = $state(false)
 
   function reset() {
     sourceValue = original
@@ -59,9 +60,19 @@
     message={error}
   />
 </div>
-<Inspect {value} name="demo"></Inspect>
+<Inspect {value} name="demo" {parseJson}></Inspect>
+<div class="input-row">
+  <label>
+    parse json
+    <input type="checkbox" bind:checked={parseJson} />
+  </label>
+</div>
 
 <style>
+  label {
+    font-family: monospace;
+  }
+
   .editor {
     position: relative;
   }

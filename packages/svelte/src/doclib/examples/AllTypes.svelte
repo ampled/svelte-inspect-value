@@ -7,7 +7,7 @@
   import sprite from './media/squirtle.png'
   import audio from './media/squirtle_cry.ogg'
   import { GLOBAL_OPTIONS_CONTEXT, type InspectOptions } from '$lib/options.svelte.js'
-  import { getContext } from 'svelte'
+  import { getContext, onMount } from 'svelte'
 
   let { seeFlashing = $bindable(false), ...props }: InspectProps & { seeFlashing?: boolean } =
     $props()
@@ -212,6 +212,9 @@
       double: (value: number) => 2 * value,
       normalFunction: function (some: string = 'some', thing: string) {
         return some + thing
+      },
+      method() {
+        return this
       },
       asyncOneLiner: async (v: number) => new Promise((r) => setTimeout(() => r(v), v)),
       asyncfn: async function () {
@@ -442,6 +445,10 @@
       strsubclass: new StringSubclass('test'),
       subclass: StringSubclass,
     },
+  })
+
+  onMount(() => {
+    allTypes.body = document.body as any
   })
 
   $effect(() => {
