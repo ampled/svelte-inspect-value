@@ -58,7 +58,7 @@ test('it can display simple values', async () => {
         expect(valueElement).toHaveTextContent(expectedValue)
       }
     } catch (e) {
-      console.error(`Test failed for value ${value}`)
+      console.error(`Test failed for value of type ${typeof value}. Value:`, value)
       throw e
     }
   }

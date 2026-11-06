@@ -13,6 +13,7 @@
     all: unset;
     display: inline;
     align-content: center; /* Simplest 2025 method */
+    cursor: default;
     margin-bottom: 0.25em;
     border: 1px solid var(--sl-color-accent);
     border-radius: 9999px;
@@ -26,6 +27,7 @@
       system-ui,
       -apple-system,
       sans-serif;
+    user-select: none;
     text-align: center;
 
     &:hover {

@@ -13,7 +13,7 @@ import ScrollTo from '@components/global-opts/ScrollToButton.svelte';
 
 `Inspect` works well for basic object and array-values aka "JSON".
 
-Actual JSON strings can be parsed by setting the [`parseJson`](/api/type-aliases/inspectoptions/#parsejson) <ScrollTo id="parseJson" client:only="svelte" /> option.
+Actual JSON strings can be parsed by setting the [`parseJson`](/api/type-aliases/inspectoptions/#parsejson) option.
 
 <e.BasicEditable client:load="svelte" />
 
@@ -49,7 +49,7 @@ The state and eventual result of promises are displayed.
 
 ### Stores
 
-Objects with a `subscribe` function are recognized as stores or rxjs observables. The
+Objects with a `subscribe` function are recognized as stores or [rxjs](https://rxjs.dev/) observables. The
 stores will be subscribed to and the latest emitted value will be displayed.
 
 If the store does not return a valid
@@ -64,7 +64,7 @@ This can be enabled / disabled with the [`stores`](/api/type-aliases/inspectopti
 
 Display "static" properties of classes.
 
-<e.Classes client:visible />
+<e.Classes client:only />
 
 ### Functions
 

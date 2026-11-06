@@ -28,6 +28,7 @@
   let {
     key,
     keyPrefix,
+    keyPostfix,
     keyDelim = ':',
     keyStyle,
     showKey = true,
@@ -46,6 +47,7 @@
   }: Props = $props()
 
   let collapseButton = $state<CollapseButton>()
+  let keyProps = $derived(typeof key === 'object' ? key : { key })
   const options = useOptions()
   const inspectState = useState()
   const previewLevel = getPreviewLevel()
@@ -68,7 +70,7 @@
     }
     // while waiting for onMount to run, check expandLevel.
     // this avoids playing the indent intro animation.
-    return path.length > options.expandLevel || neverExpandInitial.includes(key)
+    return path.length > options.expandLevel || neverExpandInitial.includes(keyProps.key)
   })
 
   onMount(() => {
@@ -122,7 +124,7 @@
         bind:this={collapseButton}
         {collapsed}
         {value}
-        {key}
+        key={keyProps.key}
         {type}
         disabled={expandingDisabled}
       />
@@ -130,11 +132,12 @@
     {#if showKey}
       <Key
         disabled={expandingDisabled}
-        delim={keyDelim}
+        delimiter={keyDelim}
         prefix={keyPrefix}
+        postfix={keyPostfix}
         style={keyStyle}
-        {key}
         {path}
+        {...keyProps}
       />
     {/if}
     {#if !isKey}
@@ -165,7 +168,7 @@
     oninspectvaluechange={() => collapseButton?.flash()}
     role="list"
     data-testid="indent"
-    class={['indent', type, match && 'match']}
+    class={['indent', type?.toLowerCase(), match && 'match']}
     {@attach scope(previewLevel === 0)}
   >
     {@render children()}

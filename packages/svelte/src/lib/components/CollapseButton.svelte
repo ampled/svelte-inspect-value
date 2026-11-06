@@ -21,6 +21,7 @@
   let childflash = $state(false)
 
   let options = useOptions()
+  let { flashOnUpdate: flashEnabled } = $derived(options.value)
 
   let rotation = $derived.by(() => {
     if (collapsed) return 0
@@ -61,7 +62,7 @@
         style="rotate:{rotation}deg;
         transition: rotate var(--__transition-duration) var(--_back-out);
         width: 100%; height: 100%;"
-        {@attach flashOnUpdate(() => value, flashButton, options.value.flashOnUpdate)}
+        {@attach flashOnUpdate(() => value, flashButton, flashEnabled)}
       />
     </div>
   {/if}

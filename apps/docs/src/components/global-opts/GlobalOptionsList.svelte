@@ -7,7 +7,6 @@
     panelState.keepOpen = true
     const input = panelState.ele?.querySelector(id) as HTMLInputElement
     if (!input) return
-    // input.focus()
     input.classList.add('focused')
     input.scrollIntoView({ behavior: 'smooth', block: 'center' })
     setTimeout(() => {
@@ -19,12 +18,13 @@
 
 <script lang="ts">
   import { starlightTheme } from './sltheme.svelte.js'
-  import { DEFAULT_OPTIONS } from 'svelte-inspect-value'
+  import { DEFAULT_OPTIONS, type InspectOptions } from 'svelte-inspect-value'
   import * as easings from 'svelte/easing'
 
   import { slide } from 'svelte/transition'
   import OptionToggle from './OptionToggleCheck.svelte'
   import { onMount } from 'svelte'
+  import { watch } from 'runed'
 
   let { visible }: { visible: boolean } = $props()
   let currentTheme: 'dark' | 'light' | undefined = undefined
@@ -37,20 +37,28 @@
   })
 
   onMount(() => {
+    const stored = localStorage.getItem('siv.global-opts')
+    if (stored) {
+      const parsed = JSON.parse(stored) as Partial<InspectOptions>
+      Object.entries(parsed).forEach(([key, value]) => {
+        // @ts-expect-error asdf
+        globalOpts[key as unknown as any] = value
+      })
+    }
+
     const doc = document.documentElement
     if ('theme' in doc.dataset) {
       starlightTheme.current = doc.dataset['theme'] as 'dark' | 'light'
     }
     const observer = new MutationObserver((mutations) => {
+      // if (globalOpts.theme !== 'inspect' && globalOpts.theme !== 'light') return
       mutations.forEach((m) => {
         if (m.type === 'attributes' && m.target instanceof HTMLElement) {
           const dataSet = m.target.dataset
           if ('theme' in dataSet && currentTheme !== dataSet['theme']) {
             if (dataSet['theme'] === 'dark') {
-              globalOpts.theme = 'inspect'
               starlightTheme.current = 'dark'
             } else {
-              globalOpts.theme = 'light'
               starlightTheme.current = 'light'
             }
             currentTheme = dataSet['theme'] as 'dark' | 'light'
@@ -63,6 +71,21 @@
     return () => {
       observer.disconnect()
     }
+  })
+
+  watch(
+    () => starlightTheme.current,
+    () => {
+      if (starlightTheme.current === 'dark' && globalOpts.theme === 'light') {
+        globalOpts.theme = 'inspect'
+      } else if (starlightTheme.current === 'light' && globalOpts.theme === 'inspect') {
+        globalOpts.theme = 'light'
+      }
+    }
+  )
+
+  $effect(() => {
+    localStorage.setItem('siv.global-opts', JSON.stringify({ ...globalOpts }))
   })
 </script>
 
@@ -86,7 +109,7 @@
           </svg>
         </button>
         <button
-          title="Reset Settings"
+          title="Reset to default"
           class="tool-button"
           onclick={() => {
             setGlobalOpts(DEFAULT_OPTIONS)
@@ -127,7 +150,6 @@
         </select>
       </label>
       <OptionToggle key="borderless">borderless</OptionToggle>
-
       <OptionToggle key="parseJson" title="parse json strings">parse json</OptionToggle>
       <OptionToggle key="noanimate" title="disable animation">noanimate</OptionToggle>
       <OptionToggle key="showTypes" title="show types">types</OptionToggle>

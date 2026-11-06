@@ -160,6 +160,7 @@
           { href: '/testing/alltypes', title: 'All Types', devonly: true },
           { href: '/testing/global', title: 'Global', devonly: true },
           { href: '/testing/search', title: 'Search', devonly: true },
+          { href: '/testing/temporal', title: 'Temporal', devonly: true },
         ],
       },
       {

@@ -1,0 +1,41 @@
+---
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro'
+import PlaygroundComponent from './_Playground.svelte'
+import examples from './examples.js'
+
+export const prerender = false
+const { example } = Astro.params as { example: string | undefined }
+let currentExample = examples.primitives
+if (example) {
+  currentExample = examples[example.split('-').join(' ') as keyof typeof examples]
+}
+if (!currentExample) return Astro.redirect('/404')
+---
+
+<StarlightPage
+  hasSidebar={false}
+  frontmatter={{
+    title: 'Playground',
+    tableOfContents: false,
+    prev: false,
+    next: false,
+    globalopts: true,
+  }}
+>
+  <div transition:name="playground" transition:animate="none">
+    <PlaygroundComponent client:load value={currentExample} urlName={example} />
+  </div>
+</StarlightPage>
+
+<style is:global>
+  @media (min-width: 72rem) {
+    .sl-container {
+      margin-inline: 0 !important;
+      width: 100%;
+      max-width: unset !important;
+      .sl-markdown-content {
+        width: 100%;
+      }
+    }
+  }
+</style>

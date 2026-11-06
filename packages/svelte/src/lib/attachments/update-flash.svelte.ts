@@ -15,10 +15,20 @@ export const flash = <T extends Element = HTMLElement | SVGElement>(
       const newVal = value()
       if (enabled) {
         if (initialized) {
-          if (!equal(newVal, prevValue)) {
-            onupdate?.(node)
-            node.dispatchEvent(new CustomEvent('inspectvaluechange', { bubbles: true }))
-            prevValue = newVal
+          try {
+            // handle temporal comparison error
+            // TODO: DIY an equal function or find alternative
+            if (!equal(newVal, prevValue)) {
+              onupdate?.(node)
+              node.dispatchEvent(new CustomEvent('inspectvaluechange', { bubbles: true }))
+              prevValue = newVal
+            }
+          } catch {
+            if (newVal !== prevValue) {
+              onupdate?.(node)
+              node.dispatchEvent(new CustomEvent('inspectvaluechange', { bubbles: true }))
+              prevValue = newVal
+            }
           }
         } else {
           initialized = true

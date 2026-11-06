@@ -1,10 +1,15 @@
 ---
+interface Props {
+  style?: string
+}
 
+const { style } = Astro.props
 ---
 
 <span
   aria-label="Svelte Inspect Value"
   class="lib-title"
+  style={style}
   transition:name="lib-title"
   transition:animate="fade"
 >
@@ -25,9 +30,9 @@
 
     .mono {
       background: transparent;
-      padding-left: 0.2rem;
+      padding-left: 0.2em;
       font-weight: normal;
-      font-size: 0.85rem;
+      font-size: 0.75em;
       font-family: monospace;
 
       .inspect {

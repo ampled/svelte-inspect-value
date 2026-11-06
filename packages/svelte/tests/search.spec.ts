@@ -18,7 +18,7 @@ describe('search', () => {
 
     expect(index).toHaveLength(2)
     expect(index[0]).toBeDefined()
-    expect(index[0].type).toBe('array')
+    expect(index[0].type).toBe('Array')
     expect(index[0].path).toBe('test')
     expect(index[1].tokens?.[0]).toBe(`'hello'`)
 

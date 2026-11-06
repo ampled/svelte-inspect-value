@@ -65,7 +65,7 @@
   let [TypeComponent, componentProps] = $derived(
     getTypeComponent(value, type, usedefaults, options.value)
   )
-  let path = $derived(key != null && prevPath ? [...prevPath, key] : ['root'])
+  let path = $derived(key != null && prevPath ? [...prevPath, key as PropertyKey] : ['root'])
   let stringifiedPath = $derived(stringifyPath(path))
 
   const searchResult = useSearchContext()

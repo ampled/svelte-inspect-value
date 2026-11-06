@@ -1,7 +1,7 @@
 <!-- svelte-ignore state_referenced_locally -->
 <script lang="ts">
   // import Console from '$lib/components/icons/Console.svelte'
-  import { Inspect } from '@components'
+  import { Inspect, AnchorHeading } from '@components'
   import { StateHistory } from 'runed'
   import ColorPicker from 'svelte-awesome-color-picker'
 
@@ -199,7 +199,7 @@
 
 <Inspect values={{ style, history: history.log.map((h) => h.snapshot) }} />
 
-<h2 id="defining-a-theme">Defining a theme</h2>
+<AnchorHeading level="2" id="defining-a-theme">Defining a theme</AnchorHeading>
 
 <p>
   Add your custom theme class to a global css file and import it, then set the theme-class using the
@@ -223,7 +223,7 @@
 
 <em>Note: these code blocks are updated with colors set in the theme editor above</em>
 
-<h2 id="extended-theming">Extended customization</h2>
+<AnchorHeading level="2" id="extended-theming">Extended customization</AnchorHeading>
 
 <p>
   Behind the scenes, the base16 theme is mapped to internal CSS-variables. This mapping can be

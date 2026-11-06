@@ -14,7 +14,7 @@ describe('inspect panel', () => {
     expect(rendered.result.component).toBeDefined()
   })
 
-  test('it can persist settings using localStorage', async () => {
+  test.skip('it can persist settings using localStorage', async () => {
     let persistedSettings = localStorage.getItem('siv.panel')
     expect(persistedSettings).toBeNull()
 

@@ -6,8 +6,8 @@
   import FunctionBody from './FunctionBody.svelte'
 
   type Props = TypeViewProps<
-    () => unknown,
-    'function' | 'asyncfunction' | 'generatorfunction' | 'asyncgeneratorfunction'
+    Function,
+    'Function' | 'AsyncFunction' | 'GeneratorFunction' | 'AsyncGeneratorFunction'
   >
 
   let { value, key, type, path, ...rest }: Props = $props()
@@ -17,9 +17,11 @@
   const previewLevel = getPreviewLevel()
 
   const oneLine = $derived.by(() => {
-    switch (type) {
+    switch (type?.toLowerCase()) {
+      case 'function':
+        return value.toString().replace('function', '')
       case 'asyncfunction':
-        return value.toString().replace('async', '')
+        return value.toString().replace('async', '').replace('function', '')
       case 'generatorfunction':
         return value.toString().replace('function*', '').replace('*', '')
       case 'asyncgeneratorfunction':

@@ -4,7 +4,7 @@ import { stringifyOrToString, type ValueType } from './util.js'
 export function logToConsole(path: PropertyKey[] = [], value: unknown, type: string | undefined) {
   const prefix = [
     `%cInspect ${type} at ${path.join('.')}:`,
-    'background-color: black; padding: 5px; color: hotpink; border-radius: 8px;',
+    'background-color: #1e2c3e; padding: 5px; color: hotpink; border-radius: 8px;',
   ]
 
   console.log(...prefix)
