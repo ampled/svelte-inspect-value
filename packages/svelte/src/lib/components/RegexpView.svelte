@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { getIsKey } from '../contexts.js'
   import type { TypeViewProps } from '../types.js'
   import Expandable from './Expandable.svelte'
   import GetterSetter from './GetterSetter.svelte'
@@ -9,6 +10,8 @@
   type Props = TypeViewProps<RegExp>
 
   let { value, key = undefined, type, path, ...rest }: Props = $props()
+
+  let { source, flags } = $derived(value)
 
   let keys = [
     'lastIndex',
@@ -23,9 +26,21 @@
     'unicode',
     'unicodeSets',
   ]
+
+  const isKey = getIsKey()
 </script>
 
-<Expandable length={1} showLength={false} {type} {key} {path} {value} {...rest} keepPreviewOnExpand>
+<Expandable
+  length={1}
+  showLength={false}
+  {type}
+  {key}
+  {path}
+  {value}
+  showKey={!isKey}
+  {...rest}
+  keepPreviewOnExpand
+>
   {#snippet valuePreview()}
     <Highlight
       data-testid="value"
@@ -33,7 +48,11 @@
       title={value.toString()}
       value={value.toString()}
       fields={['value']}
-    />
+    >
+      <span class="slash">/</span><span>{source}</span><span class="slash">/</span><span
+        class="flags">{flags}</span
+      >
+    </Highlight>
   {/snippet}
   <PropertyList {keys} {value} {type}>
     {#snippet item({ key, descriptor })}
@@ -45,3 +64,10 @@
     {/snippet}
   </PropertyList>
 </Expandable>
+
+<style>
+  .slash,
+  .flags {
+    color: var(--base08);
+  }
+</style>

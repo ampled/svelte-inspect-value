@@ -2,33 +2,35 @@
   import type { SvelteHTMLElements } from 'svelte/elements'
   import { getPreviewLevel, setIsKey } from '../contexts.js'
   import { useOptions } from '../options.svelte.js'
-  import type { TypeViewProps } from '../types.js'
+  import type { KeyProps } from '../types.js'
   import { getType, stringify, stringifyPath } from '../util.js'
   import Node from './Node.svelte'
   import Type from './Type.svelte'
 
   import Highlight from './Highlight.svelte'
 
-  type Props = {
-    prefix?: string
-    key: TypeViewProps<unknown>['key'] | unknown
-    path?: TypeViewProps<unknown>['path']
-    delim?: string
-    disabled?: boolean
-    allowUndefined?: boolean
-  } & SvelteHTMLElements['span']
+  type Props = KeyProps & SvelteHTMLElements['span']
 
-  let { key, path = [], delim = ':', prefix, disabled, onclick, ...rest }: Props = $props()
+  let {
+    key,
+    path = [],
+    delimiter = ':',
+    prefix,
+    postfix,
+    disabled,
+    onclick,
+    ...rest
+  }: Props = $props()
 
   const options = useOptions()
-  const keyTypes = ['string', 'number', 'symbol', 'quotedstring']
-  const simpleKeys = ['bigint', 'regexp']
+  const keyTypes = ['String', 'Number', 'Symbol', 'quotedstring']
+  const simpleKeys = ['BigInt', 'RegExp']
   const shouldBeQuoted = /[^A-zÀ-ú0-9\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F_$]|[\\[\]`]/
   const previewLevel = getPreviewLevel()
 
   let keyType = $derived.by(() => {
     const t = getType(key)
-    if (t === 'string') {
+    if (t === 'String') {
       if ((key as string).match(shouldBeQuoted) || key === '') {
         return 'quotedstring'
       }
@@ -70,7 +72,7 @@
           <span class="prefix">{prefix}</span>
         {/if}
         {#if keyTypes.includes(keyType)}
-          <span class={['key', keyType, disabled && 'disabled']}>
+          <span class={['key', keyType.toLowerCase(), disabled && 'disabled']}>
             {#if keyType === 'quotedstring' && key !== ''}
               {#each display as string as char, i (i)}
                 {#if char === ' '}
@@ -92,9 +94,12 @@
         {:else}
           <Type type={keyType} force />
         {/if}
+        {#if postfix}
+          <span class="postfix">{postfix}</span>
+        {/if}
       </div>
-      {#if delim}
-        <span class="delim">{delim}</span>
+      {#if delimiter}
+        <span class="delim">{delimiter}</span>
       {/if}
     </div>
   </svelte:boundary>

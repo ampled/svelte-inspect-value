@@ -275,13 +275,28 @@ export type PanelProps = {
  */
 export type Note = { title?: string; description?: string }
 
+export type KeyProps = {
+  key?: PropertyKey
+  style?: HTMLAttributes<HTMLDivElement>['style']
+  path?: PropertyKey[]
+  disabled?: boolean
+  prefix?: string
+  postfix?: string
+  delimiter?: string
+  show?: boolean
+}
+
 export type TypeViewProps<Value = unknown, Type = ValueType> = {
   value: Value
-  key?: PropertyKey
+  key?: PropertyKey | KeyProps
   /**
-   * Prefix for key e.g. "get" or "static"
+   * Prefix for key
    */
   keyPrefix?: string
+  /**
+   * Postfix for key
+   */
+  keyPostfix?: string
   /**
    * Should key be shown
    */
@@ -432,6 +447,14 @@ export type List =
   | Float64Array
   | BigInt64Array
   | BigUint64Array
+
+export type TemporalObject =
+  | Temporal.PlainDate
+  | Temporal.PlainDateTime
+  | Temporal.ZonedDateTime
+  | Temporal.Instant
+  | Temporal.Duration
+  | Temporal.PlainTime
 
 type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] extends N
   ? Acc[number]

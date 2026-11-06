@@ -508,7 +508,7 @@
     }
 
     &.error,
-    &.InspectError {
+    &.inspecterror {
       color: var(--_error-color);
     }
 
@@ -593,7 +593,7 @@
     }
 
     &.url {
-      color: var(--_url-type-color);
+      color: var(--_string-value-color);
     }
 
     &.urlsearchparams {

@@ -11,7 +11,7 @@
   import LinkIcon from './icons/LinkIcon.svelte'
   import { useOptions } from '../options.svelte.js'
   import type { TypeViewProps } from '../types.js'
-  import { collapseString, stringify } from '../util.js'
+  import { collapseString, stringEscapeGroups, stringify, isEscapeGroup } from '../util.js'
   import Highlight from './Highlight.svelte'
 
   type Props = TypeViewProps<string>
@@ -28,19 +28,24 @@
   let ele: 'a' | 'span' = $derived(isUrlOrPath ? 'a' : 'span')
 
   let collapsed = $derived(collapseString(displayOrValue, stringCollapse))
-  let stringified = $derived(stringify(collapsed, 0, quotes))
+  let quote = $derived(quotes === 'single' ? `'` : quotes === 'double' ? '"' : '')
+  let groups = $derived([quote, ...stringEscapeGroups(collapsed), quote])
 </script>
 
 <svelte:element
   this={ele}
   data-testid="value"
-  class={['stringvalue', ' value', type, isUrlOrPath && 'url-or-path']}
-  title={stringify(value)}
+  class={['stringvalue', 'value', type.toLowerCase(), isUrlOrPath && 'url-or-path', quotes]}
+  title={value}
   href={isUrlOrPath ? value : null}
   target={isUrlOrPath ? '_blank' : null}
   rel={isUrlOrPath ? 'noreferrer' : null}
 >
-  <Highlight value={stringified} fields={['value']} alsoMatch={value} />{#if isUrlOrPath}
+  <Highlight value={stringify(displayOrValue, 0, quotes)} fields={['value']} alsoMatch={value}>
+    {#each groups as group}
+      <span class={{ escape: isEscapeGroup(group) }}>{group}</span>
+    {/each}
+  </Highlight>{#if isUrlOrPath}
     <span class="value url">
       <LinkIcon />
     </span>
@@ -54,8 +59,12 @@
     overflow: hidden;
     text-overflow: ellipsis;
     text-wrap: nowrap;
-    white-space: pre !important;
+    white-space: nowrap !important;
     white-space-collapse: preserve-spaces;
+  }
+
+  .escape {
+    color: var(--base0E);
   }
 
   .url-or-path {

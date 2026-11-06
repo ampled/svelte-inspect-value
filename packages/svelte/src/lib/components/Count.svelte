@@ -18,26 +18,27 @@
     }
   })
 
+  // TODO: move to core lib
   let unit = $derived.by(() => {
     switch (type) {
       case undefined:
         return
-      case 'urlsearchparams':
+      case 'URLSearchParams':
         return
-      case 'array':
-      case 'int8array':
-      case 'uint8array':
-      case 'uint8clampedarray':
-      case 'int16array':
-      case 'uint16array':
-      case 'int32array':
-      case 'uint32array':
-      case 'float32array':
-      case 'float64array':
-      case 'bigint64array':
-      case 'biguint64array':
+      case 'Array':
+      case 'Int8Array':
+      case 'Uint8Array':
+      case 'Uint8ClampedArray':
+      case 'Int16Array':
+      case 'Uint16Array':
+      case 'Int32array':
+      case 'Uint32Array':
+      case 'Float32Array':
+      case 'Float64Array':
+      case 'BigInt64Array':
+      case 'BigInt64Array':
         return 'items'
-      case 'string':
+      case 'String':
         return 'chars'
       default:
         return 'entries'

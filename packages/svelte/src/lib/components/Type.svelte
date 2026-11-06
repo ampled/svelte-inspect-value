@@ -14,69 +14,79 @@
 
   const options = useOptions()
 
+  // TODO: move to core lib
   let display = $derived.by(() => {
     switch (type) {
-      case 'number':
+      case 'Undefined':
+        return 'undefined'
+      case 'Null':
+        return 'null'
+      case 'Number':
         return 'num'
-      case 'string':
+      case 'String':
         return 'str'
-      case 'regexp':
-        return 'regex'
-      case 'function':
-        return 'fn'
-      case 'asyncfunction':
-        return 'async fn'
-      case 'generatorfunction':
-        return 'fn*'
-      case 'asyncgeneratorfunction':
-        return 'async fn*'
-      case 'boolean':
+      case 'Symbol':
+        return 'symbol'
+      case 'Boolean':
         return 'bool'
-      case 'url':
-        return 'URL'
-      case 'urlsearchparams':
-        return 'URLSearch'
-      case 'map':
-        return 'Map'
-      case 'set':
-        return 'Set'
-      case 'date':
-        return 'Date'
-      case 'object':
+      case 'BigInt':
+        return 'bigint'
+      case 'Object':
         return 'obj'
-      case 'array':
+      case 'Array':
         return 'arr'
-      case 'promise':
-        return 'Promise'
+      case 'RegExp':
+        return 'regex'
+      case 'Function':
+        return 'fn'
+      case 'AsyncFunction':
+        return 'async fn'
+      case 'GeneratorFunction':
+        return 'fn*'
+      case 'AsyncGeneratorFunction':
+        return 'async fn*'
+      case 'Temporal.PlainDate':
+      case 'Temporal.PlainTime':
+      case 'Temporal.PlainDateTime':
+      case 'Temporal.PlainMonthDay':
+      case 'Temporal.PlainYearMonth':
+      case 'Temporal.Instant':
+      case 'Temporal.ZonedDateTime':
+      case 'Temporal.ZonedDateTime':
+      case 'Temporal.Duration':
+        return type.split('.')[1]
       default:
         return type
     }
   })
 
+  // TODO move to shared lib
   const ALWAYS_VISIBLE_TYPES = [
-    'temporal.plaindate',
-    'temporal.plaindatetime',
-    'temporal.plaintime',
-    'temporal.plainmonthday',
-    'temporal.plainyearmonth',
-    'temporal.duration',
-    'temporal.instant',
-    'temporal.zoneddatetime',
-    'undefined',
-    'null',
+    'Undefined',
+    'Null',
     'class',
-    'function',
-    'asyncfunction',
-    'generatorfunction',
-    'asyncgeneratorfunction',
-    'promise',
+    'Function',
+    'AsyncFunction',
+    'GeneratorFunction',
+    'AsyncGeneratorFunction',
+    'Promise',
     'readable',
     'writable',
     'Entry',
-    'map',
-    'set',
-    'date',
-    'url',
+    'Map',
+    'Set',
+    'Date',
+    'URL',
+    'Error',
+    'Temporal.PlainDate',
+    'Temporal.PlainTime',
+    'Temporal.PlainDateTime',
+    'Temporal.PlainMonthDay',
+    'Temporal.PlainYearMonth',
+    'Temporal.Instant',
+    'Temporal.ZonedDateTime',
+    'Temporal.ZonedDateTime',
+    'Temporal.Duration',
   ]
 
   let required = $derived(ALWAYS_VISIBLE_TYPES.includes(type))
@@ -90,7 +100,7 @@
     fields={['type']}
     alsoMatch={type}
     data-testid="type"
-    class={['type', type, previewLevel ?? 'preview']}
+    class={['type', type.toLowerCase(), previewLevel ?? 'preview']}
     title={type}
     {...rest}
   />

@@ -47,17 +47,29 @@ const tokenizers = {
 }
 
 const typedArrays = [
-  'int8array',
-  'uint8array',
-  'uint8clampedarray',
-  'int16array',
-  'uint16array',
-  'int32array',
-  'uint32array',
-  'float32array',
-  'float64array',
-  'bigint64array',
-  'biguint64array',
+  'Int8Array',
+  'Uint8Array',
+  'uint8ClampedArray',
+  'int16Array',
+  'Uint16Array',
+  'Int32Array',
+  'Uint32Array',
+  'Float32Array',
+  'Float64Array',
+  'BigInt64Array',
+  'BigUint64Array',
+]
+
+const temporalTypes = [
+  'Temporal.PlainDate',
+  'Temporal.PlainTime',
+  'Temporal.PlainDateTime',
+  'Temporal.PlainMonthDay',
+  'Temporal.PlainYearMonth',
+  'Temporal.Instant',
+  'Temporal.ZonedDateTime',
+  'Temporal.ZonedDateTime',
+  'Temporal.Duration',
 ]
 
 function addNode(index: SearchIndex, path: unknown[], tokens: string[] | undefined, type: string) {
@@ -73,7 +85,7 @@ const indexers = {
   default({ index, prevPath, value, type }) {
     addNode(index, prevPath, [String(value)], type)
   },
-  string: (args) => {
+  String: (args) => {
     const { index, prevPath, options } = args
     const v = args.value as string
 
@@ -86,7 +98,7 @@ const indexers = {
 
     return index
   },
-  object: ({ value, prevPath, index, visited, maxDepth, depth = 0, type, options }) => {
+  Object: ({ value, prevPath, index, visited, maxDepth, depth = 0, type, options }) => {
     if (visited.has(value)) {
       return index
     }
@@ -144,7 +156,7 @@ const indexers = {
 
     return index
   },
-  array: ({ value, prevPath, index, visited, maxDepth, depth = 0, type, options }) => {
+  Array: ({ value, prevPath, index, visited, maxDepth, depth = 0, type, options }) => {
     if (visited.has(value)) return index
     visited.add(value)
     const array = value as unknown[]
@@ -168,7 +180,7 @@ const indexers = {
 
     return index
   },
-  typedarray: ({ value, prevPath, index, visited, maxDepth, depth = 0, type, options }) => {
+  TypedArray: ({ value, prevPath, index, visited, maxDepth, depth = 0, type, options }) => {
     if (visited.has(value)) return index
     visited.add(value)
     const array = value as List
@@ -205,7 +217,7 @@ const indexers = {
 
     return index
   },
-  map({ value, prevPath, index, visited, maxDepth, depth = 0, options }) {
+  Map({ value, prevPath, index, visited, maxDepth, depth = 0, options }) {
     if (visited.has(value)) return index
     const map = value as Map<unknown, unknown>
     addNode(index, prevPath, [map.size ? 'entries' : 'empty'], 'map')
@@ -224,7 +236,7 @@ const indexers = {
     })
     return index
   },
-  set({ value, prevPath, index, visited, maxDepth, depth = 0, options }) {
+  Set({ value, prevPath, index, visited, maxDepth, depth = 0, options }) {
     if (visited.has(value)) return index
     const set = value as Set<unknown>
 
@@ -244,7 +256,7 @@ const indexers = {
     })
     return index
   },
-  descriptor: ({ value, index, prevPath }) => {
+  Descriptor: ({ value, index, prevPath }) => {
     addNode(index, prevPath, [descriptorPrefix(value)], 'descriptor')
 
     if (value.get) {
@@ -256,33 +268,34 @@ const indexers = {
 
     return index
   },
-  function: ({ value, index, prevPath, type }) => {
+  Function: ({ value, index, prevPath, type }) => {
     addNode(index, prevPath, [tokenizers.function(value)], type)
     return index
   },
-  promise: ({ index, prevPath, type }) => {
+  Promise: ({ index, prevPath, type }) => {
     addNode(index, prevPath, ['state', 'result'], type)
 
     return index
   },
-  bigint: ({ value, prevPath, index }) => {
+  BigInt: ({ value, prevPath, index }) => {
     addNode(index, prevPath, [String(value) + 'n'], 'bigint')
     return index
   },
-  iterator: ({ prevPath, index, type }) => {
+  Iterator: ({ prevPath, index, type }) => {
     addNode(index, prevPath, [], type)
     return index
   },
-  date: ({ value, prevPath, index, visited }) => {
+  Date: ({ value, prevPath, index, visited }) => {
     visited.add(value)
     const date = value as Date
+
     addNode(
       index,
       prevPath,
       [
-        'year',
-        'month',
-        'day',
+        'toString',
+        'toDateString',
+        'toUTCString',
         'date',
         'hour',
         'minutes',
@@ -295,7 +308,45 @@ const indexers = {
     )
     return index
   },
-  url: ({ value, prevPath = [], index, type, depth = 0, maxDepth, options }) => {
+  Temporal: ({ value, prevPath, index, visited, type, depth = 0, maxDepth, options }) => {
+    visited.add(value)
+    const temporalValue = value as Temporal.PlainDate | Temporal.Instant | Temporal.Duration
+    let keys = (
+      Object.getOwnPropertyNames(Object.getPrototypeOf(value)) as (keyof typeof temporalValue)[]
+    ).filter((k) => !['constructor'].includes(k as string) && typeof value[k] !== 'function')
+
+    let localeString: string | undefined
+
+    try {
+      localeString = (temporalValue as any).toLocaleString()
+    } catch {
+      localeString = undefined
+    }
+
+    addNode(
+      index,
+      prevPath,
+      [temporalValue.toString(), localeString ? localeString : null, ...keys].filter(
+        (val) => val != null
+      ) as unknown as string[],
+      type
+    )
+
+    keys.forEach((key) => {
+      buildSearchIndex({
+        value: value[key],
+        key,
+        prevPath,
+        index,
+        maxDepth,
+        depth: depth + 1,
+        visited,
+        options,
+      })
+    })
+    return index
+  },
+  URL: ({ value, prevPath = [], index, type, depth = 0, maxDepth, options }) => {
     const url = value as URL
 
     const { hash, host, hostname, href, origin, password, pathname, port, protocol, username } =
@@ -334,7 +385,7 @@ const indexers = {
 
     return index
   },
-  error: (args) => {
+  Error: (args) => {
     const { index, prevPath, value, visited, depth = 0, maxDepth, options } = args
     const err = value as Error
 
@@ -384,7 +435,7 @@ const indexers = {
       })
     }
   },
-  urlsearchparams: ({ value, prevPath, index, type }) => {
+  URLSearchParams: ({ value, prevPath, index, type }) => {
     const params = value as URLSearchParams
     if (params.size > 0) {
       addNode(index, prevPath, [params.toString(), params.size ? 'entries' : 'empty'], type)
@@ -424,7 +475,7 @@ const indexers = {
 
     return index
   },
-  regexp({ index, prevPath, value, type, options, depth = 0, maxDepth }) {
+  RegExp({ index, prevPath, value, type, options, depth = 0, maxDepth }) {
     const regexp = value as RegExp
     const keys = [
       'lastIndex',
@@ -491,11 +542,12 @@ export const buildSearchIndex = (indexArgs: BuildSearchIndexArgs) => {
   let indexerId: keyof typeof indexers | undefined = undefined
   const type = getType(value, options.stores)
 
-  if (typedArrays.includes(type)) indexerId = 'typedarray'
-  if (type.includes('function')) indexerId = 'function'
-  if (['iterator', 'generator'].some((t) => type.includes(t))) indexerId = 'iterator'
+  if (temporalTypes.includes(type)) indexerId = 'Temporal'
+  if (typedArrays.includes(type)) indexerId = 'TypedArray'
+  if (type.includes('Function')) indexerId = 'Function'
+  if (['iterator', 'generator'].some((t) => type.includes(t))) indexerId = 'Iterator'
   if (descriptor && (descriptor.set || descriptor.get)) {
-    indexerId = 'descriptor'
+    indexerId = 'Descriptor'
   }
 
   //@ts-expect-error - yeah

@@ -9,22 +9,47 @@
 
   let { value, key, type, path, ...rest }: Props = $props()
 
-  let entries = $derived(
-    Object.entries({
-      toString: value.toString(),
-      dateString: value.toDateString(),
-      utcString: value.toUTCString(),
-      year: value.getFullYear(),
-      month: value.getMonth(),
-      date: value.getDate(),
-      day: value.getDay(),
-      hour: value.getHours(),
-      minutes: value.getMinutes(),
-      seconds: value.getSeconds(),
-      milliseconds: value.getMilliseconds(),
-      time: value.getTime(),
-    })
-  )
+  // TODO: move to shared lib
+  const keys = [
+    'toString',
+    'toLocaleString',
+    'toLocaleDateString',
+    'toLocaleTimeString',
+    'toDateString',
+    'toTimeString',
+    'toISOString',
+    'toUTCString',
+    'toGMTString',
+    'getDate',
+    'getDay',
+    'getFullYear',
+    'getHours',
+    'getMilliseconds',
+    'getMinutes',
+    'getMonth',
+    'getSeconds',
+    'getTime',
+    'getTimezoneOffset',
+    'getUTCDate',
+    'getUTCDay',
+    'getUTCFullYear',
+    'getUTCHours',
+    'getUTCMilliseconds',
+    'getUTCMinutes',
+    'getUTCMonth',
+    'getUTCSeconds',
+    'getYear',
+  ] as unknown as (keyof Date)[]
+
+  let entries = $derived.by(() => {
+    let res = keys.map((k) => [k, (value[k] as unknown as Function)()])
+
+    if (Object.hasOwn(globalThis, 'Temporal')) {
+      res.push(['toTemporalInstant', value.toTemporalInstant()])
+    }
+
+    return res
+  })
 </script>
 
 <Expandable
@@ -41,7 +66,14 @@
   {/snippet}
   {#each entries as [key, value], i (key)}
     <Entry {i}>
-      <Node {value} {key} {path} />
+      <Node
+        {value}
+        {key}
+        {path}
+        keyStyle="--_text-color: var(--_function-name-color); padding-right: 1ch; gap: 0;"
+        keyDelim="=>"
+        keyPostfix="()"
+      />
     </Entry>
   {/each}
 </Expandable>

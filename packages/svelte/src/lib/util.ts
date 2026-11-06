@@ -22,7 +22,7 @@ export function initialize(opts: OptionsContext) {
 export function getType(value: unknown, stores: InspectOptions['stores'] = false) {
   const t = typeOf(value)
 
-  if (t === 'function') {
+  if (t === 'Function') {
     if (
       // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
       (value as Function).toString().startsWith('class') ||
@@ -31,11 +31,11 @@ export function getType(value: unknown, stores: InspectOptions['stores'] = false
     ) {
       return 'class'
     }
-  } else if (t === 'object') {
+  } else if (t === 'Object') {
     if (stores && isStore(value)) {
       return 'store'
     }
-    return 'object'
+    return t
   }
   return t
 }
@@ -70,30 +70,29 @@ function typeofAsFunction(value: unknown) {
 
 /** @inline */
 export type ValueType =
-  | 'string'
-  | 'number'
-  | 'bigint'
-  | 'boolean'
-  | 'symbol'
-  | 'undefined'
-  | 'object'
-  | 'function'
-  | 'asyncfunction'
-  | 'generatorfunction'
-  | 'asyncgeneratorfunction'
-  | 'regexp'
-  | 'date'
-  | 'class'
-  | 'error'
-  | 'array'
-  | 'null'
-  | 'set'
-  | 'map'
-  | 'url'
-  | 'urlsearchparams'
-  | 'promise'
-  | 'iterator'
-  | 'NaN'
+  | 'String'
+  | 'Number'
+  | 'BigInt'
+  | 'Boolean'
+  | 'Symbol'
+  | 'Undefined'
+  | 'Object'
+  | 'Function'
+  | 'AsyncFunction'
+  | 'GeneratorFunction'
+  | 'AsyncGeneratorFunction'
+  | 'RegExp'
+  | 'Date'
+  | 'Class'
+  | 'Error'
+  | 'Array'
+  | 'Null'
+  | 'Set'
+  | 'Map'
+  | 'Url'
+  | 'UrlSearchParams'
+  | 'Promise'
+  | 'Iterator'
   | 'store'
   | (string & {})
 
@@ -172,6 +171,23 @@ export function getAllDescriptors<T extends object>(
     for (const key of Object.getOwnPropertyNames(current)) {
       if (!(key in result)) {
         result[key] = descriptors[key]
+      }
+    }
+    current = Object.getPrototypeOf(current) as object | null
+  }
+
+  return result
+}
+
+export function getAllKeys<T extends object>(obj: T) {
+  let result: (string | symbol)[] = []
+  let current: object | null = obj
+
+  while (current && current !== Object.prototype) {
+    const keys = [...Object.getOwnPropertyNames(current), ...Object.getOwnPropertySymbols(current)]
+    for (const key of keys) {
+      if (!result.includes(key)) {
+        result.push(key)
       }
     }
     current = Object.getPrototypeOf(current) as object | null
@@ -465,3 +481,14 @@ export function nodeActionKeydown<F extends (e: UIEvent) => void | Promise<void>
     }
   }
 }
+
+// source: https://github.com/trbrc/svelte-inspect
+export const stringEscapeGroups = (str: string) => {
+  // Split string into array of sequences of characters, with needed escapes broken out
+  const characters = str.split(/([\x00-\x1F]+)/)
+  return characters.map((char) => JSON.stringify(char).slice(1, -1))
+}
+
+const backslashCharCode = '\\'.charCodeAt(0)
+
+export const isEscapeGroup = (str: string) => str.charCodeAt(0) === backslashCharCode

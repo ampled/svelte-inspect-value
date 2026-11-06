@@ -54,6 +54,7 @@
 
   // svelte-ignore state_referenced_locally TODO
   const previewLevel = getContext<number | undefined>(Symbol.for('siv.preview-level')) ?? startLevel
+  const SIV_DEBUG = getContext<(() => boolean) | undefined>(Symbol.for('SIV.DEBUG'))
   const options = useOptions()
   let {
     previewEntries,
@@ -81,15 +82,16 @@
 
   function alwaysRender(type: string) {
     return [
-      'boolean',
-      'string',
-      'number',
-      'bigint',
-      'symbol',
-      'regexp',
+      'Boolean',
+      'String',
+      'Number',
+      'BigInt',
+      'Symbol',
+      'RegExp',
+      'Date',
       'class',
-      'undefined',
-      'null',
+      'Undefined',
+      'Null',
       'store',
     ].includes(type)
   }
@@ -103,6 +105,7 @@
     {/snippet}
     <div
       data-testid="preview"
+      data-previewlevel={previewLevel}
       class={['preview', classValue]}
       transition:slide={{
         axis: 'x',
@@ -147,6 +150,9 @@
       {#if postfix}
         <span class="post level-{previewLevel}" style={bracketStyle}>{postfix}</span>
       {/if}
+      {#if SIV_DEBUG?.()}
+        <span class="post level-{previewLevel}" style="font-size: 0.8em;">{previewLevel}</span>
+      {/if}
     </div>
   </svelte:boundary>
 {/if}
@@ -160,7 +166,7 @@
   {:else}
     <div class="key-type-preview">
       {#if showKey}
-        <Key disabled path={newPath} {key} delim={keyDelim} style={keyStyle} allowUndefined />
+        <Key disabled path={newPath} {key} delimiter={keyDelim} style={keyStyle} />
       {/if}
       <Type type={valType} force />
     </div>

@@ -18,7 +18,14 @@
     alsoMatch?: string
   } & SvelteHTMLElements['span']
 
-  let { value: text, fields = ['any'], alsoMatch, class: className, ...rest }: Props = $props()
+  let {
+    value: text,
+    fields = ['any'],
+    alsoMatch,
+    class: className,
+    children,
+    ...rest
+  }: Props = $props()
   const searchCtx = useSearchContext()
   const options = useOptions()
   const { query, matchingPaths, terms } = $derived(searchCtx())
@@ -82,7 +89,11 @@
     ]}
     {...rest}
   >
-    {text}
+    {#if children}
+      {@render children()}
+    {:else}
+      {text}
+    {/if}
   </span>
 {/if}
 

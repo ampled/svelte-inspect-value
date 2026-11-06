@@ -21,6 +21,7 @@
     showKey = true,
     keyDelim = ':',
     keyPrefix,
+    keyPostfix,
     keyStyle,
     type,
     forceType,
@@ -41,6 +42,7 @@
   let title = $derived(
     typeof value === 'string' ? value : display != null ? display : value?.toString()
   )
+  let keyProps = $derived(typeof key === 'object' ? key : { key })
 </script>
 
 <div
@@ -59,7 +61,15 @@
       <Bullet {value} />
     {/if}
     {#if showKey}
-      <Key disabled prefix={keyPrefix} delim={keyDelim} style={keyStyle} {key} {path} />
+      <Key
+        disabled
+        prefix={keyPrefix}
+        postfix={keyPostfix}
+        delimiter={keyDelim}
+        style={keyStyle}
+        {path}
+        {...keyProps}
+      />
     {/if}
     {#if !isKey}
       <Type {type} force={forceType} />
@@ -70,7 +80,7 @@
       <Highlight
         data-testid="value"
         {title}
-        class={['value', type]}
+        class={['value', type?.toLowerCase()]}
         value={displayOrValue}
         fields={['value']}
       />
